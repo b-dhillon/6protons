@@ -39,18 +39,18 @@ export default function App() {
     return (<HomePage setPage={handlePage} setCameraRotate={handleClick} cameraRotate={cameraRotate} />);
   }
 
-  // else if(page === 'lesson1')
-  // {
-  //   return (<Lesson1 setPage={handlePage} setCameraRotate={handleClick}/>)
-  // }
-  // else if(page === 'lesson2')
-  // {
-  //   return (<Lesson2 />)
-  // }
-  // else if(page === 'lesson3')
-  // {
-  //   return (<Lesson3 />)
-  // }
-  // else return <h1>Not yet</h1>
+  else if(page === 'lesson1')
+  {
+    return (<Lesson1 setPage={handlePage} setCameraRotate={handleClick}/>)
+  }
+  else if(page === 'lesson2')
+  {
+    return (<Lesson2 />)
+  }
+  else if(page === 'lesson3')
+  {
+    return (<Lesson3 />)
+  }
+  else return <h1>Uh oh, something broke.</h1>
   
 }

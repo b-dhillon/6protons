@@ -23,7 +23,7 @@ export default function HomePage(props)
 
   useEffect(() =>
   {
-    setTimeout(() => setLoading(false), 500)
+    setTimeout(() => setLoading(false), 400)
   }, [])
 
   return (
@@ -40,7 +40,9 @@ export default function HomePage(props)
             </Suspense>
         </Canvas>
 
-        { !loading ? <HeroOverlay /> : ''}
+        { !loading && !props.cameraRotate ? <HeroOverlay /> : ''}
+        {props.cameraRotate ? <LessonSelectionOverlay setPage={props.setPage}/> : ''}
+
         {/* { props.cameraRotate ? <LessonSelectionOverlay setPage={props.setPage}/> : <HeroOverlay /> } */}
 
         {/* OVERLAYS  */}
