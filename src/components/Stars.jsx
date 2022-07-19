@@ -4,6 +4,21 @@ import { Points, PointMaterial } from '@react-three/drei'
 import * as random from "maath/random";
 import * as THREE from 'three'
 
+// const loadingManager = new THREE.LoadingManager(); 
+
+// loadingManager.onStart = function(url, item, total ) {
+//     console.log('Started Loading')
+// }
+
+// loadingManager.onProgress = function(url, loaded, total) {
+//     console.log(`Started loading: ${url}`);
+// }
+
+// loadingManager.onLoad = function() {
+//     console.log('Just finished');
+// }
+
+// const gltfLoader = new GLTFLoader(loadingManager);
 
 export default function Stars(props) {
     const ref = useRef()

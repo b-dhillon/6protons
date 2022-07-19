@@ -18,8 +18,20 @@ export default function HomePage(props)
     setFlipped(!flipped);
   }
 
-    return (
+  return (
     <>
+        {/* 3D SCENE */}
+        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 20, fov: 75, position: [0,0,5] }}>
+          <color attach="background" args={["#000000"]} />
+            <Suspense fallback={null}>
+                <Stars />
+                <RotateCamera cameraRotate={props.cameraRotate}/>
+                <spotLight position={[10, 10, 10] } intensity={1}/>
+                <ambientLight intensity={.4} />
+                <TestosteroneModel flipped={flipped}/>
+            </Suspense>
+        </Canvas>
+
         {/* OVERLAYS  */}
         { props.cameraRotate ? <LessonSelectionOverlay setPage={props.setPage}/> : <HeroOverlay />}
 
@@ -28,19 +40,6 @@ export default function HomePage(props)
             <div><a title={props.cameraRotate ? "Back to Home" : "Get Started"}></a></div>
         </div>
 
-        {/* 3D SCENE */}
-        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 20, fov: 75, position: [0,0,5] }}>
-          <color attach="background" args={["#000000"]} />
-            <Suspense fallback={null}>
-                <RotateCamera cameraRotate={props.cameraRotate}/>
-                <spotLight position={[10, 10, 10] } intensity={1}/>
-                <ambientLight intensity={.4} />
-                <TestosteroneModel flipped={flipped}/>
-                <Stars />
-                {/* { props.cameraRotate ? <spotLight position={[10, 10, -10] } intensity={1}/> : null} */}
-                {/* { props.cameraRotate ? <BuckyballModel /> : null} */}
-            </Suspense>
-        </Canvas>
     </>
     )
 }
@@ -77,25 +76,6 @@ function TestosteroneModel(props) {
         </group>
     </group>
     )
-}
-
-function BuckyballModel() {
-  const ref = useRef()
-  const { nodes, materials } = useGLTF('/buckyball-transformed.glb')
-
-  useFrame((state) => {
-    ref.current.rotation.y += .004
-    // ref.current.rotation.x = THREE.MathUtils.lerp(ref.current.rotation.x, props.flipped ? (Math.PI * 1.5) : Math.PI / 2 , 0.1)
-  })
-  return (
-    <group ref={ref} dispose={null} position={[.76, -.05, 2]}>
-      <group scale={0.03}>
-        <mesh geometry={nodes['carbon-atoms'].geometry} material={materials['Material.001']} position={[1.02, 3.01, 1.45]} scale={0.23} />
-        <mesh geometry={nodes['carbon-bonds'].geometry} material={materials['Material.001']} position={[2.9, 1.01, -1.53]} rotation={[-0.42, 1.23, -2.44]} />
-        <mesh geometry={nodes['soccer-pattern'].geometry} material={materials['Material.001']} position={[0.18, 1.66, 3.07]} scale={0.23} />
-      </group>
-    </group>
-  )
 }
 
 function HeroOverlay() {

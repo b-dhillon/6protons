@@ -46,7 +46,9 @@ svg {
   z-index: 2;
   display: flex;
   justify-content: center;
+  animation: fadeIn 1s 1 ease-in;
 }
+
 .hero {
   position: relative;
   top: 55%;
@@ -70,13 +72,14 @@ svg {
   position: relative;
 
 }
+
 .hero--subtitle {
   width: 90%;
   line-height: 40px;
   /* margin-top: 15px; */
   text-align: center;
   color: white !important;
-  font-size: 1.7em;
+  font-size: 2em;
 }
 .hero--txt--html {
   background: linear-gradient(to right, #3272F4 0%, #CC2DD7 85%);
