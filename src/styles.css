@@ -19,7 +19,6 @@ body {
   -webkit-font-smoothing: antialiased;
   color: #ddd;
   /* background: #12071f; */
-  background: #000;
 }
 
 a {
@@ -46,7 +45,9 @@ svg {
   z-index: 2;
   display: flex;
   justify-content: center;
-  animation: fadeIn 1s 1 ease-in;
+  animation: fadeIn 2s 1 ease-in;
+  background: transparent;
+
 }
 
 .hero {
@@ -90,6 +91,7 @@ svg {
   letter-spacing: -0.05em;
 }
 .heroBtn {
+  animation: fadeIn 2s 1 ease-in;
   font-size: 1.1rem;
   font-weight: bold;
   position: absolute;
