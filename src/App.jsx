@@ -19,25 +19,25 @@ export default function App() {
     setPage(`${id}`)
   }
 
-  const [loading, setLoading] = useState(true)
+  // const [loading, setLoading] = useState(true)
 
-  useEffect(() =>
-  {
-    setTimeout(() => setLoading(false), 3000)
-  }, [])
-
-  
-  if(loading === false)
-  {
-    return (<HomePage setPage={handlePage} setCameraRotate={handleClick} cameraRotate={cameraRotate} />)
-  }
-  else return (<h1>Loading...</h1>)
-  
-
-  // if(page === 'home')
+  // useEffect(() =>
   // {
-  //   return (<HomePage setPage={handlePage} setCameraRotate={handleClick} cameraRotate={cameraRotate} />);
+  //   setTimeout(() => setLoading(false), 3000)
+  // }, [])
+
+  
+  // if(loading === false)
+  // {
+  //   return (<HomePage setPage={handlePage} setCameraRotate={handleClick} cameraRotate={cameraRotate} />)
   // }
+  // else return (<h1>Loading...</h1>)
+  
+
+  if(page === 'home')
+  {
+    return (<HomePage setPage={handlePage} setCameraRotate={handleClick} cameraRotate={cameraRotate} />);
+  }
 
   // else if(page === 'lesson1')
   // {

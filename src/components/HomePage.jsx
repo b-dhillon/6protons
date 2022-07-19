@@ -18,6 +18,14 @@ export default function HomePage(props)
     setFlipped(!flipped);
   }
 
+
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() =>
+  {
+    setTimeout(() => setLoading(false), 500)
+  }, [])
+
   return (
     <>
         {/* 3D SCENE */}
@@ -32,8 +40,11 @@ export default function HomePage(props)
             </Suspense>
         </Canvas>
 
+        { !loading ? <HeroOverlay /> : ''}
+        {/* { props.cameraRotate ? <LessonSelectionOverlay setPage={props.setPage}/> : <HeroOverlay /> } */}
+
         {/* OVERLAYS  */}
-        { props.cameraRotate ? <LessonSelectionOverlay setPage={props.setPage}/> : <HeroOverlay />}
+        {/* { props.cameraRotate ? <LessonSelectionOverlay setPage={props.setPage}/> : <HeroOverlay />} */}
 
         {/* BUTTONS */}
         <div className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => {props.setCameraRotate()}} style={props.cameraRotate ? {marginTop: 80} : {marginTop: 0}}>
