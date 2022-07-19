@@ -4,6 +4,7 @@ import Stars from './Stars'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+import MemoizedStars from './Stars'
 
 /* 
 TODO
@@ -136,16 +137,18 @@ export default function Lesson1(props) {
         } 
 
         return (
-            <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 45, position: [0, 0, 2] }}>
-                <color attach="background" args={["#000000"]} />
-                <Suspense fallback={null}>
-                    {/* <OrbitControls /> */}
-                    <spotLight position={[10, 10, 10] } intensity={.8}/>
-                    <ambientLight intensity={.5} />
-                    <Stars />
-                    <Model path={`/model${sectionState}.glb`} />
-                </Suspense>
-            </Canvas>
+            <>
+                <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 45, position: [0, 0, 2] }}>
+                    <color attach="background" args={["#000000"]} />
+                    <Suspense fallback={null}>
+                        <MemoizedStars/>
+                        <spotLight position={[10, 10, 10] } intensity={.8}/>
+                        <ambientLight intensity={.5} />
+                        <Model path={`/model${sectionState}.glb`} />
+                    </Suspense>
+                </Canvas>
+            </>
+
         )
     }
 
@@ -237,35 +240,6 @@ function _Text({sectionState})
 
 }
 
-function TextReWord({sectionState})
-{
-    if(sectionState === 1)
-    {
-        return (
-            <div className='lesson1--text--wrapper'>
-                <p>In 1985, the largest and most symmetrical form of pure carbon was discovered.</p> 
-            </div>
-        )
-    }
-    else if(sectionState === 2)
-    {
-        return (
-            <div className='lesson1--text--wrapper'>
-                <p>Chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of He<sub>2</sub> gas..</p>
-            </div>
-        )
-    }
-    else if(sectionState === 3)
-    {
-        return (
-            <div className='lesson1--text--wrapper'>
-                <p>The result? Novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere.</p>
-            </div>
-        )
-    }
-
-} 
-
 function TopNavBar({sectionState, setPage, setCameraRotate}) {
     
     return (
@@ -335,3 +309,14 @@ function BottomNavBar({sectionState, handleBack, handleNext}) {
 //     )
 
 // }
+
+
+
+
+            // <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 45, position: [0, 0, 2] }}>
+                // <color attach="background" args={["#000000"]} />
+                // <Suspense fallback={null}>
+                    {/* <OrbitControls /> */}
+                    {/* <Stars /> */}
+                {/* </Suspense> */}
+            {/* </Canvas> */}

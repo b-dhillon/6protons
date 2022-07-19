@@ -1,4 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
+import { Canvas } from '@react-three/fiber'
+import Stars from './components/Stars'
+import * as THREE from 'three'
+
+
 import HomePage from './components/HomePage'
 import Lesson1 from './components/Lesson1.jsx'
 import Lesson2 from './components/Lesson2'
@@ -41,8 +46,11 @@ export default function App() {
 
   else if(page === 'lesson1')
   {
-    return (<Lesson1 setPage={handlePage} setCameraRotate={handleClick}/>)
+    return (
+      <Lesson1 setPage={handlePage} setCameraRotate={handleClick}/>
+    )
   }
+  
   else if(page === 'lesson2')
   {
     return (<Lesson2 />)
