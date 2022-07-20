@@ -36,14 +36,6 @@ export default function Model(props) {
     if (props.sectionState === 0) {
         return (
             <Model0 />
-
-            // <>
-            //     <primitive 
-            //     object={model}
-            //     scale={(.1)}
-            //     position={[0, 0, -0.5]}
-            //     transparent={false}/>
-            // </>
         )
     }
 
@@ -57,12 +49,6 @@ export default function Model(props) {
     else if (props.sectionState === 2) {
         return (
             <>
-                <primitive 
-                object={model}
-                scale={(.12)}
-                position={[.66, 0, -1]}
-                transparent={false}
-                />
             </>
         )
     }
@@ -70,37 +56,18 @@ export default function Model(props) {
     else if (props.sectionState === 3) {
         return (
             <>
-                <primitive 
-                object={model}
-                scale={(.11)}
-                position={[.66, 0, -1]}
-                rotation={[0, (-Math.PI / 8), 0]}
-                transparent={false}
-                />
             </>
         )
     }
     else if (props.sectionState === 4) {
         return (
             <>
-                <primitive 
-                object={model}
-                scale={(.11)}
-                position={[.66, 0, -1]}
-                transparent={false}
-                />
             </>
         )
     }
     else if (props.sectionState === 5) {
         return (
             <>
-                <primitive 
-                object={model}
-                scale={(.03)}
-                position={[.66, 0, -1]}
-                transparent={false}
-                />
             </>
         )
     }
