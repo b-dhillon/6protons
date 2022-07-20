@@ -18,7 +18,7 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   color: #ddd;
-  /* background: #12071f; */
+  /* background: black; */
 }
 
 a {
@@ -455,8 +455,9 @@ span
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* border: 1px solid red; */
+  border: 1px solid red;
   padding: 0px 120px 30px 120px;
+  z-index: 3;
 }
 .lesson1--bottomNav > button 
 {
