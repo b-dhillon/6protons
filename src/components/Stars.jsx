@@ -1,4 +1,4 @@
-import { useState, useRef, memo } from 'react'
+import React, { useState, useRef, memo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Points, PointMaterial } from '@react-three/drei'
 import * as random from "maath/random";
@@ -20,7 +20,7 @@ import * as THREE from 'three'
 
 // const gltfLoader = new GLTFLoader(loadingManager);
 
-export default function Stars(props) {
+const Stars = React.memo( function Stars(props) {
     const ref = useRef()
     const [sphere] = useState(() => random.inSphere(new Float32Array(10000), { radius: 2 }))
 
@@ -43,6 +43,7 @@ export default function Stars(props) {
             </group>
         </>
     )
-}
+})
 
+export default Stars;
 export const MemoizedStars = memo(Stars);

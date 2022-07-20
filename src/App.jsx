@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import Stars from './components/Stars'
 import * as THREE from 'three'
