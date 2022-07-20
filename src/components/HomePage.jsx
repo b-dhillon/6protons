@@ -23,7 +23,7 @@ export default function HomePage(props)
 
   useEffect(() =>
   {
-    setTimeout(() => setLoading(false), 400)
+    setTimeout(() => setLoading(false), 600)
   }, [])
 
   return (
