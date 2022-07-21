@@ -455,9 +455,9 @@ span
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid red;
   padding: 0px 120px 30px 120px;
   z-index: 3;
+  /* border: 1px solid red; */
 }
 .lesson1--bottomNav > button 
 {

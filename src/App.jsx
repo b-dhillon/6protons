@@ -2,11 +2,17 @@ import React, { useState, Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import Stars from './components/Stars'
 import BottomNavBar from './components/BottomNavBar'
+import Text from './components/lesson_1/text'
+import Models from './components/lesson_1/models'
+import store from './store'
+
 
 import HomePage from './components/HomePage'
 import Lesson1 from './components/Lesson1.jsx'
 import Lesson2 from './components/Lesson2'
 import Lesson3 from './components/Lesson3'
+import { Provider } from 'react-redux';
+
 
 export default function App() {
 
@@ -38,16 +44,20 @@ export default function App() {
     return (
       <>
       {/* <BottomNavBar sectionState={sectionState} handleBack={handleBack} handleNext={handleNext} /> */}
-      <BottomNavBar />
+        <BottomNavBar />
+        <Text />
         {/* <Lesson1 /> */}
-        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 45, position: [0, 0, 2] }}>
-          <color attach="background" args={["#000000"]} />
-          <Suspense fallback={null}>
-            <spotLight position={[10, 10, 10] } intensity={.8}/>
-            <ambientLight intensity={.5} />
-            <Stars />
-          </Suspense>
-        </Canvas>
+          <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 45, position: [0, 0, 2] }}>
+            <color attach="background" args={["#000000"]} />
+            <Suspense fallback={null}>
+              <spotLight position={[10, 10, 10] } intensity={.8}/>
+              <ambientLight intensity={.5} />
+              <Stars />
+              <Provider store={store}>
+                <Models/>
+              </Provider>
+            </Suspense>
+          </Canvas>
       </>
     )
   }
