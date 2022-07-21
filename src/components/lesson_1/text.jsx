@@ -3,10 +3,27 @@ import { useSelector } from 'react-redux';
 export default function Text(){
     const counter = useSelector(state => state.counter);
 
+    function TopNavBar({sectionState, setPage, setCameraRotate}) {
+        return (
+            <header className='lesson1--header'>
+                <ul className="homeBtn--wrapper">
+                    <li className="homeBtn" onClick={() => 
+                    {
+                        setPage(`home`)
+                        setCameraRotate()
+                    }}>
+                        <a href="#" className="homeBtn--icon"><i className="fas fa-house"></i></a>
+                    </li>
+                </ul>
+                {counter === 0 ? <h1 style={{zIndex: 3, position: 'absolute'}}>C<sub>60</sub> - Fullerene</h1> : null}
+            </header>
+        )
+    }
+
     if (counter === 0)
     {
         return (
-            null
+            <TopNavBar />
         )
     }
 
@@ -14,19 +31,28 @@ export default function Text(){
     {
         return (
             // Refactor all wrapper classes into one.
-            <div className='lesson1--text--wrapper'>
-                <p>In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of helium gas...</p>
-            </div>
+            <>
+                <TopNavBar />
+                <div className='lesson1--text--wrapper'>
+                    <p>In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of He<sub>2</sub></p>
+                </div>
+            </>
+
         )
     }
 
     else if(counter === 2)
     {
         return (
-            <div className='lesson1--text--wrapper2'>
-                <p>The result? Novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered.</p>
-                <p>This molecule would go on to be named Buckminsterfullerene. Often shortened to fullerene, and nicknamed <span>Buckyball</span>.</p>
-            </div>
+            <>
+                <TopNavBar />
+                <div className='lesson1--text--wrapper2'>
+                    <p>The result? Novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered.
+                    <br/>
+                    <br/>
+                    This molecule would go on to be named Buckminsterfullerene. Often shortened to fullerene, and nicknamed <span>Buckyball</span>.</p>
+                </div>
+            </>
         )
     }
 

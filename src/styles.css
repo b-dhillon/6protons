@@ -346,8 +346,8 @@ svg {
   color: #f07167;
   font-size: 65px;
   text-transform: uppercase;
-  animation: paragraphAnimation 1.2s ease-out 1 both; 
-  animation-delay: .75s;
+  animation: slideUp 2s 1 both; 
+  animation-delay: 1.5s;
   margin-top: 1%;
   /* width: 50% */
 }
@@ -364,17 +364,17 @@ svg {
   flex-wrap: wrap;
   z-index: 2;
 
-  /* border: 1px solid red; */
+  /* border: 10px solid blue; */
 }
 .lesson1--text--wrapper > p 
 {
   width: 90%;
-  font-size: 1.66rem;
+  font-size: 1.5vw;
   text-align: center;
   line-height: 45px;
-  /* animation: fadeIn 2s 1 ease-in-out; */
+  animation: fadeIn 2s 1 ease-in-out;
 
-  /* border: 1px solid blue; */
+  /* border: 1px solid yellow; */
 }
 .lesson1--text--wrapper2
 {
@@ -399,7 +399,7 @@ svg {
   line-height: 45px;
   animation: fadeIn 2s 1 ease-in-out;
 
-  /* border: 1px solid blue; */
+  border: 1px solid blue;
 }
 
 .lesson1--text--wrapper3
@@ -447,28 +447,17 @@ span
   /* margin-top: 45%; */
   /* animation: fadeIn 3.25s 1 ease-in-out;  */
 }
-.lesson1--bottomNav{
-  width: 100%;
-  height: 10%;
-  position: absolute;
-  top: 90%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0px 120px 30px 120px;
-  z-index: 3;
-  /* border: 1px solid red; */
-}
-.lesson1--bottomNav > button 
+
+.lesson--nav > button 
 {
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
   background: transparent;
   /* background: transparent; */
-  border: 1px solid white;
+  border: 1.5px solid white;
 }
-.lesson1--bottomNav > button:hover
+.lesson--nav > button:hover
 {
   animation: growGlow .2s ease-in-out;
   animation-fill-mode: forwards;
@@ -480,21 +469,35 @@ span
 
 
 
+/* RE_FACTOR THE TWO BELOW CLASSES INTO ONE */
 
-
-.lesson1--footer 
-{
+.lesson1--footer {
   position: absolute;
-  top: 88%;
-  left: 0;
   width: 100%;
   height: 10%;
+  top: 88%;
+  left: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 3;
 
-  /* border: 2px solid red; */
+  /* border: 5px solid blue; */
 }
+
+.lesson--nav {
+  position: absolute;
+  width: 100%;
+  height: 10%;
+  top: 45%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 1.5%;
+  z-index: 3;
+  /* border: 1px solid red; */
+}
+
 
 .bottomNav--icons
 {
@@ -509,13 +512,15 @@ span
 }
 
 
-.startLesson1Btn {
+.startBtn-lesson {
+  position: absolute;
+  z-index: 3;
+
   font-size: 1.1rem;
   font-weight: bold;
   /* position: absolute; */
   /* top: 82%;
   left: 43.5%; */
-  z-index: 2;
   font-family: Arial, Helvetica, sans-serif;
   text-transform: uppercase;
   display: -webkit-inline-box;
@@ -525,8 +530,10 @@ span
   display: -moz-inline-flex;
   display: -ms-inline-flexbox;
   display: inline-flex;
+
+  /* border: 1px solid red; */
 }
-.startLesson1Btn > div {
+.startBtn-lesson > div {
   position: relative;
   width: 180px;
   height: 55px;
@@ -535,7 +542,7 @@ span
   -moz-perspective: 1000px;
   perspective: 1000px;
 }
-.startLesson1Btn > div > a {
+.startBtn-lesson > div > a {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -555,7 +562,7 @@ span
   -moz-transition: -moz-transform 0.25s;
   transition: transform 0.25s;
 }
-.startLesson1Btn > div > a::before, .startLesson1Btn > div > a::after {
+.startBtn-lesson > div > a::before, .startBtn-lesson > div > a::after {
   justify-content: center;
   align-items: center;
   margin: 0;
@@ -574,7 +581,7 @@ span
   display: flex;
   border-radius: 2px;
 }
-.startLesson1Btn > div > a::before {
+.startBtn-lesson > div > a::before {
   border: 2px solid rgb(255, 255, 255);
   background-color: #000;
   color: 2px solid rgb(255, 255, 255);
@@ -585,7 +592,7 @@ span
   -o-transform: rotateY(0deg) translateZ(25px);
   transform: rotateY(0deg) translateZ(25px);
 }
-.startLesson1Btn > div > a::after {
+.startBtn-lesson > div > a::after {
   background-color: black;
   border: 2px solid #f07167;
   color: #f07167;
@@ -595,7 +602,7 @@ span
   -o-transform: rotateX(90deg) translateZ(25px);
   transform: rotateX(90deg) translateZ(25px);
 }
-.startLesson1Btn > div > a:hover {
+.startBtn-lesson > div > a:hover {
   -webkit-transform: translateZ(-25px) rotateX(-90deg);
   -moz-transform: translateZ(-25px) rotateX(-90deg);
   -ms-transform: translateZ(-25px) rotateX(-90deg);
@@ -741,14 +748,19 @@ span
   /* border: 1px solid rgba(61, 135, 255);  */
 }
 
-@keyframes growGlow {
-  from {
+@keyframes grow-and-glow {
+  0% {
     box-shadow: 0 0 0px 0px white;
     transform: scale(1);
   }
-  to {
+  50% {
     box-shadow: 0 0 10px 4px white;
-    transform: scale(1.2);
+    transform: scale(1.25);
+  }
+
+  100% {
+    box-shadow: 0 0 0px 0px white;
+    transform: scale(1);
   }
 }
 @keyframes fadeIn {
@@ -769,16 +781,16 @@ span
     opacity: 0;
   }
 }
-@keyframes paragraphAnimation {
+@keyframes slideUp {
     from
     {
         opacity: 0;
-        transform: perspective(500px) translate3d(0, 150px, 0)
+        transform: translate3d(0, 50px, 0)
     }
     to
     {
         opacity: 1;
-        transform: perspective(500px) translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
     }
 }
 @keyframes homeColorAn {
@@ -818,9 +830,26 @@ span
 
 
 
-.test {
+.sectionCounter {
   position: absolute; 
   z-index: 4;
   top: 30; 
   left: 25;
+
+  border: 1px solid red;
+}
+
+
+.lesson--incrementBtn {
+  animation: grow-and-glow 4s infinite;
+}
+
+.lesson--incrementBtn {
+  box-shadow: 0 0 10px 4px white;
+  transform: scale(1.25);
+}
+
+.lesson--decrementBtn:hover {
+  box-shadow: 0 0 10px 2px white;
+  transform: scale(1.1);
 }
