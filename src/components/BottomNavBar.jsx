@@ -1,6 +1,11 @@
 import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { increment, decrement } from '../actions/actions';
 
 export default function BottomNavBar() {
+
+    const counter = useSelector(state => state.counter)
+    const dispatch = useDispatch();
 
     function handleNext() 
     {
@@ -32,10 +37,25 @@ export default function BottomNavBar() {
 
     return (
         <>
-            <h1 className='test'>{`Section ${sectionState}`}</h1>
+            <h1 className='test'>{`Section ${counter}`}</h1>
             <div className='lesson1--bottomNav'>
-                <button onClick={handleBack}></button>
-                <button onClick={handleNext}></button>
+                <button
+                    onClick={() => dispatch(decrement())}>
+                    Back
+                </button>
+
+                <button
+                    onClick={() => dispatch(increment())}>
+                    Next
+                </button>
+
+
+
+
+
+
+                {/* <button onClick={handleBack}></button>
+                <button onClick={handleNext}></button> */}
             </div> 
         </>
 
