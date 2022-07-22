@@ -1,4 +1,4 @@
-@import url("https://rsms.me/inter/inter.css");
+/* @import url("https://rsms.me/inter/inter.css"); */
 * {
   box-sizing: border-box;
 }
@@ -66,7 +66,7 @@ svg {
   padding: 0;
   font-size: 7.5vw;
   font-weight: 500;
-  letter-spacing: -0.02em;
+  /* letter-spacing: -0.02em; */
   background: linear-gradient(to right, #3272F4 0%, #CC2DD7 75%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -80,7 +80,7 @@ svg {
   /* margin-top: 15px; */
   text-align: center;
   color: white !important;
-  font-size: 2em;
+  font-size: 2vw;
 }
 .hero--txt--html {
   background: linear-gradient(to right, #3272F4 0%, #CC2DD7 85%);
@@ -377,23 +377,22 @@ svg {
   flex-wrap: wrap;
   z-index: 2;
 
-  /* border: 10px solid blue; */
 }
 .lesson1--text--wrapper > p 
 {
-  width: 90%;
+  width: 85%;
   font-size: 1.5vw;
   text-align: center;
   line-height: 45px;
   animation: fadeIn 2s 1 ease-in-out;
 
-  /* border: 1px solid yellow; */
 }
 
 
 
 .lesson1--text--wrapper2
 {
+  font-family: monospace;
   position: absolute;
   top: 10%;
   left: 8%;
@@ -727,24 +726,29 @@ span
   left: 0;
   right: 0;
   bottom: 0;
-  width: 3.8rem;
-  height: 3.8rem;
+  width: 4.1rem;
+  height: 4.1rem;
   border-radius: 50%;
   /* background: rgb(30, 99, 209); */
   /* background: #3272F4; */
-  background: #f07167;
-  z-index: 0;
+  background: hsla(197, 100%, 64%, 1);
+  /* border: 2px solid;  
+  border-image: linear-gradient(90deg, hsla(339, 100%, 55%, 1) hsla(197, 100%, 64%, 1) 1); */
+
+  /* background: linear-gradient(45deg, slateblue, coral) border-box;
+  border: 5px solid transparent;
+  border-radius: 50px; */
+
+
+  z-index: 2;
   transform: scale(.8);
   transition: 0.3s cubic-bezier(.95, .32, .37, 1.21);
 }
   
 .homeBtn--icon:hover::before {  
-  transform: scale(.8);
+  transform: scale(1.5);
 }
 
-/* .homeBtn--icon:hover::after {  
-  transform: scale(20);
-} */
 
 .homeBtn a:hover:before { 
   animation: homeColorAn 5s ease-out 10 both; 

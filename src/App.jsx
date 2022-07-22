@@ -4,6 +4,7 @@ import MemoizedStars from './components/Stars';
 import LessonNav from './components/LessonNav';
 import LessonText from './components/Lesson_1/LessonText';
 import Models from './components/Lesson_1/LessonModels';
+
 import DataStore from './store';
 
 import Home from './components/Home';
@@ -18,7 +19,7 @@ export default function App() {
   console.log('App.JSX Rendered');
 
 
-  const [page, setPage] = useState('Lesson_1');
+  const [page, setPage] = useState('Home');
   const [cameraRotate, setCameraRotate] = useState(false);
 
   function handleClick() 
@@ -66,11 +67,11 @@ export default function App() {
 
 
   
-  else if(page === 'lesson2')
+  else if(page === 'Lesson_2')
   {
     return (<Lesson2 />)
   }
-  else if(page === 'lesson3')
+  else if(page === 'Lesson_3')
   {
     return (<Lesson3 />)
   }

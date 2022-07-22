@@ -32,7 +32,7 @@ function LessonModels() {
         }
       })
 
-      const ref = useRef()
+      const ref = useRef();
 
       function OscilateAnimation() {
         useFrame((state) => {
@@ -57,7 +57,9 @@ function LessonModels() {
       }
 
       else if(counter === 2){
+
         return (
+
           <group ref={group} {...props} dispose={null} position={positions} scale={scale}>
             <group name="Scene">
               <group name="animation-empty">

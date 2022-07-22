@@ -24,7 +24,7 @@ function LessonNav() {
         )
     }
 
-    else if( counter >= 0)
+    else if( counter >= 0 && counter < 7)
     {
         return (
             <>

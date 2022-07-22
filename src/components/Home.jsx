@@ -137,7 +137,7 @@ function LessonSelectionOverlay(props) {
     
 
     return (
-      <div className="frame" onMouseMove={mouseMove} onMouseLeave={mouseLeave} ref={frame} onClick={() => props.setPage(`lesson${props.id}`)}>
+      <div className="frame" onMouseMove={mouseMove} onMouseLeave={mouseLeave} ref={frame} onClick={() => props.setPage(`Lesson_${props.id}`)}>
       {/* <div className="frame" onClick={() => props.setPage(`lesson${props.id}`)}> */}
         <div className="card" ref={card}>
         {/* <div className="card"> */}
