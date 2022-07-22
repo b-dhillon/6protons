@@ -2,23 +2,21 @@ import React, { useState, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import MemoizedStars from './components/Stars';
 import LessonNav from './components/LessonNav';
-import LessonText from './components/Lesson_1/LessonText';
-import Models from './components/Lesson_1/LessonModels';
-
+import LessonText from './components/Lessons/Lesson_1/LessonText';
+import Models from './components/Lessons/Lesson_1/LessonModels';
 import DataStore from './store';
 
 import Home from './components/Home';
 import HomeNav from './components/HomeNav';
-import Lesson_1 from './components/Lesson1.jsx';
-import Lesson2 from './components/Lesson2';
-import Lesson3 from './components/Lesson3';
+import Lesson_1 from './components/Lessons/Lesson_1/Lesson_1.jsx';
+import Lesson_2 from './components/Lessons/Lesson_2/Lesson_2.jsx';
+import Lesson_3 from './components/Lessons/Lesson_3/Lesson_3.jsx';
+
 import { Provider } from 'react-redux';
 
 
 export default function App() {
   console.log('App.JSX Rendered');
-
-
   const [page, setPage] = useState('Home');
   const [cameraRotate, setCameraRotate] = useState(false);
 
@@ -69,11 +67,12 @@ export default function App() {
   
   else if(page === 'Lesson_2')
   {
-    return (<Lesson2 />)
+    return (<Lesson_2 />)
   }
+
   else if(page === 'Lesson_3')
   {
-    return (<Lesson3 />)
+    return (<Lesson_3 />)
   }
   else return <h1>Uh oh, something broke.</h1>
   
