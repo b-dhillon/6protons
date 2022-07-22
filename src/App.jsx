@@ -1,6 +1,6 @@
 import React, { useState, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import Stars from './components/Stars';
+import MemoizedStars from './components/Stars';
 import LessonNav from './components/LessonNav';
 import LessonText from './components/Lesson_1/LessonText';
 import Models from './components/Lesson_1/LessonModels';
@@ -15,6 +15,7 @@ import { Provider } from 'react-redux';
 
 
 export default function App() {
+  console.log('App.JSX Rendered');
 
 
   const [page, setPage] = useState('Lesson_1');
@@ -53,7 +54,7 @@ export default function App() {
             <Suspense fallback={null}>
               <spotLight position={[10, 10, 10] } intensity={.8}/>
               <ambientLight intensity={.3} />
-              <Stars />
+              <MemoizedStars />
               <Provider store={DataStore}>
                 <Models/>
               </Provider>

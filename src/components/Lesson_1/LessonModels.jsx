@@ -1,13 +1,14 @@
-import { useSelector } from 'react-redux';
 import React, { useRef, useEffect } from 'react';
-import { useGLTF, useAnimations } from '@react-three/drei';
+import { useSelector } from 'react-redux';
 import { useFrame, } from '@react-three/fiber'
+import { useGLTF, useAnimations } from '@react-three/drei';
 
 useGLTF.preload(`/lesson1_models/model1.glb`)
 useGLTF.preload(`/lesson1_models/model2.glb`)
 useGLTF.preload(`/lesson1_models/model3.glb`)
 useGLTF.preload(`/lesson1_models/model4.glb`)
 useGLTF.preload(`/lesson1_models/model5.glb`)
+console.log('models loaded');
 
 
 function LessonModels() {
@@ -16,13 +17,11 @@ function LessonModels() {
 
   function Model({ ...props })
     {
-      console.log(`counter is: ${counter}`);
       const group = useRef()
-      const { nodes, materials, animations } = useGLTF(`/lesson1_models/model${counter}-transformed.glb`)
+      const { nodes, materials, animations } = useGLTF(`/lesson1_models/model${counter}.glb`)
       const { actions } = useAnimations(animations, group)
       const positions = [.66, 0, -1];
       const scale = 0.12;
-      console.log(actions);
       useEffect(() =>
       {
         if(counter != 3)
