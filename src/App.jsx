@@ -6,7 +6,6 @@ import Text from './components/lesson_1/text'
 import Models from './components/lesson_1/models'
 import store from './store'
 
-
 import Home from './components/Home'
 import Lesson1 from './components/Lesson1.jsx'
 import Lesson2 from './components/Lesson2'

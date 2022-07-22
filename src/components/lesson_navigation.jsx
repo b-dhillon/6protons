@@ -7,7 +7,7 @@ export default function LessonNavBar() {
     const counter = useSelector(state => state.counter)
     const dispatch = useDispatch();
 
-    function TopSectionText() {
+    function SectionCounterGUI() {
         return <h5 className='sectionCounter'>{`Section ${counter}`}</h5>
     }
 
@@ -15,7 +15,7 @@ export default function LessonNavBar() {
     {
         return (
             <>
-                <TopSectionText />
+                <SectionCounterGUI />
                 <div className='lesson1--footer'>
                     <div className="startBtn-lesson" onClick={() => dispatch(increment())}>
                         <div><a title={"Start Lesson"}></a></div>
@@ -29,7 +29,7 @@ export default function LessonNavBar() {
     {
         return (
             <>
-                <TopSectionText />
+                <SectionCounterGUI />
                 <div className='lesson--nav'>
                     <button className='lesson--decrementBtn'
                         onClick={() => dispatch(decrement())}>

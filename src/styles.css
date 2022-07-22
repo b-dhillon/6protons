@@ -376,18 +376,23 @@ svg {
 
   /* border: 1px solid yellow; */
 }
+
+
+
 .lesson1--text--wrapper2
 {
   position: absolute;
   top: 10%;
   left: 8%;
-  width: 49%;
+  width: 47%;
   height: 80%;
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
   z-index: 2;
+  animation: slideUp 2s 1 both; 
+  animation-delay: .5s;
 
   /* border: 1px solid red; */
 }
@@ -397,10 +402,68 @@ svg {
   font-size: 1.66rem;
   text-align: left;
   line-height: 45px;
-  animation: fadeIn 2s 1 ease-in-out;
-
-  border: 1px solid blue;
+  /* animation: slideUp 2s 1 both; 
+  animation-delay: .5s; */
+  /* border: 1px solid blue; */
 }
+
+
+.lesson1--text--wrapperX
+{
+  position: absolute;
+  top: 10%;
+  left: 8%;
+  width: 47%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+  animation: slideUp 2s 1 both; 
+  animation-delay: .5s;
+
+  /* border: 1px solid red; */
+}
+.lesson1--text--wrapperX > p 
+{
+  width: 100%;
+  font-size: 1.66rem;
+  text-align: left;
+  line-height: 45px;
+  /* animation: slideUp 2s 1 both; 
+  animation-delay: .5s; */
+  /* border: 1px solid blue; */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .lesson1--text--wrapper3
 {
@@ -493,7 +556,7 @@ span
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0px 1.5%;
+  padding: 0px 2.5%;
   z-index: 3;
   /* border: 1px solid red; */
 }
@@ -836,7 +899,7 @@ span
   top: 30; 
   left: 25;
 
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 
 
