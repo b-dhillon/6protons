@@ -1,5 +1,5 @@
 import { useState, useEffect, Suspense } from 'react';
-import BottomNavBar from './lesson_navigation';
+import BottomNavBar from './LessonNav';
 import Model from './Model'
 
 

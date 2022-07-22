@@ -1,8 +1,7 @@
-import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { increment, decrement } from '../actions/actions';
+import { increment, decrement } from '../actions';
 
-export default function LessonNavBar() {
+function LessonNav() {
 
     const counter = useSelector(state => state.counter)
     const dispatch = useDispatch();
@@ -47,13 +46,6 @@ export default function LessonNavBar() {
             </>
         )
     }
-
-
-
-
-    // else if( counter >= 0)
-    // {
-
-    // }
-
 }
+
+export default LessonNav

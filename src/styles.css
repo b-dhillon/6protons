@@ -301,8 +301,27 @@ svg {
 }
 
 
-
 /* LESSON 1 */
+.lesson1--title--wrapper {
+  width: 100%; 
+  position: absolute; 
+  background: transparent;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+}
+
+.lesson1--title {
+  font-family: Quicksand-bold;
+  color: #f07167;
+  font-size: 65px;
+  text-transform: uppercase;
+  animation: slideUp 2s 1 both; 
+  animation-delay: 1.5s;
+  margin-top: 1%;
+  z-index: 2;
+  /* position: absolute; */
+}
 .lesson1--wrapper 
 {
   position: absolute; 
@@ -340,17 +359,11 @@ svg {
 {
   box-shadow: 0 0 10px 5px #f07167;
 }
-.lesson1--header > h1
+/* .lesson1--header > h1
 {
-  font-family: Quicksand-bold;
-  color: #f07167;
-  font-size: 65px;
-  text-transform: uppercase;
-  animation: slideUp 2s 1 both; 
-  animation-delay: 1.5s;
-  margin-top: 1%;
-  /* width: 50% */
-}
+
+  /* width: 50%
+} */
 .lesson1--text--wrapper 
 {
   position: absolute;

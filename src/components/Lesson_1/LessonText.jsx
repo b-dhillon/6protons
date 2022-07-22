@@ -1,30 +1,15 @@
 import { useSelector } from 'react-redux';
 
-export default function Text(){
+function LessonText(){
     const counter = useSelector(state => state.counter);
-
-    function TopNavBar({sectionState, setPage, setCameraRotate}) {
-        return (
-            <header className='lesson1--header'>
-                <ul className="homeBtn--wrapper">
-                    <li className="homeBtn" onClick={() => 
-                    {
-                        setPage(`home`)
-                        setCameraRotate()
-                    }}>
-                        <a href="#" className="homeBtn--icon"><i className="fas fa-house"></i></a>
-                    </li>
-                </ul>
-                {counter === 0 ? <h1 style={{zIndex: 3, position: 'absolute'}}>C<sub>60</sub> - Fullerene</h1> : null}
-            </header>
-        )
-    }
 
     if (counter === 0)
     {
         return (
-            <TopNavBar />
-        )
+            <div className='lesson1--title--wrapper'>
+                <h1 className='lesson1--title' style={{}}>C<sub>60</sub> - Fullerene</h1>
+            </div>
+            )
     }
 
     if(counter === 1)
@@ -32,7 +17,6 @@ export default function Text(){
         return (
             // Refactor all wrapper classes into one.
             <>
-                <TopNavBar />
                 <div className='lesson1--text--wrapper'>
                     <p>In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of He<sub>2</sub></p>
                 </div>
@@ -45,7 +29,6 @@ export default function Text(){
     {
         return (
             <>
-                <TopNavBar />
                 <div className='lesson1--text--wrapper2'>
                     <p>The result? Novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered.
                     <br/>
@@ -112,3 +95,5 @@ export default function Text(){
     }
     
 }
+
+export default LessonText;

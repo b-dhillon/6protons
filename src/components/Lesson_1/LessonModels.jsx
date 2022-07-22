@@ -3,40 +3,26 @@ import React, { useRef, useEffect } from 'react';
 import { useGLTF, useAnimations } from '@react-three/drei';
 import { useFrame, } from '@react-three/fiber'
 
-// import Model0 from '../../models/Model0'
+useGLTF.preload(`/lesson1_models/model1.glb`)
+useGLTF.preload(`/lesson1_models/model2.glb`)
+useGLTF.preload(`/lesson1_models/model3.glb`)
+useGLTF.preload(`/lesson1_models/model4.glb`)
+useGLTF.preload(`/lesson1_models/model5.glb`)
 
-export default function Models() {
+
+function LessonModels() {
+
   const counter = useSelector(state => state.counter);
 
   function Model({ ...props })
     {
       console.log(`counter is: ${counter}`);
       const group = useRef()
-      const { nodes, materials, animations } = useGLTF(`/transformed_models_lesson1/model${counter}-transformed.glb`)
+      const { nodes, materials, animations } = useGLTF(`/lesson1_models/model${counter}-transformed.glb`)
       const { actions } = useAnimations(animations, group)
       const positions = [.66, 0, -1];
       const scale = 0.12;
       console.log(actions);
-
-      // Model Animations
-      /*
-      useEffect(() =>
-      {
-        actions['animation-emptyAction'].play();
-      })
-      */
-
-      // Model 4 Animation
-      /*
-      useEffect(() =>
-      {
-        actions['animation-emptyAction.001'].play();
-        actions['caffieneEmptyAction.001'].play();
-      })
-      */
-
-      // Model 5 Animation
-      
       useEffect(() =>
       {
         if(counter != 3)
@@ -45,11 +31,6 @@ export default function Models() {
           _animations.forEach((a) => a.play())
 
         }
-        // console.log(_animations);
-        // _animations[2].play();
-
-        // actions['animation-emptyAction.001'].play();
-        // actions['caffieneEmptyAction.001'].play();
       })
 
       const ref = useRef()
@@ -78,20 +59,6 @@ export default function Models() {
 
       else if(counter === 2){
         return (
-
-
-
-          // <group ref={group} {...props} dispose={null} scale={10} position={positions}>
-          //   <group name="Scene">
-          //     <group name="soccerEmpty" position={[-0.05, 0, 0.05]} scale={0.01} ref={ref}>
-          //       <group name="soccerModel" position={[0.18, 1.66, 3.07]} scale={0.23}>
-          //         <mesh name="SurfSphere047" geometry={nodes.SurfSphere047.geometry} material={materials.Carbon} />
-          //         <mesh name="SurfSphere047_1" geometry={nodes.SurfSphere047_1.geometry} material={materials['Material.001']} />
-          //       </group>
-          //     </group>
-          //     <mesh name="Text" geometry={nodes.Text.geometry} material={materials['text-material']} position={[-0.95, -5, -1.05]} rotation={[Math.PI / 2, 0, 0.1]} scale={0.9} />
-          //   </group>
-          // </group>
           <group ref={group} {...props} dispose={null} position={positions} scale={scale}>
             <group name="Scene">
               <group name="animation-empty">
@@ -105,11 +72,11 @@ export default function Models() {
         )
       }
 
-      else if(counter === 3){
+      else if(counter === 3) {
+        
         OscilateAnimation();
 
-        return(
-
+        return (
           <group ref={ref} {...props} dispose={null} position={positions} scale={scale}>
             <mesh geometry={nodes.Text.geometry} material={materials['text-material']} position={[-0.93, -5, -1.06]} rotation={[Math.PI / 2, 0, 0.13]} scale={0.9} />
             <group position={[0.18, 1.66, 3.07]} scale={0.23}>
@@ -117,20 +84,10 @@ export default function Models() {
               <mesh geometry={nodes.SurfSphere047_1.geometry} material={materials['Material.001']} />
             </group>
           </group>
-
-        //   <group ref={group} {...props} dispose={null} position={positions} scale={scale}>
-        //     <group name="Scene">
-        //       <group name="animation-empty" position={[-0.05, 0, 0.05]} >
-        //         <mesh name="carbon-atoms" geometry={nodes['carbon-atoms'].geometry} material={materials['Material.001']} position={[1.02, 3.01, 1.45]} scale={0.23} />
-        //         <mesh name="carbon-bonds" geometry={nodes['carbon-bonds'].geometry} material={materials['Material.001']} position={[2.9, 1.01, -1.53]} rotation={[-0.42, 1.23, -2.44]} />
-        //         <mesh name="soccer-pattern" geometry={nodes['soccer-pattern'].geometry} material={materials.Carbon} position={[0.18, 1.66, 3.07]} scale={0.23} />
-        //       </group>
-        //     </group>
-        //  </group>
         )
       }
 
-      else if(counter === 4){
+      else if(counter === 4) {
         return (
           <group ref={group} {...props} dispose={null} position={positions} scale={scale}>
             <group name="Scene">
@@ -179,3 +136,5 @@ export default function Models() {
 
   else return null;
 }
+
+export default LessonModels;
