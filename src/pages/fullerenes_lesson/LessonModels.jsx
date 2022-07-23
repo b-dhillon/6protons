@@ -21,7 +21,8 @@ function LessonModels() {
       const { nodes, materials, animations } = useGLTF(`/lesson1_models/model${counter}.glb`)
       const { actions } = useAnimations(animations, group)
       const positions = [.66, 0, -1];
-      const scale = 0.12;
+      const scale = 0.10;
+
       useEffect(() =>
       {
         if(counter != 3)
@@ -44,7 +45,7 @@ function LessonModels() {
       if(counter === 0)
       {
         return (
-          <group ref={group} {...props} dispose={null} scale={0.075}>
+          <group ref={group} {...props} dispose={null} scale={0.065}>
             <group name="Scene">
               <group name="animation-empty">
                 <mesh name="carbon-atoms" geometry={nodes['carbon-atoms'].geometry} material={materials.Carbon} position={[1.02, 3.01, 1.45]} scale={0.23} />

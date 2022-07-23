@@ -6,15 +6,15 @@ function LessonNav() {
     const counter = useSelector(state => state.counter)
     const dispatch = useDispatch();
 
-    function SectionCounterGUI() {
-        return <h5 className='sectionCounter'>{`Section ${counter}`}</h5>
-    }
+    // function SectionCounterGUI() {
+    //     return <h5 className='sectionCounter'>{`Section ${counter}`}</h5>
+    // }
 
     if(counter === 0)
     {
         return (
             <>
-                <SectionCounterGUI />
+                {/* <SectionCounterGUI /> */}
                 <div className='lesson1--footer'>
                     <div className="startBtn-lesson" onClick={() => dispatch(increment())}>
                         <div><a title={"Start Lesson"}></a></div>
@@ -24,11 +24,11 @@ function LessonNav() {
         )
     }
 
-    else if( counter >= 0 && counter < 7)
+    else if( counter >= 0 )
     {
         return (
             <>
-                <SectionCounterGUI />
+                {/* <SectionCounterGUI /> */}
                 <div className='lesson--nav'>
                     <button className='lesson--decrementBtn'
                         onClick={() => dispatch(decrement())}>
@@ -36,7 +36,7 @@ function LessonNav() {
                     </button>
     
                     <button className='lesson--incrementBtn'
-                        onClick={() => dispatch(increment())}>
+                        onClick={() => dispatch(increment()) }>
                         <i className="fa-solid fa-angle-right bottomNav--icons"></i>
                     </button>
     

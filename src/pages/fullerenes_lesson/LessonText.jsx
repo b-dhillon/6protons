@@ -55,14 +55,14 @@ function LessonText(){
     {
         return (
             <>
-                <div className='lesson1--text--wrapperX'>
+                <div className='lesson1--text--wrapper2'>
                     <p>For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known.
                     <br/>
                     <br/>
-                    These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as <span>novel drug delivery systems</span>.
+                    These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems.
                     <br/>
                     <br/>
-                    Scientists have even turned their attention to buckyballs in their quest for a <span>cure for AIDS...</span></p>
+                    Scientists have even turned their attention to buckyballs in their quest for a <span>cure for AIDS.</span></p>
                 </div>
             </>
 

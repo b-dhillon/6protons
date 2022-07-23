@@ -12,9 +12,15 @@ body,
   overflow: hidden;
 }
 
+.stats{
+  position: absolute; 
+  z-index: 10; 
+}
+
 body {
   overscroll-behavior-y: none;
-  font-family: "Inter var", sans-serif;
+  font-family: 'Courier New', Courier, monospace !important;
+  /* font-family: "Inter var", sans-serif !important; */
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   color: #ddd;
@@ -64,9 +70,9 @@ svg {
 .hero--title {
   margin: 0;
   padding: 0;
-  font-size: 7vw;
-  font-weight: 500;
-  letter-spacing: 12px;
+  font-size: 6.6vw;
+  font-weight: 350;
+  letter-spacing: 6px;
   background: linear-gradient(to right, #3272F4 0%, #CC2DD7 75%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -81,7 +87,7 @@ svg {
   /* margin-top: 15px; */
   text-align: center;
   color: white !important;
-  font-size: 2vw;
+  font-size: 1.8vw;
 }
 .hero--txt--html {
   background: linear-gradient(to right, #3272F4 0%, #CC2DD7 85%);
@@ -225,6 +231,7 @@ svg {
   padding: 100px;
 
   animation: fadeIn 1.5s ease-in 1 both; 
+  /* border: 1px solid yellow; */
   /* justify-content: center; */
 }
 .lessonSelection--title {
@@ -232,7 +239,6 @@ svg {
   padding: 0;
   font-size: 4.5em;
   font-weight: 300;
-  font-family: Quicksand;
   letter-spacing: 0.05em;
   height: 100px; 
   overflow: hidden;
@@ -245,37 +251,41 @@ svg {
   height: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
+  /* border: 1px solid red; */
 }
 .frame {
   width: 300px;
   height: 450px;
   transition: transform 200ms;
   z-index: 2;
+  margin: 0 2%;
+
 }
 .frame:hover {
-  transform: scale3d(1.25, 1.25, 1.25);
+  transform: scale3d(1.1, 1.1, 1.1);
 }
 .card {
   width: 100%;
   height: 100%;
   border-radius: 9px;
-  /* background-image: url("https://djjjk9bjm164h.cloudfront.net/background3.jpg");
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat; */
-  /* box-shadow: 0 0 10px 2px rgba(248, 248, 248, 0.689); */
   position: relative;
   transition-duration: 250ms;
   transition-property: transform, box-shadow;
   transition-timing-function: ease-out;
-  border: 1px solid white;
   padding: 10px;
   display: flex; 
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  border: 1px solid white;
+
+
   /* justify-content: center; */
+}
+
+.card:hover {
+  border: 1px solid #3272F4;;
 }
 
 .card > h1 {
@@ -313,13 +323,13 @@ svg {
 }
 
 .lesson1--title {
-  font-family: Quicksand-bold;
+  /* font-family: Quicksand-bold; */
   color: #f07167;
-  font-size: 65px;
-  text-transform: uppercase;
+  font-size: 60px;
+  /* text-transform: uppercase; */
   animation: slideUp 2s 1 both; 
   animation-delay: 1.5s;
-  margin-top: 1%;
+  margin-top: 1.5%;
   z-index: 2;
   /* position: absolute; */
 }
@@ -333,7 +343,9 @@ svg {
   height: 100%;
 
   padding: 12.5px;
-  /* border: solid 1px white; */
+  /* border: 1px solid red; */
+
+  /* border: 1px solid white; */
 }
 .lesson1--header 
 {
@@ -378,6 +390,8 @@ svg {
   flex-wrap: wrap;
   z-index: 2;
 
+  /* border: 10px solid yellow;  */
+
 }
 .lesson1--text--wrapper > p 
 {
@@ -397,7 +411,7 @@ svg {
   position: absolute;
   top: 10%;
   left: 8%;
-  width: 47%;
+  width: 40%;
   height: 80%;
   display: flex;
   justify-content: center;
@@ -406,13 +420,14 @@ svg {
   z-index: 2;
   animation: slideUp 2s 1 both; 
   animation-delay: .5s;
+  margin-left: 15px;
 
   /* border: 1px solid red; */
 }
 .lesson1--text--wrapper2 > p 
 {
   width: 100%;
-  font-size: 1.66rem;
+  font-size: 1.4rem;
   text-align: left;
   line-height: 45px;
   /* animation: slideUp 2s 1 both; 
@@ -501,7 +516,7 @@ svg {
 span 
 {
   color: #f07167;
-  font-family: Quicksand-bold;
+  /* font-family: Quicksand-bold; */
 }
 
 .lesson1--text2

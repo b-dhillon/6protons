@@ -15,7 +15,7 @@ const Stars = React.memo( function Stars(props) {
         ref.current.rotation.y -= delta / 15
 
         // Camera zoom-in animation on load: 
-        state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, 1, 0.07)
+        state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, 1, 0.14)
     })
 
     return (
@@ -29,6 +29,5 @@ const Stars = React.memo( function Stars(props) {
     )
 })
 
-// export default Stars;
 const MemoizedStars = memo(Stars);
 export default MemoizedStars;
