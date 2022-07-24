@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Home from './pages/Home';
+import Home from './pages/home/Home';
 import FullerenesLesson from './pages/fullerenes_lesson/FullerenesLesson.jsx';
 import DiamondsLesson from './pages/diamonds_lesson/DiamondsLesson.jsx';
 import NanotubesLesson from './pages/nanotubes_lesson/NanotubesLesson.jsx';

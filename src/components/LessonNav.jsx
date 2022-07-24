@@ -15,8 +15,8 @@ function LessonNav() {
         return (
             <>
                 {/* <SectionCounterGUI /> */}
-                <div className='lesson1--footer'>
-                    <div className="startBtn-lesson" onClick={() => dispatch(increment())}>
+                <div className='startLessonBtn--wrapper'>
+                    <div className="startLessonBtn" onClick={() => dispatch(increment())}>
                         <div><a title={"Start Lesson"}></a></div>
                     </div>  
                 </div> 
@@ -29,15 +29,15 @@ function LessonNav() {
         return (
             <>
                 {/* <SectionCounterGUI /> */}
-                <div className='lesson--nav'>
+                <div className='lessonNav'>
                     <button className='lesson--decrementBtn'
                         onClick={() => dispatch(decrement())}>
-                        <i className="fa-solid fa-angle-left bottomNav--icons"></i>
+                        <i className="fa-solid fa-angle-left lessonNav--icons" style={{color: 'white'}}></i>
                     </button>
     
                     <button className='lesson--incrementBtn'
                         onClick={() => dispatch(increment()) }>
-                        <i className="fa-solid fa-angle-right bottomNav--icons"></i>
+                        <i className="fa-solid fa-angle-right lessonNav--icons" style={{color: 'white'}}></i>
                     </button>
     
                     {/* <button onClick={handleBack}></button>

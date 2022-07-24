@@ -1,13 +1,14 @@
 import { useSelector } from 'react-redux';
 
+
 function LessonText(){
     const counter = useSelector(state => state.counter);
 
     if (counter === 0)
     {
         return (
-            <div className='lesson1--title--wrapper'>
-                <h1 className='lesson1--title' style={{}}>C<sub>60</sub> - Fullerene</h1>
+            <div className='title--wrapper'>
+                <h1 className='title' style={{}}>C<sub>60</sub> - Fullerene</h1>
             </div>
         )
     }
@@ -17,7 +18,7 @@ function LessonText(){
         return (
             // Refactor all wrapper classes into one.
             <>
-                <div className='lesson1--text--wrapper'>
+                <div className='text--wrapper'>
                     <p>In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of He<sub>2</sub> gas.</p>
                 </div>
             </>
@@ -29,7 +30,7 @@ function LessonText(){
     {
         return (
             
-            <div className='lesson1--text--wrapper2'>
+            <div className='text--wrapper2'>
                 <p>The result? Novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered.
                 <br/>
                 <br/>
@@ -42,7 +43,7 @@ function LessonText(){
     else if(counter === 3)
     {
         return (
-            <div className='lesson1--text--wrapper2'>
+            <div className='text--wrapper2'>
                 <p>Each fullerene (buckyball) has 20 hexagons and 12 pentagons <span>(highlighted in red)</span> that fit together like the seams of a soccer ball. 
                 <br/>
                 <br/>
@@ -55,7 +56,7 @@ function LessonText(){
     {
         return (
             <>
-                <div className='lesson1--text--wrapper2'>
+                <div className='text--wrapper2'>
                     <p>For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known.
                     <br/>
                     <br/>
@@ -72,7 +73,7 @@ function LessonText(){
     else if(counter === 5)
     {
         return (
-            <div className='lesson1--text--wrapper2'>
+            <div className='text--wrapper2'>
                 <p>
                     How can buckyballs help cure aids? An enzyme (HIV-1-Protease) that is required for HIV to reproduce, exhibits a <span>nonpolar pocket</span> in its three-dimensional structure.
                     <br/>
@@ -88,7 +89,7 @@ function LessonText(){
     else if(counter === 6)
     {
         return (
-            <div className='lesson1--text--wrapper3'>
+            <div className='text--wrapper'>
                 <h4>Congratulations! 🎉 You have completed this lesson!</h4>
             </div>
         )
