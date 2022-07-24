@@ -66,15 +66,15 @@ export default function HomePage(props)
     setFlipped(!flipped);
   }
 
-  const [loading, setLoading] = useState(true)
 
   useEffect(() =>
   {
-    setTimeout(() => setLoading(false), 6000)
+    setTimeout(() => props.setLoading() , 5000)
+    // console.log(loading);
   }, [])
 
 
-  if (loading) {
+  if (props.loading.length === 0) {
     return (
       <>
         <div className='spinnerWrapper'>
