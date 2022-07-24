@@ -52,7 +52,7 @@ function Overlay(props) {
 function RotateCamera({cameraRotate}) {
   useFrame((state) => 
   {
-    state.camera.rotation.y = THREE.MathUtils.lerp(state.camera.rotation.y, (cameraRotate ? (Math.PI) : 0), 0.06)
+    state.camera.rotation.y = THREE.MathUtils.lerp(state.camera.rotation.y, (cameraRotate ? (Math.PI) : 0), 0.08)
   })
   return <></>
 }
@@ -69,8 +69,7 @@ export default function HomePage(props)
 
   useEffect(() =>
   {
-    setTimeout(() => props.setLoading() , 5000)
-    // console.log(loading);
+    setTimeout(() => props.setLoading() , 3500)
   }, [])
 
 

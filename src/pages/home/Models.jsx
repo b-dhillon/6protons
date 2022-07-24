@@ -13,6 +13,7 @@ function Models(props) {
     const { nodes, materials } = useGLTF('/transformed_models_home/testosterone2-transformed.glb')
 
     useFrame((state) => {
+        // console.log(state.clock.getDelta());
         ref.current.rotation.z = Math.sin((state.clock.elapsedTime) * 1.5) / 6
         ref.current.rotation.x = THREE.MathUtils.lerp(ref.current.rotation.x, props.flipped ? (Math.PI * 1.5) : (Math.PI / 2) , 0.17)
     })
