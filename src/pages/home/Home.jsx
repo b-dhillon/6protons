@@ -9,6 +9,14 @@ import nanotubesThumbnail from '../../images/nano.jpeg'
 import Models from './Models'
 import './styles.css';
 
+// function resolveAfter2Seconds() {
+//   return new Promise(resolve => {
+//     setTimeout(() => {
+//       resolve('resolved');
+//     }, 2000);
+//   });
+// }
+
 function Overlay(props) {
 
   function Card(props) {
@@ -23,8 +31,41 @@ function Overlay(props) {
     )
   }
 
+
+  
+  function LessonSelection() {
+    return (
+        <div className='lessonSelection--wrapper'>
+          <h1 className='lessonSelection--title'>Please select a lesson.</h1>
+          <div className='card--wrapper'>
+            <Card id={'Fullerenes'} setPage={props.setPage} title={"Fullerenes"} img={fullerenesThumbnail} description={"Placeholder for Fullerenes description. Lorem impsum, just random filler text here. And a little more."} />
+            <Card id={'Diamonds'} setPage={props.setPage} title={"Diamonds"} img={diamondsThumbnail} description={"Placeholder for Diamonds description. Lorem impsum, just random filler text here. And a little more."}/>
+            <Card id={'Nanotubes'} setPage={props.setPage} title={"Nanotubes"} img={nanotubesThumbnail} description={"Placeholder for Nanotubes description. Lorem impsum, just random filler text here. And a little more."}/>
+          </div>
+        </div>
+    )
+  }
+
+  // function LessonSelection() {
+  //   let a = null;
+  //   setTimeout(() => {
+  //     a = (
+  //       <div className='lessonSelection--wrapper'>
+  //         <h1 className='lessonSelection--title'>Please select a lesson.</h1>
+  //         <div className='card--wrapper'>
+  //           <Card id={'Fullerenes'} setPage={props.setPage} title={"Fullerenes"} img={fullerenesThumbnail} description={"Placeholder for Fullerenes description. Lorem impsum, just random filler text here. And a little more."} />
+  //           <Card id={'Diamonds'} setPage={props.setPage} title={"Diamonds"} img={diamondsThumbnail} description={"Placeholder for Diamonds description. Lorem impsum, just random filler text here. And a little more."}/>
+  //           <Card id={'Nanotubes'} setPage={props.setPage} title={"Nanotubes"} img={nanotubesThumbnail} description={"Placeholder for Nanotubes description. Lorem impsum, just random filler text here. And a little more."}/>
+  //         </div>
+  //       </div>
+  //     )
+  //   }, 5000);
+  //   return a;
+  // }
+
   if(!props.cameraRotate)
   {
+
     return (
       <div className='hero--wrapper'>
         <div className='hero' >
@@ -36,23 +77,20 @@ function Overlay(props) {
   }
   else
     return (
-      <>
-        <div className='lessonSelection--wrapper'>
-          <h1 className='lessonSelection--title'>Please select a lesson.</h1>
-          <div className='card--wrapper'>
-            <Card id={'Fullerenes'} setPage={props.setPage} title={"Fullerenes"} img={fullerenesThumbnail} description={"Placeholder for Fullerenes description. Lorem impsum, just random filler text here. And a little more."} />
-            <Card id={'Diamonds'} setPage={props.setPage} title={"Diamonds"} img={diamondsThumbnail} description={"Placeholder for Diamonds description. Lorem impsum, just random filler text here. And a little more."}/>
-            <Card id={'Nanotubes'} setPage={props.setPage} title={"Nanotubes"} img={nanotubesThumbnail} description={"Placeholder for Nanotubes description. Lorem impsum, just random filler text here. And a little more."}/>
-          </div>
-        </div>
-      </> 
+      ''
     )
 }
+
+
+
+
+
+
 
 function RotateCamera({cameraRotate}) {
   useFrame((state) => 
   {
-    state.camera.rotation.y = THREE.MathUtils.lerp(state.camera.rotation.y, (cameraRotate ? (Math.PI) : 0), 0.08)
+    state.camera.rotation.y = THREE.MathUtils.lerp(state.camera.rotation.y, (cameraRotate ? (Math.PI) : 0), 0.15)
   })
   return <></>
 }
@@ -69,7 +107,7 @@ export default function HomePage(props)
 
   useEffect(() =>
   {
-    setTimeout(() => props.setLoading() , 3500)
+    setTimeout(() => props.setLoading() , 4500)
   }, [])
 
 
@@ -85,7 +123,8 @@ export default function HomePage(props)
             <div></div>
             <div></div>
           </div>
-          <h1>Loading</h1>
+          <h1>Building your 3D world.</h1>
+          <h2>For the best experience please use Google Chrome.</h2>
         </div>
       </>
     )

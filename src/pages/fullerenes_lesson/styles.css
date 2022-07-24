@@ -80,3 +80,74 @@ span
   color: #f07167;
   /* font-family: Quicksand-bold; */
 }
+
+.lessonSpinnerWrapper {
+    width: 100%; 
+    height: 100%; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.lessonSpinnerWrapper > h1 {
+    font-family: 'Courier New', Courier, monospace;
+    margin-top: 75px !important;
+}
+
+.lessonSpinner {
+    width: 88px;
+    height: 88px;
+    animation: spinner-y0fdc1 2s infinite ease;
+    transform-style: preserve-3d;
+}
+   
+.lessonSpinner > div {
+background-color: rgba(240, 113, 103, 0.2);
+height: 100%;
+position: absolute;
+width: 100%;
+border: 2px solid #f07167;
+}
+
+.lessonSpinner div:nth-of-type(1) {
+transform: translateZ(-44px) rotateY(180deg);
+}
+
+.lessonSpinner div:nth-of-type(2) {
+transform: rotateY(-270deg) translateX(50%);
+transform-origin: top right;
+}
+
+.lessonSpinner div:nth-of-type(3) {
+transform: rotateY(270deg) translateX(-50%);
+transform-origin: center left;
+}
+
+.lessonSpinner div:nth-of-type(4) {
+transform: rotateX(90deg) translateY(-50%);
+transform-origin: top center;
+}
+
+.lessonSpinner div:nth-of-type(5) {
+transform: rotateX(-90deg) translateY(50%);
+transform-origin: bottom center;
+}
+
+.lessonSpinner div:nth-of-type(6) {
+transform: translateZ(44px);
+}
+
+@keyframes spinner-y0fdc1 {
+0% {
+    transform: rotate(45deg) rotateX(-25deg) rotateY(25deg);
+}
+
+50% {
+    transform: rotate(45deg) rotateX(-385deg) rotateY(25deg);
+}
+
+100% {
+    transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
+}
+}

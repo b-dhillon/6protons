@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Stats } from '@react-three/drei'
 import { Provider } from 'react-redux';
@@ -11,7 +11,33 @@ import DataStore from '../../store';
 import './styles.css'
 
 function FullerenesLesson(props) {
-    return (
+    const [lessonLoading, setLessonLoading] = useState(true)
+
+    useEffect(() =>
+    {
+      setTimeout(() => setLessonLoading(false) , 2200)
+    }, [])
+  
+  
+    if (lessonLoading) {
+      return (
+        <>
+          <div className='lessonSpinnerWrapper'>
+            <div className='lessonSpinner'>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+            <h1>Loading Fullerenes.</h1>
+          </div>
+        </>
+      )
+    }
+
+    else return (
         <>
             <Stats showPanel={0} className="stats" {...props} />
             <HomeNav setPage={props.setPage} setCameraRotate={props.setCameraRotate}/>

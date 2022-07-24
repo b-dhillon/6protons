@@ -6,7 +6,7 @@ import * as THREE from 'three'
 
 const Stars = React.memo( function Stars(props) {
     const ref = useRef()
-    const [sphere] = useState(() => random.inSphere(new Float32Array(10000), { radius: 2 }))
+    const [sphere] = useState(() => random.inSphere(new Float32Array(8000), { radius: 2 }))
 
     useFrame((state, delta) =>
     {

@@ -15,7 +15,6 @@ export default function App() {
     setLoading(loading.push(1));
   }
 
-
   function handleClick() 
   {
     setCameraRotate(!cameraRotate)
