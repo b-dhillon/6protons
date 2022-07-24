@@ -154,8 +154,8 @@
     top: 0;
     left: 0;
     padding: 100px;
+    animation: fadeIn 2s ease-in 1 both; 
 
-    animation: fadeIn 1.5s ease-in 1 both; 
     /* border: 1px solid yellow; */
     /* justify-content: center; */
 }
@@ -168,6 +168,8 @@
     height: 100px; 
     overflow: hidden;
     display: block;
+    animation: fadeIn 2s ease-in 1 both; 
+
     /* -webkit-text-stroke:1px white;
     -webkit-text-fill-color: black; */
 }
@@ -177,6 +179,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    animation: fadeIn 2s ease-in 1 both; 
+
     /* border: 1px solid red; */
 }
 .frame {
@@ -185,6 +189,8 @@
     transition: transform 200ms;
     z-index: 2;
     margin: 0 2%;
+    /* animation: fadeIn 2s ease-in 1 both;  */
+
 }
 .frame:hover {
     transform: scale3d(1.1, 1.1, 1.1);
@@ -203,6 +209,8 @@
     justify-content: space-between;
     align-items: center;
     border: 1px solid white;
+    /* animation: fadeIn 2s ease-in 1 both;  */
+
 }
 .card:hover {
     border: 1px solid #3272F4;;
@@ -297,4 +305,14 @@ transform: translateZ(44px);
 100% {
     transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
 }
+}
+
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+  
+    to {
+      opacity: 1;
+    }
 }

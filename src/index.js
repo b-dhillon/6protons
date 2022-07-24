@@ -6,7 +6,6 @@ import { Provider } from 'react-redux';
 import store from './store'
 // import sectionCounter from './reducers/sectionCounter';
 
-
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
