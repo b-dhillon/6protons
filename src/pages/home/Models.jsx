@@ -3,6 +3,10 @@ import { useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 
+useGLTF.preload(`/transformed_models_home/testosterone2-transformed.glb`);
+console.log('home models loaded');
+
+
 
 function Models(props) {
     const ref = useRef()

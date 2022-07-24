@@ -1,7 +1,7 @@
-import { useState, Suspense } from 'react'
+import { useState, Suspense, useEffect } from 'react'
 import { Canvas, useFrame, } from '@react-three/fiber'
 import { Stats } from '@react-three/drei'
-import Stars from '../../components/Stars'
+import MemoizedStars from '../../components/Stars'
 import * as THREE from 'three'
 import fullerenesThumbnail from '../../images/fullerenes2.jpeg'
 import diamondsThumbnail from '../../images/diamonds12-min.png'
@@ -52,7 +52,7 @@ function Overlay(props) {
 function RotateCamera({cameraRotate}) {
   useFrame((state) => 
   {
-    state.camera.rotation.y = THREE.MathUtils.lerp(state.camera.rotation.y, (cameraRotate ? (Math.PI) : 0), 0.07)
+    state.camera.rotation.y = THREE.MathUtils.lerp(state.camera.rotation.y, (cameraRotate ? (Math.PI) : 0), 0.06)
   })
   return <></>
 }
@@ -66,13 +66,40 @@ export default function HomePage(props)
     setFlipped(!flipped);
   }
 
-  return (
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() =>
+  {
+    setTimeout(() => setLoading(false), 6000)
+  }, [])
+
+
+  if (loading) {
+    return (
+      <>
+        <div className='spinnerWrapper'>
+          <div className='spinner'>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <h1>Loading</h1>
+        </div>
+      </>
+    )
+  }
+
+
+  else return (
     <>
       <Stats showPanel={0} className="stats" {...props} />
       <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 20, fov: 75, position: [0,0,5] }}>
         <color attach="background" args={["#000000"]} />
           <Suspense fallback={null}>
-              <Stars />
+              <MemoizedStars />
               <RotateCamera cameraRotate={props.cameraRotate}/>
               <spotLight position={[10, 10, 10] } intensity={1}/>
               <ambientLight intensity={.4} />
@@ -90,11 +117,3 @@ export default function HomePage(props)
 }
 
 
-
-
-
-// const [loading, setLoading] = useState(true)
-// useEffect(() =>
-// {
-//   setTimeout(() => setLoading(false), 600)
-// }, [])
