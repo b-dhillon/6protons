@@ -14,7 +14,7 @@ function Models(props) {
 
     useFrame((state) => {
         ref.current.rotation.z = Math.sin((state.clock.elapsedTime) * 1.5) / 6
-        ref.current.rotation.x = THREE.MathUtils.lerp(ref.current.rotation.x, props.flipped ? (Math.PI * 1.5) : (Math.PI / 2) , 0.15)
+        ref.current.rotation.x = THREE.MathUtils.lerp(ref.current.rotation.x, props.flipped ? (Math.PI * 1.5) : (Math.PI / 2) , 0.17)
     })
 
     return (
