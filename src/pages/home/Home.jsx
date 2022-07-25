@@ -107,7 +107,7 @@ export default function HomePage(props)
 
   useEffect(() =>
   {
-    setTimeout(() => props.setLoading() , 4500)
+    setTimeout(() => props.setLoading() , 3000)
   }, [])
 
 
@@ -123,8 +123,8 @@ export default function HomePage(props)
             <div></div>
             <div></div>
           </div>
-          <h1>Building your 3D world.</h1>
-          <h2>For the best experience please use Google Chrome.</h2>
+          <h1>Building 3D world</h1>
+          <h2>For the best experience, please use Google Chrome.</h2>
         </div>
       </>
     )
