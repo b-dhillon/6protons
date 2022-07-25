@@ -40,7 +40,7 @@ function FullerenesLesson(props) {
     else return (
         <>
             <Stats showPanel={0} className="stats" {...props} />
-            <HomeNav setPage={props.setPage} setCameraRotate={props.setCameraRotate}/>
+            <HomeNav setPage={props.setPage} />
             <LessonNav />
             <Text />
             <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 45, position: [0, 0, 3] }}>

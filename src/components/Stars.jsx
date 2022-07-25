@@ -6,7 +6,7 @@ import * as THREE from 'three'
 
 const Stars = React.memo( function Stars(props) {
     const ref = useRef()
-    const [sphere] = useState(() => random.inSphere(new Float32Array(9000), { radius: 1.75 }))
+    const [sphere] = useState(() => random.inSphere(new Float32Array(10000), { radius: 2 }))
 
     useFrame((state, delta) =>
     {
@@ -15,7 +15,7 @@ const Stars = React.memo( function Stars(props) {
         ref.current.rotation.y -= delta / 15
 
         // Camera zoom-in animation on load: 
-        state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, 1, 0.05)
+        state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, 1, 0.014)
     })
 
     return (

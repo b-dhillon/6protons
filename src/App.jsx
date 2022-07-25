@@ -7,17 +7,11 @@ import NanotubesLesson from './pages/nanotubes_lesson/NanotubesLesson.jsx';
 export default function App() {
   console.log('App.JSX Rendered');
   const [page, setPage] = useState('Home');
-  const [cameraRotate, setCameraRotate] = useState(false);
   const [loading, setLoading] = useState([])
 
   function handleLoading()
   {
     setLoading(loading.push(1));
-  }
-
-  function handleClick() 
-  {
-    setCameraRotate(!cameraRotate)
   }
 
   function handlePage(id)
@@ -27,13 +21,13 @@ export default function App() {
 
   if(page === 'Home')
   {
-    return (<Home setPage={handlePage} setCameraRotate={handleClick} cameraRotate={cameraRotate} loading={loading} setLoading={handleLoading}/>);
+    return (<Home setPage={handlePage} loading={loading} setLoading={handleLoading}/>);
   }
 
   else if(page === 'Fullerenes_Lesson')
   {
     return (
-      <FullerenesLesson setPage={handlePage} setCameraRotate={handleClick}/>
+      <FullerenesLesson setPage={handlePage} />
     )
   }  
 

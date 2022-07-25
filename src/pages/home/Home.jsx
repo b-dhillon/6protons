@@ -98,6 +98,8 @@ function RotateCamera({cameraRotate}) {
 export default function HomePage(props) 
 {
   const [flipped, setFlipped] = useState(false);
+  const [cameraRotate, setCameraRotate] = useState(false);
+
 
   function rotateModel()
   {
@@ -134,20 +136,25 @@ export default function HomePage(props)
   else return (
     <>
       <Stats showPanel={0} className="stats" {...props} />
-      <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 20, fov: 75, position: [0,0,5] }}>
+      <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 20, fov: 75, position: [0,0, 2.5] }}>
         <color attach="background" args={["#000000"]} />
           <Suspense fallback={null}>
               <MemoizedStars />
-              <RotateCamera cameraRotate={props.cameraRotate}/>
+              <RotateCamera cameraRotate={cameraRotate}/>
               <spotLight position={[10, 10, 10] } intensity={1}/>
               <ambientLight intensity={.4} />
               <Models flipped={flipped}/>
           </Suspense>
       </Canvas>
-      <Overlay setPage={props.setPage} cameraRotate={props.cameraRotate}/>
+      <Overlay setPage={props.setPage} cameraRotate={cameraRotate}/>
 
       {/* BUTTON */}
-      <div className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => {props.setCameraRotate()}} >
+      <div className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => {
+        setCameraRotate(!cameraRotate)
+        setTimeout(() => console.log('check check') , 3000)
+      
+        }} >
+
           <div><a title={props.cameraRotate ? "Back to Home" : "Get Started"}></a></div>
       </div>
     </>
