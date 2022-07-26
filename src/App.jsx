@@ -8,6 +8,12 @@ export default function App() {
   console.log('App.JSX Rendered');
   const [page, setPage] = useState('Home');
   const [loading, setLoading] = useState([])
+  const [overlay, setOverlay] = useState(false);
+
+  function handleOverlay(){
+    setOverlay(!overlay);
+  }
+
 
   function handleLoading()
   {
@@ -21,7 +27,7 @@ export default function App() {
 
   if(page === 'Home')
   {
-    return (<Home setPage={handlePage} loading={loading} setLoading={handleLoading}/>);
+    return (<Home setPage={handlePage} loading={loading} setLoading={handleLoading} overlay={overlay} setOverlay={handleOverlay}/>);
   }
 
   else if(page === 'Fullerenes_Lesson')

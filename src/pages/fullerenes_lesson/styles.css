@@ -59,7 +59,7 @@
   z-index: 2;
   animation: slideUp 2s 1 both; 
   animation-delay: .5s;
-  margin-left: 15px;
+  margin-left: 35px;
 
   /* border: 1px solid red; */
 }
@@ -91,7 +91,7 @@ span
 }
 
 .lessonSpinnerWrapper > h1 {
-    font-family: 'Courier New', Courier, monospace;
+    /* font-family: 'Courier New', Courier, monospace; */
     margin-top: 75px !important;
 }
 

@@ -20,7 +20,7 @@ function LessonModels() {
       const group = useRef()
       const { nodes, materials, animations } = useGLTF(`/lesson1_models/model${counter}.glb`)
       const { actions } = useAnimations(animations, group)
-      const positions = [.66, 0, -1];
+      const positions = [.62, 0, -1];
       const scale = 0.10;
 
       useEffect(() =>
@@ -37,7 +37,7 @@ function LessonModels() {
 
       function OscilateAnimation() {
         useFrame((state) => {
-          ref.current.rotation.y = Math.sin((state.clock.elapsedTime) * .55) / 2.5
+          ref.current.rotation.y = Math.sin((state.clock.elapsedTime) * .75) / 4.5
       })
   
       }
@@ -81,7 +81,7 @@ function LessonModels() {
         return (
           <group ref={ref} {...props} dispose={null} position={positions} scale={scale}>
             <mesh geometry={nodes.Text.geometry} material={materials['text-material']} position={[-0.93, -5, -1.06]} rotation={[Math.PI / 2, 0, 0.13]} scale={0.9} />
-            <group position={[0.18, 1.66, 3.07]} scale={0.23}>
+            <group position={[0.18, 1.66, 3.07]} scale={0.23} rotation={[0,-0.2,0]}>
               <mesh geometry={nodes.SurfSphere047.geometry} material={materials.Carbon} />
               <mesh geometry={nodes.SurfSphere047_1.geometry} material={materials['Material.001']} />
             </group>

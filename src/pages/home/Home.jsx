@@ -31,8 +31,6 @@ function Overlay(props) {
     )
   }
 
-
-  
   function LessonSelection() {
     return (
         <div className='lessonSelection--wrapper'>
@@ -46,23 +44,6 @@ function Overlay(props) {
     )
   }
 
-  // function LessonSelection() {
-  //   let a = null;
-  //   setTimeout(() => {
-  //     a = (
-  //       <div className='lessonSelection--wrapper'>
-  //         <h1 className='lessonSelection--title'>Please select a lesson.</h1>
-  //         <div className='card--wrapper'>
-  //           <Card id={'Fullerenes'} setPage={props.setPage} title={"Fullerenes"} img={fullerenesThumbnail} description={"Placeholder for Fullerenes description. Lorem impsum, just random filler text here. And a little more."} />
-  //           <Card id={'Diamonds'} setPage={props.setPage} title={"Diamonds"} img={diamondsThumbnail} description={"Placeholder for Diamonds description. Lorem impsum, just random filler text here. And a little more."}/>
-  //           <Card id={'Nanotubes'} setPage={props.setPage} title={"Nanotubes"} img={nanotubesThumbnail} description={"Placeholder for Nanotubes description. Lorem impsum, just random filler text here. And a little more."}/>
-  //         </div>
-  //       </div>
-  //     )
-  //   }, 5000);
-  //   return a;
-  // }
-
   if(!props.cameraRotate)
   {
 
@@ -75,10 +56,24 @@ function Overlay(props) {
       </div>
     )
   }
-  else
+  // if(!props.overlay){
+  //   return ()
+  // }
+
+  else if(props.overlay)
     return (
-      ''
-    )
+      <div className='lessonSelection--wrapper'>
+        <h1 className='lessonSelection--title'>Please select a lesson.</h1>
+        <div className='card--wrapper'>
+          <Card id={'Fullerenes'} setPage={props.setPage} title={"Fullerenes"} img={fullerenesThumbnail} description={"Placeholder for Fullerenes description. Lorem impsum, just random filler text here. And a little more."} />
+          <Card id={'Diamonds'} setPage={props.setPage} title={"Diamonds"} img={diamondsThumbnail} description={"Placeholder for Diamonds description. Lorem impsum, just random filler text here. And a little more."}/>
+          <Card id={'Nanotubes'} setPage={props.setPage} title={"Nanotubes"} img={nanotubesThumbnail} description={"Placeholder for Nanotubes description. Lorem impsum, just random filler text here. And a little more."}/>
+        </div>
+      </div>
+  )
+
+  else return ('')
+
 }
 
 
@@ -146,16 +141,14 @@ export default function HomePage(props)
               <Models flipped={flipped}/>
           </Suspense>
       </Canvas>
-      <Overlay setPage={props.setPage} cameraRotate={cameraRotate}/>
+      <Overlay setPage={props.setPage} cameraRotate={cameraRotate} overlay={props.overlay}/>
 
       {/* BUTTON */}
       <div className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => {
         setCameraRotate(!cameraRotate)
-        setTimeout(() => console.log('check check') , 3000)
-      
-        }} >
-
-          <div><a title={props.cameraRotate ? "Back to Home" : "Get Started"}></a></div>
+        setTimeout(() => props.setOverlay() , 700)
+        }}>
+          <div><a title={cameraRotate ? "Back to Home" : "Get Started"}></a></div>
       </div>
     </>
   )
