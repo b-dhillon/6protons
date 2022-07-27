@@ -31,7 +31,7 @@ function FullerenesLesson(props) {
               <div></div>
               <div></div>
             </div>
-            <h1>Loading Fullerenes.</h1>
+            <h1>Loading lesson.</h1>
           </div>
         </>
       )
