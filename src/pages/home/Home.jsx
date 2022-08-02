@@ -76,12 +76,6 @@ function Overlay(props) {
 
 }
 
-
-
-
-
-
-
 function RotateCamera({cameraRotate}) {
   useFrame((state) => 
   {

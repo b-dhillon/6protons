@@ -14,7 +14,6 @@ export default function App() {
     setOverlay(!overlay);
   }
 
-
   function handleLoading()
   {
     setLoading(loading.push(1));
