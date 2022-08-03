@@ -114,7 +114,7 @@ export default function HomePage(props)
             <div></div>
             <div></div>
           </div>
-          <h1>Building 3D world</h1>
+          <h1>Loading</h1>
           <h2>For the best experience, please use Google Chrome.</h2>
         </div>
       </>
