@@ -47,7 +47,7 @@ function LessonText(){
                 <p>Each fullerene (buckyball) has 20 hexagons and 12 pentagons <span>(highlighted in red)</span> that fit together like the seams of a soccer ball. 
                 <br/>
                 <br/>
-                They have extraordinary chemical and physical properties. Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.</p>
+                Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space, and because they are essentially hollow cages, they can be manipulated to make materials never before known.</p>
             </div>
         )
     }

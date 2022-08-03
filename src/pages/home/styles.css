@@ -245,7 +245,7 @@
     justify-content: center;
 }
 
-.spinnerWrapper > h1 {
+.spinnerWrapper > h2 {
     /* font-family: 'Courier New', Courier, monospace; */
     margin-top: 75px !important;
 }
