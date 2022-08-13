@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 function LessonText(){
     const counter = useSelector(state => state.counter);
 
+    // Change line breaks into a class with a uniform padding bottom
+
     if (counter === 0)
     {
         return (
@@ -13,7 +15,7 @@ function LessonText(){
         )
     }
 
-    if(counter === 1)
+    else if(counter === 1)
     {
         return (
             // Refactor all wrapper classes into one.
@@ -86,7 +88,7 @@ function LessonText(){
             </div>
         )
     }
-    else if(counter === 6)
+    else
     {
         return (
             <div className='text--wrapper'>
