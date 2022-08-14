@@ -115,7 +115,7 @@ export default function HomePage(props)
             <div></div>
           </div>
           <h1 class='loading--title'>loading</h1>
-          <h2>for the best experience, please use Google Chrome.</h2>
+          <h2>For the best experience, please use Google Chrome.</h2>
         </div>
       </>
     )
