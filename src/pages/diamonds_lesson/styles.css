@@ -1,0 +1,20 @@
+/* This is repeated from the fullerenes lesson and needs to be re-factored */
+.title--wrapper {
+    width: 100%; 
+    position: absolute; 
+    background: transparent;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+}
+  
+.title {
+    /* font-family: Quicksand-bold; */
+    color: #f07167;
+    font-size: 60px;
+    animation: slideUp 2s 1 both; 
+    animation-delay: 1.5s;
+    margin-top: 1.5%;
+    z-index: 2;
+    /* position: absolute; */
+}

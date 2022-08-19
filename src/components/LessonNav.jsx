@@ -6,15 +6,10 @@ function LessonNav() {
     const counter = useSelector(state => state.counter)
     const dispatch = useDispatch();
 
-    // function SectionCounterGUI() {
-    //     return <h5 className='sectionCounter'>{`Section ${counter}`}</h5>
-    // }
-
     if(counter === 0)
     {
         return (
             <>
-                {/* <SectionCounterGUI /> */}
                 <div className='startLessonBtn--wrapper'>
                     <div className="startLessonBtn" onClick={() => dispatch(increment())}>
                         <div><a title={"Start Lesson"}></a></div>
@@ -28,7 +23,6 @@ function LessonNav() {
     {
         return (
             <>
-                {/* <SectionCounterGUI /> */}
                 <div className='lessonNav'>
                     <button className='lesson--decrementBtn'
                         onClick={() => dispatch(decrement())}>

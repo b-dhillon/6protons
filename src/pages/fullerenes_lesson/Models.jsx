@@ -8,7 +8,6 @@ useGLTF.preload(`/lesson1_models/model2.glb`)
 useGLTF.preload(`/lesson1_models/model3.glb`)
 useGLTF.preload(`/lesson1_models/model4.glb`)
 useGLTF.preload(`/lesson1_models/model5.glb`)
-console.log('lesson models loaded');
 
 
 function LessonModels() {
@@ -16,22 +15,22 @@ function LessonModels() {
   const counter = useSelector(state => state.counter);
 
   function Model({ ...props })
+  {
+    const group = useRef()
+    const { nodes, materials, animations } = useGLTF(`/lesson1_models/model${counter}.glb`)
+    const { actions } = useAnimations(animations, group)
+    const positions = [.62, 0, -1];
+    const scale = 0.10;
+
+    useEffect(() =>
     {
-      const group = useRef()
-      const { nodes, materials, animations } = useGLTF(`/lesson1_models/model${counter}.glb`)
-      const { actions } = useAnimations(animations, group)
-      const positions = [.62, 0, -1];
-      const scale = 0.10;
-
-      useEffect(() =>
+      if(counter != 3)
       {
-        if(counter != 3)
-        {
-          const _animations = Object.values(actions);
-          _animations.forEach((a) => a.play())
+        const _animations = Object.values(actions);
+        _animations.forEach((a) => a.play())
 
-        }
-      })
+      }
+    })
 
       const ref = useRef();
 
