@@ -38,12 +38,12 @@ export default function App() {
 
   else if(page === 'Diamonds_Lesson')
   {
-    return (<DiamondsLesson />)
+    return (<DiamondsLesson setPage={handlePage}/>)
   }
 
   else if(page === 'Nanotubes_Lesson')
   {
-    return (<NanotubesLesson/>)
+    return (<NanotubesLesson setPage={handlePage}/>)
   }
   else return <h1>Uh oh, something broke.</h1>
 }

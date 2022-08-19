@@ -21,26 +21,18 @@ function Overlay(props) {
 
   function Card(props) {
     return (
-      <div className="frame" onClick={() => props.setPage(`${props.id}_Lesson`)}>
+      <div className="frame" onClick={() => 
+        {
+          props.setPage(`${props.id}_Lesson`)
+          props.setOverlay();
+        }
+      }>
         <div className="card">
           <h1>{props.title}</h1>
           <img src={props.img} className='card--img'/>
           <h3>{props.description}</h3>
         </div>
       </div>
-    )
-  }
-
-  function LessonSelection() {
-    return (
-        <div className='lessonSelection--wrapper'>
-          <h1 className='lessonSelection--title'>Please select a lesson.</h1>
-          <div className='card--wrapper'>
-            <Card id={'Fullerenes'} setPage={props.setPage} title={"Fullerenes"} img={fullerenesThumbnail} description={"Placeholder for Fullerenes description. Lorem impsum, just random filler text here. And a little more."} />
-            <Card id={'Diamonds'} setPage={props.setPage} title={"Diamonds"} img={diamondsThumbnail} description={"Placeholder for Diamonds description. Lorem impsum, just random filler text here. And a little more."}/>
-            <Card id={'Nanotubes'} setPage={props.setPage} title={"Nanotubes"} img={nanotubesThumbnail} description={"Placeholder for Nanotubes description. Lorem impsum, just random filler text here. And a little more."}/>
-          </div>
-        </div>
     )
   }
 
@@ -56,16 +48,14 @@ function Overlay(props) {
       </div>
     )
   }
-  // if(!props.overlay){
-  //   return ()
-  // }
+
 
   else if(props.overlay)
     return (
       <div className='lessonSelection--wrapper'>
         <h1 className='lessonSelection--title'>Please select a lesson.</h1>
         <div className='card--wrapper'>
-          <Card id={'Fullerenes'} setPage={props.setPage} title={"Fullerenes"} img={fullerenesThumbnail} description={"Placeholder for Fullerenes description. Lorem impsum, just random filler text here. And a little more."} />
+          <Card id={'Fullerenes'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Fullerenes"} img={fullerenesThumbnail} description={"Placeholder for Fullerenes description. Lorem impsum, just random filler text here. And a little more."} />
           <Card id={'Diamonds'} setPage={props.setPage} title={"Diamonds"} img={diamondsThumbnail} description={"Placeholder for Diamonds description. Lorem impsum, just random filler text here. And a little more."}/>
           <Card id={'Nanotubes'} setPage={props.setPage} title={"Nanotubes"} img={nanotubesThumbnail} description={"Placeholder for Nanotubes description. Lorem impsum, just random filler text here. And a little more."}/>
         </div>
@@ -135,11 +125,15 @@ export default function HomePage(props)
               <Models flipped={flipped}/>
           </Suspense>
       </Canvas>
-      <Overlay setPage={props.setPage} cameraRotate={cameraRotate} overlay={props.overlay}/>
+      <Overlay setPage={props.setPage} cameraRotate={cameraRotate} overlay={props.overlay} setOverlay={props.setOverlay}/>
 
       {/* BUTTON */}
       <div className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => {
         setCameraRotate(!cameraRotate)
+
+        // Timeout is to create a delay between camera rotating and paining of 
+        // lesson DOM elements to the screen. This produces a smoother animation with less 
+        // frames being dropped.
         setTimeout(() => props.setOverlay() , 700)
         }}>
           <div><a title={cameraRotate ? "Back to Home" : "Get Started"}></a></div>
