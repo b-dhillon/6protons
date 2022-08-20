@@ -9,6 +9,7 @@
     display: flex;
     justify-content: center;
     animation: fadeIn 3s 1 ease-in;
+    animation-delay: 1s;
     background: transparent;
     font-family: Arial, Helvetica, sans-serif;
 
