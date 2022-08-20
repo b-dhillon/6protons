@@ -5,7 +5,6 @@ function LessonText(){
     const counter = useSelector(state => state.counter);
 
     // Change line breaks into a class with a uniform padding bottom
-
     if (counter === 0)
     {
         return (
@@ -92,7 +91,7 @@ function LessonText(){
     {
         return (
             <div className='text--wrapper'>
-                <h4>Congratulations! 🎉 You have completed this lesson!</h4>
+                <h4>Lesson completed! Please navigate back to home.</h4>
             </div>
         )
     }

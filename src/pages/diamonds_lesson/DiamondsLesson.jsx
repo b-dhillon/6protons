@@ -3,10 +3,10 @@ import { Canvas } from '@react-three/fiber';
 import MemoizedStars from '../../components/Stars';
 import HomeNav from '../../components/HomeNav';
 import { Provider } from 'react-redux';
-import Models from './Models';
+import DiamondModels from './DiamondModels';
 import DataStore from '../../store';
 import LessonNav from '../../components/LessonNav';
-import './styles.css'
+import './diamond-styles.css'
 import DiamondText from './DiamondText';
 
 
@@ -50,7 +50,7 @@ function DiamondsLesson(props) {
               <color attach="background" args={["#000000"]} />
               <Suspense fallback={null}>
                 <Provider store={DataStore}>
-                  <Models/>
+                  <DiamondModels/>
                 </Provider>
                 <spotLight position={[10, 10, 10] } intensity={.8}/>
                 <ambientLight intensity={.3} />

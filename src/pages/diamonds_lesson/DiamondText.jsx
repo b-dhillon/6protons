@@ -19,7 +19,7 @@ function DiamondText(){
     {
         return (
             <div className='text--wrapper'>
-                <h4>Congratulations! 🎉 You have completed this lesson!</h4>
+                <p>Diamonds are the s</p>
             </div>
         )
     }

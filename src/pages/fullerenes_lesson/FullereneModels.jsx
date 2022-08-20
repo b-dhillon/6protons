@@ -32,14 +32,13 @@ function LessonModels() {
       }
     })
 
-      const ref = useRef();
+    const ref = useRef();
 
-      function OscilateAnimation() {
+    function OscilateAnimation() {
         useFrame((state) => {
           ref.current.rotation.y = Math.sin((state.clock.elapsedTime) * .75) / 4.5
       })
-  
-      }
+    }
       
       if(counter === 0)
       {

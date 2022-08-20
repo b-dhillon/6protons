@@ -134,7 +134,7 @@ export default function HomePage(props)
         // Timeout is to create a delay between camera rotating and paining of 
         // lesson DOM elements to the screen. This produces a smoother animation with less 
         // frames being dropped.
-        setTimeout(() => props.setOverlay() , 700)
+        setTimeout(() => props.setOverlay() , 600)
         }}>
           <div><a title={cameraRotate ? "Back to Home" : "Get Started"}></a></div>
       </div>
