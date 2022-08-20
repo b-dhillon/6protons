@@ -15,11 +15,23 @@ function DiamondText(){
         )
     }
 
-    else
+    else if (counter === 1)
     {
         return (
-            <div className='text--wrapper'>
-                <p>Diamonds are the s</p>
+            <div className='text--wrapper2' style={{fontSize: 20}}>
+                <p>Diamonds are the hardest of all substances. They contain only carbon atoms, just like fullerenes and nano-tubes. 
+                    Diamonds however, have their carbon atoms arranged in a <span>diamond lattice</span>. 
+                </p>
+            </div>
+        )
+    }
+
+    else if (counter === 2)
+    {
+        return(
+            <div className='text--wrapper2'>
+                <p>Oops! The rest of this lesson is currently under development. 
+                </p>
             </div>
         )
     }

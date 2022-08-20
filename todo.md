@@ -1,8 +1,8 @@
 ## To-do
-    - Add some copy for section 1 of diamond lesson
+    - Add development section model -- blender monkey
     - Change home button design -- either go make to circle expansion or something else 
-    - Add back to lesson selection page?
-    - Clear counter
+    - Add back button
+    - Clear counter each time back button or home button is clicked (anytime a user exits a lesson counter should be set to 0)
 
 
 

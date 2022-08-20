@@ -16,8 +16,18 @@ function LessonModels() {
     const group = useRef()
     const { nodes, materials, animations } = useGLTF(`/lesson2_models/model${counter}.glb`)
     const { actions } = useAnimations(animations, group);
+    const positions = [1, -.4, -1];
+    const scale = 0.40;
+
+    
 
     const ref = useRef();
+
+    function OscilateAnimation() {
+        useFrame((state) => {
+          ref.current.rotation.y = Math.sin((state.clock.elapsedTime) * .75) / 5
+      })
+    }
 
     function RotateAnimation() {
       useFrame((state) => {
@@ -29,7 +39,6 @@ function LessonModels() {
     {
       if(counter >= 0)
       {
-        console.log(actions);
         const _animations = Object.values(actions);
         _animations.forEach((a) => a.play())
 
@@ -53,17 +62,32 @@ function LessonModels() {
           </group>
         </group>
       )
-    } 
+    }
 
     else if (counter === 1) 
     {
-      return <></>
+      OscilateAnimation();
+      return (
+      <>
+        <group ref={ref} {...props} dispose={null} position={positions} scale={scale}>
+          <group position={[0, 1, 0]} scale={0.06}>
+            <group position={[0, 0.06, 0]} scale={17.42}>
+              <group rotation={[0, 0.15, 0]}>
+                <mesh geometry={nodes.Cube001.geometry} material={materials.Material} />
+                <mesh geometry={nodes.Cube001_1.geometry} material={materials['S Material']} />
+              </group>
+            </group>
+          </group>
+          <mesh geometry={nodes.Text.geometry} material={materials['Material.003']} position={[0, -1, 0]} rotation={[Math.PI / 2, 0, 0]} scale={0.5} />
+        </group>
+      </>
+      )
     }
 
     else return <></>;
   }
 
-  if (counter === 0) {
+  if (counter === 0 || counter === 1 ) {
     return <Model />
   } else return null; 
 
