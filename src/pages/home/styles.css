@@ -8,8 +8,7 @@
     z-index: 2;
     display: flex;
     justify-content: center;
-    animation: fadeIn 3s 1 ease-in;
-    animation-delay: 1s;
+    animation: fadeIn 3.5s 1 ease-in;
     background: transparent;
     font-family: Arial, Helvetica, sans-serif;
 
