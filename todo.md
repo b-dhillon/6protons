@@ -1,5 +1,4 @@
 ## To-do
-    - Create scale animation for diamond model 
     - Add some copy for section 1 of diamond lesson
 
 
@@ -10,5 +9,5 @@
     
 
 
-
+    - Create async await functions for home page to await rendering of overlay until 3d elements are painted
     - Add back to lesson selection page?
