@@ -18,7 +18,7 @@ function DiamondsLesson(props) {
 
     useEffect(() =>
     {
-      setTimeout(() => setLessonLoading(false) , 400)
+      setTimeout(() => setLessonLoading(false) , 2000)
     }, [])
   
   
@@ -34,7 +34,7 @@ function DiamondsLesson(props) {
               <div></div>
               <div></div>
             </div>
-            <h1>loading lesson</h1>
+            <h1>loading diamonds</h1>
           </div>
         </>
       )
