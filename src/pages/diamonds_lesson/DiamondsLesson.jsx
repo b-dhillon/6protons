@@ -9,10 +9,6 @@ import LessonNav from '../../components/LessonNav';
 import './diamond-styles.css'
 import DiamondText from './DiamondText';
 
-
-
-
-
 function DiamondsLesson(props) {
     const [lessonLoading, setLessonLoading] = useState(true)
 

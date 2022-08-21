@@ -204,7 +204,7 @@ svg {
 /* HomeNav Styles */
 .homeBtn--wrapper {
   position: absolute;
-  padding: 0;
+  padding: 10px 30px;
   width: 100%; 
   height: 50px;
   display: flex; 
@@ -213,7 +213,7 @@ svg {
   /* right: 20px; */
   z-index: 2;
 
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 
 .homeBtn {
@@ -224,6 +224,9 @@ svg {
 .backBtn { 
   list-style: none;
   background: transparent;
+}
+.backBtn:hover {
+  transform: scale(1.2)
 }
 
 .homeBtn--icon {  
