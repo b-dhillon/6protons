@@ -29,12 +29,13 @@ function Overlay(props) {
       }>
         <div className="card">
           <h1>{props.title}</h1>
-          <img src={props.img} className='card--img'/>
+          <img src={props.img} className='card--img' />
           <h3>{props.description}</h3>
         </div>
       </div>
     )
   }
+
 
   if(!props.cameraRotate)
   {

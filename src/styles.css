@@ -205,15 +205,25 @@ svg {
 .homeBtn--wrapper {
   position: absolute;
   padding: 0;
-  top: 15px;
-  right: 20px;
+  width: 100%; 
+  height: 50px;
+  display: flex; 
+  justify-content: space-between;
+  /* top: 15px; */
+  /* right: 20px; */
   z-index: 2;
+
+  border: 1px solid red;
 }
 
 .homeBtn {
   list-style: none;
   background: transparent;
+}
 
+.backBtn { 
+  list-style: none;
+  background: transparent;
 }
 
 .homeBtn--icon {  
