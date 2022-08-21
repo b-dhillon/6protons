@@ -87,7 +87,7 @@ function LessonModels() {
     else return <></>;
   }
 
-  if (counter === 0 || counter === 1 ) {
+  if (counter === 0 ) {
     return <Model />
   } else return null; 
 

@@ -22,8 +22,8 @@ function FullerenesLesson(props) {
     if (lessonLoading) {
       return (
         <>
-          <div className='lessonSpinnerWrapper'>
-            <div className='lessonSpinner'>
+          <div className='spinnerWrapper'>
+            <div className='spinner'>
               <div></div>
               <div></div>
               <div></div>

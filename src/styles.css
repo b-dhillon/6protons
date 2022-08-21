@@ -224,6 +224,7 @@ svg {
 .backBtn { 
   list-style: none;
   background: transparent;
+  size:
 }
 .backBtn:hover {
   transform: scale(1.2)
