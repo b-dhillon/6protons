@@ -1,8 +1,15 @@
+import { useSelector, useDispatch } from 'react-redux';
+import { reset } from '../actions';
+
 function HomeNav(props) {
+
+    const dispatch = useDispatch();
+
 
     return (
             <ul className="homeBtn--wrapper">
                 <li className="homeBtn" onClick={() => {
+                    dispatch(reset());
                     props.setPage(`Home`); 
                     
                 }}>

@@ -33,9 +33,6 @@ function LessonNav() {
                         onClick={() => dispatch(increment()) }>
                         <i className="fa-solid fa-angle-right lessonNav--icons" style={{color: 'white'}}></i>
                     </button>
-    
-                    {/* <button onClick={handleBack}></button>
-                    <button onClick={handleNext}></button> */}
                 </div> 
             </>
         )

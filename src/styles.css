@@ -228,7 +228,7 @@ svg {
 }
 
 .homeIcon:hover {  
-  animation: homeBtn 3s ease-out 10 both; 
+  transform: scale(1.2)
 }
 
 
