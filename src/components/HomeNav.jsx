@@ -11,6 +11,7 @@ function HomeNav(props) {
 
                 <li className="backBtn" onClick={() => {
                     dispatch(reset());
+                    props.setOverlay();
                     props.setPage(`Home`); 
                     
                 }}>

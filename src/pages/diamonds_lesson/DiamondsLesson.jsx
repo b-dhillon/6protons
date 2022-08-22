@@ -14,7 +14,7 @@ function DiamondsLesson(props) {
 
     useEffect(() =>
     {
-      setTimeout(() => setLessonLoading(false) , 2000)
+      setTimeout(() => setLessonLoading(false) , 1500)
     }, [])
   
   
@@ -39,7 +39,7 @@ function DiamondsLesson(props) {
 
     else return (
       <>
-          <HomeNav setPage={props.setPage} />
+          <HomeNav setPage={props.setPage} setOverlay={props.setOverlay} />
           <LessonNav />
           <DiamondText />
           <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 75, position: [0,0,5] }}>

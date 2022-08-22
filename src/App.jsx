@@ -33,15 +33,15 @@ export default function App() {
 
   else if(page === 'Fullerenes_Lesson')
   {
-    return <FullerenesLesson setPage={handlePage} /> 
+    return <FullerenesLesson setPage={handlePage} setOverlay={handleOverlay}/> 
   }  
 
   else if(page === 'Diamonds_Lesson')
   {
-    return <DiamondsLesson setPage={handlePage}/>
+    return <DiamondsLesson setPage={handlePage} setOverlay={handleOverlay}/>
   }
 
-  else return <NanotubesLesson setPage={handlePage}/>
+  else return <NanotubesLesson setPage={handlePage} setOverlay={handleOverlay}/>
 
 
 }

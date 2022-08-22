@@ -159,7 +159,7 @@ export default function HomePage(props)
         // frames being dropped.
         setTimeout(() => props.setOverlay() , 600)
         }}>
-          <div><a title={cameraRotate ? "Back to Home" : "Get Started"}></a></div>
+          <div><a title={rotatedCamera ? "Back to Home" : "Get Started"}></a></div>
       </div>
     </>
   )
