@@ -21,8 +21,8 @@ function DiamondsLesson(props) {
     if (lessonLoading) {
       return (
         <>
-          <div className='lessonSpinnerWrapper'>
-            <div className='lessonSpinner'>
+          <div className='spinnerWrapper'>
+            <div className='spinner' >
               <div></div>
               <div></div>
               <div></div>
@@ -30,7 +30,7 @@ function DiamondsLesson(props) {
               <div></div>
               <div></div>
             </div>
-            <h1>loading diamonds</h1>
+            <h1 style={{marginTop: 80}}>loading diamonds</h1>
           </div>
         </>
       )
