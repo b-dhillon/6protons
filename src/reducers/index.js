@@ -15,8 +15,36 @@ const sectionCounter = (state = 0, action) =>
     }
 }
 
+const rotatedCamera = (state = false, action) =>
+{
+    switch (action.type)
+    {
+        case '180':
+            return !state;
+        default:
+            return state;
+    }
+
+    /*
+    return !state 
+    */
+}
+
+const overlay = (state = false, action) => 
+{
+    switch (action.type)
+    {
+        case 'rotated':
+            return !state;
+        default:
+            return state;
+    }
+}
+
 const allReducers = combineReducers({
     counter: sectionCounter,
+    rotatedCamera: rotatedCamera,
+    overlay: overlay,
 })
 
 export default allReducers;

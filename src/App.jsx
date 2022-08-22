@@ -25,7 +25,6 @@ export default function App() {
   }  
 
   console.log('App.JSX Rendered');
-  console.log(overlay);
 
   if(page === 'Home')
   {

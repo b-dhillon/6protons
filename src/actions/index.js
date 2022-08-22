@@ -18,3 +18,17 @@ export const reset = () =>
         type: 'RESET'
     }
 }
+
+export const rotateCamera = () => 
+{
+    return {
+        type: '180'
+    }
+}
+
+export const resetCamera = () => 
+{
+    return {
+        type: '0'
+    }
+}

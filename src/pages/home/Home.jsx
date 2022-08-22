@@ -7,6 +7,11 @@ import fullerenesThumbnail from '../../images/fullerenes2.jpeg'
 import diamondsThumbnail from '../../images/diamonds12-min.png'
 import nanotubesThumbnail from '../../images/nano.jpeg'
 import Models from './Models'
+import { useSelector, useDispatch } from 'react-redux';
+import { rotateCamera, resetCamera } from '../../actions';
+
+
+
 import './styles.css';
 
 // function resolveAfter2Seconds() {
@@ -18,6 +23,8 @@ import './styles.css';
 // }
 
 function Overlay(props) {
+  const rotatedCamera = useSelector(state => state.rotatedCamera);
+
 
   function Card(props) {
     return (
@@ -37,7 +44,10 @@ function Overlay(props) {
   }
 
 
-  if(!props.cameraRotate)
+
+
+
+  if(!rotatedCamera)
   {
 
     return (
@@ -49,7 +59,6 @@ function Overlay(props) {
       </div>
     )
   }
-
 
   else if(props.overlay)
     return (
@@ -63,23 +72,30 @@ function Overlay(props) {
       </div>
   )
 
-  else return ('')
-
+  else return <></>
 }
 
-function RotateCamera({cameraRotate}) {
-  useFrame((state) => 
-  {
-    state.camera.rotation.y = THREE.MathUtils.lerp(state.camera.rotation.y, (cameraRotate ? (Math.PI) : 0), 0.125)
-  })
-  return <></>
-}
+
+
 
 export default function HomePage(props) 
 {
   const [flipped, setFlipped] = useState(false);
   const [cameraRotate, setCameraRotate] = useState(false);
+  const rotatedCamera = useSelector(state => state.rotatedCamera);
 
+
+  const dispatch = useDispatch();
+
+  function RotateCamera({cameraRotate}) {
+    // const rotatedCamera = useSelector(state => state.rotatedCamera);
+  
+    useFrame((state) => 
+    {
+      state.camera.rotation.y = THREE.MathUtils.lerp(state.camera.rotation.y, (rotatedCamera ? (Math.PI) : 0), 0.125)
+    })
+    return <></>
+  }
 
   function rotateModel()
   {
@@ -87,11 +103,12 @@ export default function HomePage(props)
   }
 
 
+
+
   useEffect(() =>
   {
     setTimeout(() => props.setLoading() , 2500)
   }, [])
-
 
   if (props.loading.length === 0) {
     return (
@@ -115,7 +132,7 @@ export default function HomePage(props)
 
   else return (
     <>
-      <Stats showPanel={0} className="stats" {...props} />
+      {/* <Stats showPanel={0} className="stats" {...props} /> */}
       <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 20, fov: 75, position: [0,0, 2.5] }}>
         <color attach="background" args={["#000000"]} />
           <Suspense fallback={null}>
@@ -130,7 +147,12 @@ export default function HomePage(props)
 
       {/* BUTTON */}
       <div className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => {
-        setCameraRotate(!cameraRotate)
+        // setCameraRotate(!cameraRotate)
+        dispatch(rotateCamera());
+        // console.log(rotatedCamera);
+
+
+
 
         // Timeout is to create a delay between camera rotating and paining of 
         // lesson DOM elements to the screen. This produces a smoother animation with less 
