@@ -31,7 +31,7 @@ function FullerenesLesson(props) {
               <div></div>
               <div></div>
             </div>
-            <h1>loading fullerenes</h1>
+            <h1 style={{marginTop: 80}}>loading fullerenes</h1>
           </div>
         </>
       )
@@ -39,7 +39,7 @@ function FullerenesLesson(props) {
 
     else return (
         <>
-            <Stats showPanel={0} className="stats" {...props} />
+            {/* <Stats showPanel={0} className="stats" {...props} /> */}
             <HomeNav setPage={props.setPage} />
             <LessonNav />
             <FullereneText />
