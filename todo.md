@@ -1,6 +1,5 @@
 ## To-do
-    - Add back button;
-    - Center hero button with a wrapper
+
     - Add development section model -- blender monkey;
 
 

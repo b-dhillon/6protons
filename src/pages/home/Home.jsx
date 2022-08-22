@@ -146,21 +146,24 @@ export default function HomePage(props)
       <Overlay setPage={props.setPage} cameraRotate={cameraRotate} overlay={props.overlay} setOverlay={props.setOverlay}/>
 
       {/* BUTTON */}
-      <div className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => {
-        // setCameraRotate(!cameraRotate)
-        dispatch(rotateCamera());
-        // console.log(rotatedCamera);
+      <div className='heroBtnWrapper'>
+        <div className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => {
+          // setCameraRotate(!cameraRotate)
+          dispatch(rotateCamera());
+          // console.log(rotatedCamera);
 
 
 
 
-        // Timeout is to create a delay between camera rotating and paining of 
-        // lesson DOM elements to the screen. This produces a smoother animation with less 
-        // frames being dropped.
-        setTimeout(() => props.setOverlay() , 600)
-        }}>
-          <div><a title={rotatedCamera ? "Back to Home" : "Get Started"}></a></div>
+          // Timeout is to create a delay between camera rotating and paining of 
+          // lesson DOM elements to the screen. This produces a smoother animation with less 
+          // frames being dropped.
+          setTimeout(() => props.setOverlay() , 600)
+          }}>
+            <div><a title={rotatedCamera ? "Back to Home" : "Get Started"}></a></div>
+        </div>
       </div>
+
     </>
   )
 }

@@ -40,16 +40,21 @@
     color: white !important;
     font-size: 1.85rem;
 }
+
+.heroBtnWrapper {
+    position: absolute;
+    width: 100%; 
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    top: 80%;
+}
+
 .heroBtn {
     animation: fadeIn 1s 1 ease-in;
     font-size: 1.1rem;
     font-weight: bold;
-    position: absolute;
-    top: 80%;
-    left: 42.1%;
-    z-index: 2;
     font-family: Arial, Helvetica, sans-serif;
-    /* text-transform: uppercase; */
     display: -webkit-inline-box;
     display: -moz-inline-box;
     display: inline-box;
@@ -60,9 +65,8 @@
 }
 .heroBtn > div {
     position: relative;
-    width: 160px;
+    width: 180px;
     height: 55px;
-    margin: 0 15px;
     -webkit-perspective: 1000px;
     -moz-perspective: 1000px;
     perspective: 1000px;
@@ -153,10 +157,9 @@
     z-index: 2;
     top: 0;
     left: 0;
-    padding: 100px;
+    padding: 100px 0px;
     animation: fadeIn 1s ease-in 1 both; 
 
-    /* border: 1px solid yellow; */
     /* justify-content: center; */
 }
 .lessonSelection--title {
@@ -181,7 +184,6 @@
     justify-content: center;
     /* animation: fadeIn 2s ease-in 1 both;  */
 
-    /* border: 1px solid red; */
 }
 .frame {
     width: 300px;
