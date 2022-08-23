@@ -28,23 +28,33 @@ function NanotubeModels() {
     const positions = [1, -.4, -1];
     const scale = 0.40;
 
-    useEffect(() =>
-    {
-      if(counter >= 0)
-      {
-        const _animations = Object.values(actions);
-        _animations.forEach((a) => a.play())
+    // useEffect(() =>
+    // {
+    //   if(counter >= 0)
+    //   {
+    //     const _animations = Object.values(actions);
+    //     console.log(_animations);
+    //     _animations.forEach((a) => {
+    //       a.timeScale = 1/2; 
+    //       a.play();
+    //     })
 
-      }
-    })
+    //   }
+    // })
 
     if(counter === 0)
     {
       Animation();
       return (
-        <group ref={ref} {...props} dispose={null} scale={0.5} position={[0,-1.5,0]}>
-            <mesh geometry={nodes.Carbon_Nanotube.geometry} material={materials['Carbon Nanotube Material']} />
+        <group ref={ref} {...props} dispose={null} position={[0, .33, 0]} scale={0.5}>
+          <group name="Scene" position={[0, -1, 0]}>
+            <mesh name="Carbon_Nanotube" geometry={nodes.Carbon_Nanotube.geometry} material={materials['Carbon Nanotube Material']} position={[0, -4, 0]} />
+          </group>
         </group>
+
+        // <group ref={ref} {...props} dispose={null} scale={0.5} position={[0,-1.5,0]}>
+        //     <mesh geometry={nodes.Carbon_Nanotube.geometry} material={materials['Carbon Nanotube Material']} />
+        // </group>
       )
     }
 

@@ -1,8 +1,16 @@
 ## To-do
 
-    - Add nanotube model for nanotube section 0
+    - Write nanotubes section-1 copy
+    - Get diamonds material right
+
+
     - Add development section model -- blender monkey;
-    - Add under development section for section 1 of nanotubes;
+    - Add under development section for section 2 of nanotubes;
+
+    - Create corresponding project page on portfolio 
+    - Create ReadMe on GitHub
+
+
 
     - Add steroid hormone label on model flip of home page;
 

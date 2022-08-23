@@ -10,7 +10,7 @@ function NanotubeText(){
     {
         return (
             <div className='title--wrapper'>
-                <h1 className='title' style={{}}>C<sub>n</sub> - Nanotubes</h1>
+                <h1 className='title'>C<sub>n</sub> - Nanotubes</h1>
             </div>
         )
     }

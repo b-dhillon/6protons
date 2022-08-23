@@ -51,7 +51,7 @@ function Overlay(props) {
       <div className='hero--wrapper'>
         <div className='hero' >
             <h1 className='hero--title'>Learn by Seeing.</h1>
-            <p className='hero--subtitle'>A visual introduction to carbon chemistry.</p>
+            <p className='hero--subtitle'>A visual introduction to carbon allotropes.</p>
         </div>
       </div>
     )
@@ -141,7 +141,7 @@ export default function HomePage(props)
               <MemoizedStars />
               <spotLight position={[10, 10, 10] } intensity={1}/>
               <ambientLight intensity={.4} />
-              <Models flipped={flipped}/>
+              {rotatedCamera ? '' : <Models flipped={flipped}/>}
           </Suspense>
       </Canvas>
       <Overlay setPage={props.setPage} cameraRotate={cameraRotate} overlay={props.overlay} setOverlay={props.setOverlay}/>
