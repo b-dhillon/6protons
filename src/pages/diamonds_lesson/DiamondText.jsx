@@ -20,7 +20,7 @@ function DiamondText(){
         return (
             <div className='text--wrapper' style={{fontSize: 20}}>
                 <p>Diamonds are the hardest of all substances. They contain only carbon atoms, just like Fullerenes and Nanotubes. 
-                    Diamonds however, have their carbon atoms arranged in a <span>tetrahedral lattice</span>. 
+                    Diamonds however have their carbon atoms arranged in a <span>tetrahedral lattice</span>. 
                 </p>
             </div>
         )

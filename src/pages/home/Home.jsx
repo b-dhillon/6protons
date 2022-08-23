@@ -44,9 +44,6 @@ function Overlay(props) {
   }
 
 
-
-
-
   if(!rotatedCamera)
   {
 

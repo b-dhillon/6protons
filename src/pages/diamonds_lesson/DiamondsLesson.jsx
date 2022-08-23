@@ -48,8 +48,10 @@ function DiamondsLesson(props) {
                 <Provider store={DataStore}>
                   <DiamondModels/>
                 </Provider>
-                <spotLight position={[10, 10, 10] } intensity={.8}/>
-                <ambientLight intensity={.3} />
+                <spotLight position={[10, 10, 10] } intensity={4}/>
+                <spotLight position={[-10, 10, 10] } intensity={4}/>
+                <pointLight position={[0, -0.5, -1] } intensity={3}/>
+                <ambientLight intensity={.9} />
                 <MemoizedStars />
               </Suspense>
           </Canvas>
