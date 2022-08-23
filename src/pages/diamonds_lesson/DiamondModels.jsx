@@ -8,7 +8,7 @@ import * as THREE from 'three';
 useGLTF.preload('/lesson2_models/model0.glb');
 
 
-function LessonModels() {
+function DiamondModels() {
   const counter = useSelector(state => state.counter);
 
   function Model({ ...props })
@@ -107,4 +107,4 @@ function LessonModels() {
 
 }
 
-export default LessonModels
+export default DiamondModels

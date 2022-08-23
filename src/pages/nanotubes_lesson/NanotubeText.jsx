@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 
 
-function DiamondText(){
+function NanotubeText(){
     const counter = useSelector(state => state.counter);
 
     // Change line breaks into a class with a uniform padding bottom
@@ -10,7 +10,7 @@ function DiamondText(){
     {
         return (
             <div className='title--wrapper'>
-                <h1 className='title' style={{}}>C<sub>n</sub> - Diamond</h1>
+                <h1 className='title' style={{}}>C<sub>n</sub> - Nanotubes</h1>
             </div>
         )
     }
@@ -39,4 +39,4 @@ function DiamondText(){
     
 }
 
-export default DiamondText;
+export default NanotubeText;

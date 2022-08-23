@@ -84,13 +84,17 @@ export default function HomePage(props)
 
   const dispatch = useDispatch();
 
+
+
   function RotateCamera({cameraRotate}) {
     // const rotatedCamera = useSelector(state => state.rotatedCamera);
-  
+
     useFrame((state) => 
     {
       state.camera.rotation.y = THREE.MathUtils.lerp(state.camera.rotation.y, (rotatedCamera ? (Math.PI) : 0), 0.125)
     })
+  
+
     return <></>
   }
 
@@ -133,8 +137,8 @@ export default function HomePage(props)
       <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 20, fov: 75, position: [0,0, 2.5] }}>
         <color attach="background" args={["#000000"]} />
           <Suspense fallback={null}>
-              <MemoizedStars />
               <RotateCamera cameraRotate={cameraRotate}/>
+              <MemoizedStars />
               <spotLight position={[10, 10, 10] } intensity={1}/>
               <ambientLight intensity={.4} />
               <Models flipped={flipped}/>
