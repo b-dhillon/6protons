@@ -29,9 +29,9 @@ function DiamondText(){
     else if (counter === 2)
     {
         return(
-            <div className='text--wrapper2'>
+            <div className='text--wrapper'>
                 <p>The rest of this lesson is actively being developed. Please see the lesson on <span>Fullerenes</span> for an example of the
-                    minimal viable product (MVP) of the project. 
+                    minimal viable product (MVP) of this project. 
                 </p>
             </div>
         )
