@@ -15,7 +15,7 @@ const sectionCounter = (state = 0, action) =>
     }
 }
 
-const rotatedCamera = (state = false, action) =>
+const start = (state = false, action) =>
 {
     switch (action.type)
     {
@@ -43,7 +43,7 @@ const overlay = (state = false, action) =>
 
 const allReducers = combineReducers({
     counter: sectionCounter,
-    rotatedCamera: rotatedCamera,
+    start: start,
     overlay: overlay,
 })
 

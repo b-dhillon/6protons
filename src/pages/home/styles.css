@@ -1,52 +1,58 @@
 /* HOME PAGE STYLES */
-.hero--wrapper {
-    position: absolute; 
+.overlay {
+    /* position: absolute; */
+    width: 100%; 
+    height: 100%; 
     top: 0 ;
     left: 0;
-    height: 100%; 
-    width: 100%;
-    z-index: 2;
-    display: flex;
-    justify-content: center;
-    animation: fadeIn 3.5s 1 ease-in;
-    background: transparent;
+    z-index: 3;
+    position: absolute;
     font-family: Arial, Helvetica, sans-serif;
+    /* display: flex; 
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; */
+
 }
-.hero {
+
+.overlay--wrapper {
     position: relative;
-    top: 55%;
-    height: 250px;
-    z-index: 2;
+    top: 52%;
     display: flex; 
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    animation: fadeIn 2.5s 1 ease-in;
 }
 .hero--title {
     margin: 0;
     padding: 0;
-    font-size: 7rem;
+    font-size: 11vh;
     font-weight: 350;
-    letter-spacing: 3px;
+    letter-spacing: 5px;
+    text-align: center;
+
     background: linear-gradient(to right, #3272F4 0%, #CC2DD7 75%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     position: relative;
 }
 .hero--subtitle {
-    width: 90%;
+    width: 100%;
+    /* margin: 0;  */
     line-height: 40px;
     text-align: center;
     color: white !important;
-    font-size: 1.85rem;
+    font-size: 3vh;
 }
 
 .heroBtnWrapper {
-    position: absolute;
-    width: 100%; 
-    z-index: 2;
-    display: flex;
-    justify-content: center;
-    top: 80%;
+    /* position: absolute; */
+    /* width: 100%;  */
+    /* z-index: 2; */
+    /* display: flex; */
+    /* justify-content: center; */
+    /* top: 80%; */
 }
 
 .heroBtn {
@@ -61,6 +67,7 @@
     display: -moz-inline-flex;
     display: -ms-inline-flexbox;
     display: inline-flex;
+    margin-top: 10px;
 }
 .heroBtn > div {
     position: relative;
@@ -96,8 +103,8 @@
     justify-content: center;
     align-items: center;
     margin: 0;
-    width: 180px;
-    height: 55px;
+    width: 160px;
+    height: 50px;
     position: absolute;
     /* border: 2px solid rgb(255, 255, 255); */
     border: 2px solid rgb(61, 135, 255);
@@ -139,16 +146,10 @@
     transform: translateZ(-25px) rotateX(-90deg);
     cursor: pointer; 
 }
-.lessonSelection--container {
-    width: 300px;
-    height: 450px;
-    border-radius: 10px;
-    border: 1px solid ;
-    box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.55);
-}
+
 
 .lessonSelection--wrapper {
-    position: absolute;
+    /* position: absolute;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -156,53 +157,104 @@
     height: 100%;
     z-index: 2;
     top: 0;
-    left: 0;
-    padding: 100px 0px;
-    animation: fadeIn 1s ease-in 1 both; 
-
-    /* justify-content: center; */
+    left: 0; */
+    /* padding-top: 8vh; */
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center !important;
+    align-items: center;
+    animation: fadeIn .5s ease-in 1 both; 
+    font-family: 'Courier New', Courier, monospace !important;
 }
+
+
 .lessonSelection--title {
     margin: 0;
     padding: 0;
-    font-size: 4.5em;
+    font-size: 2.75rem;
     font-weight: 300;
     letter-spacing: 0.05em;
-    height: 100px; 
+    /* height: 100px;  */
     overflow: hidden;
     display: block;
     flex-shrink: 1;
 
     /* animation: fadeIn 2s ease-in 1 both;  */
-
     /* -webkit-text-stroke:1px white;
     -webkit-text-fill-color: black; */
 }
-.card--wrapper {
-    width: 100%;
-    height: 73%;
+.lessonSelection {
+    /* margin: 6vh 0px; */
+    width: 800px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; */
+    flex-shrink: 1;
+    padding: 40px;
+    background-color: rgba(0, 0, 0, .5);
+    backdrop-filter: blur(100px);
+    border-radius: 10px; 
+    border: 1px solid white;
+    /* overflow: scroll; */
+    z-index: 10;
+
+}
+
+.card--wrapper--wrapper {
+    width: 500px;
+    height: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 1;
-    /* animation: fadeIn 2s ease-in 1 both;  */
 
+    /* border: 1px solid red; */
+}
+
+.card--wrapper--wrapper > button {
+    background: transparent;
+    border: 1px solid #3272F4;
+    color: #3272F4;
+    width: 30px; 
+    height: 30px;
+    margin: 0 20px;
+    cursor: pointer;
+
+}
+
+.card--wrapper--wrapper > button:hover {
+    transform: scale(1.1);
+}
+
+.card--wrapper {
+    width: 600px;
+    height: 400px;
+    /* padding-left: 50px; */
+    z-index: 1;
+
+    display: flex !important; 
+    align-items: center;
+    overflow: scroll !important;
+
+    /* scroll-snap-type: x mandatory !important; */
 }
 .frame {
     width: 300px;
-    height: 400px;
+    height: 300px;
     transition: transform 200ms;
     z-index: 2;
-    margin: 0 2%;
+    margin-left: 20px;
+    margin-right: 20px;
+    flex-shrink: 1;
+    scroll-snap-align: center;
     /* animation: fadeIn 2s ease-in 1 both;  */
+}
 
-}
-.frame:hover {
-    transform: scale3d(1.03, 1.03, 1.03);
-}
 .card {
-    width: 100%;
-    height: 100%;
+    width: 300px;
+    height: 300px;
     border-radius: 9px;
     position: relative;
     transition-duration: 250ms;
@@ -211,14 +263,18 @@
     padding: 10px;
     display: flex; 
     flex-direction: column;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     align-items: center;
     border: 1px solid white;
+    flex-shrink: 1;
+
     /* animation: fadeIn 2s ease-in 1 both;  */
 
 }
 .card:hover {
-    border: 1px solid #3272F4;;
+    border: 1px solid #3272F4;
+    transform: scale3d(1.03, 1.03, 1.03);
+
 }
 .card > h1 {
     /* width: 100%;  */
@@ -237,6 +293,7 @@
     position: relative; 
     font-weight: 300;
     font-size: 1rem;
+    padding: 10px;
 
 /* border: 1px solid blue;  */
 }
@@ -333,12 +390,12 @@ transform: translateZ(44px);
         height: 180px;
     }
 
-    .hero--title {
+    /* .hero--title {
         font-size: 6rem;
     }
     .hero--subtitle {
         font-size: 1.5rem;
-    }
+    } */
 
     .heroBtn > div > a::before, 
     .heroBtn > div > a::after {
@@ -351,23 +408,28 @@ transform: translateZ(44px);
     }
 
     .frame {
-        width: 250px;
+        /* width: 250px; */
     }
 }
 
 @media screen and (max-width: 780px) {
 
     .hero {
-        height: 180px;
+        white-space: nowrap;
     }
 
-    .hero--title {
-        font-size: 5rem;
+    /* .hero--title {
+        font-size: 4.5rem;
+        
     }
     .hero--subtitle {
-        font-size: 1.5rem;
-    }
+        font-size: 1.25rem;
+    } */
 
-
+    /* .heroBtn > div > a::before, 
+    .heroBtn > div > a::after {
+        width: 140px;
+        height: 50px;
+    } */
 
 }

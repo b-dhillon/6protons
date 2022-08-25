@@ -19,7 +19,7 @@ export const reset = () =>
     }
 }
 
-export const rotateCamera = () => 
+export const start = () => 
 {
     return {
         type: '180'

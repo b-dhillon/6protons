@@ -47,9 +47,10 @@
 .text--wrapper2
 {
   font-family: monospace;
-  position: absolute;
-  top: 10%;
-  left: 8%;
+  /* position: absolute; */
+  padding: 20px;
+  /* top: 10%;
+  left: 8%; */
   width: 40%;
   height: 80%;
   display: flex;
@@ -60,8 +61,8 @@
   animation: slideUp 2s 1 both; 
   animation-delay: .5s;
   margin-left: 35px;
-
-  /* border: 1px solid red; */
+  padding-right: 40px;
+  border-right: 3px solid white;
 }
 
 .text--wrapper2 > p 
@@ -70,6 +71,8 @@
   font-size: 1.4rem;
   text-align: left;
   line-height: 45px;
+  overflow: scroll;
+
   /* animation: slideUp 2s 1 both; 
   animation-delay: .5s; */
   /* border: 1px solid blue; */

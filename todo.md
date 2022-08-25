@@ -1,7 +1,13 @@
 ## To-do
-
+    - Add graphene thumbnail
+    - Add gradient at bottom of paragraphs in fullerene lesson to indicate user to scroll
     - Get diamonds material right
-    - Fix positioning of hero button
+
+
+
+
+
+
 
 
     - Create corresponding project page on portfolio 
@@ -12,7 +18,8 @@
 
 
 
-
+ Completed this push: 
+    - Fix positioning of hero button, make responsive.
 
 
 

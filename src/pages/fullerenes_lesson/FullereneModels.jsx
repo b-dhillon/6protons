@@ -111,7 +111,7 @@ function LessonModels() {
       else if(counter === 5){
         return (
           <group ref={group} {...props} dispose={null} position={positions}>
-            <group name="Scene" scale={.023}>
+            <group name="Scene" scale={.021}>
               
               <group name="proteaseEmpty" rotation={[Math.PI, -1.17, Math.PI]} position={positions}>
                 <mesh name="proteaseModel" geometry={nodes.proteaseModel.geometry} material={materials.Material_0} rotation={[0, -0.02, 0]} />

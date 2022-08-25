@@ -45,7 +45,7 @@ function LessonText(){
     {
         return (
             <div className='text--wrapper2'>
-                <p>Each fullerene (buckyball) has 20 hexagons and 12 pentagons <span>(highlighted in red)</span> that fit together like the seams of a soccer ball. 
+                <p>Each molecule of fullerene has 20 hexagons and 12 pentagons <span>(highlighted in red)</span> that fit together like the seams of a soccer ball. 
                 <br/>
                 <br/>
                 Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space, and because they are essentially hollow cages, they can be manipulated to make materials never before known.</p>
@@ -90,8 +90,8 @@ function LessonText(){
     else
     {
         return (
-            <div className='text--wrapper'>
-                <h4>Lesson completed! Please navigate back to home.</h4>
+            <div className='text--wrapper' style={{fontSize: '1.25rem'}}>
+                <h4>Lesson completed! Please navigate back to lesson selection <i className="fa-solid fa-arrow-left-long" style={{color: 'white'}}></i> or home <i className="fas fa-house homeIcon" style={{color: 'white'}}></i></h4>
             </div>
         )
     }

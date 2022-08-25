@@ -46,7 +46,7 @@ function NanotubesLesson(props) {
 
             <HomeNav setPage={props.setPage} setOverlay={props.setOverlay}/>
             <LessonNav />
-            <NanotubeText/>
+            <NanotubeText setPage={props.setPage}/>
 
 
             <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 75, position: [0,0,2] }}>

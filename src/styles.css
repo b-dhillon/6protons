@@ -11,7 +11,7 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow: scroll;
   background-color: black;
 }
 
@@ -287,7 +287,7 @@ svg {
   }
   50% {
     box-shadow: 0 0 10px 4px white;
-    transform: scale(1.35);
+    transform: scale(1.25);
   }
 
   100% {

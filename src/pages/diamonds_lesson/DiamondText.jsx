@@ -26,7 +26,7 @@ function DiamondText(){
         )
     }
 
-    else if (counter === 2)
+    else
     {
         return(
             <div className='text--wrapper'>

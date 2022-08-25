@@ -50,8 +50,8 @@
 
 .text--wrapper > p 
 {
-  width: 80%;
-  font-size: 1.5vw;
+  width: 85%;
+  font-size: 1.2rem;
   text-align: center;
   line-height: 45px;
   animation: fadeIn 2s 1 ease-in-out;

@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { reset, rotateCamera, resetCamera } from '../actions';
+import { reset, start, resetCamera } from '../actions';
 
 function HomeNav(props) {
 
@@ -20,7 +20,7 @@ function HomeNav(props) {
                 </li>
 
                 <li className="homeBtn" onClick={() => {
-                    dispatch(rotateCamera());
+                    dispatch(start());
                     dispatch(reset());
                     props.setPage(`Home`); 
                     
