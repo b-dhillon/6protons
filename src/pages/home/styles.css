@@ -71,8 +71,8 @@
 }
 .heroBtn > div {
     position: relative;
-    width: 180px;
-    height: 55px;
+    width: 160px;
+    height: 50px;
     -webkit-perspective: 1000px;
     -moz-perspective: 1000px;
     perspective: 1000px;
@@ -159,6 +159,8 @@
     top: 0;
     left: 0; */
     /* padding-top: 8vh; */
+    width: 100%;
+    max-width: 1200px;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -166,13 +168,34 @@
     align-items: center;
     animation: fadeIn .5s ease-in 1 both; 
     font-family: 'Courier New', Courier, monospace !important;
+    /* border: 1px solid yellow;  */
+}
+
+.lessonSelection {
+    /* margin: 6vh 0px; */
+    width: 90%;
+    height: 90%;
+    max-height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 1;
+    padding: 25px 0px;
+    background-color: rgba(0, 0, 0, .66);
+    backdrop-filter: blur(100px);
+    border-radius: 10px; 
+    border: 1px solid white;
+    /* overflow: scroll; */
+    z-index: 10;
+
 }
 
 
 .lessonSelection--title {
     margin: 0;
     padding: 0;
-    font-size: 2.75rem;
+    font-size: 4.5vw;
     font-weight: 300;
     letter-spacing: 0.05em;
     /* height: 100px;  */
@@ -184,31 +207,15 @@
     /* -webkit-text-stroke:1px white;
     -webkit-text-fill-color: black; */
 }
-.lessonSelection {
-    /* margin: 6vh 0px; */
-    width: 800px;
-    height: 600px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* justify-content: center; */
-    flex-shrink: 1;
-    padding: 40px;
-    background-color: rgba(0, 0, 0, .5);
-    backdrop-filter: blur(100px);
-    border-radius: 10px; 
-    border: 1px solid white;
-    /* overflow: scroll; */
-    z-index: 10;
 
-}
 
 .card--wrapper--wrapper {
-    width: 500px;
+    width: 100%;
     height: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 0px 30px;
 
     /* border: 1px solid red; */
 }
@@ -229,41 +236,51 @@
 }
 
 .card--wrapper {
-    width: 600px;
+    width: 100%;
     height: 400px;
     /* padding-left: 50px; */
     z-index: 1;
+    justify-content: center;
 
     display: flex !important; 
     align-items: center;
     overflow: scroll !important;
 
+    /* border: 1px solid blue; */
+
     /* scroll-snap-type: x mandatory !important; */
 }
 .frame {
-    width: 300px;
-    height: 300px;
-    transition: transform 200ms;
+    width: 25vw;
+    height: 25vw;
+    max-width: 300px;
+    max-height: 300px;
+    min-width: 165px; 
+    min-height: 165px;
     z-index: 2;
     margin-left: 20px;
     margin-right: 20px;
     flex-shrink: 1;
-    scroll-snap-align: center;
+    scroll-snap-align: start;
     /* animation: fadeIn 2s ease-in 1 both;  */
 }
 
 .card {
-    width: 300px;
-    height: 300px;
+    width: 25vw;
+    height: 25vw;
+    max-width: 300px;
+    max-height: 300px;
+    min-width: 165px; 
+    min-height: 165px;
     border-radius: 9px;
     position: relative;
     transition-duration: 250ms;
-    transition-property: transform, box-shadow;
+    transition-property: transform;
     transition-timing-function: ease-out;
     padding: 10px;
     display: flex; 
     flex-direction: column;
-    /* justify-content: space-between; */
+    /* justify-content: flex-start; */
     align-items: center;
     border: 1px solid white;
     flex-shrink: 1;
@@ -279,13 +296,15 @@
 .card > h1 {
     /* width: 100%;  */
     /* height: 20%;  */
+    font-size: 2.3vw;
     font-weight: 500;
     letter-spacing: 4px;
 
     /* border: 1px solid blue;  */
 }
 .card > img {
-    width: 80%; 
+    width: 20vw; 
+    max-width: 80%;
     height: auto;
     /* border: 1px solid blue;  */
 }
@@ -383,6 +402,17 @@ transform: translateZ(44px);
     }
 }
 
+/* Setting max font size to 3rem */
+@media screen and (min-width: 1100px) {
+    .lessonSelection--title {
+        font-size: 3rem;
+    }
+    .card > h1 {
+        font-size: 2rem;
+    }
+}
+
+
 
 @media screen and (max-width: 1100px) {
 
@@ -403,21 +433,24 @@ transform: translateZ(44px);
         height: 50px;
     }
 
-    .lessonSelection--title {
-        font-size: 3em;
-    }
+    /* .lessonSelection--title {
+        font-size: 2rem;
+    } */
 
     .frame {
         /* width: 250px; */
     }
+
+
+    .card--wrapper--wrapper {
+        padding: 0;
+    }
 }
 
 @media screen and (max-width: 780px) {
-
     .hero {
         white-space: nowrap;
     }
-
     /* .hero--title {
         font-size: 4.5rem;
         
@@ -432,4 +465,14 @@ transform: translateZ(44px);
         height: 50px;
     } */
 
+}
+
+@media screen and (max-height: 600px) {
+    .card--wrapper--wrapper,
+    .card--wrapper {
+        height: 300px;
+    }
+    .lessonSelection {
+        padding: 10px;
+    }
 }

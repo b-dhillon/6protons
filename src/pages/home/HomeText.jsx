@@ -73,14 +73,14 @@ function HomeText(props) {
 
 
             <div className='card--wrapper--wrapper'>
-              <button onClick={ () => slide('left')}><i className="fa-solid fa-angle-left lessonNav--icons" ></i></button>
+              {/* <button onClick={ () => slide('left')}><i className="fa-solid fa-angle-left lessonNav--icons" ></i></button> */}
               <div className='card--wrapper'>
                 <Card id={'Fullerenes'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Fullerenes"} img={fullerenesThumbnail} description={"Placeholder for Fullerenes description. Lorem impsum, just random filler text here. And a little more."} />
                 <Card id={'Nanotubes'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Nanotubes"} img={nanotubesThumbnail} description={"Placeholder for Nanotubes description. Lorem impsum, just random filler text here. And a little more."}/>
                 <Card id={'Diamonds'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Diamonds"} img={diamondsThumbnail} description={"Placeholder for Diamonds description. Lorem impsum, just random filler text here. And a little more."}/>
-                <Card id={'Graphene'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Graphene"} img={diamondsThumbnail} description={"Placeholder for Graphene description. Lorem impsum, just random filler text here. And a little more."}/>
+                {/* <Card id={'Graphene'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Graphene"} img={diamondsThumbnail} description={"Placeholder for Graphene description. Lorem impsum, just random filler text here. And a little more."}/> */}
               </div>
-              <button onClick={ () => slide('right')} style={{background: 'transparent'}}><i className="fa-solid fa-angle-right lessonNav--icons"></i></button>
+              {/* <button onClick={ () => slide('right')} style={{background: 'transparent'}}><i className="fa-solid fa-angle-right lessonNav--icons"></i></button> */}
             </div>
             
 
