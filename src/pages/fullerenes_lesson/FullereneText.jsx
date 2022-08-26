@@ -6,6 +6,17 @@ function LessonText(){
     const counter = useSelector(state => state.counter);
     const [overflow, setOverflow] = useState();
 
+    useEffect(()=> {
+        const element = document.querySelector('.text--wrapper2--p')
+        if(element)
+        {
+            const isOverflown = ({clientHeight, scrollHeight }) => {
+                return scrollHeight > clientHeight;
+            }
+            setOverflow(isOverflown(element));
+        }
+    }, [counter])
+
     function ScrollHelper() {
         return (
             <div className='scrolldown--wrapper'>
@@ -20,29 +31,7 @@ function LessonText(){
     }
 
 
-    useEffect(()=> {
-        const element = document.querySelector('.text--wrapper2--p')
-        const isOverflown = ({ clientWidth, clientHeight, scrollWidth, scrollHeight }) => {
-            return scrollHeight > clientHeight;
-        }
-
-        setOverflow(isOverflown(element));
-
-    }, [counter])
-
-    function AddScroll(){
-        const element = document.querySelector('.text--wrapper2')
-        const isOverflown = ({ clientWidth, clientHeight, scrollWidth, scrollHeight }) => {
-            return scrollHeight > clientHeight || scrollWidth > clientWidth;
-        }
-
-        console.log(isOverflown(element));
-
-        return <></>
-    }
-
-
-    // Change line breaks into a class with a uniform padding bottom
+    // Change line breaks into a class with a uniform padding or margin bottom
     if (counter === 0)
     {
         return (
@@ -74,6 +63,7 @@ function LessonText(){
                 <br/>
                 <br/>
                 This molecule would go on to be named Buckminsterfullerene. Often shortened to fullerene, and nicknamed <span>Buckyball</span>.</p>
+                {overflow ? <ScrollHelper/> : ''}
             </div>
             
         )
@@ -87,7 +77,9 @@ function LessonText(){
                 <br/>
                 <br/>
                 Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space, and because they are essentially hollow cages, they can be manipulated to make materials never before known.</p>
+                {overflow ? <ScrollHelper/> : ''}
             </div>
+
         )
     }
 
@@ -104,7 +96,9 @@ function LessonText(){
                     <br/>
                     <br/>
                     Scientists have even turned their attention to buckyballs in their quest for a <span>cure for AIDS.</span></p>
+                    {overflow ? <ScrollHelper/> : ''}
                 </div>
+
             </>
 
         )

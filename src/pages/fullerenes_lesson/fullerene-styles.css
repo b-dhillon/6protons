@@ -123,34 +123,9 @@ span
   width: 50px; 
   height: 50px;
   --color: white;
-  /* --sizeX: 22.5px;
-  --sizeY: 37.5px; */
   position: relative;
-  /* width: var(--sizeX);
-  height: var(--sizeY);
-  margin-left: var(sizeX / 2); */
-  /* border: calc(var(--sizeX) / 10) solid var(--color);
-  border-radius: 50px; */
   box-sizing: border-box;
-  /* margin-bottom: 5px; */
-  cursor: pointer;
   font-size: 14px;
-
-}
-
-.scrolldown::before {
-  /* content: "";
-  position: absolute;
-  bottom: 22.5px;
-  left: 50%;
-  width: 5px;
-  height: 5px;
-  margin-left: -3px;
-  background-color: var(--color);
-  border-radius: 100%;
-  animation: scrolldown-anim 2s infinite;
-  box-sizing: border-box;
-  box-shadow: 0px -5px 3px 1px #2a547066; */
 }
 
 @keyframes scrolldown-anim {
@@ -177,8 +152,6 @@ span
 }
 
 .chevrons {
-  /* padding: 6px 0 0 0;
-  margin-left: -3px; */
   margin-top: 10px; 
   margin-left: 12.5px;
   width: 22.5px;

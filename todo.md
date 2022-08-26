@@ -1,5 +1,4 @@
 ## To-do
-   - Change out hero Button to rounded one that only changes border on hover
 
    - Create corresponding project page on portfolio 
    - Re-factor && Clean
@@ -7,10 +6,11 @@
 
 
 
-
    Optional ~
     - Get diamonds material right
     - Add graphene thumbnail
+    - Change out hero Button to rounded one that only changes border on hover?
+
 
 
 
