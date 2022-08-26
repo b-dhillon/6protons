@@ -1,8 +1,46 @@
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 
 function LessonText(){
     const counter = useSelector(state => state.counter);
+    const [overflow, setOverflow] = useState();
+
+    function ScrollHelper() {
+        return (
+            <div className='scrolldown--wrapper'>
+                <div className="scrolldown"> Scroll
+                    <div className="chevrons">
+                        <div className="chevrondown"></div>
+                        <div className="chevrondown"></div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+
+    useEffect(()=> {
+        const element = document.querySelector('.text--wrapper2--p')
+        const isOverflown = ({ clientWidth, clientHeight, scrollWidth, scrollHeight }) => {
+            return scrollHeight > clientHeight;
+        }
+
+        setOverflow(isOverflown(element));
+
+    }, [counter])
+
+    function AddScroll(){
+        const element = document.querySelector('.text--wrapper2')
+        const isOverflown = ({ clientWidth, clientHeight, scrollWidth, scrollHeight }) => {
+            return scrollHeight > clientHeight || scrollWidth > clientWidth;
+        }
+
+        console.log(isOverflown(element));
+
+        return <></>
+    }
+
 
     // Change line breaks into a class with a uniform padding bottom
     if (counter === 0)
@@ -32,7 +70,7 @@ function LessonText(){
         return (
             
             <div className='text--wrapper2'>
-                <p>The result? Novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered.
+                <p className='text--wrapper2--p'>The result? Novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered.
                 <br/>
                 <br/>
                 This molecule would go on to be named Buckminsterfullerene. Often shortened to fullerene, and nicknamed <span>Buckyball</span>.</p>
@@ -45,7 +83,7 @@ function LessonText(){
     {
         return (
             <div className='text--wrapper2'>
-                <p>Each molecule of fullerene has 20 hexagons and 12 pentagons <span>(highlighted in red)</span> that fit together like the seams of a soccer ball. 
+                <p className='text--wrapper2--p'>Each molecule of fullerene has 20 hexagons and 12 pentagons <span>(highlighted in red)</span> that fit together like the seams of a soccer ball. 
                 <br/>
                 <br/>
                 Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space, and because they are essentially hollow cages, they can be manipulated to make materials never before known.</p>
@@ -55,10 +93,11 @@ function LessonText(){
 
     else if(counter === 4)
     {
+
         return (
             <>
                 <div className='text--wrapper2'>
-                    <p>For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known.
+                    <p className='text--wrapper2--p'>For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known.
                     <br/>
                     <br/>
                     These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems.
@@ -75,7 +114,7 @@ function LessonText(){
     {
         return (
             <div className='text--wrapper2'>
-                <p>
+                <p className='text--wrapper2--p'>
                     How can buckyballs help cure aids? An enzyme (HIV-1-Protease) that is required for HIV to reproduce, exhibits a <span>nonpolar pocket</span> in its three-dimensional structure.
                     <br/>
                     <br/>
@@ -84,6 +123,9 @@ function LessonText(){
                     <br/>
                     If this pocket is blocked, the production of virus ceases. Because <span>buckyballs are nonpolar</span>, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible blockers.
                 </p>
+
+                {overflow ? <ScrollHelper/> : ''}
+
             </div>
         )
     }
