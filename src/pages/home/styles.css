@@ -159,18 +159,22 @@
     padding: 10px;
 }
 
-.heroBtn:hover {
+/* .heroBtn:hover {
     border: 1px solid #CC2DD7;
     color: #CC2DD7
+} */
+
+
+
+
+.hidden {
+    display: none;
 }
 
 
+.hero--wrapper {
 
-
-
-
-
-
+}
 
 
 .lessonSelection--wrapper {

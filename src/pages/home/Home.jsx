@@ -58,7 +58,7 @@ function HomePage(props)
 
   else return (
     <>
-      <Stats showPanel={0} className="stats" {...props} />
+      {/* <Stats showPanel={0} className="stats" {...props} /> */}
 
       <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 20, fov: 75, position: [0,0, 2.5] }}>
         <color attach="background" args={["#000000"]} />
@@ -66,7 +66,7 @@ function HomePage(props)
               {/* <RotateCamera cameraRotate={cameraRotate}/> */}
               <MemoizedStars />
               <spotLight position={[10, 10, 10] } intensity={1}/>
-              <ambientLight intensity={.4} />
+              <ambientLight intensity={.2} />
               {started ? '' : <Models flipped={flipped}/>}
           </Suspense>
       </Canvas>

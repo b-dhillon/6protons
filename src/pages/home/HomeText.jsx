@@ -51,65 +51,74 @@ function HomeText(props) {
     }, 10);
 
   }
-    const started = useSelector(state => state.start);
-    const dispatch = useDispatch();
 
-  
-    if(!started)
-    {
-      return (
-          <div>
-              <h1 className='hero--title'>Learn by Seeing</h1>
-              <p className='hero--subtitle'>A visual introduction to carbon allotropes.</p>
-          </div>
-      )
-    }
-  
-    else
-      return (
-        <div className='lessonSelection--wrapper'>
-          <div className='lessonSelection'>
-            <h1 className='lessonSelection--title'>Please select a lesson</h1>
+  const started = useSelector(state => state.start);
+  const dispatch = useDispatch();
 
 
-            <div className='card--wrapper--wrapper'>
-              {/* <button onClick={ () => slide('left')}><i className="fa-solid fa-angle-left lessonNav--icons" ></i></button> */}
-              <div className='card--wrapper'>
-                <Card id={'Fullerenes'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Fullerenes"} img={fullerenesThumbnail} description={"Placeholder for Fullerenes description. Lorem impsum, just random filler text here. And a little more."} />
-                <Card id={'Nanotubes'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Nanotubes"} img={nanotubesThumbnail} description={"Placeholder for Nanotubes description. Lorem impsum, just random filler text here. And a little more."}/>
-                {/* <Card id={'Diamonds'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Diamonds"} img={diamondsThumbnail} description={"Placeholder for Diamonds description. Lorem impsum, just random filler text here. And a little more."}/> */}
-                {/* <Card id={'Graphene'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Graphene"} img={diamondsThumbnail} description={"Placeholder for Graphene description. Lorem impsum, just random filler text here. And a little more."}/> */}
-              </div>
-              {/* <button onClick={ () => slide('right')} style={{background: 'transparent'}}><i className="fa-solid fa-angle-right lessonNav--icons"></i></button> */}
-            </div>
 
-           
-            <button className="heroBtn" onMouseEnter={props.rotateModel} onMouseLeave={props.rotateModel} onClick={() => {
-            dispatch(start());}}>
+  // if (started)
+  // {
+    // const hero = document.querySelector(".hero--wrapper");
+    // const lessonSlection = document.querySelector(".lessonSelection--wrapper")
 
-              {started ? "Back to Home" : "Get Started"}
-            </button>
-          
-            
+    // document.classList.add(".hidden")
+  // } 
 
-            {/* <div className="heroBtn" onClick={() => {
-                dispatch(start());
-                // Timeout is to create a delay between camera rotating and paining of 
-                // lesson DOM elements to the screen. This produces a smoother animation with less 
-                // frames being dropped.
-                // setTimeout(() => props.setOverlay() , 600)
-              }} 
-              onMouseEnter={props.rotateModel} 
-              onMouseLeave={props.rotateModel}
-              >
-              <div>
-                <a title={started ? "Back to Home" : "Get Started"}></a>
-              </div>
-            </div> */}
-    
+  if(!started)
+  {
+    return (
+        <div className='hero--wrapper'>
+            <h1 className='hero--title'>Learn by Seeing</h1>
+            <p className='hero--subtitle'>A visual introduction to carbon allotropes.</p>
         </div>
-      </div>
     )
+  }
+
+  else
+    return (
+      <div className='lessonSelection--wrapper'>
+        <div className='lessonSelection'>
+          <h1 className='lessonSelection--title'>Please select a lesson</h1>
+
+
+          <div className='card--wrapper--wrapper'>
+            {/* <button onClick={ () => slide('left')}><i className="fa-solid fa-angle-left lessonNav--icons" ></i></button> */}
+            <div className='card--wrapper'>
+              <Card id={'Fullerenes'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Fullerenes"} img={fullerenesThumbnail} description={"Placeholder for Fullerenes description. Lorem impsum, just random filler text here. And a little more."} />
+              <Card id={'Nanotubes'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Nanotubes"} img={nanotubesThumbnail} description={"Placeholder for Nanotubes description. Lorem impsum, just random filler text here. And a little more."}/>
+              {/* <Card id={'Diamonds'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Diamonds"} img={diamondsThumbnail} description={"Placeholder for Diamonds description. Lorem impsum, just random filler text here. And a little more."}/> */}
+              {/* <Card id={'Graphene'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Graphene"} img={diamondsThumbnail} description={"Placeholder for Graphene description. Lorem impsum, just random filler text here. And a little more."}/> */}
+            </div>
+            {/* <button onClick={ () => slide('right')} style={{background: 'transparent'}}><i className="fa-solid fa-angle-right lessonNav--icons"></i></button> */}
+          </div>
+
+          
+          <button className="heroBtn" onMouseEnter={props.rotateModel} onMouseLeave={props.rotateModel} onClick={() => {
+          dispatch(start());}}>
+
+            {started ? "Back to Home" : "Get Started"}
+          </button>
+        
+        
+          {/* <div className="heroBtn" onClick={() => {
+              dispatch(start());
+              // Timeout is to create a delay between camera rotating and paining of 
+              // lesson DOM elements to the screen. This produces a smoother animation with less 
+              // frames being dropped.
+              // setTimeout(() => props.setOverlay() , 600)
+            }} 
+            onMouseEnter={props.rotateModel} 
+            onMouseLeave={props.rotateModel}
+            >
+            <div>
+              <a title={started ? "Back to Home" : "Get Started"}></a>
+            </div>
+          </div> */}
+  
+      </div>
+    </div>
+  )
 }
 
 export default HomeText
