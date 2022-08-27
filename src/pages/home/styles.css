@@ -8,23 +8,36 @@
     z-index: 3;
     position: absolute;
     font-family: Arial, Helvetica, sans-serif;
-    /* display: flex; 
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; */
-
-}
-
-.overlay--wrapper {
-    position: relative;
-    top: 52%;
     display: flex; 
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    /* border: 1px solid red; */
     animation: fadeIn 2.5s 1 ease-in;
+
+
 }
+
+/* .overlay--wrapper {
+    position: relative;
+    top: 52%; 
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+} */
+
+.hero--wrapper {
+    position: absolute;
+    /* border: 3px solid blue; */
+    width: 100%;
+    max-width: 1200px;
+    height: 100vh;
+}
+
 .hero--title {
+    position: relative;
+    top: 54%;
     margin: 0;
     padding: 0;
     font-size: 11vh;
@@ -38,6 +51,8 @@
     position: relative;
 }
 .hero--subtitle {
+    position: relative;
+    top: 53%;
     width: 100%;
     /* margin: 0;  */
     line-height: 40px;
@@ -154,9 +169,10 @@
     background: black;
     color: #3272F4;
     border: 1px solid #3272F4;
-    /* border-radius: 20px; */
     cursor: pointer;
     padding: 10px;
+    position: absolute;
+    top: 75%; 
 }
 
 /* .heroBtn:hover {
@@ -168,18 +184,16 @@
 
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 
-.hero--wrapper {
 
-}
 
 
 .lessonSelection--wrapper {
-    /* position: absolute;
-    display: flex;
+    position: absolute;
+    /* display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
@@ -198,6 +212,8 @@
     animation: fadeIn .5s ease-in 1 both; 
     font-family: 'Courier New', Courier, monospace !important;
     /* border: 1px solid yellow;  */
+    /* display: none; */
+
 }
 
 .lessonSelection {
@@ -217,6 +233,8 @@
     border: 1px solid white;
     /* overflow: scroll; */
     z-index: 10;
+    /* display: none; */
+
 
 }
 

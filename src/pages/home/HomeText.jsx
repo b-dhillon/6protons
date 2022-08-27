@@ -57,13 +57,7 @@ function HomeText(props) {
 
 
 
-  // if (started)
-  // {
-    // const hero = document.querySelector(".hero--wrapper");
-    // const lessonSlection = document.querySelector(".lessonSelection--wrapper")
 
-    // document.classList.add(".hidden")
-  // } 
 
   if(!started)
   {
