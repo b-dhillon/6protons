@@ -1,10 +1,12 @@
 ## To-do
    - Ipad Changes
+   
       - Fix heroBtn responsiveness now with new home page design
 
       - Get rid of all hover effects if ipad is detected
-         - Inlcuding flipping testosterone!
-         - Dont forget about the hover effect on HomeNav
+         - Last one is start lesson button. The two below are done. 
+            - Inlcuding flipping testosterone!
+            - Dont forget about the hover effect on HomeNav
 
       - Get rid of scroll on body --  only allow for scroll on paragraphs
       - Adjust soccer ball pattern model to the left
