@@ -46,15 +46,7 @@
     font-size: 3vh;
 }
 
-.heroBtnWrapper {
-    /* position: absolute; */
-    /* width: 100%;  */
-    /* z-index: 2; */
-    /* display: flex; */
-    /* justify-content: center; */
-    /* top: 80%; */
-}
-
+/* 
 .heroBtn {
     animation: fadeIn 1s 1 ease-in;
     font-size: 1.1rem;
@@ -106,7 +98,6 @@
     width: 160px;
     height: 50px;
     position: absolute;
-    /* border: 2px solid rgb(255, 255, 255); */
     border: 2px solid rgb(61, 135, 255);
     box-sizing: border-box;
     content: attr(title);
@@ -145,7 +136,41 @@
     -o-transform: translateZ(-25px) rotateX(-90deg);
     transform: translateZ(-25px) rotateX(-90deg);
     cursor: pointer; 
+} */
+
+
+
+.heroBtn {
+    /* width: 20vh; 
+    max-width: 160px;
+    min-width: 100px;
+    max-height: 50px; */
+    width: 150px;
+    height: 45px;
+    animation: fadeIn 1s 1 ease-in;
+    font-size: .8em;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    background: black;
+    color: #3272F4;
+    border: 1px solid #3272F4;
+    /* border-radius: 20px; */
+    cursor: pointer;
+    padding: 10px;
 }
+
+.heroBtn:hover {
+    border: 1px solid #CC2DD7;
+    color: #CC2DD7
+}
+
+
+
+
+
+
+
+
 
 
 .lessonSelection--wrapper {
@@ -254,8 +279,8 @@
     height: 25vw;
     max-width: 300px;
     max-height: 300px;
-    min-width: 165px; 
-    min-height: 165px;
+    min-width: 190px; 
+    min-height: 190px;
     z-index: 2;
     margin-left: 20px;
     margin-right: 20px;
@@ -269,8 +294,8 @@
     height: 25vw;
     max-width: 300px;
     max-height: 300px;
-    min-width: 165px; 
-    min-height: 165px;
+    min-width: 190px; 
+    min-height: 190px;
     border-radius: 9px;
     position: relative;
     transition-duration: 250ms;
@@ -295,12 +320,14 @@
 .card > h1 {
     /* width: 100%;  */
     /* height: 20%;  */
-    font-size: 2.3vw;
+    font-size: 3vh;
     font-weight: 500;
     letter-spacing: 4px;
 
     /* border: 1px solid blue;  */
 }
+
+
 .card > img {
     width: 20vw; 
     max-width: 80%;
@@ -406,10 +433,27 @@ transform: translateZ(44px);
     .lessonSelection--title {
         font-size: 3rem;
     }
+
+    .heroBtn {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (min-height: 610px) and (min-width: 1100px) {
     .card > h1 {
         font-size: 2rem;
     }
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -418,60 +462,68 @@ transform: translateZ(44px);
     .hero {
         height: 180px;
     }
-
-    /* .hero--title {
-        font-size: 6rem;
-    }
-    .hero--subtitle {
-        font-size: 1.5rem;
-    } */
-
-    .heroBtn > div > a::before, 
-    .heroBtn > div > a::after {
-        width: 160px;
-        height: 50px;
-    }
-
-    /* .lessonSelection--title {
-        font-size: 2rem;
-    } */
-
-    .frame {
-        /* width: 250px; */
-    }
-
-
-    .card--wrapper--wrapper {
-        padding: 0;
-    }
 }
+
+
+
+
+
 
 @media screen and (max-width: 780px) {
     .hero {
         white-space: nowrap;
     }
-    /* .hero--title {
-        font-size: 4.5rem;
-        
-    }
-    .hero--subtitle {
-        font-size: 1.25rem;
-    } */
-
-    /* .heroBtn > div > a::before, 
-    .heroBtn > div > a::after {
-        width: 140px;
-        height: 50px;
-    } */
 
 }
+
+
+
+
 
 @media screen and (max-height: 600px) {
     .card--wrapper--wrapper,
     .card--wrapper {
-        height: 300px;
+        height: 60vh;
     }
+
     .lessonSelection {
         padding: 10px;
     }
+
+    .heroBtn {
+        width: 130px;
+        height: 40px; 
+        font-size: .7em;
+    }
+
+    .card {
+        width: 19vw;
+        height: 19vw;
+
+    }
+    .frame {
+        width: 19vw;
+        height: 19vw;
+
+    }
+}
+
+
+@media screen and (min-height: 700px) and (max-width: 1000px) {
+
+    .card > h1 {
+        font-size: 1.5rem;
+    }
+
+    .card {
+        width: 30vw;
+        height: 30vw;
+
+    }
+    .frame {
+        width: 30vw;
+        height: 30vw;
+
+    }
+
 }

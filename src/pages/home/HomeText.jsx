@@ -82,9 +82,17 @@ function HomeText(props) {
               </div>
               {/* <button onClick={ () => slide('right')} style={{background: 'transparent'}}><i className="fa-solid fa-angle-right lessonNav--icons"></i></button> */}
             </div>
+
+           
+            <button className="heroBtn" onMouseEnter={props.rotateModel} onMouseLeave={props.rotateModel} onClick={() => {
+            dispatch(start());}}>
+
+              {started ? "Back to Home" : "Get Started"}
+            </button>
+          
             
 
-            <div className="heroBtn" onClick={() => {
+            {/* <div className="heroBtn" onClick={() => {
                 dispatch(start());
                 // Timeout is to create a delay between camera rotating and paining of 
                 // lesson DOM elements to the screen. This produces a smoother animation with less 
@@ -97,7 +105,8 @@ function HomeText(props) {
               <div>
                 <a title={started ? "Back to Home" : "Get Started"}></a>
               </div>
-            </div>
+            </div> */}
+    
         </div>
       </div>
     )

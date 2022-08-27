@@ -74,7 +74,21 @@ function HomePage(props)
       <div className='overlay'>
         <div className='overlay--wrapper' style={{top: (started ? 0 : '52%')}}>
           <HomeText setPage={props.setPage} overlay={props.overlay} setOverlay={props.setOverlay} rotateModel={rotateModel}/>
-        { started ? '' : <div className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => {
+
+          
+          <button className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => { dispatch(start());}}
+          >
+            {started ? "Back to Home" : "Get Started"}
+          </button>
+          
+
+
+
+
+
+
+
+        {/* { started ? '' : <div className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => {
           dispatch(start());
           // Timeout is to create a delay between camera rotating and paining of 
           // lesson DOM elements to the screen. This produces a smoother animation with less 
@@ -83,7 +97,10 @@ function HomePage(props)
           }}>
             <div><a title={started ? "Back to Home" : "Get Started"}></a></div>
         </div>
-        }
+        } */}
+
+
+
         </div>
       </div>
     </>
