@@ -20,7 +20,7 @@ function Models(props) {
 
     return (
     <group position={[-.1, .55, -1]} {...props} dispose={null}>
-        <group ref={ref} scale={0.055} rotation={[(Math.PI * 1.5), 0, 0]}>
+        <group ref={ref} scale={0.055} rotation={[(Math.PI / 2), 0, 0]}>
             <mesh geometry={nodes.SurfSphere.geometry} material={materials.Oxygen} />
             <mesh geometry={nodes.SurfSphere_1.geometry} material={materials.Carbon} />
             <mesh geometry={nodes.SurfSphere_2.geometry} material={materials.Hydrogen} />
