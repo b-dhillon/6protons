@@ -38,7 +38,7 @@
 .text--wrapper > p 
 {
   width: 85%;
-  font-size: 1.5vw;
+  font-size: 1.7vw !important;
   text-align: center;
   line-height: 45px;
   animation: fadeIn 2s 1 ease-in-out;
