@@ -76,16 +76,11 @@ function HomePage(props)
           <HomeText setPage={props.setPage} overlay={props.overlay} setOverlay={props.setOverlay} rotateModel={rotateModel}/>
 
           
-          <button className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => { dispatch(start());}}
+          { started ? '' : <button className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => { dispatch(start());}}
           >
             {started ? "Back to Home" : "Get Started"}
-          </button>
+          </button>}
           
-
-
-
-
-
 
 
         {/* { started ? '' : <div className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => {
