@@ -9,6 +9,7 @@
       - Get rid of scroll on body --  only allow for scroll on paragraphs
       - Adjust soccer ball pattern model to the left
       - Make nanotubes start button higher 
+      - Get rid of doped buckyball animation and just rotate it in 3js, no scale. 
    
    - Fix flipped model bug.
 
