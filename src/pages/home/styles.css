@@ -536,3 +536,9 @@ transform: translateZ(44px);
     }
 
 }
+
+@media screen and (min-height: 1200px) {
+    .card > h1 {
+        font-size: 1.5rem;
+    }
+}
