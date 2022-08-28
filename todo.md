@@ -1,5 +1,6 @@
 ## To-do
    - Ipad Changes
+      - Make fullerene start page paint quicker -- have it paint in the background while the loader is spinning, then make the loader display none after 3-5 seconds. Currently you are re-rendering the page after loading -- dont spark a full re-render just add a display none class instead. 
    
 
 
@@ -27,10 +28,10 @@
 
 
    - Get rid of all hover effects if ipad is detected
-      - Last one is start lesson button. The two below are done. 
-         - Inlcuding flipping testosterone!
-         - Dont forget about the hover effect on HomeNav
-
+      - Start lesson button.
+      - Hero button 
+      - Steroid hormone flipping
+      - Hero button 
 
 
 

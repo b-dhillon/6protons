@@ -50,7 +50,7 @@ function LessonModels() {
       {
         RotateAnimation();
         return (
-          <group ref={ref} {...props} dispose={null} scale={0.065}>
+          <group ref={ref} {...props} dispose={null} scale={0.063}>
             <group name="Scene">
               <group name="animation-empty">
                 <mesh name="carbon-atoms" geometry={nodes['carbon-atoms'].geometry} material={materials.Carbon} position={[1.02, 3.01, 1.45]} scale={0.23} />

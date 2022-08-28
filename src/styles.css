@@ -95,8 +95,9 @@ svg {
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
     background: black;
-    color: #f07167;
-    border: 1px solid #f07167;
+    color: white; 
+    /* color: #f07167; */
+    border: 1px solid white;
     cursor: pointer;
     padding: 10px;
     position: absolute;
@@ -222,6 +223,7 @@ svg {
 /* HomeNav Styles */
 .homeBtn--wrapper {
   position: absolute;
+  top: 0;
   padding: 10px 30px;
   width: 100%; 
   height: 50px;

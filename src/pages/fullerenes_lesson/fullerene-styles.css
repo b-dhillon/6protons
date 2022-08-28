@@ -2,6 +2,7 @@
 .title--wrapper {
   width: 100%; 
   position: absolute; 
+  top: 0;
   background: transparent;
   display: flex; 
   align-items: center; 
@@ -63,17 +64,6 @@
   margin-left: 35px;
   padding-right: 40px;
   border-right: 3px solid white;
-}
-
-.text--wrapper2 > p 
-{
-
-  /* background: linear-gradient(180deg, #00000088 97%, #ffffff44 100%); */
-
-
-  /* animation: slideUp 2s 1 both; 
-  animation-delay: .5s; */
-  /* border: 1px solid blue; */
 }
 
 .text--wrapper2--p {
