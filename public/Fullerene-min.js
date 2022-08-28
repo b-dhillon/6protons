@@ -7,12 +7,12 @@ import { useGLTF } from '@react-three/drei'
 
 export default function Model({ ...props }) {
   const group = useRef()
-  const { nodes, materials } = useGLTF('/nanotubes1-transformed.glb')
+  const { nodes, materials } = useGLTF('/fullerene-min-transformed.glb')
   return (
     <group ref={group} {...props} dispose={null}>
-      <mesh geometry={nodes.Carbon_Nanotube.geometry} material={materials.Nitrogen} />
+      <mesh geometry={nodes.fullerene.geometry} material={materials['Material.001']} position={[2.9, 1.01, -1.53]} rotation={[-0.42, 1.23, -2.44]} />
     </group>
   )
 }
 
-useGLTF.preload('/nanotubes1-transformed.glb')
+useGLTF.preload('/fullerene-min-transformed.glb')
