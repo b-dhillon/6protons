@@ -10,6 +10,9 @@ import './styles.css';
 
 import fullerenesThumbnail from '../../images/fullerenes2.jpeg';
 import nanotubesThumbnail from '../../images/nano.jpeg';
+import diamondsThumbnail from '../../images/diamonds12-min.png';
+import grapheneThumbnail from '../../images/graphene.jpg';
+
 
 
 import Card from './Card';
@@ -128,8 +131,10 @@ function HomePage(props)
 
               <div className='card--wrapper--wrapper'>
                 <div className='card--wrapper'>
-                  <Card id={'Fullerenes'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Fullerenes"} img={fullerenesThumbnail} description={"Placeholder for Fullerenes description. Lorem impsum, just random filler text here. And a little more."} />
-                  <Card id={'Nanotubes'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Nanotubes"} img={nanotubesThumbnail} description={"Placeholder for Nanotubes description. Lorem impsum, just random filler text here. And a little more."}/>
+                  <Card id={'Fullerenes'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Fullerenes"} img={fullerenesThumbnail}  />
+                  <Card id={'Nanotubes'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Nanotubes"} img={nanotubesThumbnail} />
+                  <Card id={'Graphene'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Graphene"} img={grapheneThumbnail} />
+                  <Card id={'Diamonds'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Diamonds"} img={diamondsThumbnail} />
                 </div>
               </div>
 
