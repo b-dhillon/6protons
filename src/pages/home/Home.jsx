@@ -117,6 +117,9 @@ function HomePage(props)
           <div className='hero--wrapper'>
             <h1 className='hero--title'>Learn by Seeing</h1>
             <p className='hero--subtitle'>A visual introduction to carbon allotropes.</p>
+            <button className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => { dispatch(start());}}>
+              Get Started
+            </button>
           </div>
 
           <div className={`lessonSelection--wrapper hidden`}>
@@ -130,12 +133,10 @@ function HomePage(props)
                 </div>
               </div>
 
-          
-              {/* <button className="heroBtn" onMouseEnter={props.rotateModel} onMouseLeave={props.rotateModel} onClick={() => {
-              dispatch(start());}}>
-
+              <button className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => { dispatch(start());}}>
                 {started ? "Back to Home" : "Get Started"}
-              </button> */}
+              </button>
+
             </div>
           </div>
 
@@ -149,9 +150,7 @@ function HomePage(props)
 
 
 
-          <button className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => { dispatch(start());}}>
-            {started ? "Back to Home" : "Get Started"}
-          </button>
+
           
 
 

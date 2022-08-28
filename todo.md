@@ -1,28 +1,21 @@
 ## To-do
    - Ipad Changes
+   
 
-      - Fix heroBtn responsiveness now with new home page design
+
+
 
 
 
       - Get rid of scroll on body --  only allow for scroll on paragraphs
-      - Adjust soccer ball pattern model to the left
-      - Make nanotubes start button higher 
-      - Get rid of doped buckyball animation and just rotate it in 3js, no scale. 
-   
-   - Fix flipped model bug.
+      - Fix flipped model bug.
 
 
 
 
 
 
-
-
-
-
-
-
+   - Test on large monoitor -- too much vertical can make steroid model too big?
    - Re-factor && Clean
    - Create corresponding project page on portfolio 
    - Create ReadMe on GitHub
