@@ -16,7 +16,7 @@ function FullerenesLesson(props) {
 
     useEffect(() =>
     {
-      setTimeout(() => setLessonLoading(false) , 3500)
+      setTimeout(() => setLessonLoading(false) , 2500)
     }, [])
 
     // useEffect(() => {

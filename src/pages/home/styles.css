@@ -10,7 +10,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    animation: fadeIn 2s 1 ease-in;
+    /* animation: fadeIn 2s 1 ease-in; */
 }
 
 .hero--wrapper {
@@ -539,6 +539,26 @@ transform: translateZ(44px);
 
 @media screen and (min-height: 1200px) {
     .card > h1 {
+        font-size: 1.5rem;
+    }
+
+    .hero--title {
+        font-size: 7rem;
+    }
+
+    .hero--subtitle {
+        font-size: 2rem;
+    }
+}
+
+@media screen and (min-height: 900px) and (max-width: 800px) {
+
+
+    .hero--title {
+        font-size: 4.5rem;
+    }
+
+    .hero--subtitle {
         font-size: 1.5rem;
     }
 }

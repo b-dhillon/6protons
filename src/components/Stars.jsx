@@ -14,6 +14,12 @@ const Stars = React.memo( function Stars(props) {
         ref.current.rotation.x -= delta / 10
         ref.current.rotation.y -= delta / 15
 
+        let count = 1; 
+        // if(count === 1){
+        //     console.log(state);
+        //     count++;
+        // }
+
         // Camera zoom-in animation on load: 
         state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, 1, 0.14)
     })

@@ -1,37 +1,23 @@
 ## To-do
-   - Ipad Changes
-      - Make fullerene start page paint quicker -- have it paint in the background while the loader is spinning, then make the loader display none after 3-5 seconds. Currently you are re-rendering the page after loading -- dont spark a full re-render just add a display none class instead. 
-   
 
-
-
-
-
-
-      - Get rid of scroll on body --  only allow for scroll on paragraphs
-      - Fix flipped model bug.
-
-
-
-
-
-
-   - Test on large monoitor -- too much vertical can make steroid model too big?
-   - Re-factor && Clean
    - Create corresponding project page on portfolio 
+      - Need 3 gifs 
+         1. Starting a lesson -- on ipad, from the home screen to showcase that it is indeed ipad
+         2. Navigating through lesson **
+         3. Going back to lesson selection and clicking on nanotubes
+
+
+
+
+   - Re-factor && Clean
    - Create ReadMe on GitHub
-
-
-
-
-
-
-
-   - Get rid of all hover effects if ipad is detected
+   - Test on large monoitor -- too much vertical can make steroid model too big?
+   - Re-add hover effects only if on desktop 
+      - Steroid hormone flipping
+         - Fix flipped model bug.
       - Start lesson button.
       - Hero button 
-      - Steroid hormone flipping
-      - Hero button 
+
 
 
 
