@@ -24,7 +24,7 @@ function LessonModels() {
 
     useEffect(() =>
     {
-      if(counter != 3 )
+      if( counter != 0 && counter != 3 )
       {
         const _animations = Object.values(actions);
         _animations.forEach((a) => a.play())
@@ -39,11 +39,18 @@ function LessonModels() {
           ref.current.rotation.y = Math.sin((state.clock.elapsedTime) * .75) / 4.5
       })
     }
+
+    function RotateAnimation() {
+      useFrame((state) => {
+        ref.current.rotation.y += 0.002
+    })
+  }
       
       if(counter === 0)
       {
+        RotateAnimation();
         return (
-          <group ref={group} {...props} dispose={null} scale={0.065}>
+          <group ref={ref} {...props} dispose={null} scale={0.065}>
             <group name="Scene">
               <group name="animation-empty">
                 <mesh name="carbon-atoms" geometry={nodes['carbon-atoms'].geometry} material={materials.Carbon} position={[1.02, 3.01, 1.45]} scale={0.23} />

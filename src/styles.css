@@ -82,7 +82,7 @@ svg {
   position: absolute;
   width: 100%;
   height: 10%;
-  top: 88%;
+  top: 87%;
   left: 0;
   display: flex;
   align-items: center;
@@ -91,6 +91,41 @@ svg {
 }
 
 .startLessonBtn {
+    width: 150px;
+    height: 45px;
+    font-size: 1rem;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    background: black;
+    color: #f07167;
+    border: 1px solid #f07167;
+    cursor: pointer;
+    padding: 10px;
+    position: absolute;
+
+
+
+
+
+
+
+
+  /* position: absolute;
+  z-index: 3;
+  font-size: 1.1rem;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  text-transform: uppercase;
+  display: -webkit-inline-box;
+  display: -moz-inline-box;
+  display: inline-box;
+  display: -webkit-inline-flex;
+  display: -moz-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex; */
+}
+
+/* .startLessonBtn {
   position: absolute;
   z-index: 3;
   font-size: 1.1rem;
@@ -104,8 +139,8 @@ svg {
   display: -moz-inline-flex;
   display: -ms-inline-flexbox;
   display: inline-flex;
-}
-.startLessonBtn > div {
+} */
+/* .startLessonBtn > div {
   position: relative;
   width: 180px;
   height: 55px;
@@ -141,7 +176,6 @@ svg {
   width: 180px;
   height: 55px;
   position: absolute;
-  /* border: 2px solid rgb(61, 135, 255); */
   box-sizing: border-box;
   content: attr(title);
   display: -webkit-box;
@@ -153,11 +187,12 @@ svg {
   display: flex;
   border-radius: 2px;
 }
+
+
 .startLessonBtn > div > a::before {
   border: 2px solid rgb(255, 255, 255);
   background-color: #000;
   color: 2px solid rgb(255, 255, 255);
-  /* color: rgb(61, 135, 255); */
   -webkit-transform: rotateY(0deg) translateZ(25px);
   -moz-transform: rotateY(0deg) translateZ(25px);
   -ms-transform: rotateY(0deg) translateZ(25px);
@@ -181,7 +216,7 @@ svg {
   -o-transform: translateZ(-25px) rotateX(-90deg);
   transform: translateZ(-25px) rotateX(-90deg);
   cursor: pointer; 
-}
+} */
 
 .sectionCounter {
   position: absolute; 

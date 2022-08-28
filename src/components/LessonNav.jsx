@@ -11,9 +11,9 @@ function LessonNav() {
         return (
             <>
                 <div className='startLessonBtn--wrapper'>
-                    <div className="startLessonBtn" onClick={() => dispatch(increment())}>
-                        <div><a title={"Start Lesson"}></a></div>
-                    </div>  
+                    <button className="startLessonBtn" onClick={() => dispatch(increment())}>
+                        Start Lesson
+                    </button>  
                 </div> 
             </>
         )

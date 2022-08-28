@@ -15,14 +15,14 @@ const Stars = React.memo( function Stars(props) {
         ref.current.rotation.y -= delta / 15
 
         // Camera zoom-in animation on load: 
-        state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, 1, 0.12)
+        state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, 1, 0.14)
     })
 
     return (
         <>
             <group rotation={[0, 0, Math.PI / 4]}>
                 <Points ref={ref} positions={sphere} stride={3} frustumCulled={false} {...props}>
-                    <PointMaterial transparent color="#fff" size={0.0025} sizeAttenuation={true} depthWrite={false} />
+                    <PointMaterial transparent color="#fff" size={0.003} sizeAttenuation={true} depthWrite={false} />
                 </Points>
             </group>
         </>
