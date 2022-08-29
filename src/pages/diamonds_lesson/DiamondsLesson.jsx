@@ -39,24 +39,23 @@ function DiamondsLesson(props) {
 
     else return (
       <>
-          <HomeNav setPage={props.setPage} setOverlay={props.setOverlay} />
-          <LessonNav />
-          <DiamondText />
-          
-          <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 75, position: [0,0,5] }}>
-              <Suspense fallback={null}>
-                <Provider store={DataStore}>
-                  <DiamondModels/>
-                </Provider>
-                <spotLight position={[10, 10, 10] } intensity={4}/>
-                <spotLight position={[-10, 10, 10] } intensity={4}/>
-                <spotLight position={[1, 1, 1] } intensity={4}/>
-                <spotLight position={[-1, 1, 1] } intensity={4}/>
-                <pointLight position={[0, -0.5, -2] } intensity={3}/>
-                <ambientLight intensity={3} />
-                <MemoizedStars />
-              </Suspense>
-          </Canvas>
+        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 75, position: [0,0,5] }}>
+            <Suspense fallback={null}>
+              <MemoizedStars />
+              <Provider store={DataStore}>
+                <DiamondModels/>
+              </Provider>
+              <spotLight position={[10, 10, 10] } intensity={4}/>
+              <spotLight position={[-10, 10, 10] } intensity={4}/>
+              <spotLight position={[1, 1, 1] } intensity={4}/>
+              <spotLight position={[-1, 1, 1] } intensity={4}/>
+              <pointLight position={[0, -0.5, -2] } intensity={3}/>
+              <ambientLight intensity={3} />
+            </Suspense>
+        </Canvas>
+        <HomeNav setPage={props.setPage} setOverlay={props.setOverlay} />
+        <LessonNav />
+        <DiamondText />
       </>
     );
 }

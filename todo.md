@@ -2,13 +2,14 @@
 
    - Change font size to smaller and possibly pick a more elegant looking font.
       - Make text wrapper1 font size smaller 
-   - Move "under development" to section-1 of each lesson -- dont show any of the lesson, especaily that same first repeating text-wrapper1 
+
+
 
    - Create corresponding project page on portfolio 
       - Need 3 gifs 
          1. Starting a lesson -- on ipad, from the home screen to showcase that it is indeed ipad
          2. Navigating through lesson **
-         3. Going back to lesson selection and clicking on nanotubes
+         3. Going back to lesson selection and clicking on each of the lessons
 
 
 
