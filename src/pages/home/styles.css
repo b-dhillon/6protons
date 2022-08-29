@@ -271,7 +271,7 @@
 }
 
 .card--wrapper {
-    width: 300px;
+    width: 80%;
     height: 400px;
     z-index: 1;
     display: flex;
