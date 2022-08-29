@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useFrame, } from '@react-three/fiber'
-import { useGLTF, useAnimations } from '@react-three/drei';
+import { useGLTF, useAnimations, MeshWobbleMaterial, mesh } from '@react-three/drei';
 import * as THREE from 'three';
 
 
@@ -46,6 +46,7 @@ function NanotubeModels() {
     {
       Animation();
       return (
+
         <group ref={ref} {...props} dispose={null} position={[0, .33, 0]} scale={0.5}>
           <group name="Scene" position={[0, -1, 0]}>
             <mesh name="Carbon_Nanotube" geometry={nodes.Carbon_Nanotube.geometry} material={materials['Carbon Nanotube Material']} position={[0, -4, 0]} />
