@@ -28,7 +28,7 @@ const Stars = React.memo( function Stars(props) {
         <>
             <group rotation={[0, 0, Math.PI / 4]}>
                 <Points ref={ref} positions={sphere} stride={3} frustumCulled={false} {...props}>
-                    <PointMaterial transparent color="#fff" size={0.004} sizeAttenuation={true} depthWrite={false} />
+                    <PointMaterial transparent color="#fff" size={0.0035} sizeAttenuation={true} depthWrite={false} />
                 </Points>
             </group>
         </>

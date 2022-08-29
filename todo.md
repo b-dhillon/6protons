@@ -1,5 +1,8 @@
 ## To-do
 
+   - Change font size to smaller and possibly pick a more elegant looking font.
+   - Move "under development" to section-1 of each lesson -- dont show any of the lesson, especaily that same first repeating text-wrapper1 
+
    - Create corresponding project page on portfolio 
       - Need 3 gifs 
          1. Starting a lesson -- on ipad, from the home screen to showcase that it is indeed ipad
@@ -11,6 +14,7 @@
 
    - Re-factor && Clean
    - Create ReadMe on GitHub
+   - Switch out Doped Fullerene model to something more performant -- just remove scale animation?
    - Test on large monoitor -- too much vertical can make steroid model too big?
    - Re-add hover effects only if on desktop 
       - Steroid hormone flipping
