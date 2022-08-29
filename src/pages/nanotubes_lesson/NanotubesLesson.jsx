@@ -11,61 +11,54 @@ import './nanotube-styles.css'
 import { Provider } from 'react-redux';
 
 
-
 function NanotubesLesson(props) {
 
-    const [lessonLoading, setLessonLoading] = useState(true)
+  const [lessonLoading, setLessonLoading] = useState(true)
 
-    useEffect(() =>
-    {
-      setTimeout(() => setLessonLoading(false) , 1500)
-    }, [])
+  useEffect(() =>
+  {
+    setTimeout(() => setLessonLoading(false) , 1000)
+  }, [])
+
   
-  
-    if (lessonLoading) {
-      return (
-        <>
-          <div className='spinnerWrapper'>
-            <div className='spinner' >
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
-            <h1 style={{marginTop: 80}}>loading nanotubes</h1>
+  if (lessonLoading) {
+    return (
+      <>
+        <div className='spinnerWrapper'>
+          <div className='spinner' >
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
           </div>
-        </>
-      )
-    }
+          <h1 style={{marginTop: 80}}>loading nanotubes</h1>
+        </div>
+      </>
+    )
+  }
 
-    else return (
-        <>
-            {/* <h1 style={{position: 'absolute', zIndex: 3, top: '40%', left: '24%'}}>This part of the world is under construction.</h1> */}
+  else return (
+      <>
+        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 75, position: [0,0,2] }}>
+            <Suspense fallback={null}>
+                <Stars />
+                <spotLight position={[10, 10, 10] } intensity={4}/>
+                <spotLight position={[-10, 10, 10] } intensity={4}/>
+                <pointLight position={[0, -0.5, -1] } intensity={3}/>
+                <ambientLight intensity={3} />
+                <Provider store={DataStore}>
+                    <NanotubeModels/>
+                </Provider>
+            </Suspense>
+        </Canvas>
 
-            <HomeNav setPage={props.setPage} setOverlay={props.setOverlay}/>
-            <LessonNav />
-            <NanotubeText setPage={props.setPage}/>
-
-
-            <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 75, position: [0,0,2] }}>
-                <color attach="background" args={["#000000"]} />
-                <Suspense fallback={null}>
-                    {/* <spotLight position={[10, 10, 10] } intensity={1}/>
-                    <ambientLight intensity={.4} /> */}
-                    <spotLight position={[10, 10, 10] } intensity={4}/>
-                    <spotLight position={[-10, 10, 10] } intensity={4}/>
-                    <pointLight position={[0, -0.5, -1] } intensity={3}/>
-                    <ambientLight intensity={3} />
-                    <Stars />
-                    <Provider store={DataStore}>
-                        <NanotubeModels/>
-                    </Provider>
-                </Suspense>
-            </Canvas>
-        </>
-    );
+        <HomeNav setPage={props.setPage} setOverlay={props.setOverlay}/>
+        <LessonNav />
+        <NanotubeText setPage={props.setPage}/>
+      </>
+  );
 }
 
 export default NanotubesLesson; 

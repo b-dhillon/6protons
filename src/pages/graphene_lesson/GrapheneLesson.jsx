@@ -14,7 +14,7 @@ function GrapheneLesson(props) {
 
     useEffect(() =>
     {
-      setTimeout(() => setLessonLoading(false) , 2000)
+      setTimeout(() => setLessonLoading(false) , 1000)
     }, [])
   
   
