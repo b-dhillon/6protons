@@ -3,6 +3,7 @@ import Home from './pages/home/Home';
 import FullerenesLesson from './pages/fullerenes_lesson/FullerenesLesson.jsx';
 import DiamondsLesson from './pages/diamonds_lesson/DiamondsLesson.jsx';
 import NanotubesLesson from './pages/nanotubes_lesson/NanotubesLesson.jsx';
+import GrapheneLesson from './pages/graphene_lesson/GrapheneLesson.jsx';
 
 export default function App() {
   const [page, setPage] = useState('Home');
@@ -39,6 +40,10 @@ export default function App() {
   else if(page === 'Diamonds_Lesson')
   {
     return <DiamondsLesson setPage={handlePage} setOverlay={handleOverlay}/>
+  }
+  else if(page === 'Graphene_Lesson')
+  {
+    return <GrapheneLesson setPage={handlePage} setOverlay={handleOverlay}/>
   }
 
   else return <NanotubesLesson setPage={handlePage} setOverlay={handleOverlay}/>

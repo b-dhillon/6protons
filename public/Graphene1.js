@@ -7,12 +7,12 @@ import { useGLTF } from '@react-three/drei'
 
 export default function Model({ ...props }) {
   const group = useRef()
-  const { nodes, materials } = useGLTF('/fullerene-min-transformed.glb')
+  const { nodes, materials } = useGLTF('/graphene1-transformed.glb')
   return (
     <group ref={group} {...props} dispose={null}>
-      <mesh geometry={nodes.fullerene.geometry} material={materials['Material.001']} position={[2.9, 1.01, -1.53]} rotation={[-0.42, 1.23, -2.44]} />
+      <mesh geometry={nodes.Nondestructive_Graphene.geometry} material={materials['Atom Material']} rotation={[Math.PI / 2, 0, 0]} scale={1.18} />
     </group>
   )
 }
 
-useGLTF.preload('/fullerene-min-transformed.glb')
+useGLTF.preload('/graphene1-transformed.glb')

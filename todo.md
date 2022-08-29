@@ -1,6 +1,7 @@
 ## To-do
 
    - Change font size to smaller and possibly pick a more elegant looking font.
+      - Make text wrapper1 font size smaller 
    - Move "under development" to section-1 of each lesson -- dont show any of the lesson, especaily that same first repeating text-wrapper1 
 
    - Create corresponding project page on portfolio 

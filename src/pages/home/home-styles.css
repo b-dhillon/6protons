@@ -143,8 +143,6 @@
     cursor: pointer; 
 } */
 
-
-
 .heroBtn {
     /* width: 20vh; 
     max-width: 160px;
@@ -183,15 +181,6 @@
 
 .lessonSelection--wrapper {
     position: absolute;
-    /* display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    z-index: 2;
-    top: 0;
-    left: 0; */
-    /* padding-top: 8vh; */
     width: 100%;
     max-width: 1200px;
     height: 100vh;
@@ -199,11 +188,8 @@
     flex-direction: column;
     justify-content: center !important;
     align-items: center;
-    /* animation: fadeIn .5s ease-in 1 both;  */
     font-family: 'Courier New', Courier, monospace !important;
     /* border: 1px solid yellow;  */
-    /* display: none; */
-
 }
 
 .lessonSelection {
@@ -224,8 +210,6 @@
     /* overflow: scroll; */
     /* z-index: 2; */
     /* display: none; */
-
-
 }
 
 
@@ -299,9 +283,8 @@
     align-items: center;
     border: 1px solid white;
     margin: 0 10px;
-
-    /* animation: fadeIn 2s ease-in 1 both;  */
     scroll-snap-align: start;
+    cursor: pointer;
 
 }
 /* .card:hover {

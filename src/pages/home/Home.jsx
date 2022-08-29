@@ -1,21 +1,20 @@
 import { useState, Suspense, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Stats } from '@react-three/drei'
 import { useSelector, useDispatch } from 'react-redux';
 import { start } from '../../actions';
 import MemoizedStars from '../../components/Stars'
+import Card from './Card';
 import Models from './Models'
-import HomeText from './HomeText';
-import './styles.css';
-
+import './home-styles.css';
 import fullerenesThumbnail from '../../images/fullerenes2.jpeg';
 import nanotubesThumbnail from '../../images/nano.jpeg';
 import diamondsThumbnail from '../../images/diamonds12-min.png';
 import grapheneThumbnail from '../../images/graphene.jpg';
+// import { Stats } from '@react-three/drei'
+// import HomeText from './HomeText';
 
 
 
-import Card from './Card';
 
 
 function HomePage(props) 
@@ -23,10 +22,7 @@ function HomePage(props)
   const [flipped, setFlipped] = useState(false);
   const started = useSelector(state => state.start);
   const dispatch = useDispatch();
-  // const hero = document.querySelector(".hero--wrapper");
 
-
-  
   // const [cameraRotate, setCameraRotate] = useState(false);
   // function RotateCamera({cameraRotate}) {
   //   // const rotatedCamera = useSelector(state => state.rotatedCamera);
@@ -145,10 +141,6 @@ function HomePage(props)
             </div>
           </div>
 
-          
-          
-
-
         {/* { started ? '' : <div className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => {
           dispatch(start());
           // Timeout is to create a delay between camera rotating and paining of 
@@ -159,8 +151,6 @@ function HomePage(props)
             <div><a title={started ? "Back to Home" : "Get Started"}></a></div>
         </div>
         } */}
-
-
 
         {/* </div> */}
       </div>
