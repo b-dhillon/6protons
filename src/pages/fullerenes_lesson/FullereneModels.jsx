@@ -88,7 +88,7 @@ function LessonModels() {
         OscilateAnimation();
 
         return (
-          <group ref={ref} {...props} dispose={null} position={[0.54, 0, -1]} scale={scale}>
+          <group ref={ref} {...props} dispose={null} position={[0.50, 0, -1]} scale={scale}>
             <mesh geometry={nodes.Text.geometry} material={materials['text-material']} position={[-0.93, -5, -1.06]} rotation={[Math.PI / 2, 0, 0.13]} scale={0.9} />
             <group position={[0.18, 1.66, 3.07]} scale={0.23} rotation={[0,-0.2,0]}>
               <mesh geometry={nodes.SurfSphere047.geometry} material={materials.Carbon} />

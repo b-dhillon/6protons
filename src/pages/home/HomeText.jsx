@@ -63,8 +63,8 @@ function HomeText(props) {
   {
     return (
         <div className='hero--wrapper'>
-            <h1 className='hero--title'>Learn by Seeing</h1>
-            <p className='hero--subtitle'>A visual introduction to carbon allotropes.</p>
+            <h1 className='hero--title'>6 Protons</h1>
+            <p className='hero--subtitle'>An introduction to the chemistry of carbon crystals.</p>
         </div>
     )
   }

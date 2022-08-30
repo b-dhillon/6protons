@@ -24,23 +24,6 @@ function NanotubeModels() {
   {
     const group = useRef()
     const { nodes, materials, animations } = useGLTF(`/lesson3_models/model${counter}.glb`)
-    const { actions } = useAnimations(animations, group);
-    const positions = [1, -.4, -1];
-    const scale = 0.40;
-
-    // useEffect(() =>
-    // {
-    //   if(counter >= 0)
-    //   {
-    //     const _animations = Object.values(actions);
-    //     console.log(_animations);
-    //     _animations.forEach((a) => {
-    //       a.timeScale = 1/2; 
-    //       a.play();
-    //     })
-
-    //   }
-    // })
 
     if(counter === 0)
     {

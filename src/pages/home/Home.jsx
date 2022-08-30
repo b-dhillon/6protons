@@ -10,7 +10,7 @@ import fullerenesThumbnail from '../../images/fullerenes2.jpeg';
 import nanotubesThumbnail from '../../images/nano.jpeg';
 import diamondsThumbnail from '../../images/diamonds12-min.png';
 import grapheneThumbnail from '../../images/graphene.jpg';
-// import { Stats } from '@react-three/drei'
+import { Stats } from '@react-three/drei'
 // import HomeText from './HomeText';
 
 
@@ -49,13 +49,10 @@ function HomePage(props)
   useEffect(() => {
     if (started)
     {
-      const lessonSelection = document.querySelector(".lessonSelection--wrapper");
-      lessonSelection.classList.remove("hidden")
       const hero = document.querySelector(".hero--wrapper");
       hero.classList.add("hidden")
-
-
-      console.log('done');
+      const lessonSelection = document.querySelector(".lessonSelection--wrapper");
+      lessonSelection.classList.remove("hidden")
     } 
     else {
       const lessonSelection = document.querySelector(".lessonSelection--wrapper");
@@ -63,8 +60,6 @@ function HomePage(props)
         lessonSelection.classList.add("hidden")
         const hero = document.querySelector(".hero--wrapper");
         hero.classList.remove("hidden")
-        console.log('done');
-
       }
 
     }
@@ -91,10 +86,11 @@ function HomePage(props)
       </>
     )
   }
+  // onMouseEnter={rotateModel} onMouseLeave={rotateModel}
 
   else return (
     <>
-      {/* <Stats showPanel={0} className="stats" {...props} /> */}
+      <Stats showPanel={0} className="stats" {...props} />
 
       <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 20, fov: 75, position: [0,0, 2.5] }}>
         <color attach="background" args={["#000000"]} />
@@ -103,7 +99,20 @@ function HomePage(props)
               <MemoizedStars />
               <spotLight position={[10, 10, 10] } intensity={1}/>
               <ambientLight intensity={.3} />
-              {started ? '' : <Models flipped={flipped}/>}
+
+              {/* <spotLight position={[10, 10, 10] } intensity={4}/>
+              <spotLight position={[-10, 10, 10] } intensity={4}/>
+              <pointLight position={[0, -0.5, -1] } intensity={3}/>
+              <ambientLight intensity={3} /> */}
+
+
+
+
+
+
+
+              <Models flipped={flipped}/>
+              {/* {started ? '' : <Models flipped={flipped}/>} */}
           </Suspense>
       </Canvas>
 
@@ -115,8 +124,11 @@ function HomePage(props)
 
           <div className='hero--wrapper'>
             <h1 className='hero--title'>Learn by Seeing</h1>
-            <p className='hero--subtitle'>A visual introduction to carbon allotropes.</p>
-            <button className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => { dispatch(start());}}>
+            <p className='hero--subtitle'>A visual introduction to the chemistry of carbon crystals.</p>
+            <button className="heroBtn" onClick={() => { 
+              rotateModel();
+              dispatch(start());
+              }}>
               Get Started
             </button>
           </div>
@@ -134,8 +146,10 @@ function HomePage(props)
                 </div>
               </div>
 
-              <button className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => { dispatch(start());}}>
-                {started ? "Back to Home" : "Get Started"}
+              <button className="heroBtn" onClick={() => { 
+                rotateModel();
+                dispatch(start());}}>
+                Back to Home
               </button>
 
             </div>
