@@ -14,7 +14,7 @@ function DiamondsLesson(props) {
 
     useEffect(() =>
     {
-      setTimeout(() => setLessonLoading(false) , 1000)
+      setTimeout(() => setLessonLoading(false) , 1500)
     }, [])
   
   
@@ -47,9 +47,7 @@ function DiamondsLesson(props) {
               </Provider>
               <spotLight position={[10, 10, 10] } intensity={4}/>
               <spotLight position={[-10, 10, 10] } intensity={4}/>
-              <spotLight position={[1, 1, 1] } intensity={4}/>
-              <spotLight position={[-1, 1, 1] } intensity={4}/>
-              <pointLight position={[0, -0.5, -2] } intensity={3}/>
+              <pointLight position={[0, -0.5, -2] } intensity={20}/>
               <ambientLight intensity={3} />
             </Suspense>
         </Canvas>

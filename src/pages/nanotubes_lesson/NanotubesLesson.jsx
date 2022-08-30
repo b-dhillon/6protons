@@ -17,7 +17,7 @@ function NanotubesLesson(props) {
 
   useEffect(() =>
   {
-    setTimeout(() => setLessonLoading(false) , 1000)
+    setTimeout(() => setLessonLoading(false) , 1500)
   }, [])
 
   
