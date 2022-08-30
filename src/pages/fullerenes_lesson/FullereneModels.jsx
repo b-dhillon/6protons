@@ -51,7 +51,7 @@ function LessonModels() {
       {
         RotateAnimation();
         return ( 
-          <group ref={ref} {...props} dispose={null} scale={.075}>
+          <group ref={ref} {...props} dispose={null} scale={.073}>
             <mesh geometry={nodes.fullerene.geometry} material={materials['Material.001']} position={[2.9, 1.01, -1.53]} rotation={[-0.42, 1.23, -2.44]} />
           </group>
           // <group ref={ref} {...props} dispose={null} scale={0.063}>

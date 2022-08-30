@@ -68,7 +68,7 @@ function FullerenesLesson(props) {
         <>
             {/* <Stats showPanel={0} className="stats" {...props} /> */}
 
-            <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 45, position: [0, 0, 3] }}>
+            <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 45, position: [0, 0, 2] }}>
                 <color attach="background" args={["#000000"]} />
                 <Suspense fallback={null}>
                   <MemoizedStars />

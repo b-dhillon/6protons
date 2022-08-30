@@ -59,7 +59,7 @@ function GrapheneLesson(props) {
             
             </Suspense>
           </Canvas>
-          <GrapheneText/>
+          <GrapheneText setPage={props.setPage}/>
 
       </>
     );

@@ -46,7 +46,7 @@ function NanotubeText(props){
     {
         return(
             <div className='text--wrapper' style={{flexDirection: 'column'}}>
-                <p>The rest of this lesson is actively being developed. Please see the lesson on <span>Fullerenes </span>
+                <p>This lesson is being developed. Please see the lesson on <span>Fullerenes</span>
                  for an example of the minimal viable product (MVP) of this project.
                 </p>
 
