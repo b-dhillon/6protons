@@ -8,6 +8,8 @@ import DataStore from '../../store';
 import LessonNav from '../../components/LessonNav';
 import './diamond-styles.css'
 import DiamondText from './DiamondText';
+import { OrbitControls } from '@react-three/drei'
+
 
 function DiamondsLesson(props) {
     const [lessonLoading, setLessonLoading] = useState(true)
@@ -40,6 +42,8 @@ function DiamondsLesson(props) {
     else return (
       <>
         <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 75, position: [0,0,5] }}>
+          <OrbitControls/>
+
             <Suspense fallback={null}>
               <MemoizedStars />
               <Provider store={DataStore}>

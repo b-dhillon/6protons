@@ -7,6 +7,8 @@ import NanotubeText from './NanotubeText';
 import NanotubeModels from './NanotubeModels';
 import DataStore from '../../store';
 import './nanotube-styles.css'
+import { OrbitControls, PointerLockControls, TrackballControls } from '@react-three/drei'
+
 
 import { Provider } from 'react-redux';
 
@@ -42,6 +44,9 @@ function NanotubesLesson(props) {
   else return (
       <>
         <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 75, position: [0,0,2] }}>
+          {/* <OrbitControls/> */}
+          {/* <PointerLockControls/> */}
+          <TrackballControls/>
             <Suspense fallback={null}>
                 <Stars />
                 <spotLight position={[10, 10, 10] } intensity={4}/>

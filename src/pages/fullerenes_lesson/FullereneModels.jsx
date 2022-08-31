@@ -20,7 +20,7 @@ function LessonModels() {
     const group = useRef()
     const { nodes, materials, animations } = useGLTF(`/lesson1_models/model${counter}.glb`)
     const { actions } = useAnimations(animations, group)
-    const positions = [.62, 0, -1];
+    const positions = [.5, 0, -1];
     const scale = 0.10;
 
     useEffect(() =>
@@ -70,7 +70,7 @@ function LessonModels() {
 
         return (
 
-          <group ref={group} {...props} dispose={null} position={[0.54, 0, -1]} scale={scale}>
+          <group ref={group} {...props} dispose={null} position={positions} scale={scale}>
             <group name="Scene">
               <group name="animation-empty">
                 <mesh name="carbon-atoms" geometry={nodes['carbon-atoms'].geometry} material={materials.Carbon} position={[1.02, 3.01, 1.45]} scale={0.23} />
@@ -88,7 +88,7 @@ function LessonModels() {
         OscilateAnimation();
 
         return (
-          <group ref={ref} {...props} dispose={null} position={[0.50, 0, -1]} scale={scale}>
+          <group ref={ref} {...props} dispose={null} position={positions} scale={scale}>
             <mesh geometry={nodes.Text.geometry} material={materials['text-material']} position={[-0.93, -5, -1.06]} rotation={[Math.PI / 2, 0, 0.13]} scale={0.9} />
             <group position={[0.18, 1.66, 3.07]} scale={0.23} rotation={[0,-0.2,0]}>
               <mesh geometry={nodes.SurfSphere047.geometry} material={materials.Carbon} />
@@ -100,7 +100,7 @@ function LessonModels() {
 
       else if(counter === 4) {
         return (
-          <group ref={group} {...props} dispose={null} position={[0.54, 0, -1]} scale={scale}>
+          <group ref={group} {...props} dispose={null} position={positions} scale={scale}>
             <group name="Scene">
               <group name="caffieneEmpty" rotation={[0, 0, -0.08]} scale={scale}>
                 <group name="caffieneModel" position={[-1.87, 3.16, -1.95]} rotation={[1, 0, 0]} scale={0.16}>

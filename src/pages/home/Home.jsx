@@ -43,7 +43,7 @@ function HomePage(props)
 
   useEffect(() =>
   {
-    setTimeout(() => props.setLoading() , 3500)
+    setTimeout(() => props.setLoading() , 1600)
   }, [])
 
   useEffect(() => {
@@ -86,11 +86,10 @@ function HomePage(props)
       </>
     )
   }
-  // onMouseEnter={rotateModel} onMouseLeave={rotateModel}
 
   else return (
     <>
-      <Stats showPanel={0} className="stats" {...props} />
+      {/* <Stats showPanel={0} className="stats" {...props} /> */}
 
       <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 20, fov: 75, position: [0,0, 2.5] }}>
         <color attach="background" args={["#000000"]} />
@@ -105,14 +104,7 @@ function HomePage(props)
               <pointLight position={[0, -0.5, -1] } intensity={3}/>
               <ambientLight intensity={3} /> */}
 
-
-
-
-
-
-
-              <Models flipped={flipped}/>
-              {/* {started ? '' : <Models flipped={flipped}/>} */}
+              {started ? '' : <Models flipped={flipped}/>}
           </Suspense>
       </Canvas>
 
@@ -125,8 +117,7 @@ function HomePage(props)
           <div className='hero--wrapper'>
             <h1 className='hero--title'>Learn by Seeing</h1>
             <p className='hero--subtitle'>A visual introduction to the chemistry of carbon crystals.</p>
-            <button className="heroBtn" onClick={() => { 
-              rotateModel();
+            <button className="heroBtn"   onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => { 
               dispatch(start());
               }}>
               Get Started
@@ -146,8 +137,7 @@ function HomePage(props)
                 </div>
               </div>
 
-              <button className="heroBtn" onClick={() => { 
-                rotateModel();
+              <button className="heroBtn" style={{height: '45px'}} onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => { 
                 dispatch(start());}}>
                 Back to Home
               </button>

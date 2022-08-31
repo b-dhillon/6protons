@@ -22,7 +22,9 @@ body,
 
 body {
   overscroll-behavior-y: none;
-  font-family: 'Courier New', Courier, monospace !important;
+  /* font-family: 'Courier New', Courier, monospace !important; */
+  /* font-family: Arial, Helvetica, sans-serif !important; */
+  font-family: quicksand;
   /* font-family: "Inter var", sans-serif !important; */
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -41,7 +43,6 @@ svg {
 
 
 /* LessonText Styles */
-
 .title--wrapper {
   width: 100%; 
   position: absolute; 
@@ -56,9 +57,11 @@ svg {
   color: #f07167;
   font-size: 60px;
   animation: slideUp 2s 1 both; 
-  animation-delay: 1.5s;
-  margin-top: 1.5%;
+  animation-delay: .5s;
+  margin: 0;
+  padding: 10px;
   z-index: 2;
+  font-weight: 500;
 }
 
 .text--wrapper 
@@ -88,11 +91,11 @@ svg {
 
 .text--wrapper2
 {
-  font-family: monospace;
-  /* position: absolute; */
+  /* font-family: 'Courier New', Courier, monospace; */
+  position: absolute;
   padding: 20px;
-  /* top: 10%;
-  left: 8%; */
+  top: 10%;
+  left: 8%;
   width: 40%;
   height: 80%;
   display: flex;
@@ -113,6 +116,8 @@ svg {
   text-align: left;
   line-height: 45px;
   overflow: scroll;
+  /* animation: slideUp 2s 1 both; 
+  animation-delay: .5s; */
 }
 
 span 
@@ -237,12 +242,19 @@ span
   box-shadow: 0 0 10px 4px white;
   transform: scale(1.25);
   animation: grow-and-glow 4s infinite;
+  cursor: pointer;
+}
+
+.lesson--decrementBtn {
+  cursor: pointer;
 }
 
 .lesson--decrementBtn:hover {
   /* box-shadow: 0 0 10px 2px white; */
   transform: scale(1.1);
 }
+
+
 
 .startLessonBtn--wrapper {
   position: absolute;
@@ -261,7 +273,7 @@ span
     height: 45px;
     font-size: 1rem;
     font-weight: bold;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: quicksand;
     background: black;
     color: white; 
     /* color: #f07167; */
@@ -269,6 +281,7 @@ span
     cursor: pointer;
     padding: 10px;
     position: absolute;
+    border-radius: 10px;
 
   /* position: absolute;
   z-index: 3;
@@ -283,6 +296,11 @@ span
   display: -moz-inline-flex;
   display: -ms-inline-flexbox;
   display: inline-flex; */
+}
+
+.startLessonBtn:hover {
+  color: #f07167;
+  border: 1px solid #f07167;
 }
 
 /* .startLessonBtn {
