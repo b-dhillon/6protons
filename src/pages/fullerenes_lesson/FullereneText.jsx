@@ -21,7 +21,7 @@ function LessonText(){
     function ScrollHelper() {
         return (
             <div className='scrolldown--wrapper'>
-                <div className="scrolldown"> Scroll
+                <div className="scrolldown">
                     <div className="chevrons">
                         <div className="chevrondown"></div>
                         <div className="chevrondown"></div>
