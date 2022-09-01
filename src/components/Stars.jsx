@@ -29,5 +29,4 @@ const Stars = React.memo( function Stars(props) {
     )
 })
 
-const MemoizedStars = memo(Stars);
-export default MemoizedStars;
+export default Stars;

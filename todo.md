@@ -1,6 +1,5 @@
 ## To-do
    - Add quicksand font
-   - Re-factor && Clean
    - Create ReadMe on GitHub
    - Make it look decent in 27 inch 4k (3840 x 2160) 
       - Scale up max width/height limits .... or just add a media query?
