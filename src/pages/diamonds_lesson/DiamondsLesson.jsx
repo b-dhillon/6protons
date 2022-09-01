@@ -12,38 +12,34 @@ import { OrbitControls } from '@react-three/drei'
 
 
 function DiamondsLesson(props) {
-    const [lessonLoading, setLessonLoading] = useState(true)
+    // const [lessonLoading, setLessonLoading] = useState(true)
 
-    useEffect(() =>
-    {
-      setTimeout(() => setLessonLoading(false) , 1500)
-    }, [])
+    // useEffect(() =>
+    // {
+    //   setTimeout(() => setLessonLoading(false) , 1500)
+    // }, [])
   
-  
-    if (lessonLoading) {
-      return (
-        <>
-          <div className='spinnerWrapper'>
-            <div className='spinner' >
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
-            <h1 style={{marginTop: 80}}>loading diamonds</h1>
-          </div>
-        </>
-      )
-    }
-
-
-    else return (
+    // if (lessonLoading) {
+    //   return (
+    //     <>
+    //       <div className='spinnerWrapper'>
+    //         <div className='spinner' >
+    //           <div></div>
+    //           <div></div>
+    //           <div></div>
+    //           <div></div>
+    //           <div></div>
+    //           <div></div>
+    //         </div>
+    //         <h1 style={{marginTop: 80}}>loading diamonds</h1>
+    //       </div>
+    //     </>
+    //   )
+    // }
+    return (
       <>
         <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 75, position: [0,0,5] }}>
           <OrbitControls/>
-
             <Suspense fallback={null}>
               <MemoizedStars />
               <Provider store={DataStore}>

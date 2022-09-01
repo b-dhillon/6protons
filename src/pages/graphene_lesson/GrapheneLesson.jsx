@@ -10,34 +10,34 @@ import GrapheneModels from './GrapheneModels.jsx';
 import GrapheneText from './GrapheneText.jsx'
 
 function GrapheneLesson(props) {
-    const [lessonLoading, setLessonLoading] = useState(true)
+    // const [lessonLoading, setLessonLoading] = useState(true)
 
-    useEffect(() =>
-    {
-      setTimeout(() => setLessonLoading(false) , 1500)
-    }, [])
+    // useEffect(() =>
+    // {
+    //   setTimeout(() => setLessonLoading(false) , 1500)
+    // }, [])
   
   
-    if (lessonLoading) {
-      return (
-        <>
-          <div className='spinnerWrapper'>
-            <div className='spinner' >
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
-            <h1 style={{marginTop: 80}}>loading graphene</h1>
-          </div>
-        </>
-      )
-    }
+    // if (lessonLoading) {
+    //   return (
+    //     <>
+    //       <div className='spinnerWrapper'>
+    //         <div className='spinner' >
+    //           <div></div>
+    //           <div></div>
+    //           <div></div>
+    //           <div></div>
+    //           <div></div>
+    //           <div></div>
+    //         </div>
+    //         <h1 style={{marginTop: 80}}>loading graphene</h1>
+    //       </div>
+    //     </>
+    //   )
+    // }
 
 
-    else return (
+    return (
       <>
           <HomeNav setPage={props.setPage} setOverlay={props.setOverlay} />
           <LessonNav />

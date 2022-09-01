@@ -15,33 +15,33 @@ import { Provider } from 'react-redux';
 
 function NanotubesLesson(props) {
 
-  const [lessonLoading, setLessonLoading] = useState(true)
+  // const [lessonLoading, setLessonLoading] = useState(true)
 
-  useEffect(() =>
-  {
-    setTimeout(() => setLessonLoading(false) , 1500)
-  }, [])
+  // useEffect(() =>
+  // {
+  //   setTimeout(() => setLessonLoading(false) , 1500)
+  // }, [])
 
   
-  if (lessonLoading) {
-    return (
-      <>
-        <div className='spinnerWrapper'>
-          <div className='spinner' >
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-          <h1 style={{marginTop: 80}}>loading nanotubes</h1>
-        </div>
-      </>
-    )
-  }
+  // if (lessonLoading) {
+  //   return (
+  //     <>
+  //       <div className='spinnerWrapper'>
+  //         <div className='spinner' >
+  //           <div></div>
+  //           <div></div>
+  //           <div></div>
+  //           <div></div>
+  //           <div></div>
+  //           <div></div>
+  //         </div>
+  //         <h1 style={{marginTop: 80}}>loading nanotubes</h1>
+  //       </div>
+  //     </>
+  //   )
+  // }
 
-  else return (
+  return (
       <>
         <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 75, position: [0,0,2] }}>
           {/* <OrbitControls/> */}

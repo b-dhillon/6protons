@@ -1,24 +1,10 @@
 ## To-do
 
-   - Change font size to smaller and possibly pick a more elegant looking font.
-      - Make text wrapper1 font size smaller 
-
-
-   - Make it look decent in 27 inch 4k (3840 x 2160) 
-      - Scale up max width/height limits .... or just add a media query?
-         - Hero title 
-         - Hero subtitle
-         - Button 
-         - lesson selection 
-         - cards
-
-
-
    - Create corresponding project page on portfolio 
       - Need 3 gifs 
          1. On Mac -- launch app, hover over get started and watch model flip, then scroll through the lessons with scroll snap, then go back to home and unflip the model.
 
-         
+
          2. Navigate through fullerenes lesson, on mac **
          3. On iPad, starting from home screen, go back to each lesson and click on each lesson with copy saying 
             that it works on iPad too! Just like your MLM one.  
@@ -28,13 +14,19 @@
 
    - Re-factor && Clean
    - Create ReadMe on GitHub
-   - Switch out Doped Fullerene model to something more performant -- just remove scale animation?
-   - Test on large monoitor -- too much vertical can make steroid model too big?
+   - Make it look decent in 27 inch 4k (3840 x 2160) 
+      - Scale up max width/height limits .... or just add a media query?
+         - Hero title 
+         - Hero subtitle
+         - Button 
+         - lesson selection 
+         - cards
    - Re-add hover effects only if on desktop 
       - Steroid hormone flipping
          - Fix flipped model bug.
       - Start lesson button.
       - Hero button 
+   - Switch out Doped Fullerene model to something more performant -- just remove scale animation?
 
 
 
