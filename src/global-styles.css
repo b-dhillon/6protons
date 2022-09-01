@@ -23,7 +23,7 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   color: #ddd;
-  font-family: quicksand;
+  font-family: quicksand, 'Courier New', Courier, monospace;
   /* font-family: 'Courier New', Courier, monospace !important; */
   /* font-family: Arial, Helvetica, sans-serif !important; */
   /* font-family: "Inter var", sans-serif !important; */
