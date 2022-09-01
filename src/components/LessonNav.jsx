@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { increment, decrement } from '../actions';
+import { increment, decrement } from '../redux/actions';
 
 function LessonNav() {
 

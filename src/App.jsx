@@ -8,12 +8,6 @@ import GrapheneLesson from './pages/graphene_lesson/GrapheneLesson.jsx';
 export default function App() {
   const [page, setPage] = useState('Home');
   const [loading, setLoading] = useState([])
-  const [overlay, setOverlay] = useState(false);
-
-
-  function handleOverlay(){
-    setOverlay(a => !a);
-  }
 
   function handleLoading()
   {
@@ -25,28 +19,24 @@ export default function App() {
     setPage(`${id}`)
   }  
 
-  console.log('App.JSX Rendered');
-
   if(page === 'Home')
   {
-    return <Home setPage={handlePage} loading={loading} setLoading={handleLoading} overlay={overlay} setOverlay={handleOverlay}/>;
+    return <Home setPage={handlePage} loading={loading} setLoading={handleLoading} />;
   }
 
   else if(page === 'Fullerenes_Lesson')
   {
-    return <FullerenesLesson setPage={handlePage} setOverlay={handleOverlay}/> 
+    return <FullerenesLesson setPage={handlePage} /> 
   }  
 
   else if(page === 'Diamonds_Lesson')
   {
-    return <DiamondsLesson setPage={handlePage} setOverlay={handleOverlay}/>
+    return <DiamondsLesson setPage={handlePage} />
   }
   else if(page === 'Graphene_Lesson')
   {
-    return <GrapheneLesson setPage={handlePage} setOverlay={handleOverlay}/>
+    return <GrapheneLesson setPage={handlePage} />
   }
 
-  else return <NanotubesLesson setPage={handlePage} setOverlay={handleOverlay}/>
-
-
+  else return <NanotubesLesson setPage={handlePage} />
 }

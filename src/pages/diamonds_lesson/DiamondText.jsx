@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { reset } from '../../actions';
+import { reset } from '../../redux/actions';
 
 function DiamondText(props){
     const counter = useSelector(state => state.counter);

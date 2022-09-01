@@ -1,17 +1,5 @@
 ## To-do
-
-   - Create corresponding project page on portfolio 
-      - Need 3 gifs 
-         1. On Mac -- launch app, hover over get started and watch model flip, then scroll through the lessons with scroll snap, then go back to home and unflip the model.
-
-
-         2. Navigate through fullerenes lesson, on mac **
-         3. On iPad, starting from home screen, go back to each lesson and click on each lesson with copy saying 
-            that it works on iPad too! Just like your MLM one.  
-
-
-
-
+   - Add quicksand font
    - Re-factor && Clean
    - Create ReadMe on GitHub
    - Make it look decent in 27 inch 4k (3840 x 2160) 
@@ -30,22 +18,5 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
    Optional ~
-    - Get diamonds material right
-    - Add graphene thumbnail
-    - Add steroid hormone label on model flip of home page?;
     - Create async await functions for home page to await rendering of overlay until 3d elements are painted;

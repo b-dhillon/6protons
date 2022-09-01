@@ -56,15 +56,6 @@ function LessonModels() {
           <group ref={ref} {...props} dispose={null} scale={.073}>
             <mesh geometry={nodes.fullerene.geometry} material={materials['Material.001']} position={[2.9, 1.01, -1.53]} rotation={[-0.42, 1.23, -2.44]} />
           </group>
-          // <group ref={ref} {...props} dispose={null} scale={0.063}>
-          //   <group name="Scene">
-          //     <group name="animation-empty">
-          //       <mesh name="carbon-atoms" geometry={nodes['carbon-atoms'].geometry} material={materials.Carbon} position={[1.02, 3.01, 1.45]} scale={0.23} />
-          //       <mesh name="carbon-bonds" geometry={nodes['carbon-bonds'].geometry} material={materials.Carbon} position={[2.9, 1.01, -1.53]} rotation={[-0.42, 1.23, -2.44]} />
-          //       <mesh name="soccer-pattern" geometry={nodes['soccer-pattern'].geometry} material={materials.Carbon} position={[0.18, 1.66, 3.07]} scale={0.23} />
-          //     </group>
-          //   </group>
-          // </group>
         )
       }
 

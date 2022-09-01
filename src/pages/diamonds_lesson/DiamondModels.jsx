@@ -16,23 +16,22 @@ function DiamondModels() {
     {
       const _animations = Object.values(actions);
       _animations.forEach((a) => a.play())
-
     })
 
     return (
-        <group ref={group} {...props} dispose={null} position={[0, -.5, -1]} scale={.5}>
-          <group name="Scene">
-             <group name="Empty001" position={[0, 1, 0]} scale={0.06}>
-               <group name="Empty" position={[0, 0.06, 0]} scale={1.74}>
-                 <group name="ZnS_Unit_Cell" rotation={[0, 0.15, 0]}>
-                   <mesh name="Cube001" geometry={nodes.Cube001.geometry} material={materials.Material} />
-                   <mesh name="Cube001_1" geometry={nodes.Cube001_1.geometry} material={materials['S Material']} />
-                 </group>
-               </group>
-            </group>
+      <group ref={group} {...props} dispose={null} position={[0, -.5, -1]} scale={.5}>
+        <group name="Scene">
+            <group name="Empty001" position={[0, 1, 0]} scale={0.06}>
+              <group name="Empty" position={[0, 0.06, 0]} scale={1.74}>
+                <group name="ZnS_Unit_Cell" rotation={[0, 0.15, 0]}>
+                  <mesh name="Cube001" geometry={nodes.Cube001.geometry} material={materials.Material} />
+                  <mesh name="Cube001_1" geometry={nodes.Cube001_1.geometry} material={materials['S Material']} />
+                </group>
+              </group>
           </group>
         </group>
-      ) 
+      </group>
+    ) 
   }
 
   if (counter === 0 ) {

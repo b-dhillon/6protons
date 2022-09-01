@@ -1,23 +1,19 @@
 import { Suspense, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
+import { Provider } from 'react-redux';
 import MemoizedStars from '../../components/Stars';
 import HomeNav from '../../components/HomeNav';
-import { Provider } from 'react-redux';
-import DataStore from '../../store';
+import DataStore from '../../redux/store';
 import LessonNav from '../../components/LessonNav';
-import './graphene-styles.css';
 import GrapheneModels from './GrapheneModels.jsx';
 import GrapheneText from './GrapheneText.jsx'
 
 function GrapheneLesson(props) {
     // const [lessonLoading, setLessonLoading] = useState(true)
-
     // useEffect(() =>
     // {
     //   setTimeout(() => setLessonLoading(false) , 1500)
     // }, [])
-  
-  
     // if (lessonLoading) {
     //   return (
     //     <>
@@ -60,7 +56,6 @@ function GrapheneLesson(props) {
             </Suspense>
           </Canvas>
           <GrapheneText setPage={props.setPage}/>
-
       </>
     );
 }

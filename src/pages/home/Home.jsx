@@ -1,21 +1,16 @@
 import { useState, Suspense, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { useSelector, useDispatch } from 'react-redux';
-import { start } from '../../actions';
-import MemoizedStars from '../../components/Stars'
-import Card from './Card';
-import Models from './Models'
-import './home-styles.css';
+import { start } from '../../redux/actions';
 import fullerenesThumbnail from '../../images/fullerenes2.jpeg';
 import nanotubesThumbnail from '../../images/nano.jpeg';
 import diamondsThumbnail from '../../images/diamonds12-min.png';
 import grapheneThumbnail from '../../images/graphene.jpg';
+import MemoizedStars from '../../components/Stars'
+import Card from './Card';
+import Models from './Models'
+import './home-styles.css';
 import { Stats } from '@react-three/drei'
-// import HomeText from './HomeText';
-
-
-
-
 
 function HomePage(props) 
 {
@@ -74,9 +69,7 @@ function HomePage(props)
   else return (
     <>
       {/* <Stats showPanel={0} className="stats" {...props} /> */}
-
       <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 20, fov: 75, position: [0,0, 2.5] }}>
-        <color attach="background" args={["#000000"]} />
           <Suspense fallback={null}>
               <MemoizedStars />
               <spotLight position={[10, 10, 10] } intensity={1}/>
