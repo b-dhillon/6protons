@@ -2,9 +2,9 @@ import { useState, Suspense, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { useSelector, useDispatch } from 'react-redux';
 import { start } from '../../redux/actions';
-import fullerenesThumbnail from '../../images/fullerenes2.jpeg';
-import nanotubesThumbnail from '../../images/nano.jpeg';
-import diamondsThumbnail from '../../images/diamonds12-min.png';
+import fullerenesThumbnail from '../../images/fullerene.jpeg';
+import nanotubesThumbnail from '../../images/nanotube.jpeg';
+import diamondsThumbnail from '../../images/diamond.png';
 import grapheneThumbnail from '../../images/graphene.jpg';
 import MemoizedStars from '../../components/Stars'
 import Card from './Card';
