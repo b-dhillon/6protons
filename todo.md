@@ -1,5 +1,11 @@
 ## To-do
    - Add quicksand font
+   - Fix centering of models on larger screens
+   - Fix fullerene redirection on the 3 lessons
+
+
+
+
    - Create ReadMe on GitHub
    - Make it look decent in 27 inch 4k (3840 x 2160) 
       - Scale up max width/height limits .... or just add a media query?
