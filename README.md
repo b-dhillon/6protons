@@ -15,7 +15,7 @@ Instructions:
 
     <!-- ![image](src/images/download-readme.jpg) -->
 
-    <img src="./src/images/download-readme.jpg" style="width:200px;"/>
+    <img src="./src/images/download-readme.jpg" style="width:300px;"/>
 
 
 2. Next, using the command line, naviagate to the project directory.
@@ -36,70 +36,72 @@ Instructions:
 ## Architecture
 - Single Page Application.
 ### File Tree
-.
-└── 3D-Textbook-master/
-    ├── node_modules
-    ├── public/
-    │   ├── lesson1_models/
-    │   │   ├── model0.glb
-    │   │   ├── model2.glb
-    │   │   ├── model3.glb
-    │   │   ├── model4.glb
-    │   │   └── model5.glb
-    │   ├── lesson2_models/
-    │   │   └── model0.glb
-    │   ├── lesson3_models/
-    │   │   └── model0.glb
-    │   ├── lesson4_models/
-    │   │   └── model0.glb
-    │   └── home_models/
-    │       └── steroid.glb
-    ├── src/
-    │   ├── components/
-    │   │   ├── HomeNav.jsx
-    │   │   ├── LessonNav.jsx
-    │   │   └── Stars.jsx
-    │   ├── images/
-    │   │   ├── diamond.png
-    │   │   ├── download-readme.jpg
-    │   │   ├── fullerene.jpeg
-    │   │   ├── graphene.jpg
-    │   │   └── nanotube.jpeg
-    │   ├── pages/
-    │   │   ├── diamonds_lesson/
-    │   │   │   ├── DiamondModels.jsx
-    │   │   │   ├── DiamondLesson.jsx
-    │   │   │   └── DiamondText.jsx
-    │   │   ├── fullerenes_lesson/
-    │   │   │   ├── FullereneModels.jsx
-    │   │   │   ├── FullereneLesson.jsx
-    │   │   │   └── FullereneText.jsx
-    │   │   ├── graphene_lesson/
-    │   │   │   ├── GrapheneLesson.jsx
-    │   │   │   ├── GrapheneModels.jsx
-    │   │   │   └── GrapheneText.jsx
-    │   │   ├── home/
-    │   │   │   ├── Card.jsx
-    │   │   │   ├── homes-stles.css
-    │   │   │   ├── Home.jsx
-    │   │   │   └── Models.jsx
-    │   │   └── nanotubes_lesson/
-    │   │       ├── NanotubeModels.jsx
-    │   │       ├── NanotubesLesson.jsx
-    │   │       └── NanotubeText.jsx
-    │   ├── redux/
-    │   │   ├── actions/
-    │   │   │   └── index.js
-    │   │   ├── reducers/
-    │   │   │   └── index.js
-    │   │   └── store.js
-    │   ├── App.jsx
-    │   ├── global-styles.css
-    │   └── index.js
-    ├── package-lock.json
-    ├── package.json
-    ├── README.md
-    └── .gitignore
+<div>
+    .
+    └── 3D-Textbook-master/
+        ├── node_modules
+        ├── public/
+        │   ├── lesson1_models/
+        │   │   ├── model0.glb
+        │   │   ├── model2.glb
+        │   │   ├── model3.glb
+        │   │   ├── model4.glb
+        │   │   └── model5.glb
+        │   ├── lesson2_models/
+        │   │   └── model0.glb
+        │   ├── lesson3_models/
+        │   │   └── model0.glb
+        │   ├── lesson4_models/
+        │   │   └── model0.glb
+        │   └── home_models/
+        │       └── steroid.glb
+        ├── src/
+        │   ├── components/
+        │   │   ├── HomeNav.jsx
+        │   │   ├── LessonNav.jsx
+        │   │   └── Stars.jsx
+        │   ├── images/
+        │   │   ├── diamond.png
+        │   │   ├── download-readme.jpg
+        │   │   ├── fullerene.jpeg
+        │   │   ├── graphene.jpg
+        │   │   └── nanotube.jpeg
+        │   ├── pages/
+        │   │   ├── diamonds_lesson/
+        │   │   │   ├── DiamondModels.jsx
+        │   │   │   ├── DiamondLesson.jsx
+        │   │   │   └── DiamondText.jsx
+        │   │   ├── fullerenes_lesson/
+        │   │   │   ├── FullereneModels.jsx
+        │   │   │   ├── FullereneLesson.jsx
+        │   │   │   └── FullereneText.jsx
+        │   │   ├── graphene_lesson/
+        │   │   │   ├── GrapheneLesson.jsx
+        │   │   │   ├── GrapheneModels.jsx
+        │   │   │   └── GrapheneText.jsx
+        │   │   ├── home/
+        │   │   │   ├── Card.jsx
+        │   │   │   ├── homes-stles.css
+        │   │   │   ├── Home.jsx
+        │   │   │   └── Models.jsx
+        │   │   └── nanotubes_lesson/
+        │   │       ├── NanotubeModels.jsx
+        │   │       ├── NanotubesLesson.jsx
+        │   │       └── NanotubeText.jsx
+        │   ├── redux/
+        │   │   ├── actions/
+        │   │   │   └── index.js
+        │   │   ├── reducers/
+        │   │   │   └── index.js
+        │   │   └── store.js
+        │   ├── App.jsx
+        │   ├── global-styles.css
+        │   └── index.js
+        ├── package-lock.json
+        ├── package.json
+        ├── README.md
+        └── .gitignore
+</div>
 
 
 
