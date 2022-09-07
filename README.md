@@ -36,7 +36,7 @@ Instructions:
 ## Architecture
 - Single Page Application.
 ### File Tree
-<div>
+```
     .
     └── 3D-Textbook-master/
         ├── node_modules
@@ -101,8 +101,7 @@ Instructions:
         ├── package.json
         ├── README.md
         └── .gitignore
-</div>
-
+```
 
 
 
