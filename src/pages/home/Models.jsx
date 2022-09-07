@@ -3,11 +3,11 @@ import { useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 
-useGLTF.preload(`/transformed_models_home/testosterone2-transformed.glb`);
+useGLTF.preload(`/home_models/steroid.glb`);
 
 function Models(props) {
     const ref = useRef()
-    const { nodes, materials } = useGLTF('/transformed_models_home/testosterone2-transformed.glb')
+    const { nodes, materials } = useGLTF('/home_models/steroid.glb')
 
     useFrame((state) => {
         ref.current.rotation.z = Math.sin((state.clock.elapsedTime) * 1.5) / 6

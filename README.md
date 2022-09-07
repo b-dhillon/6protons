@@ -5,15 +5,17 @@
 ### Live Build: 
 - [https://6protons.app](https://6protons.app)
 
-# Getting Started:
+## Getting Started:
 
-## Setting Up Dev Environment:
+### Dev Environment Set-up:
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment below for notes on how to deploy the project on a live system.  
 
 Instructions:
 1. Download the source code by clicking the green "code" button at the top of this README file and click "Download Zip"  
 
-    ![image](src/images/download-readme.jpg)
+    <!-- ![image](src/images/download-readme.jpg) -->
+
+    <img src="./src/images/download-readme.jpg" style="width:200px;"/>
 
 
 2. Next, using the command line, naviagate to the project directory.
@@ -31,12 +33,73 @@ Instructions:
 5. Happy hacking!
 
 
-# Architecture
+## Architecture
 - Single Page Application.
-## File Tree
-
->Block Quote
-
+### File Tree
+.
+└── 3D-Textbook-master/
+    ├── node_modules
+    ├── public/
+    │   ├── lesson1_models/
+    │   │   ├── model0.glb
+    │   │   ├── model2.glb
+    │   │   ├── model3.glb
+    │   │   ├── model4.glb
+    │   │   └── model5.glb
+    │   ├── lesson2_models/
+    │   │   └── model0.glb
+    │   ├── lesson3_models/
+    │   │   └── model0.glb
+    │   ├── lesson4_models/
+    │   │   └── model0.glb
+    │   └── home_models/
+    │       └── steroid.glb
+    ├── src/
+    │   ├── components/
+    │   │   ├── HomeNav.jsx
+    │   │   ├── LessonNav.jsx
+    │   │   └── Stars.jsx
+    │   ├── images/
+    │   │   ├── diamond.png
+    │   │   ├── download-readme.jpg
+    │   │   ├── fullerene.jpeg
+    │   │   ├── graphene.jpg
+    │   │   └── nanotube.jpeg
+    │   ├── pages/
+    │   │   ├── diamonds_lesson/
+    │   │   │   ├── DiamondModels.jsx
+    │   │   │   ├── DiamondLesson.jsx
+    │   │   │   └── DiamondText.jsx
+    │   │   ├── fullerenes_lesson/
+    │   │   │   ├── FullereneModels.jsx
+    │   │   │   ├── FullereneLesson.jsx
+    │   │   │   └── FullereneText.jsx
+    │   │   ├── graphene_lesson/
+    │   │   │   ├── GrapheneLesson.jsx
+    │   │   │   ├── GrapheneModels.jsx
+    │   │   │   └── GrapheneText.jsx
+    │   │   ├── home/
+    │   │   │   ├── Card.jsx
+    │   │   │   ├── homes-stles.css
+    │   │   │   ├── Home.jsx
+    │   │   │   └── Models.jsx
+    │   │   └── nanotubes_lesson/
+    │   │       ├── NanotubeModels.jsx
+    │   │       ├── NanotubesLesson.jsx
+    │   │       └── NanotubeText.jsx
+    │   ├── redux/
+    │   │   ├── actions/
+    │   │   │   └── index.js
+    │   │   ├── reducers/
+    │   │   │   └── index.js
+    │   │   └── store.js
+    │   ├── App.jsx
+    │   ├── global-styles.css
+    │   └── index.js
+    ├── package-lock.json
+    ├── package.json
+    ├── README.md
+    └── .gitignore
 
 
 
@@ -62,3 +125,7 @@ Add additional notes about how to deploy this on a live system
 - MIT
 
 # Acknowledgements
+
+
+
+>Block Quote
