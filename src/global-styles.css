@@ -360,9 +360,8 @@ transform: translateZ(40px);
 
 .text--wrapper > p {
   width: 80%;
-  font-size: 1.8vw !important;
+  font-size: 1.9vw !important;
   text-align: center;
-  line-height: 45px;
   animation: fadeIn 2s 1 ease-in-out;
 }
 
@@ -477,4 +476,13 @@ span
   to {
     opacity: 0.5;
   }
+}
+
+
+@media screen and (min-width: 1400px) {
+
+  .text--wrapper > p {
+    font-size: 1.5vw !important;
+  }
+  
 }

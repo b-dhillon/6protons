@@ -20,9 +20,9 @@ function LessonModels() {
     const group = useRef()
     const { nodes, materials, animations } = useGLTF(`/lesson1_models/model${counter}.glb`)
     const { actions } = useAnimations(animations, group)
-    const positions = [.48, 0, -1];
-    const scale = 0.10;
-    const scale2 = 0.08;
+    const positions = [ .26, 0, 0];
+    const scale = 0.05;
+    const scale2 = 0.05;
 
 
     useEffect(() =>
@@ -81,7 +81,7 @@ function LessonModels() {
         OscilateAnimation();
 
         return (
-          <group ref={ref} {...props} dispose={null} position={[.45, 0, -1]} scale={scale2}>
+          <group ref={ref} {...props} dispose={null} position={positions} scale={scale2}>
             <mesh geometry={nodes.Text.geometry} material={materials['text-material']} position={[-0.93, -5, -1.06]} rotation={[Math.PI / 2, 0, 0.13]} scale={0.9} />
             <group position={[0.18, 1.66, 3.07]} scale={0.23} rotation={[0,-0.2,0]}>
               <mesh geometry={nodes.SurfSphere047.geometry} material={materials.Carbon} />
@@ -114,8 +114,8 @@ function LessonModels() {
 
       else if(counter === 5){
         return (
-          <group ref={group} {...props} dispose={null} position={positions} >
-            <group name="Scene" scale={.016}>
+          <group ref={group} {...props} dispose={null} position={positions} scale={0.009}>
+            <group name="Scene">
               
               <group name="proteaseEmpty" rotation={[Math.PI, -1.17, Math.PI]} position={positions}>
                 <mesh name="proteaseModel" geometry={nodes.proteaseModel.geometry} material={materials.Material_0} rotation={[0, -0.02, 0]} />

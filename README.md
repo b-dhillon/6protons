@@ -1,11 +1,12 @@
-# 3D Textbook - Web App
+# 3D Textbook
 
 ### Project Description:
-- 6protons.app is an eLearning minimum viable product (mvp). It is designed to teach math & science by visualizing abstract concepts using 3D models. The app in its current form focuses on carbon crystals, however the framework can be used to teach any STEM subject. 
+- 6protons.app is a web application. Specifically it is an eLearning minimum viable product (mvp). It is designed to teach math & science by visualizing abstract concepts using 3D models. The app in its current form focuses on carbon crystals (carbon is the only atom with 6 protons), however this framework can be applied to teach any STEM subject. 
 ### Live Build: 
 - [https://6protons.app](https://6protons.app)
 
-## File Tree
+## Application Archietecture:
+### File System:
 ```
     .
     └── 3D-Textbook-master/
@@ -73,7 +74,7 @@
         └── .gitignore
 ```
 
-## Dev Environment Set-up:
+## Development Environment Set-up:
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment below for notes on how to deploy the project on a live system.  
 
 Instructions:
@@ -92,16 +93,11 @@ Instructions:
     ```bash
     npm install
     ``` 
-4. After dependecies have all finished installing, fire up a development server from the terminal with the following command: 
+4. After dependecies have finished installing, boot up a development server from the terminal with the following command: 
     ```bash
     npm start
     ``` 
 5. Happy hacking!
-
-
-## Architecture
-- Single Page Application.
-
 
 
 
