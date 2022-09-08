@@ -325,8 +325,8 @@ transform: translateZ(40px);
 .title {
   color: #f07167;
   font-size: 60px;
-  animation: slideUp 2s 1 both; 
-  animation-delay: .5s;
+  /* animation: slideUp 2s 1 both; 
+  animation-delay: .5s; */
   margin: 0;
   padding: 10px;
   z-index: 2;
