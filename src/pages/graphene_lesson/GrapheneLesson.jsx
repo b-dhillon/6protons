@@ -38,7 +38,7 @@ function GrapheneLesson(props) {
           <HomeNav setPage={props.setPage} setOverlay={props.setOverlay} />
           <LessonNav />
           
-          <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 75, position: [0,0,5] }}>
+          <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 75, position: [0,0,2] }}>
             <MemoizedStars />
             <Suspense fallback={null}>
 
