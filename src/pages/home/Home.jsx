@@ -25,7 +25,7 @@ function HomePage(props)
 
   useEffect(() =>
   {
-    setTimeout(() => props.setLoading() , 1600)
+    setTimeout(() => props.setLoading() , 2500)
   }, [])
 
   useEffect(() => {
@@ -70,6 +70,8 @@ function HomePage(props)
     <>
       {/* <Stats showPanel={0} className="stats" {...props} /> */}
       <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 20, fov: 75, position: [0,0, 2.5] }}>
+        {/* <color attach="background" args={["#fff"]} /> */}
+
           <Suspense fallback={null}>
               <MemoizedStars />
               <spotLight position={[10, 10, 10] } intensity={1}/>

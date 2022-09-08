@@ -3,15 +3,6 @@ import { useSelector } from 'react-redux';
 import { useFrame, } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei';
 
-useGLTF.preload(`/lesson1_models/model0.glb`)
-useGLTF.preload(`/lesson1_models/model1.glb`)
-useGLTF.preload(`/lesson1_models/model2.glb`)
-useGLTF.preload(`/lesson1_models/model3.glb`)
-useGLTF.preload(`/lesson1_models/model4.glb`)
-useGLTF.preload(`/lesson1_models/model5.glb`)
-
-
-
 function LessonModels() {
 
   const counter = useSelector(state => state.counter);
@@ -54,7 +45,7 @@ function LessonModels() {
       {
         RotateAnimation();
         return ( 
-          <group ref={ref} {...props} dispose={null} scale={.073}>
+          <group ref={ref} {...props} dispose={null} scale={.07}>
             <mesh geometry={nodes.fullerene.geometry} material={materials['Material.001']} position={[2.9, 1.01, -1.53]} rotation={[-0.42, 1.23, -2.44]} />
           </group>
         )
@@ -143,3 +134,10 @@ function LessonModels() {
 }
 
 export default LessonModels;
+
+useGLTF.preload(`/lesson1_models/model0.glb`)
+useGLTF.preload(`/lesson1_models/model1.glb`)
+useGLTF.preload(`/lesson1_models/model2.glb`)
+useGLTF.preload(`/lesson1_models/model3.glb`)
+useGLTF.preload(`/lesson1_models/model4.glb`)
+useGLTF.preload(`/lesson1_models/model5.glb`)
