@@ -77,7 +77,13 @@
 ### Architecture
 - 6protons.app is built as a single page web application. This design allows for the application to be run on any browser, making the app cross platform. The app runs on desktops, laptops, and tablets. 
 
-### Screenshots:
+### User Interface Screenshots:
+
+<img src="./img-ui/ui-1.png" style="width:300px;"/>
+<img src="./img-ui/ui-2.png" style="width:300px;"/>
+<img src="./img-ui/ui-3.png" style="width:300px;"/>
+<img src="./img-ui/ui-4.jpg" style="width:300px;"/>
+
 
 
 ## Development Environment Set-up:
