@@ -3,6 +3,14 @@ import { useSelector } from 'react-redux';
 import { useFrame, } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei';
 
+useGLTF.preload(`/lesson1_models/model0.glb`)
+useGLTF.preload(`/lesson1_models/model1.glb`)
+useGLTF.preload(`/lesson1_models/model2.glb`)
+useGLTF.preload(`/lesson1_models/model3.glb`)
+useGLTF.preload(`/lesson1_models/model4.glb`)
+useGLTF.preload(`/lesson1_models/model5.glb`)
+
+
 
 function LessonModels() {
 

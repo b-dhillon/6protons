@@ -60,7 +60,7 @@ function HomePage(props)
             <div></div>
             <div></div>
           </div>
-          <h1 class='loading--title'>loading</h1>
+          <h1 className='loading--title'>loading</h1>
         </div>
       </>
     )

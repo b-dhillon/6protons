@@ -5,12 +5,7 @@ import DiamondsLesson from './pages/diamonds_lesson/DiamondsLesson.jsx';
 import NanotubesLesson from './pages/nanotubes_lesson/NanotubesLesson.jsx';
 import GrapheneLesson from './pages/graphene_lesson/GrapheneLesson.jsx';
 
-useGLTF.preload(`/lesson1_models/model0.glb`)
-useGLTF.preload(`/lesson1_models/model1.glb`)
-useGLTF.preload(`/lesson1_models/model2.glb`)
-useGLTF.preload(`/lesson1_models/model3.glb`)
-useGLTF.preload(`/lesson1_models/model4.glb`)
-useGLTF.preload(`/lesson1_models/model5.glb`)
+
 
 export default function App() {
   const [page, setPage] = useState('Home');

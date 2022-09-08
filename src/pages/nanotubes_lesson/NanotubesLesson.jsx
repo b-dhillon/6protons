@@ -1,4 +1,4 @@
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import Stars from '../../components/Stars';
 import HomeNav from '../../components/HomeNav';
@@ -7,7 +7,7 @@ import NanotubeText from './NanotubeText';
 import NanotubeModels from './NanotubeModels';
 import DataStore from '../../redux/store';
 import './nanotube-styles.css'
-import { OrbitControls, PointerLockControls, TrackballControls } from '@react-three/drei'
+import { TrackballControls } from '@react-three/drei'
 import { Provider } from 'react-redux';
 
 

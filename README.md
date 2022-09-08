@@ -5,7 +5,7 @@
 ### Live Build: 
 - [https://6protons.app](https://6protons.app)
 
-## App Structure:
+## Application Structure:
 ### File System:
 ```
     .
@@ -76,6 +76,9 @@
 
 ### Architecture
 - 6protons.app is built as a single page web application. This design allows for the application to be run on any browser, making the app cross platform. The app runs on desktops, laptops, and tablets. 
+
+### Screenshots:
+
 
 ## Development Environment Set-up:
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment below for notes on how to deploy the project on a live system.  

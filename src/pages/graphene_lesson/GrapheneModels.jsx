@@ -2,8 +2,6 @@ import React, { useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useFrame, } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei';
-import * as THREE from 'three';
-
 
 useGLTF.preload('/lesson4_models/model0.glb');
 

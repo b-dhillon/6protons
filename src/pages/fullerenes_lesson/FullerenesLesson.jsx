@@ -1,4 +1,4 @@
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense } from 'react';
 import { Canvas,  } from '@react-three/fiber';
 import { Provider } from 'react-redux';
 import FullereneModels from './FullereneModels';
