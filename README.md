@@ -79,10 +79,10 @@ Six Protons is built as a single page web application. This design allows for th
 
 ### User Interface Screenshots:
 
-<img src="./img-ui/ui-1.png" style="width:400px;"/>
-<img src="./img-ui/ui-2.png" style="width:400px;"/>
-<img src="./img-ui/ui-3.png" style="width:400px;"/>
-<img src="./img-ui/ui-4.jpg" style="width:400px;"/>
+<img src="./img-ui/ui-1.png" style="width:500px;"/>
+<img src="./img-ui/ui-2.png" style="width:500px;"/>
+<img src="./img-ui/ui-3.png" style="width:500px;"/>
+<img src="./img-ui/ui-4.jpg" style="width:500px;"/>
 
 ### Built With:
 - React (JavaScript)
