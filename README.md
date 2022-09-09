@@ -1,7 +1,7 @@
 # 3D Textbook
 
 ### Project Description:
-- 6protons.app is a web application. Specifically it is an eLearning minimum viable product (mvp). It is designed to teach math & science by visualizing abstract concepts using 3D models. The app in its current form focuses on carbon crystals (carbon is the only atom with 6 protons), however this framework can be applied to teach any STEM subject. 
+- Six Protons is a web application. Specifically it is an eLearning minimum viable product (mvp). It is designed to teach math & science by visualizing abstract concepts using 3D models. The app in its current form focuses on carbon crystals (carbon is the only atom with 6 protons), however this framework can be applied to teach any STEM subject. 
 ### Live Build: 
 - [https://6protons.app](https://6protons.app)
 
@@ -74,8 +74,8 @@
         └── .gitignore
 ```
 
-### Architecture
-6protons.app is built as a single page web application. This design allows for the application to be run on any browser making the app cross platform. The app runs well on desktops, laptops, and tablets. 
+### Architecture:
+Six Protons is built as a single page web application. This design allows for the application to be run on any browser, making the app inherently cross platform. The app runs well on desktops, laptops, and tablets, casting a wide net for users of all types.
 
 ### User Interface Screenshots:
 
@@ -84,10 +84,20 @@
 <img src="./img-ui/ui-3.png" style="width:400px;"/>
 <img src="./img-ui/ui-4.jpg" style="width:400px;"/>
 
+### Built With:
+- React (JavaScript)
+    - To render and update the DOM based on changes in application state. 
+- Redux
+    - To pass data between sibling components and synchronize state across components.
+- Blender
+    - To create 3D assets. 
+- Three.JS / React-3-Fiber
+    - To import, render, and animate 3D assets.
+
 
 
 ## Development Environment Set-up:
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment below for notes on how to deploy the project on a live system.  
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 Instructions:
 1. Download the source code by clicking the green "code" button at the top of this README file and click "Download Zip"  
@@ -113,18 +123,25 @@ Instructions:
 
 
 
-## Technologies 
-- JavaScript
-- React
-- Redux
-- Three.JS / React-3-Fiber
-- Blender
+## Authors:
+- B. Dhillon - Designer && Developer
 
+## License:
+```
+Six Protons (https://6protons.app)
+Copyright (c) 2022, Bhavandeep Dhillon
 
-## Authors
-- Bhav Dhillon - Designer && Engineer
+Six Protons is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, specifically version 3 of the License.
 
-## License 
-- MIT
+Six Protons is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-## Acknowledgements
+You should have received a copy of the GNU Affero General Public License
+along with Six Protons.  If not, see <http://www.gnu.org/licenses/>.
+```
+## Acknowledgements:
+Special thanks to the open source developer collective, Poimandres. For their development of the incredible React renderer for Three.js (react-three-fiber) as well as their useful GLTF to JSX transformer (gltfjsx). Without either this project would not be so declarative and relatively simple to understand.
