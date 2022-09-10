@@ -144,4 +144,4 @@ You should have received a copy of the GNU Affero General Public License
 along with Six Protons.  If not, see <http://www.gnu.org/licenses/>.
 ```
 ## Acknowledgements:
-Special thanks to the open source developer collective, Poimandres. For their development of the incredible React renderer for Three.js (react-three-fiber) as well as their useful GLTF to JSX transformer (gltfjsx). Without either this project would not be so declarative and relatively simple to understand.
+Special thanks to the open source developer collective, Poimandres. For their development of the incredible React renderer for Three.js (react-three-fiber) as well as their useful GLTF to JSX transformer (gltfjsx).
