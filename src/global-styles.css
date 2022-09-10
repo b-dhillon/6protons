@@ -1,4 +1,10 @@
 /* @import url("https://rsms.me/inter/inter.css"); */
+@font-face {
+  font-family: quicksand;
+  src: url(./fonts/Quicksand-Regular.ttf);
+}
+
+
 * {
   box-sizing: border-box;
 }

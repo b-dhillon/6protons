@@ -75,7 +75,9 @@
 ```
 
 ### Architecture:
-Six Protons is built as a single page web application. This design allows for the application to be run on any browser, making the app inherently cross platform. The app runs well on desktops, laptops, and tablets, casting a wide net for users of all types.
+Six Protons is written using a functional paradigm and is built as a single page web application. This design allows for the application to be run on any browser, making the app inherently cross platform. The app runs well on desktops, laptops, and tablets, casting a wide net for users of all types.
+
+
 
 ### User Interface Screenshots:
 
