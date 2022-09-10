@@ -1,7 +1,4 @@
-## To-do
-
-   - Add quicksand font
-   
+## To-do   
    - Make it look decent in 27 inch 4k (3840 x 2160) 
       - Scale up max width/height limits .... or just add a media query?
          - Hero title 
@@ -10,6 +7,7 @@
          - lesson selection 
          - cards
    
+   - Add React.memo and useMemo to components.
 
 
    - Re-add hover effects only if on desktop 

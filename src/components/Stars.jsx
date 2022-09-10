@@ -1,4 +1,4 @@
-import React, { useState, useRef, memo } from 'react'
+import React, { useState, useRef, memo, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Points, PointMaterial } from '@react-three/drei'
 import * as random from "maath/random";
@@ -6,7 +6,7 @@ import * as THREE from 'three'
 
 const Stars = React.memo( function Stars(props) {
     const ref = useRef()
-    const [sphere] = useState(() => random.inSphere(new Float32Array(3000), { radius: 1.25 }))
+    const sphere = useMemo(() => random.inSphere(new Float32Array(3000), { radius: 1.25 }))
 
     useFrame((state, delta) =>
     {
