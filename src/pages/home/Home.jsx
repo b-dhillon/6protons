@@ -94,7 +94,7 @@ function HomePage(props)
           <div className='lessonSelection'>
             <h1 className='lessonSelection--title'>Please select a lesson</h1>
 
-            <div className='card--wrapper--wrapper'>
+            <div className='card--container'>
               <div className='card--wrapper'>
                 <Card id={'Fullerenes'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Fullerenes"} img={fullerenesThumbnail}  />
                 <Card id={'Nanotubes'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Nanotubes"} img={nanotubesThumbnail} />
