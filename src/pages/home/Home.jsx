@@ -70,8 +70,6 @@ function HomePage(props)
     <>
       {/* <Stats showPanel={0} className="stats" {...props} /> */}
       <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 20, fov: 75, position: [0,0, 2.5] }}>
-        {/* <color attach="background" args={["#fff"]} /> */}
-
           <Suspense fallback={null}>
               <MemoizedStars />
               <spotLight position={[10, 10, 10] } intensity={1}/>
@@ -85,7 +83,7 @@ function HomePage(props)
         <div className='hero--wrapper'>
           <h1 className='hero--title'>Learn by Seeing</h1>
           <p className='hero--subtitle'>A visual introduction to the chemistry of carbon crystals.</p>
-          <button className="heroBtn"   onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => { 
+          <button className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => { 
             dispatch(start());
             }}>
             Get Started
@@ -105,7 +103,7 @@ function HomePage(props)
               </div>
             </div>
 
-            <button className="heroBtn" style={{height: '45px'}} onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => { 
+            <button className="heroBtn" style={{height: '45px'}} onClick={() => { 
               dispatch(start());}}>
               Back to Home
             </button>
