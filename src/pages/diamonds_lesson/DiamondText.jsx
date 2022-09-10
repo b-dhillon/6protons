@@ -29,16 +29,16 @@ function DiamondText(props){
     {
         
         return(
-            <div className='text--wrapper' style={{flexDirection: 'column'}}>
+            <div className='text--wrapper'>
                 <p>The lesson is being developed. Please see the lesson on <span>Fullerenes </span>
                     for an example of the minimal viable product (MVP) of this project.
                 </p>
-
                 <button className='fullerene-redirect' onClick={() => {
-                    props.setPage('Fullerenes_Lesson');
-                    dispatch(reset());
+                console.log('clicked');
+                props.setPage('Fullerenes_Lesson');
+                dispatch(reset());
                 }}>
-                    Go to Fullerenes Lesson
+                Go to Fullerenes Lesson
                 </button> 
             </div>
         )

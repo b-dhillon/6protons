@@ -128,7 +128,7 @@ svg {
 
 
 /* HomeNav */
-.homeBtn--wrapper {
+.homeNav--wrapper {
   position: absolute;
   top: 0;
   padding: 10px 30px;
@@ -136,7 +136,7 @@ svg {
   height: 50px;
   display: flex; 
   justify-content: space-between;
-  z-index: 2;
+  z-index: 3;
 }
 
 .homeBtn {
@@ -169,12 +169,13 @@ svg {
 }
 
 .fullerene-redirect {
-  width: 180px; 
+  width: 170px; 
   height: 40px; 
   background: black;
   color: #f07167;
   border: 1px solid #f07167;
   cursor: pointer;
+  animation: fadeIn 2s 1 ease-in-out;
 }
 
 
@@ -341,25 +342,26 @@ transform: translateZ(40px);
   font-family: 'Courier New', Courier, monospace !important;
 }
 
-.text--wrapper--wrapper {
+.global-text-wrapper {
   position: absolute;
   top: 0; 
   width: 100%; 
   height: 100%;
   display: flex;
   align-items: center;
-  /* border: 1px solid red; */
+  z-index: 2;
 }
 
 .text--wrapper {
   /* position: absolute;
   top: 10%; */
   /* left: 0; */
-  width: 100%;
   /* height: 80%; */
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   flex-wrap: wrap;
   z-index: 2;
 }

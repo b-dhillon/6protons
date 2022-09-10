@@ -4,7 +4,7 @@ import { reset, start } from '../redux/actions';
 function HomeNav(props) {
     const dispatch = useDispatch();
     return (
-        <ul className="homeBtn--wrapper">
+        <ul className="homeNav--wrapper">
 
             <li className="backBtn" onClick={() => {
                 dispatch(reset());

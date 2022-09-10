@@ -31,7 +31,9 @@ function NanotubesLesson(props) {
 
         <HomeNav setPage={props.setPage} setOverlay={props.setOverlay}/>
         <LessonNav />
-        <NanotubeText setPage={props.setPage}/>
+        <div className="global-text-wrapper">
+          <NanotubeText setPage={props.setPage}/>
+        </div>
       </>
   );
 }

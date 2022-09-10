@@ -26,7 +26,9 @@ function DiamondsLesson(props) {
         </Canvas>
         <HomeNav setPage={props.setPage} setOverlay={props.setOverlay} />
         <LessonNav />
-        <DiamondText />
+        <div className="global-text-wrapper">
+          <DiamondText setPage={props.setPage}/>
+        </div>
       </>
     );
 }

@@ -55,7 +55,9 @@ function GrapheneLesson(props) {
             
             </Suspense>
           </Canvas>
-          <GrapheneText setPage={props.setPage}/>
+          <div className='global-text-wrapper'>
+            <GrapheneText setPage={props.setPage}/>
+          </div>
       </>
     );
 }

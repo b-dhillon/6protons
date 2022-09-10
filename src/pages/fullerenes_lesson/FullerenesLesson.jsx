@@ -23,7 +23,7 @@ function FullerenesLesson(props) {
         </Canvas>
           <HomeNav setPage={props.setPage} setOverlay={props.setOverlay} />
           <LessonNav />
-          <div className="text--wrapper--wrapper">
+          <div className="global-text-wrapper">
             <FullereneText />
           </div>
       </>
