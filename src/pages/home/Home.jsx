@@ -103,9 +103,9 @@ function HomePage(props)
               </div>
             </div>
 
-            <button className="heroBtn" style={{height: '45px'}} onClick={() => { 
+            <button className="heroBtn" onClick={() => { 
               dispatch(start());}}>
-              Back to Home
+              Back
             </button>
           </div>
         </div>

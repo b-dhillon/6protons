@@ -33,6 +33,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     position: relative;
+    white-space: nowrap;
 }
 
 .hero--subtitle {
@@ -40,7 +41,9 @@
     width: 100%;
     line-height: 40px;
     text-align: center;
-    color: white !important;
+    color: white;
+    white-space: nowrap;
+
 }
 
 .heroBtn {
@@ -49,10 +52,10 @@
     min-width: 100px;
     max-height: 50px; */
     font-family: Quicksand;
-    width: 150px;
-    height: 50px;
+    width: 15vh;
+    height: 4.33vh;
     animation: fadeIn 1s 1 ease-in;
-    font-size: .9em;
+    font-size: 1.66vh;
     font-weight: bold;
     background: black;
     color: #3272F4;
@@ -60,6 +63,14 @@
     cursor: pointer;
     padding: 10px;
     border-radius: 10px;
+    white-space: nowrap;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    
+    overflow: hidden;
 }
 
 .heroBtn:hover {
@@ -74,22 +85,22 @@
 .lessonSelection--wrapper {
     position: absolute;
     width: 100%;
-    max-width: 1200px;
-    height: 100vh;
+    height: 100%;
+    /* max-width: 1200px; */
     display: flex;
     flex-direction: column;
     justify-content: center !important;
     align-items: center;
-    /* font-family: 'Courier New', Courier, monospace !important; */
+
 }
 
 .lessonSelection {
     /* margin: 6vh 0px; */
     border: 2px solid white;
-    width: 90%;
-    height: 90%;
+    width: 80%;
 
-    max-height: 700px;
+    height: 80%;
+    /* max-height: 700px; */
 
 
     display: flex;
@@ -100,18 +111,20 @@
     padding: 10px 0px;
     background-color: rgba(0, 0, 0, .2);
     border-radius: 10px; 
+    overflow: hidden;
+
 }
 
 .lessonSelection--title {
-    font-size: 4.5vw;
-
+    font-size: 6vh;
     margin: 0;
     padding: 0;
     font-weight: 300;
-    letter-spacing: 0.1em;
+    letter-spacing: 4px;
     overflow: hidden;
     display: block;
     flex-shrink: 1;
+    white-space: nowrap;
 }
 
 .card--container {
@@ -119,17 +132,18 @@
     display: flex; 
     align-items: center;
     justify-content: center; 
-    padding: 0px 50px;
+    /* padding: 0 50px; */
 }
 
 .card--wrapper {
-    width: 80%;
+    max-width: 80%;
     height: 100%;
     z-index: 1;
     display: flex;
     align-items: center;
     overflow: scroll !important;
     margin: 20px 0px;
+    border: 1px solid red;
     /* scroll-snap-type: x mandatory !important; */
 }
 
@@ -137,10 +151,10 @@
     padding: 10px;
     width: 28vh;
     height: 28vh;
-    max-width: 300px !important; 
-    max-height: 300px !important;
-    min-width: 190px; 
-    min-height: 190px;
+    /* max-width: 300px !important; 
+    max-height: 300px !important; */
+    /* min-width: 190px; 
+    min-height: 190px; */
     border-radius: 9px;
     transition-duration: 250ms;
     transition-property: transform;
@@ -161,15 +175,15 @@
 }
 
 .card > h1 {
-    font-size: 2.75vh !important;
+    font-size: 2.73vh !important;
     font-weight: 500;
-    letter-spacing: 5px;
+    letter-spacing: 4px;
     font-weight: 400;
 }
 
 .card > img {
     width: 20vh; 
-    max-width: 80%;
+    /* max-width: 80%; */
     height: auto;
 }
 

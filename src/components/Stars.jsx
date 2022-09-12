@@ -4,7 +4,7 @@ import { Points, PointMaterial } from '@react-three/drei'
 import * as random from "maath/random";
 import * as THREE from 'three'
 
-const Stars = React.memo( function Stars(props) {
+const Stars = function Stars(props) {
     const ref = useRef()
     const sphere = useMemo(() => random.inSphere(new Float32Array(3000), { radius: 1.25 }))
 
@@ -27,7 +27,7 @@ const Stars = React.memo( function Stars(props) {
             </group>
         </>
     )
-})
+}
 
 const MemoizedStars = memo(Stars)
 
