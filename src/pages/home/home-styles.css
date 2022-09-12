@@ -143,7 +143,6 @@
     align-items: center;
     overflow: scroll !important;
     margin: 20px 0px;
-    border: 1px solid red;
     /* scroll-snap-type: x mandatory !important; */
 }
 
