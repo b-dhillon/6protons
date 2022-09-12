@@ -143,7 +143,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
-along with Six Protons.  If not, see <http://www.gnu.org/licenses/>.
+along with Six Protons.  If not, see <http://www.gnu.org/licenses>.
 ```
 ## Acknowledgements:
 Special thanks to the open source developer collective, Poimandres. For their development of the incredible React renderer for Three.js (react-three-fiber) as well as their useful GLTF to JSX transformer (gltfjsx).
