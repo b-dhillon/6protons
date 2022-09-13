@@ -81,7 +81,7 @@
 
 https://user-images.githubusercontent.com/88413313/189790878-cce9cd87-a22e-47e4-b969-2855c318bf8e.mp4
 
-##### The user simply selects a lesson and navigates throught the lesson as seen below:
+##### The user simply selects a lesson and navigates through it as seen below:
 https://user-images.githubusercontent.com/88413313/189790929-5481ab51-bced-4ead-adb4-fdb05ef6385c.mp4
 
 ##### The UI is fully responsive:
