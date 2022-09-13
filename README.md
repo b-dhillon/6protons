@@ -79,7 +79,16 @@ Six Protons is written using a functional paradigm and is built as a single page
 
 
 
-### User Interface Screenshots:
+### UI Design && Demo:
+
+
+https://user-images.githubusercontent.com/88413313/189790878-cce9cd87-a22e-47e4-b969-2855c318bf8e.mp4
+
+
+https://user-images.githubusercontent.com/88413313/189790929-5481ab51-bced-4ead-adb4-fdb05ef6385c.mp4
+
+
+
 
 <img src="./img-ui/ui-1.png" style="width:500px;"/>
 <img src="./img-ui/ui-2.png" style="width:500px;"/>
