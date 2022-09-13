@@ -3,11 +3,9 @@ import { useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 
-useGLTF.preload(`/home_models/steroid.glb`);
-
 function Models(props) {
     const ref = useRef()
-    const { nodes, materials } = useGLTF('/home_models/steroid.glb')
+    const { nodes, materials } = useGLTF('/home_models/model0.glb')
 
     useFrame((state) => {
         ref.current.rotation.z = Math.sin((state.clock.elapsedTime) * 1.5) / 6
@@ -26,4 +24,5 @@ function Models(props) {
     )
 }
 
+useGLTF.preload(`/home_models/model0.glb`);
 export default Models;

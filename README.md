@@ -1,9 +1,8 @@
 # 3D Textbook
 
 ### Project Description:
-- Six Protons is an eLearning minimum viable product (mvp). It is designed to teach math & science by visualizing abstract concepts using 3D models. The app in its current form focuses on carbon crystals (carbon is the only atom with 6 protons), however this framework can be applied to teach any STEM subject. 
-### Live Build: 
-- [https://6protons.app](https://6protons.app)
+- Six Protons is a web application, specifically it is an eLearning minimum viable product (mvp). It is designed to teach math & science by visualizing abstract concepts using 3D models. The app in its current form focuses on carbon crystals (carbon is the only atom with 6 protons), however this framework can be applied to teach any STEM subject. 
+
 
 ## Application Structure:
 ### File System:
@@ -25,7 +24,7 @@
         │   ├── lesson4_models/
         │   │   └── model0.glb
         │   └── home_models/
-        │       └── steroid.glb
+        │       └── model0.glb
         ├── src/
         │   ├── components/
         │   │   ├── HomeNav.jsx
@@ -105,6 +104,8 @@ https://user-images.githubusercontent.com/88413313/189790929-5481ab51-bced-4ead-
 - Three.JS / React-3-Fiber
     - To import, render, and animate 3D assets.
 
+### Live Build: 
+- [https://6protons.app](https://6protons.app)
 
 
 ## Development Environment Set-up:
