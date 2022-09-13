@@ -83,12 +83,13 @@ Six Protons is written using a functional paradigm and is built as a single page
 
 https://user-images.githubusercontent.com/88413313/189790878-cce9cd87-a22e-47e4-b969-2855c318bf8e.mp4
 
-
+The user simply selects a lesson and navigates throught the lesson as seen below:
 https://user-images.githubusercontent.com/88413313/189790929-5481ab51-bced-4ead-adb4-fdb05ef6385c.mp4
 
-#### UI is fully responsive and will work with tablets as well: 
+The UI is fully responsive:
 https://user-images.githubusercontent.com/88413313/190004640-e058fe2b-e85b-453f-bf7c-51be5e2a056b.mp4
 
+And works with tablets as well: 
 https://user-images.githubusercontent.com/88413313/190005139-403e5162-d019-4523-8d03-f6aa2287a619.mp4
 
 
