@@ -86,6 +86,12 @@ https://user-images.githubusercontent.com/88413313/189790878-cce9cd87-a22e-47e4-
 
 https://user-images.githubusercontent.com/88413313/189790929-5481ab51-bced-4ead-adb4-fdb05ef6385c.mp4
 
+#### UI is fully responsive and will work with tablets as well: 
+https://user-images.githubusercontent.com/88413313/190004640-e058fe2b-e85b-453f-bf7c-51be5e2a056b.mp4
+
+https://user-images.githubusercontent.com/88413313/190005139-403e5162-d019-4523-8d03-f6aa2287a619.mp4
+
+
 
 
 ### Screenshots
