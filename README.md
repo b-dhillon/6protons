@@ -102,13 +102,13 @@ Six Protons is written using a functional paradigm and is built as a single page
 
 ### Built With:
 - React (JavaScript)
-    - To render and update the DOM based on changes in application state. 
+    - To render and update the DOM in a declarative manner. 
 - Redux
-    - To pass data between sibling components and synchronize state across components.
+    - To pass data between sibling components and synchronize state across seperate components.
 - Blender
     - To create 3D assets. 
 - Three.JS / React-3-Fiber
-    - To import, render, and animate 3D assets.
+    - To import, render, and animate the 3D assets.
 
 
 ## Development Environment Set-up:
