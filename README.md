@@ -3,6 +3,9 @@
 ### Project Description:
 - Six Protons is a web application -- specifically it is an eLearning minimum viable product (mvp). It is designed to teach math & science by visualizing abstract concepts using 3D models. The app in its current form focuses on carbon crystals (carbon is the only atom with 6 protons), however this framework can be applied to teach any STEM subject. 
 
+### Live Build: 
+- [https://6protons.app](https://6protons.app)
+
 
 ## Application Structure:
 ### File System:
@@ -73,27 +76,23 @@
         └── .gitignore
 ```
 
-### Architecture:
-Six Protons is written using a functional paradigm and is built as a single page web application. This design allows for the app to be run on any browser, making it inherently cross platform. The app runs well on desktops, laptops, and tablets -- casting a wide net for users of all types.
-
-
 
 ### UI Design && Demo:
 
-
 https://user-images.githubusercontent.com/88413313/189790878-cce9cd87-a22e-47e4-b969-2855c318bf8e.mp4
 
-The user simply selects a lesson and navigates throught the lesson as seen below:
+##### The user simply selects a lesson and navigates throught the lesson as seen below:
 https://user-images.githubusercontent.com/88413313/189790929-5481ab51-bced-4ead-adb4-fdb05ef6385c.mp4
 
-The UI is fully responsive:
+##### The UI is fully responsive:
 https://user-images.githubusercontent.com/88413313/190004640-e058fe2b-e85b-453f-bf7c-51be5e2a056b.mp4
 
-And works with tablets as well: 
+##### And works with tablets as well: 
 https://user-images.githubusercontent.com/88413313/190005139-403e5162-d019-4523-8d03-f6aa2287a619.mp4
 
 
-
+### Architecture:
+Six Protons is written using a functional paradigm and is built as a single page web application. This design allows for the app to be run on any browser, making it inherently cross platform. The app runs well on desktops, laptops, and tablets -- casting a wide net for users of all types.
 
 ### Screenshots
 <img src="./img-ui/ui-1.png" style="width:500px;"/>
@@ -110,9 +109,6 @@ https://user-images.githubusercontent.com/88413313/190005139-403e5162-d019-4523-
     - To create 3D assets. 
 - Three.JS / React-3-Fiber
     - To import, render, and animate 3D assets.
-
-### Live Build: 
-- [https://6protons.app](https://6protons.app)
 
 
 ## Development Environment Set-up:
