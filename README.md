@@ -95,10 +95,10 @@ https://user-images.githubusercontent.com/88413313/190005139-403e5162-d019-4523-
 Six Protons is written using a functional paradigm and is built as a single page web application. This design allows for the app to be run on any browser, making it inherently cross platform. The app runs well on desktops, laptops, and tablets -- casting a wide net for users of all types.
 
 ### Screenshots
-<img src="./img-ui/ui-1.png" style="width:500px;"/>
-<img src="./img-ui/ui-2.png" style="width:500px;"/>
-<img src="./img-ui/ui-3.png" style="width:500px;"/>
-<img src="./img-ui/ui-4.jpg" style="width:500px;"/>
+<img src="./img-ui/ui-1.png" style="width:750px;"/>
+<img src="./img-ui/ui-2.png" style="width:750px;"/>
+<img src="./img-ui/ui-3.png" style="width:750px;"/>
+<img src="./img-ui/ui-4.jpg" style="width:750px;"/>
 
 ### Built With:
 - React (JavaScript)
