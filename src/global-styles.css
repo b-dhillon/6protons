@@ -172,6 +172,7 @@ svg {
   background: black;
   color: #f07167;
   border: 1px solid #f07167;
+  border-radius: 10px;
   cursor: pointer;
   animation: fadeIn 2s 1 ease-in-out;
 }
