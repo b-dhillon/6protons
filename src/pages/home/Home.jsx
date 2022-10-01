@@ -82,7 +82,7 @@ function HomePage(props)
 
         <div className='hero--wrapper'>
           <h1 className='hero--title'>Learn by Seeing</h1>
-          <p className='hero--subtitle'>A visual introduction to the chemistry of carbon crystals.</p>
+          <p className='hero--subtitle'>A visual introduction to carbon crystals.</p>
           <button className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => { 
             dispatch(start());
             }}>
