@@ -25,7 +25,7 @@ function HomePage(props)
 
   useEffect(() =>
   {
-    setTimeout(() => props.setLoading() , 2500)
+    setTimeout(() => props.setLoading() , 3700)
   }, [])
 
   useEffect(() => {
