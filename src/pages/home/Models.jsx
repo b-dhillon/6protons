@@ -7,9 +7,9 @@ function Models(props) {
     const ref = useRef()
     const { nodes, materials } = useGLTF('/home_models/model0.glb')
 
-    useFrame((state) => {
+    useFrame((state, delta) => {
         ref.current.rotation.z = Math.sin((state.clock.elapsedTime) * 1.5) / 6
-        ref.current.rotation.x = THREE.MathUtils.lerp(ref.current.rotation.x, props.flipped ? (Math.PI * 1.5) : Math.PI / 2 , 0.25)
+        ref.current.rotation.x = THREE.MathUtils.lerp(ref.current.rotation.x, props.flipped ? (Math.PI * 1.5) : Math.PI / 2 , delta * 20)
 
     })
     
@@ -23,6 +23,8 @@ function Models(props) {
         </group>
     )
 }
+
+// 0.25
 
 useGLTF.preload(`/home_models/model0.glb`);
 export default Models;

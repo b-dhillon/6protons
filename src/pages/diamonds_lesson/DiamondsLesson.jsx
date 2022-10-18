@@ -20,8 +20,11 @@ function DiamondsLesson(props) {
               <Provider store={DataStore}>
                 <DiamondModels/>
               </Provider>
+              <ambientLight intensity={1} />
               <spotLight position={[10, 10, 10] } intensity={4}/>
+              <spotLight position={[-10, 10, 10] } intensity={4}/>
               <pointLight position={[0, -0.5, -1] } intensity={20}/>
+              {/* <pointLight position={[0, -0.5, -1] } intensity={20}/> */}
             </Suspense>
         </Canvas>
         <HomeNav setPage={props.setPage} setOverlay={props.setOverlay} />

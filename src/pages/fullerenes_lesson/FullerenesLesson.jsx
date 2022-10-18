@@ -11,7 +11,7 @@ import DataStore from '../../redux/store';
 function FullerenesLesson(props) {
     return (
       <>
-        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 45, position: [0, 0, 2] }}>      
+        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 45, position: [0, 0, 4] }}>      
             <Suspense fallback={null}>
               <MemoizedStars />
               <Provider store={DataStore}>

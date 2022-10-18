@@ -1,5 +1,5 @@
 import { useState, Suspense, useEffect } from 'react'
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useFrame } from '@react-three/fiber'
 import { useSelector, useDispatch } from 'react-redux';
 import { start } from '../../redux/actions';
 import fullerenesThumbnail from '../../images/fullerene.jpeg';
@@ -10,13 +10,15 @@ import MemoizedStars from '../../components/Stars'
 import Card from './Card';
 import Models from './Models'
 import './home-styles.css';
-import { Stats } from '@react-three/drei'
 
+import { OrbitControls, Stats } from '@react-three/drei'
 function HomePage(props) 
 {
   const [flipped, setFlipped] = useState(false);
   const started = useSelector(state => state.start);
   const dispatch = useDispatch();
+
+  const [loadState, setLoadState] = useState(document.readyState);
 
   function rotateModel()
   {
@@ -27,6 +29,9 @@ function HomePage(props)
   {
     setTimeout(() => props.setLoading() , 3700)
   }, [])
+
+
+
 
   useEffect(() => {
     if (started)
@@ -66,10 +71,11 @@ function HomePage(props)
     )
   }
 
-  else return (
+  else console.log(document.readyState)
+  return (
     <>
-      {/* <Stats showPanel={0} className="stats" {...props} /> */}
-      <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 20, fov: 75, position: [0,0, 2.5] }}>
+      <Stats showPanel={0} className="stats" {...props} />
+      <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 20, fov: 75, position: [0,0, 1.66] }}>
           <Suspense fallback={null}>
               <MemoizedStars />
               <spotLight position={[10, 10, 10] } intensity={1}/>
@@ -98,8 +104,8 @@ function HomePage(props)
               <div className='card--wrapper'>
                 <Card id={'Fullerenes'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Fullerenes"} img={fullerenesThumbnail}  />
                 <Card id={'Nanotubes'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Nanotubes"} img={nanotubesThumbnail} />
-                <Card id={'Graphene'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Graphene"} img={grapheneThumbnail} />
                 <Card id={'Diamonds'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Diamonds"} img={diamondsThumbnail} />
+                <Card id={'Graphene'} setPage={props.setPage} setOverlay={props.setOverlay} title={"Graphene"} img={grapheneThumbnail} />
               </div>
             </div>
 

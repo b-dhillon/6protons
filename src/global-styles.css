@@ -214,27 +214,27 @@ border: 2px solid #004dff;
 }
 
 .spinner div:nth-of-type(1) {
-transform: translateZ(-40px) rotateY(180deg);
+  transform: translateZ(-40px) rotateY(180deg);
 }
 
 .spinner div:nth-of-type(2) {
-transform: rotateY(-270deg) translateX(50%);
-transform-origin: top right;
+  transform: rotateY(-270deg) translateX(50%);
+  transform-origin: top right;
 }
 
 .spinner div:nth-of-type(3) {
-transform: rotateY(270deg) translateX(-50%);
-transform-origin: center left;
+  transform: rotateY(270deg) translateX(-50%);
+  transform-origin: center left;
 }
 
 .spinner div:nth-of-type(4) {
-transform: rotateX(90deg) translateY(-50%);
-transform-origin: top center;
+  transform: rotateX(90deg) translateY(-50%);
+  transform-origin: top center;
 }
 
 .spinner div:nth-of-type(5) {
-transform: rotateX(-90deg) translateY(50%);
-transform-origin: bottom center;
+  transform: rotateX(-90deg) translateY(50%);
+  transform-origin: bottom center;
 }
 
 .spinner div:nth-of-type(6) {
