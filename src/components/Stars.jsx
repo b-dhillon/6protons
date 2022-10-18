@@ -14,21 +14,25 @@ const Stars = function Stars(props) {
         ref.current.rotation.x -= delta / 10
         ref.current.rotation.y -= delta / 15
 
+
+        // 60fps --> delta = .016
+        // 120fps --> delta = .008
+
         // Camera zoom-in animation on load: 
-        state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, 1, 0.14)
+        state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, 1, delta * 2)
     })
 
     return (
         <>
             <group rotation={[0, 0, Math.PI / 4]}>
                 <Points ref={ref} positions={sphere} stride={3} frustumCulled={false} {...props}>
-                    <PointMaterial transparent color="#fff" size={0.0035} sizeAttenuation={true} depthWrite={false} />
+                    <PointMaterial transparent color="#fff" size={0.004} sizeAttenuation={true} depthWrite={false} />
                 </Points>
             </group>
         </>
     )
 }
-
+// star size={0.0035}
 const MemoizedStars = memo(Stars)
 
 export default MemoizedStars;
