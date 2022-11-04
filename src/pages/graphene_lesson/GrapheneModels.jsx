@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useFrame, } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei';
 
-useGLTF.preload('/lesson4_models/model0.glb');
+// useGLTF.preload('/lesson4_models/model0.glb');
 
 
 function DiamondModels() {

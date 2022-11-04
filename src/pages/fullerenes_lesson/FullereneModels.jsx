@@ -1,143 +1,209 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useMemo, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useGLTF, Merged } from '@react-three/drei';
 import { useFrame, } from '@react-three/fiber'
-import { useGLTF, useAnimations } from '@react-three/drei';
 
-function LessonModels() {
 
+export default function FullereneModels(props)
+{
+  const { nodes } = useGLTF('lesson1_models/model0.glb');
   const counter = useSelector(state => state.counter);
 
-  function Model({ ...props })
-  {
-    const group = useRef()
-    const { nodes, materials, animations } = useGLTF(`/lesson1_models/model${counter}.glb`)
-    const { actions } = useAnimations(animations, group)
-    const positions = [ .26, 0, 0];
-    const scale = 0.05;
-    const scale2 = 0.05;
+  const centerPosition = [0, 0, 0];
+  const leftPosition = [.3, 0, 0];
 
+  let scale;
+  if (counter === 0) scale = 0.25;
+  else if (counter === 5) scale = 0.06;
+  else scale = .15;
+  console.log(scale);
 
-    useEffect(() =>
-    {
-      if( counter != 0 && counter != 3 )
-      {
-        const _animations = Object.values(actions);
-        _animations.forEach((a) => a.play())
+  const instances = useMemo(
+  () => ({
+    CarbonInstanceSphere: nodes.carbonInstanceSphere,
+    SoccerInstanceSphere: nodes.soccerInstanceSphere
+  }),
+  [nodes]);
+  nodes.soccerInstanceSphere.material = nodes.carbonBonds.material;
 
-      }
-    })
+  /*
+  In this parent function we are conditionally controlling the color of the soccer instances as well as the positioning of the model (center or left), and scale
+  because these cant be conditionally set in the child Model() function with all the other conditions without causing problems.
+  Both if statements below are to prevent the model from rendering in the centerPosition for a split seconds.
+  */
+  if (counter === 0) {
+    return (
+      <Merged meshes={instances} {...props}>
+        { (instances) => <Model instances={instances} position={centerPosition} scale={scale}/> }
+      </Merged>
+    ) 
+  };
 
-    const ref = useRef();
+  if (counter >= 2) {
+    if (counter >= 3) nodes.soccerInstanceSphere.material = nodes.soccerBonds.material;
+    else nodes.soccerInstanceSphere.material = nodes.carbonBonds.material;
 
-    function OscilateAnimation() {
-        useFrame((state) => {
-          ref.current.rotation.y = Math.sin((state.clock.elapsedTime) * .75) / 4.5
-      })
-    }
-
-    function RotateAnimation() {
-      useFrame((state) => {
-        ref.current.rotation.y += 0.002
-    })
+    return (
+      <Merged meshes={instances} {...props}>
+        { (instances) => <Model instances={instances} position={leftPosition} scale={scale}/> }
+      </Merged>
+    ) 
   }
-      
-      if(counter === 0)
-      {
-        RotateAnimation();
-        return ( 
-          <group ref={ref} {...props} dispose={null} scale={.07}>
-            <mesh geometry={nodes.fullerene.geometry} material={materials['Material.001']} position={[2.9, 1.01, -1.53]} rotation={[-0.42, 1.23, -2.44]} />
-          </group>
-        )
-      }
-
-      else if(counter === 2){
-
-        return (
-
-          <group ref={group} {...props} dispose={null} position={positions} scale={scale2}>
-            <group name="Scene">
-              <group name="animation-empty">
-                <mesh name="carbon-atoms" geometry={nodes['carbon-atoms'].geometry} material={materials.Carbon} position={[1.02, 3.01, 1.45]} scale={0.23} />
-                <mesh name="carbon-bonds" geometry={nodes['carbon-bonds'].geometry} material={materials.Carbon} position={[2.9, 1.01, -1.53]} rotation={[-0.42, 1.23, -2.44]} />
-                <mesh name="soccer-pattern" geometry={nodes['soccer-pattern'].geometry} material={materials.Carbon} position={[0.18, 1.66, 3.07]} scale={0.23} />
-              </group>
-              <mesh name="Text" geometry={nodes.Text.geometry} material={materials['text-material']} position={[0, -5, 0]} rotation={[Math.PI / 2, 0, 0]} />
-            </group>
-          </group>
-        )
-      }
-
-      else if(counter === 3) {
-        
-        OscilateAnimation();
-
-        return (
-          <group ref={ref} {...props} dispose={null} position={positions} scale={scale2}>
-            <mesh geometry={nodes.Text.geometry} material={materials['text-material']} position={[-0.93, -5, -1.06]} rotation={[Math.PI / 2, 0, 0.13]} scale={0.9} />
-            <group position={[0.18, 1.66, 3.07]} scale={0.23} rotation={[0,-0.2,0]}>
-              <mesh geometry={nodes.SurfSphere047.geometry} material={materials.Carbon} />
-              <mesh geometry={nodes.SurfSphere047_1.geometry} material={materials['Material.001']} />
-            </group>
-          </group>
-        )
-      }
-
-      else if(counter === 4) {
-        return (
-          <group ref={group} {...props} dispose={null} position={positions} scale={scale2}>
-            <group name="Scene">
-              <group name="caffieneEmpty" rotation={[0, 0, -0.08]} scale={scale}>
-                <group name="caffieneModel" position={[-1.87, 3.16, -1.95]} rotation={[1, 0, 0]} scale={0.16}>
-                  <mesh name="SurfSphere003" geometry={nodes.SurfSphere003.geometry} material={materials.Hydrogen} />
-                  <mesh name="SurfSphere003_1" geometry={nodes.SurfSphere003_1.geometry} material={materials.Oxygen} />
-                  <mesh name="SurfSphere003_2" geometry={nodes.SurfSphere003_2.geometry} material={materials.Nitrogen} />
-                  <mesh name="SurfSphere003_3" geometry={nodes.SurfSphere003_3.geometry} material={materials.Carbon} />
-                </group>
-              </group>
-              <group name="fullereneEmpty" scale={scale}>
-                <mesh name="buckyball_model" geometry={nodes.buckyball_model.geometry} material={materials['Carbon.001']} position={[2.9, 1.01, -1.53]} rotation={[-0.42, 1.23, -2.44]} />
-              </group>
-              <mesh name="Text" geometry={nodes.Text.geometry} material={materials['text-material']} position={[-1, -5, 0]} rotation={[Math.PI / 2, 0, 0]} />
-            </group>
-        </group>
-        )
-      }
-
-      else if(counter === 5){
-        return (
-          <group ref={group} {...props} dispose={null} position={positions} scale={0.009}>
-            <group name="Scene">
-              
-              <group name="proteaseEmpty" rotation={[Math.PI, -1.17, Math.PI]} position={positions}>
-                <mesh name="proteaseModel" geometry={nodes.proteaseModel.geometry} material={materials.Material_0} rotation={[0, -0.02, 0]} />
-              </group>
-
-              <group name="fullereneEmpty" position={[-1, -4.81, -0.77]} rotation={[0, 0.43, 0]}>
-                <mesh name="fullereneModel" geometry={nodes.fullereneModel.geometry} material={materials.Carbon} position={[2.9, 1.01, -1.53]} rotation={[-0.42, 1.23, -2.44]} />
-              </group>
-              <mesh name="Text001" geometry={nodes.Text001.geometry} material={materials['text-material']} position={[-14, -20, 1]} rotation={[Math.PI / 2, 0, 0]} scale={3.03} />
-            </group>
-          </group>
-        )
-      }
-    
-    else return null;
-
-  }
-
-  if(counter === 0 || counter > 1 && counter < 6){
-    return <Model />
-  }
-
   else return null;
 }
 
-export default LessonModels;
 
-useGLTF.preload(`/lesson1_models/model0.glb`)
-useGLTF.preload(`/lesson1_models/model1.glb`)
-useGLTF.preload(`/lesson1_models/model2.glb`)
-useGLTF.preload(`/lesson1_models/model3.glb`)
-useGLTF.preload(`/lesson1_models/model4.glb`)
-useGLTF.preload(`/lesson1_models/model5.glb`)
+function Model({ instances, ...props })
+{
+  // const group = useRef();
+  const { nodes, materials } = useGLTF('lesson1_models/model0.glb');
+  const counter = useSelector(state => state.counter);
+
+  /* In the child fn we conditionally render the meshes and change the material of the soccer bonds when counter = 3. */
+  const ref = useRef();
+
+  function Rotate() {
+    useFrame((_, delta) => {
+      ref.current.rotation.y += (delta / 6)
+    })
+  };
+
+  function Levitate() {
+    useFrame( (state, delta) => {
+      const t = state.clock.getElapsedTime();
+      ref.current.rotation.x = Math.cos( t / 4 ) / 8
+      ref.current.rotation.z = -0.2 - (1 + Math.sin( t / 1.5 )) / 20
+      ref.current.rotation.y += (delta / 8)
+      ref.current.position.y = (1 + Math.sin(t / 1.5 )) / 8
+      // ref.current.rotation.y = Math.sin(t / 4) / 8
+    })
+  };
+
+  function Oscilate() {
+    useFrame( (state) => {
+      const t = state.clock.getElapsedTime();
+      ref.current.rotation.y = -(1 + Math.sin(t / 1.5 )) / 4
+    })
+  };
+
+  function DoNothing() {
+    useFrame( () => {
+
+    } )
+  }
+
+  // RotateAnimation();
+
+    if(counter < 5) {
+      Levitate(); 
+    } 
+    else {
+      ref.current.rotation.x = 0;
+      ref.current.rotation.y = 0;
+      ref.current.rotation.z = 0;
+      ref.current.position.y = -.05; 
+      Oscilate(); 
+    }
+  
+
+  
+  return (
+    counter !== 1
+    ? 
+    <>
+     <group position={props.position} {...props} dispose={null} scale={counter === 6 ? 0 : props.scale} >
+
+        <group ref={ref} >
+
+          <mesh geometry={nodes.carbonBonds.geometry} material={materials.carbonMaterial}>
+            <instances.CarbonInstanceSphere position={[0, 0.94, 0.34]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0, 0.73, 0.69]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.33, 0.94, 0.11]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.65, 0.73, 0.21]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.2, 0.94, -0.28]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.4, 0.73, -0.56]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.2, 0.94, -0.28]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.4, 0.73, -0.56]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.33, 0.94, 0.11]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.65, 0.73, 0.21]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.33, 0.51, 0.79]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.65, 0.51, 0.56]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.85, 0.51, -0.07]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.73, 0.51, -0.45]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.2, 0.51, -0.83]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.2, 0.51, -0.83]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.73, 0.51, -0.45]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.85, 0.51, -0.07]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.65, 0.51, 0.56]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.33, 0.51, 0.79]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.2, 0.17, 0.96]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.4, -0.17, 0.9]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.85, 0.17, 0.49]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.73, -0.17, 0.66]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.98, 0.17, 0.11]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.98, -0.17, -0.11]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.73, 0.17, -0.66]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.85, -0.17, -0.49]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.4, 0.17, -0.9]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.2, -0.17, -0.96]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.4, 0.17, -0.9]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.2, -0.17, -0.96]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.73, 0.17, -0.66]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.85, -0.17, -0.49]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.98, 0.17, 0.11]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.98, -0.17, -0.11]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.85, 0.17, 0.49]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.73, -0.17, 0.66]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.2, 0.17, 0.96]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.4, -0.17, 0.9]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.73, -0.51, 0.45]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.85, -0.51, 0.07]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.65, -0.51, -0.56]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.33, -0.51, -0.79]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.33, -0.51, -0.79]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.65, -0.51, -0.56]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.85, -0.51, 0.07]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.73, -0.51, 0.45]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.2, -0.51, 0.83]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.2, -0.51, 0.83]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.4, -0.73, 0.56]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.2, -0.94, 0.28]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.65, -0.73, -0.21]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0.33, -0.94, -0.11]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0, -0.73, -0.69]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[0, -0.94, -0.34]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.65, -0.73, -0.21]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.33, -0.94, -0.11]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.4, -0.73, 0.56]} scale={0.07} />
+            <instances.CarbonInstanceSphere position={[-0.2, -0.94, 0.28]} scale={0.07} />
+          </mesh>
+
+          <mesh geometry={nodes.soccerBonds.geometry} material={ counter >= 3 ? materials.soccerMaterial : materials.carbonMaterial}>
+            <instances.SoccerInstanceSphere position={[0, 0.73, 0.69]} scale={0.071} />
+            <instances.SoccerInstanceSphere position={[0.33, 0.51, 0.79]} scale={0.071} />
+            <instances.SoccerInstanceSphere position={[-0.65, 0.51, 0.56]} scale={0.071} />
+            <instances.SoccerInstanceSphere position={[-0.33, 0.51, 0.79]} scale={0.071} />
+            <instances.SoccerInstanceSphere position={[0.2, 0.17, 0.96]} scale={0.071} />
+            <instances.SoccerInstanceSphere position={[-0.85, 0.17, 0.49]} scale={0.071} />
+            <instances.SoccerInstanceSphere position={[-0.73, -0.17, 0.66]} scale={0.071} />
+            <instances.SoccerInstanceSphere position={[-0.2, 0.17, 0.96]} scale={0.071} />
+            <instances.SoccerInstanceSphere position={[-0.4, -0.17, 0.9]} scale={0.071} />
+          </mesh>
+
+          { counter >= 4 ? <mesh geometry={nodes.dopeModel.geometry} material={materials.dopeMaterial} scale={0.62} /> : null }
+
+
+          { counter === 5 ? <mesh geometry={nodes.proteaseModel.geometry} material={materials.proteaseMaterial} position={[0, 0.83, 0]} rotation={[0, -Math.PI / 1.66, 0]} scale={0.17} /> : null}
+        </group>
+
+      
+        <mesh geometry={nodes.text.geometry} material={materials.textMaterial} position={[0, -3, 0]} rotation={[Math.PI / 2, 0, 0]} scale={counter === 5 ? .5 : 0} />
+      </group> 
+
+    </>
+    : 
+    ""
+  )
+};
+
+// useGLTF.preload('/newFullerene15-transformed.glb')

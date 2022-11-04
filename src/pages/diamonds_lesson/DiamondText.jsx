@@ -8,7 +8,7 @@ function DiamondText(props){
     if (counter === 0)
     {
         return (
-            <div className='title--wrapper'>
+            <div className='title-container'>
                 <h1 className='title' style={{}}>C<sub>n</sub> - Diamond</h1>
             </div>
         )

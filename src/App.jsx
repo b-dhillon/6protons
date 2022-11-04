@@ -6,14 +6,14 @@ import NanotubesLesson from './pages/nanotubes_lesson/NanotubesLesson.jsx';
 import GrapheneLesson from './pages/graphene_lesson/GrapheneLesson.jsx';
 
 
-
 export default function App() {
   const [page, setPage] = useState('Home');
-  const [loading, setLoading] = useState([])
+  const [loading, setLoading] = useState(true)
+
 
   function handleLoading()
   {
-    setLoading(loading.push(1));
+    setLoading(false);
   }
 
   function handlePage(id)

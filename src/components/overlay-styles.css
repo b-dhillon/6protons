@@ -1,0 +1,325 @@
+/* Lesson Overlay Styles --> Move all to seperate CSS File */
+
+.global-overlay-container {
+    position: absolute;
+    top: 0; 
+    width: 100%; 
+    height: 100%;
+    display: flex;
+    z-index: 2;
+    flex-direction: column;
+    animation: fadeIn 2s 1 ease-in;
+  }
+  
+  /* Header */
+  .header-container {
+    height: 10vh;
+    width: 100%; 
+    display: flex;
+  }
+  
+  .title-container {
+    height: 10vh;
+    width: 80%;
+    flex: 1;
+    background: transparent;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+  }
+  
+  .title {
+    color: #f07167;
+    font-size: 60px;
+    /* animation: slideUp 2s 1 both; 
+    animation-delay: .5s; */
+    margin: 0;
+    padding: 10px;
+    z-index: 2;
+    font-weight: 600;
+    letter-spacing: 5px;
+    font-family: Quicksand !important;
+  }
+  
+  .home-back-container {
+    width: 120px;
+    list-style: none;
+    background: transparent;
+    /* border: 1px solid blue;  */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  
+  .backBtn:hover {
+    transform: scale(1.2)
+  }
+  
+  .homeBtn--icon {  
+    /* width: 3rem;
+    padding: 30px; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;  
+    text-decoration: none;  
+  
+    transition: .5s linear;
+    position: relative;
+    z-index: 1;
+    margin: auto;
+  }
+  
+  /* .homeBtn--icon:hover {
+    transform: scale(1.2);
+  } */
+  
+  .homeIcon:hover {  
+    transform: scale(1.2)
+  }
+  
+  .fullerene-redirect {
+    width: 170px; 
+    height: 40px; 
+    background: black;
+    color: #f07167;
+    border: 1px solid #f07167;
+    border-radius: 10px;
+    cursor: pointer;
+    animation: fadeIn 2s 1 ease-in-out;
+  }
+  /* Main */
+  
+  .main-container {
+    display: flex; 
+    height: 80vh; 
+    z-index: 2;
+    
+  }
+  
+  .lessonNav-container {
+    width: 150px;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    z-index: 2;
+  }
+  
+  .lessonNav-container > button 
+  {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: transparent;
+    border: 2px solid white;
+  }
+  
+  .lesson--incrementBtn {
+    box-shadow: 0 0 10px 4px white;
+    transform: scale(1.2);
+    animation: grow-and-glow 4s infinite;
+    cursor: pointer;
+  }
+  
+  .lesson--decrementBtn {
+    cursor: pointer;
+  }
+  
+  .lesson--decrementBtn:hover {
+    transform: scale(1.1);
+  }
+  
+  
+  .panel {
+    flex: 1;
+  }
+  
+  .left {
+    /* background-color: red; */
+  }
+  
+  .right {
+    /* background-color: blue; */
+  }
+  
+  .text--wrapper {
+    /* position: absolute; */
+    /* top: 10%; */
+    /* left: 0; */
+    display: flex;
+    flex: 1;
+    /* height: 80%;
+    width: 80%; */
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    z-index: 2;
+  }
+  
+  .text--wrapper > p {
+    width: 70%;
+    font-size: 1.5vw !important;
+    text-align: center;
+    animation: fadeIn 2s 1 ease-in-out;
+    line-height: 40px;
+  }
+  
+  .text--wrapper2 {
+    /* font-family: 'Courier New', Courier, monospace; */
+    /* position: absolute; */
+    /* padding: 20px 10px;
+    margin-left: 10%; */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    z-index: 2;
+    /* padding-right: 40px; */
+    border-right: 3px solid white;
+  }
+  
+  .text--wrapper2--p {
+    width: 80%;
+    font-size: 1.5rem;
+    text-align: left;
+    line-height: 45px;
+    overflow: scroll;
+    /* animation: slideUp 2s 1 both; 
+    animation-delay: .5s; */
+  }
+  
+  
+  /* Footer */
+  
+  .footer-container {
+    position: absolute;
+    width: 100%;
+    height: 10%;
+    top: 87%;
+    left: 0;
+    /* width: 100%; 
+    height: 10vh;  */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+  }
+  
+  .startLessonBtn--wrapper {
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+  }
+  
+  .startLessonBtn {
+    width: 150px;
+    height: 45px;
+    font-size: 1rem;
+    font-weight: bold;
+    font-family: Quicksand;
+    background: black;
+    color: white; 
+    border: 2px solid white;
+    cursor: pointer;
+    padding: 10px;
+    position: absolute;
+    border-radius: 10px;
+  }
+  
+  .startLessonBtn:hover {
+    color: #f07167;
+    border: 2px solid #f07167;
+  }
+  
+  span 
+  {
+    color: #f07167;
+  }
+  
+  .scrolldown--wrapper {
+    position: absolute;
+    top: 80%; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50px; 
+    height: 50px;
+    /* border: 1px solid red; */
+  }
+  
+  .scrolldown {
+    width: 50px; 
+    height: 50px;
+    --color: white;
+    position: relative;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+  
+  .chevrons {
+    margin-top: 10px; 
+    margin-left: 12.5px;
+    width: 22.5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .chevrondown {
+    margin-top: -6px;
+    position: relative;
+    border: solid var(--color);
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    transform: rotate(45deg);
+  }
+  
+  .chevrondown:nth-child(odd) {
+    animation: pulse 1000ms ease infinite alternate;
+  }
+  
+  .chevrondown:nth-child(even) {
+    animation: pulse 1000ms ease infinite alternate 500ms;
+  }
+  
+  @keyframes scrolldown-anim {
+    0% {
+      opacity: 0;
+      height: 6px;
+    }
+  
+    40% {
+      opacity: 1;
+      height: 10px;
+    }
+  
+    80% {
+      transform: translate(0, 20px);
+      height: 10px;
+      opacity: 0;
+    }
+  
+    100% {
+      height: 3px;
+      opacity: 0;
+    }
+  }
+  
+  @keyframes pulse {
+    from {
+      opacity: 0;
+    }
+  
+    to {
+      opacity: 0.5;
+    }
+  }

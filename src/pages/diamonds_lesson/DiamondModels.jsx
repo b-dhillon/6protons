@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useGLTF, useAnimations } from '@react-three/drei';
-useGLTF.preload('/lesson2_models/model0.glb');
+// useGLTF.preload('/lesson2_models/model0.glb');
 
 function DiamondModels() {
   const counter = useSelector(state => state.counter);

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import '../../global-styles.css'
 
-
 function LessonText(){
     const counter = useSelector(state => state.counter);
     const [overflow, setOverflow] = useState();
@@ -14,6 +13,8 @@ function LessonText(){
             const isOverflown = ({clientHeight, scrollHeight }) => {
                 return scrollHeight > clientHeight;
             }
+
+            // sets overflow to true or false
             setOverflow(isOverflown(element));
         }
     }, [counter])
@@ -36,13 +37,12 @@ function LessonText(){
     if (counter === 0)
     {
         return (
-            <div className='title--wrapper'>
-                <h1 className='title' style={{}}>C<sub>60</sub> - Fullerene</h1>
-            </div>
+            <>
+            </>
         )
     }
 
-    else if(counter === 1)
+    if(counter === 1)
     {
         return (
             // Refactor all wrapper classes into one.
@@ -55,7 +55,7 @@ function LessonText(){
         )
     }
 
-    else if(counter === 2)
+    if(counter === 2)
     {
         return (
             
@@ -70,21 +70,21 @@ function LessonText(){
         )
     }
 
-    else if(counter === 3)
+    if(counter === 3)
     {
         return (
             <div className='text--wrapper2'>
                 <p className='text--wrapper2--p'>Each molecule of fullerene has 20 hexagons and 12 pentagons <span>(highlighted in red)</span> that fit together like the seams of a soccer ball. 
                 <br/>
                 <br/>
-                Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space, and because they are essentially hollow cages, they can be manipulated to make materials never before known.</p>
+                Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.</p>
                 {overflow ? <ScrollHelper/> : ''}
             </div>
 
         )
     }
 
-    else if(counter === 4)
+    if(counter === 4)
     {
 
         return (
@@ -105,7 +105,7 @@ function LessonText(){
         )
     }
 
-    else if(counter === 5)
+    if(counter === 5)
     {
         return (
             <div className='text--wrapper2'>
@@ -113,7 +113,7 @@ function LessonText(){
                     How can buckyballs help cure aids? An enzyme (HIV-1-Protease) that is required for HIV to reproduce, exhibits a <span>nonpolar pocket</span> in its three-dimensional structure.
                     <br/>
                     <br/>
-                    On the model to the right, notice how the nonpolar Fullerene is growing to fit the exact diameter of the enzyme's binding pocket.
+                    On the model to the right, notice how the nonpolar Fullerene fits the exact diameter of the enzyme's binding pocket.
                     <br/>
                     <br/>
                     If this pocket is blocked, the production of virus ceases. Because <span>buckyballs are nonpolar</span>, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible blockers.

@@ -9,7 +9,7 @@ function GrapheneText(props){
     if (counter === 0)
     {
         return (
-            <div className='title--wrapper'>
+            <div className='title-container'>
                 <h1 className='title'>C<sub>n</sub> - Graphene</h1>
             </div>
         )
