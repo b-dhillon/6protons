@@ -5,13 +5,13 @@ import { useGLTF } from '@react-three/drei'
 // Dont import entire library if youre just using one method 
 import * as THREE from 'three'
 
-function Models(props) {
+function Models({flipped, ...props}) {
     const ref = useRef()
     const { nodes, materials } = useGLTF('/home_models/model0.glb')
 
     useFrame((state, delta) => {
         ref.current.rotation.z = Math.sin((state.clock.elapsedTime) * 1.5) / 6
-        ref.current.rotation.x = THREE.MathUtils.lerp(ref.current.rotation.x, props.flipped ? (Math.PI * 1.5) : Math.PI / 2 , delta * 10)
+        ref.current.rotation.x = THREE.MathUtils.lerp(ref.current.rotation.x, flipped ? (Math.PI * 1.5) : Math.PI / 2 , delta * 15)
 
     })
     

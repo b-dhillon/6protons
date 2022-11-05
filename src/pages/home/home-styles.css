@@ -22,7 +22,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    animation: fadeIn 1s 1 ease-in;
+    /* animation: fadeIn 1s 1 ease-in; */
 }
 
 .hero--title {
@@ -55,8 +55,10 @@
     min-width: 100px;
     max-height: 50px; */
     font-family: Quicksand;
-    width: 15vh;
-    height: 4.33vh;
+    /* width: 15vh;
+    height: 4.33vh; */
+    width: 180px;
+    height: 55px;
     animation: fadeIn 1s 1 ease-in;
     font-size: 1.66vh;
     font-weight: bold;
