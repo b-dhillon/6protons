@@ -22,7 +22,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* animation: fadeIn 1s 1 ease-in; */
+    animation: fadeIn 3s 1 ease-in;
 }
 
 .hero--title {
@@ -40,7 +40,8 @@
 }
 
 .hero--subtitle {
-    font-size: 2.66vh;
+    /* font-size: 2.66vh; */
+    font-size: 1.75rem;
     width: 100%;
     line-height: 40px;
     text-align: center;
@@ -57,10 +58,10 @@
     font-family: Quicksand;
     /* width: 15vh;
     height: 4.33vh; */
-    width: 180px;
-    height: 55px;
+    width: 160px;
+    height: 50px;
     animation: fadeIn 1s 1 ease-in;
-    font-size: 1.66vh;
+    font-size: 1.75vh;
     font-weight: bold;
     background: black;
     color: #3272F4;

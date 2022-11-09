@@ -86,7 +86,7 @@ function HomePage(props)
         <Stats showPanel={0} className="stats" {...props} />
         {/* Canvas is firing asynchronously. After it fires, it cues up <Models /> to load. 
         Only after model loads does Canvas fire again and paint */}
-        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 20, fov: 75, position: [0,0,3] }}>
+        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 8, fov: 75, position: [0,0,5] }}>
           <spotLight position={[10, 10, 10] } intensity={1}/>
           <ambientLight intensity={.3} />
           { started ? '' : <Models flipped={flipped}/> }
@@ -96,7 +96,7 @@ function HomePage(props)
         <div className='overlay'>
           <div className='hero--wrapper'>
             <h1 className='hero--title'>Learn by Seeing</h1>
-            <p className='hero--subtitle'>A visual introduction to organic chemistry.</p>
+            <p className='hero--subtitle'>A visual approach to organic chemistry.</p>
             <button className="heroBtn" onMouseEnter={rotateModel} onMouseLeave={rotateModel} onClick={() => { 
               dispatch(start());
               useGLTF.preload(`/lesson1_models/model0.glb`);

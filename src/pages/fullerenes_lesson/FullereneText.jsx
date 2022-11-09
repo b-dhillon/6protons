@@ -48,7 +48,7 @@ function LessonText(){
             // Refactor all wrapper classes into one.
             <>
                 <div className='text--wrapper'>
-                    <p>In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of He<sub>2</sub> gas.</p>
+                    <p>In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas...</p>
                 </div>
             </>
 
@@ -74,10 +74,10 @@ function LessonText(){
     {
         return (
             <div className='text--wrapper2'>
-                <p className='text--wrapper2--p'>Each molecule of fullerene has 20 hexagons and 12 pentagons <span>(highlighted in red)</span> that fit together like the seams of a soccer ball. 
+                <p className='text--wrapper2--p'>Each molecule of Fullerene is composed of pure carbon. The carbon atoms arrange themselves as hexagons and pentagons <span>(highlighted in red)</span> and fit together like the seams of a soccer ball. 
                 <br/>
                 <br/>
-                Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.</p>
+                Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. Also, because they are essentially hollow cages, they can be manipulated to make materials never before known.</p>
                 {overflow ? <ScrollHelper/> : ''}
             </div>
 

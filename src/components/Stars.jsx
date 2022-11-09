@@ -10,7 +10,7 @@ const Stars = function Stars(props) {
     const ref = useRef()
 
     const start = performance.now(); 
-    const sphere = useMemo(() => random.inSphere(new Float32Array(30000), { radius: 5.25 }));
+    const sphere = useMemo(() => random.inSphere(new Float32Array(50000), { radius: 5.25 }));
     const end = performance.now();
     console.log(`Execution Time: ${(end - start).toFixed(5)} ms`);
 

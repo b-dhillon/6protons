@@ -55,11 +55,10 @@ export default function FullereneModels(props)
 
 function Model({ instances, ...props })
 {
-  // const group = useRef();
   const { nodes, materials } = useGLTF('lesson1_models/model0.glb');
   const counter = useSelector(state => state.counter);
 
-  /* In the child fn we conditionally render the meshes and change the material of the soccer bonds when counter = 3. */
+  /* In this child fn we conditionally render the meshes and change the material of the soccer bonds when counter = 3. */
   const ref = useRef();
 
   function Rotate() {
@@ -71,10 +70,11 @@ function Model({ instances, ...props })
   function Levitate() {
     useFrame( (state, delta) => {
       const t = state.clock.getElapsedTime();
-      ref.current.rotation.x = Math.cos( t / 4 ) / 8
+      ref.current.rotation.x = Math.cos( t / 4 ) / 2
       ref.current.rotation.z = -0.2 - (1 + Math.sin( t / 1.5 )) / 20
       ref.current.rotation.y += (delta / 8)
       ref.current.position.y = (1 + Math.sin(t / 1.5 )) / 8
+      ref.current.position.x = (1 - Math.sin(t / 1.5 )) / 8
       // ref.current.rotation.y = Math.sin(t / 4) / 8
     })
   };
@@ -86,24 +86,21 @@ function Model({ instances, ...props })
     })
   };
 
-  function DoNothing() {
-    useFrame( () => {
+  // function Scale() {
+  //   useFrame(() => {
 
-    } )
+  //   })
+  // }
+
+  if(counter < 5) {
+    Levitate(); 
+  } else {
+    ref.current.rotation.x = 0;
+    ref.current.rotation.y = 0;
+    ref.current.rotation.z = 0;
+    ref.current.position.y = -.05; 
+    Oscilate(); 
   }
-
-  // RotateAnimation();
-
-    if(counter < 5) {
-      Levitate(); 
-    } 
-    else {
-      ref.current.rotation.x = 0;
-      ref.current.rotation.y = 0;
-      ref.current.rotation.z = 0;
-      ref.current.position.y = -.05; 
-      Oscilate(); 
-    }
   
 
   

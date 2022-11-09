@@ -1,4 +1,5 @@
 ## Next Push
+0. Add animation to text.
 0. Add voice over.
 1. Re-design lesson selection page.
 2. Add doped buckyball text.
