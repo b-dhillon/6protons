@@ -26,7 +26,7 @@ function FullerenesLesson(props) {
   return (
     <>
       <Suspense fallback={null}>
-        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 45, position: [0, 0, 7] }}>      
+        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 45, position: [0, 0, 4] }}>      
             {/* <Suspense fallback={null}> */}
               <Stars />
               <Provider store={DataStore}>

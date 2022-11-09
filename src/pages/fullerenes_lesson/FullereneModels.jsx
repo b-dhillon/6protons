@@ -13,7 +13,7 @@ export default function FullereneModels(props)
   const leftPosition = [.3, 0, 0];
 
   let scale;
-  if (counter === 0) scale = 0.25;
+  if (counter === 0) scale = 0.24;
   else if (counter === 5) scale = 0.06;
   else scale = .15;
   console.log(scale);
@@ -72,9 +72,9 @@ function Model({ instances, ...props })
       const t = state.clock.getElapsedTime();
       ref.current.rotation.x = Math.cos( t / 4 ) / 2
       ref.current.rotation.z = -0.2 - (1 + Math.sin( t / 1.5 )) / 20
-      ref.current.rotation.y += (delta / 8)
+      // ref.current.rotation.y += (delta / 8)
       ref.current.position.y = (1 + Math.sin(t / 1.5 )) / 8
-      ref.current.position.x = (1 - Math.sin(t / 1.5 )) / 8
+      // ref.current.position.x = (1 - Math.sin(t / 1.5 )) / 8
       // ref.current.rotation.y = Math.sin(t / 4) / 8
     })
   };
