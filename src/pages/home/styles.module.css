@@ -1,0 +1,137 @@
+.btn {
+  will-change: width, height;
+  margin-bottom: 170px;
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #3272F4;
+  cursor: pointer;
+  padding: 25px;
+  border-radius: 10px;
+  white-space: nowrap;
+  justify-content: center;
+  align-content: center;
+  z-index: 3;
+  backdrop-filter: saturate(150%) blur(20px);
+  animation: fadeIn 3s 1 ease-in;
+  color: #3272F4;
+}
+
+.hoverAn {
+  /* color: green; */
+}
+
+.hoverAn:hover {
+  border: 2px solid #CC2DD7 !important;
+  color: #CC2DD7 !important;
+}
+
+.backBtnWrapper {
+  position: absolute;
+  top: 625px;
+  margin-top: 50px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.backBtn:hover {
+  border: 2px solid #CC2DD7 !important;
+  color: #CC2DD7 !important;
+}
+
+.backBtn {
+  height: 50px; 
+  width: 175px;
+  border: 2px solid #3272F4;
+  cursor: pointer;
+  padding: 25px;
+  border-radius: 10px;
+  white-space: nowrap;
+  justify-content: center;
+  align-content: center;
+  z-index: 3;
+  color: #3272F4;
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(60px, 130px));
+  grid-template-rows: repeat(3, minmax(60px, 130px));
+  grid-gap: 25px;
+}
+  
+.itemContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform, opacity;
+  justify-self: center;
+  z-index: 4;
+}
+  
+.items {
+  width: 130px; 
+  height: 130px; 
+  background-color: rgba(0,0, 0, 0.33);
+  background-size: cover;
+  background-position: center;
+  z-index: 4;
+  border: 1px solid rgba(255,255, 255, 0.5);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+}
+  
+.items:hover {
+  opacity: 0.3;
+  transform: scale(1.1);
+}
+
+.caption {
+  color: black;
+  font-size: 20px;
+  margin: 0; 
+  position: absolute;
+  z-index: 2;
+  opacity: 0;
+}
+
+.title {
+  width: 100%;
+  position: absolute;
+  text-align: center;
+  font-family: Quicksand;
+  font-weight: 400;
+  font-size: 45px;
+  margin-top: 50px;
+  letter-spacing: 8px;
+}
+
+.btnText {
+  font-size: 18px;
+  font-family: Quicksand;
+  font-weight: bold;
+  text-align: center;
+  color: inherit;
+  /* color: #3272F4; */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+

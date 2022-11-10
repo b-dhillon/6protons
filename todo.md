@@ -1,8 +1,15 @@
 ## Next Push
+1. Re-design lesson selection page.
+2. Add orbit controls
+      - Need to refactor the camera zoom function so that it only triggers once 
+3. Add refraction material to diamond
+
+
+
 0. Add animation to text.
 0. Add voice over.
-1. Re-design lesson selection page.
 2. Add doped buckyball text.
+
 3. Lerp the soccer pattern color change.
 4. Trim * imports on Three.
 5. Write your own inSphere method.
