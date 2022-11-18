@@ -8,14 +8,18 @@ import * as THREE from 'three'
 
 const Stars = function Stars(props) {
     const ref = useRef()
+    const never = 0; 
 
     const start = performance.now(); 
-    const sphere = useMemo(() => random.inSphere(new Float32Array(30000), { radius: 4 }));
+    const sphere = useMemo(() => random.inSphere(new Float32Array(50000), { radius: 5 }), [never] );
     const end = performance.now();
     console.log(`Execution Time: ${(end - start).toFixed(5)} ms`);
 
+    let firstLoad = true;
 
-
+    setTimeout( () => {
+        firstLoad = false;
+    }, 5000 )
 
     useFrame((state, delta) =>
     {
@@ -23,12 +27,10 @@ const Stars = function Stars(props) {
         ref.current.rotation.x -= delta / 10
         ref.current.rotation.y -= delta / 15
 
-        // Camera zoom-in animation on load: 
-        // (function() {
-        //     state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, 1, delta)
-        // })();
         
-        
+        if(firstLoad) {
+            state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, 1, delta)  
+        }
     })
 
     return (

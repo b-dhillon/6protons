@@ -4,6 +4,8 @@ import { Provider } from 'react-redux';
 import Stars from '../../components/Stars';
 import DataStore from '../../redux/store';
 import LessonOverlay from '../../components/LessonOverlay';
+import { OrbitControls } from '@react-three/drei'
+
 
 import FullereneModelsCombined from './FullereneModels'
 
@@ -20,13 +22,25 @@ import FullereneModelsCombined from './FullereneModels'
 
 
 function FullerenesLesson(props) {
+
+  function Spinner() {
+    console.log('spinner be spinning');
+    return (
+      <div className='spinnerWrapper'>
+        <h1 className='loading--title'>loading...</h1>
+      </div> 
+    )
+  }
   const lesson = 'Fullerenes';
   // THREE.DefaultLoadingManager.onLoad = onPageLoad;
 
   return (
     <>
-      <Suspense fallback={null}>
-        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 45, position: [0, 0, 4] }}>      
+      <Suspense fallback={Spinner}>
+        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 45, position: [0, 0, 3] }}>     
+
+            <OrbitControls noZoom minPolarAngle={0}  maxPolarAngle={Math.PI / 2}/>
+ 
             {/* <Suspense fallback={null}> */}
               <Stars />
               <Provider store={DataStore}>

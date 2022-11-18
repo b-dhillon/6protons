@@ -1,19 +1,33 @@
 ## Next Push
-1. Re-design lesson selection page.
-2. Add orbit controls
-      - Need to refactor the camera zoom function so that it only triggers once 
-3. Add refraction material to diamond
+
+Figure out if blender animations are more performant then Three Fiber useFrame....I think soo....
+ 
+1. Finish re-design of  lesson selection page.
+      - Add thumbnails.
+            - Make nanotube thumbnail with #11 -- add more lighting (overhead like fullerene) and give more "padding" clearance so that it matches the fullerene.
+                  - Try matte material too.
+
+
+      - Make diamond thumbnail 
+      - Make all the other filler thumbnails
 
 
 
-0. Add animation to text.
-0. Add voice over.
-2. Add doped buckyball text.
 
-3. Lerp the soccer pattern color change.
-4. Trim * imports on Three.
-5. Write your own inSphere method.
+2. Fix flipped model bug.
+3. Figure out new camera movement.
+3. Add animation to text.
+4. Add voice over for text.
+5. Make more cinematic with fade to black intro scene + add gentle spinners like monovn?
 
+
+
+
+### Optional
+1. Add doped buckyball text.
+2. Lerp the soccer pattern color change.
+3. Trim * imports on Three.
+4. Write your own inSphere method.
 
 
 

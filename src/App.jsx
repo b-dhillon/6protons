@@ -8,7 +8,7 @@ import GrapheneLesson from './pages/graphene_lesson/GrapheneLesson.jsx';
 
 export default function App() {
   console.log('APP RE-RENDERED');
-  const [page, setPage] = useState('Diamonds_Lesson');
+  const [page, setPage] = useState('home');
   const [loading, setLoading] = useState(true)
 
   function handleLoading() {
@@ -19,9 +19,9 @@ export default function App() {
     setPage(`${id}`)
   }  
 
-  if(page === 'Home') return <Home setPage={handlePage} loading={loading} setLoading={handleLoading} />;
-  if(page === 'Fullerenes_Lesson') return <FullerenesLesson setPage={handlePage} /> 
-  if(page === 'Diamonds_Lesson') return <DiamondsLesson setPage={handlePage} />
-  if(page === 'Graphene_Lesson') return <GrapheneLesson setPage={handlePage} />
+  if(page === 'home') return <Home setPage={handlePage} loading={loading} setLoading={handleLoading} />;
+  if(page === 'fullerene') return <FullerenesLesson setPage={handlePage} /> 
+  if(page === 'diamond') return <DiamondsLesson setPage={handlePage} />
+  if(page === 'graphene') return <GrapheneLesson setPage={handlePage} />
   else return <NanotubesLesson setPage={handlePage} />
 }

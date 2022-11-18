@@ -22,7 +22,7 @@ function LessonOverlay(props) {
 
                 <li className="home-back-container" onClick={() => {
                     dispatch(reset());
-                    props.setPage(`Home`); 
+                    props.setPage(`home`); 
                 }}>
                     <a href="#" className="homeBtn--icon"><i className="fa-solid fa-arrow-left-long backBtn" style={{color: 'white'}}></i></a> 
                 </li>
@@ -32,7 +32,7 @@ function LessonOverlay(props) {
 
                 {counter === 0 ?
                     <div>
-                        <h1 className='title' style={{}}>{thisLesson.title}</h1>
+                        <h1 className='title' style={{}}></h1>
                     </div>
                 : ""}
                 </div> 
@@ -40,7 +40,7 @@ function LessonOverlay(props) {
                     <li className="home-back-container" onClick={() => {
                         dispatch(start());
                         dispatch(reset());
-                        props.setPage(`Home`); 
+                        props.setPage(`home`); 
                     }}>
                         <a href="#" className="homeBtn--icon"><i className="fas fa-house homeIcon" style={{color: 'white'}}></i></a>
                     </li>
@@ -99,13 +99,13 @@ function LessonOverlay(props) {
             </div> : '' }
             
 
-            {counter === 0 ?
+            {/* {counter === 0 ?
             <div className='footer-container' >
                 <button className="startLessonBtn" onClick={() => dispatch(increment())}>
                     Start Lesson
                 </button>  
             </div>
-            : ""}
+            : ""} */}
             
 
         </div>

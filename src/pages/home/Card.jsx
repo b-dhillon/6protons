@@ -1,6 +1,6 @@
 function Card(props) {
     return (
-        <div className="card" onClick={() => { props.setPage(`${props.id}_Lesson`) }}>
+        <div className="card" onClick={() => { props.setPage(`${props.id}`) }}>
           <h1>{props.title}</h1>
           <img src={props.img} className='card--img' />
         </div>

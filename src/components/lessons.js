@@ -13,20 +13,24 @@ import GrapheneText from '../pages/fullerenes_lesson/FullereneText';
 
 const lessons = [
     {
+        id: 'fullerenes',
         title: 'Fullerenes',
         text: FullerenesText,
         maxCounter: 6
     },
     {
+        id: 'nanotubes',
         title: 'Nanotubes',
         text: NanotubeText,
 
     },
     {
+        id: 'diamonds',
         title: 'Diamonds',
         text: DiamondText,
     },
     {
+        id: 'graphenes',
         title: 'Graphenes',
         text: GrapheneText,
     }

@@ -14,7 +14,7 @@
 
 .hero--wrapper {
     position: relative;
-    top: 15%;
+    top: 16%;
     width: 100%;
     max-width: 1200px;
     display: flex;
@@ -57,7 +57,7 @@
     font-family: Quicksand;
     /* width: 15vh;
     height: 4.33vh; */
-    width: 160px;
+    width: 175px;
     height: 50px;
     animation: fadeIn 1s 1 ease-in;
     font-size: 1.75vh;
@@ -198,7 +198,7 @@
     font-weight: 500;
     background: black;
     color: #f0f0f0;
-    padding: 2px 10px;
+    padding: 2px 8px;
     border-radius: 20px;
     letter-spacing: 1px;
     border: .5px solid white;
@@ -212,7 +212,6 @@
     justify-content: center;
     align-items: center;
     z-index: 2;
-    /* background: #3272F4; */
     gap: 5px;
 }
 

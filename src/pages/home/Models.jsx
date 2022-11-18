@@ -17,7 +17,7 @@ function Models({flipped, ...props}) {
     
     return (
         <>
-            <group position={[-.1, .55, -1]} {...props} dispose={null}>
+            <group position={[-.1, .5, -1]} {...props} dispose={null}>
                 <group ref={ref} scale={0.055} rotation={[(Math.PI / 2), 0, 0]}>
                     <mesh geometry={nodes.SurfSphere.geometry} material={materials.Oxygen} />
                     <mesh geometry={nodes.SurfSphere_1.geometry} material={materials.Carbon} />

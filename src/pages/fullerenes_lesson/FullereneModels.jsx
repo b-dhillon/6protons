@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useEffect } from 'react';
+import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useGLTF, Merged } from '@react-three/drei';
 import { useFrame, } from '@react-three/fiber'
@@ -57,9 +57,10 @@ function Model({ instances, ...props })
 {
   const { nodes, materials } = useGLTF('lesson1_models/model0.glb');
   const counter = useSelector(state => state.counter);
-
   /* In this child fn we conditionally render the meshes and change the material of the soccer bonds when counter = 3. */
   const ref = useRef();
+
+
 
   function Rotate() {
     useFrame((_, delta) => {
@@ -68,21 +69,26 @@ function Model({ instances, ...props })
   };
 
   function Levitate() {
-    useFrame( (state, delta) => {
+    useFrame( (state, delta ) => {
       const t = state.clock.getElapsedTime();
-      ref.current.rotation.x = Math.cos( t / 4 ) / 2
-      ref.current.rotation.z = -0.2 - (1 + Math.sin( t / 1.5 )) / 20
-      // ref.current.rotation.y += (delta / 8)
-      ref.current.position.y = (1 + Math.sin(t / 1.5 )) / 8
-      // ref.current.position.x = (1 - Math.sin(t / 1.5 )) / 8
-      // ref.current.rotation.y = Math.sin(t / 4) / 8
+      ref.current.position.y = (0.75 + Math.sin(t / 1.5 )) / 4
+      // ref.current.rotation.z = -0.2 - (1 + Math.sin( t / 1.5 )) / 20
+      ref.current.rotation.y += (delta / 12)
+
+        ref.current.rotation.x = Math.cos( t / 4 ) / 2
+
+        // ref.current.position.x = (1 - Math.sin(t / 1.5 )) / 8
+        // ref.current.rotation.y = Math.sin(t / 4) / 8
+      
+
+
     })
   };
 
   function Oscilate() {
     useFrame( (state) => {
       const t = state.clock.getElapsedTime();
-      ref.current.rotation.y = -(1 + Math.sin(t / 1.5 )) / 4
+      ref.current.rotation.y = -(1 + Math.sin(t / 1.5 )) / 2
     })
   };
 
