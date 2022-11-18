@@ -75,7 +75,7 @@ export default function StartBtn({handleFlip, setPage}) {
         useGLTF.preload( `/lesson1_models/model0.glb`);
         } 
       }
-      onMouseEnter={handleFlip } onMouseLeave={handleFlip} >
+      onMouseEnter={!open ? handleFlip : null} onMouseLeave={!open ? handleFlip : null} >
 
       {!open ? <p className={styles.btnText} >Get Started</p> : ""}
 

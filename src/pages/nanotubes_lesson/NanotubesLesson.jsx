@@ -16,6 +16,8 @@ function NanotubesLesson(props) {
   return (
     <>
       <Suspense fallback={null}>
+        <div className="blackFade"></div>
+
         <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 75, position: [0,0,1.66] }}>
           {/* <TrackballControls/> */}
           <Stars />
