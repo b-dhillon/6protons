@@ -39,7 +39,7 @@ function DiamondsLesson(props) {
     <>
       <Suspense fallback={null}>
 
-        <div className="blackFade"></div>
+        {/* <div className="blackFade"></div> */}
         <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 75, position: [0,0,5] }}>
           {/* <color attach="background" args={['white']} /> */}
 
@@ -61,7 +61,7 @@ function DiamondsLesson(props) {
 
 
           <EffectComposer>
-            <Bloom luminanceThreshold={1} intensity={2} levels={9} mipmapBlur />
+            <Bloom luminanceThreshold={2} intensity={2} levels={9} mipmapBlur />
           </EffectComposer>
 
         </Canvas>

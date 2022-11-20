@@ -37,7 +37,7 @@ function FullerenesLesson(props) {
   return (
     <>
       <Suspense fallback={null}>
-        <div className="blackFade"></div>
+        {/* <div className="blackFade"></div> */}
         <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 45, position: [0, 0, 3] }}>     
 
             <OrbitControls noZoom minPolarAngle={0}  maxPolarAngle={Math.PI / 2}/>

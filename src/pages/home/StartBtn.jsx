@@ -55,7 +55,6 @@ export default function StartBtn({handleFlip, setPage}) {
 
   // Controlling the pink border hover animation:
   useEffect( () => {
-    console.log('effect ran');
     ref.current.classList = "";
     ref.current.classList.add(styles.btn);
     if (!open) {
@@ -70,12 +69,12 @@ export default function StartBtn({handleFlip, setPage}) {
     <animated.div ref={ref} style={{ ...rest, width: width, height: height }} className={styles.btn} 
       onClick={() => {
         set((open) => !open)
-        dispatch(start())
+        setTimeout( () => dispatch(start()), 500)
         // handleFlip();
         useGLTF.preload( `/lesson1_models/model0.glb`);
         } 
       }
-      onMouseEnter={!open ? handleFlip : null} onMouseLeave={!open ? handleFlip : null} >
+      onMouseEnter={handleFlip} onMouseLeave={handleFlip} >
 
       {!open ? <p className={styles.btnText} >Get Started</p> : ""}
 

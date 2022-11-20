@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Home from './pages/home/Home';
 import FullerenesLesson from './pages/fullerenes_lesson/FullerenesLesson.jsx';
 import DiamondsLesson from './pages/diamonds_lesson/DiamondsLesson.jsx';
@@ -9,7 +9,35 @@ import GrapheneLesson from './pages/graphene_lesson/GrapheneLesson.jsx';
 export default function App() {
   console.log('APP RE-RENDERED');
   const [page, setPage] = useState('home');
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
+
+  const never = 0;
+  function randomSpherePoints(radius, count) {
+      const points =  new Float32Array(count);
+      for (let i = 0; i < count; i++) {
+        const theta = Math.random() * 2 * Math.PI;
+        const phi = Math.acos(2 * Math.random() - 1);
+        const s = Math.sin(phi);
+        const x = radius * s * Math.cos(theta);
+        const y = radius * s * Math.sin(theta);
+        const z = radius * Math.cos(phi);
+        points[i] = x;
+        points[i + 1] = y;
+        points[i + 2] = z;
+      }
+      return points;
+  }
+
+
+  // This actually caches the array of points, so it only gets created once.
+  const start = performance.now(); 
+  const sphere2 = useMemo(() => randomSpherePoints(5, 50000), [never] );
+  const end = performance.now();
+  console.log(`Execution Time: ${(end - start).toFixed(5)} ms`);
+
+
+
+
 
   function handleLoading() {
     setLoading(false);

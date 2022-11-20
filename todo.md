@@ -2,23 +2,18 @@
 
 Figure out if blender animations are more performant then Three Fiber useFrame....I think soo....
  
-1. Finish re-design of  lesson selection page.
-      - Add thumbnails.
-            - Make nanotube thumbnail with #11 -- add more lighting (overhead like fullerene) and give more "padding" clearance so that it matches the fullerene.
-                  - Try matte material too.
-
-
-      - Make diamond thumbnail 
-      - Make all the other filler thumbnails
-
-
-
-
-2. Fix flipped model bug.
-3. Figure out new camera movement.
+0. Finish fixing caching of star points
+0. Compress thumbnail tiles from 1mb + to 200 or so kb
+1. Fix flipped model bug.
+2. Figure out new camera movement.
 3. Add animation to text.
 4. Add voice over for text.
-5. Make more cinematic with fade to black intro scene + add gentle spinners like monovn?
+5. Refactor 
+      - Turn blackFade into 1 fn
+      - Try to make everything as purely function as possible. Check if this impacts performance first.
+      - Clean up console log statements and warnings.
+
+6. Fix context-lost bug -- seems to be losing context to the canvas of the previous page
 
 
 
@@ -27,7 +22,7 @@ Figure out if blender animations are more performant then Three Fiber useFrame..
 1. Add doped buckyball text.
 2. Lerp the soccer pattern color change.
 3. Trim * imports on Three.
-4. Write your own inSphere method.
+~~4. Write your own inSphere method.
 
 
 

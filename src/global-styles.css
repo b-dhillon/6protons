@@ -18,7 +18,7 @@ body,
   margin: 0;
   padding: 0;
   background-color: black;
-  animation: fadeIn 1s ease-in-out 0 1
+  /* animation: fadeIn 1s ease-in-out 0 1 */
 }
 
 .blackFade {
@@ -28,7 +28,7 @@ body,
   margin: 0;
   padding: 0;
   background-color: black;
-  animation: fadeOut 1s ease-in-out forwards;
+  animation: fadeOut 1.5s ease-in-out forwards;
   z-index: 10;
 }
 
