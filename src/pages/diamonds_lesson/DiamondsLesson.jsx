@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { Provider } from 'react-redux';
 import { Canvas, useThree, BoxHelper } from '@react-three/fiber';
 import { TrackballControls, OrbitControls, Environment, useHelper,  } from '@react-three/drei'
@@ -34,10 +34,21 @@ function DiamondsLesson(props) {
 
 
 
+  const [fadeDone, setFadeDone] = useState(false);
+  function handleFadeDoneAfter2Seconds() {
+    setTimeout( () => {
+      setFadeDone(true);
+    }, 2000 )
+  }; handleFadeDoneAfter2Seconds();
+
+
+
 
   return (
     <>
       <Suspense fallback={null}>
+        {!fadeDone ? <div className="blackFade"></div> : ""}
+
 
         {/* <div className="blackFade"></div> */}
         <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 75, position: [0,0,5] }}>
@@ -61,12 +72,12 @@ function DiamondsLesson(props) {
 
 
           <EffectComposer>
-            <Bloom luminanceThreshold={2} intensity={2} levels={9} mipmapBlur />
+            <Bloom luminanceThreshold={2} intensity={2.5} levels={9} mipmapBlur />
           </EffectComposer>
 
         </Canvas>
 
-        {/* <LessonOverlay lesson={lesson} setPage={props.setPage}/> */}
+        <LessonOverlay lesson={lesson} setPage={props.setPage}/>
       </Suspense>
     </>
   );

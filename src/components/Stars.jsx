@@ -14,31 +14,31 @@ const Stars = function Stars(props) {
     // const sphere = random.inSphere(new Float32Array(50000), { radius: 5 });
     
     // const start = performance.now(); 
-    // const sphere2 = useMemo(() => random.inSphere(new Float32Array(50000), { radius: 5 }), [never] );
+    const sphere2 = useMemo(() => random.inSphere(new Float32Array(50000), { radius: 5 }), [never] );
     // const end = performance.now();
     // console.log(`Execution Time: ${(end - start).toFixed(5)} ms`);
 
 
 
     // create a function that returns an array of 3000 random positions inside a sphere of radius 10 centered at 0,0,0 
-    function randomSpherePoints(radius, count) {
-        const points =  new Float32Array(count);
-        for (let i = 0; i < count; i++) {
-          const theta = Math.random() * 2 * Math.PI;
-          const phi = Math.acos(2 * Math.random() - 1);
-          const s = Math.sin(phi);
-          const x = radius * s * Math.cos(theta);
-          const y = radius * s * Math.sin(theta);
-          const z = radius * Math.cos(phi);
-          points[i] = x;
-          points[i + 1] = y;
-          points[i + 2] = z;
-        }
-        return points;
-    }
+    // function randomSpherePoints(radius, count) {
+    //     const points =  new Float32Array(count);
+    //     for (let i = 0; i < count; i++) {
+    //       const theta = Math.random() * 2 * Math.PI;
+    //       const phi = Math.acos(2 * Math.random() - 1);
+    //       const s = Math.sin(phi);
+    //       const x = radius * s * Math.cos(theta);
+    //       const y = radius * s * Math.sin(theta);
+    //       const z = radius * Math.cos(phi);
+    //       points[i] = x;
+    //       points[i + 1] = y;
+    //       points[i + 2] = z;
+    //     }
+    //     return points;
+    // }
 
     // const start = performance.now(); 
-    const sphere2 = useMemo(() => randomSpherePoints(5, 50000), [never] );
+    // const sphere2 = useMemo(() => randomSpherePoints(5, 50000), [never] );
 
     // const end = performance.now();
     // console.log(`Execution Time: ${(end - start).toFixed(5)} ms`);

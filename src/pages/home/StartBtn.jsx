@@ -69,7 +69,7 @@ export default function StartBtn({handleFlip, setPage}) {
     <animated.div ref={ref} style={{ ...rest, width: width, height: height }} className={styles.btn} 
       onClick={() => {
         set((open) => !open)
-        setTimeout( () => dispatch(start()), 500)
+        setTimeout( () => dispatch(start()), 100)
         // handleFlip();
         useGLTF.preload( `/lesson1_models/model0.glb`);
         } 

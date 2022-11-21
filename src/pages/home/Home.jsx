@@ -1,7 +1,7 @@
 import { useState, Suspense, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { useSelector, useDispatch } from 'react-redux';
-import { useGLTF, Html } from '@react-three/drei';
+import { useSelector,  } from 'react-redux';
+import { useGLTF, Html, OrbitControls } from '@react-three/drei';
 import Stars from '../../components/Stars';
 import Models from './Models';
 import './home-styles.css';
@@ -56,6 +56,7 @@ function HomePage(props)
         {!fadeDone ? <div className="blackFade"></div> : ""}
 
         <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 8, fov: 75, position: [0,0,4] }}>
+          <OrbitControls/>
           
           {flipped && !started 
             ?

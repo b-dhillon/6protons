@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import { Canvas,  } from '@react-three/fiber';
 import { Provider } from 'react-redux';
 import Stars from '../../components/Stars';
@@ -31,26 +31,39 @@ function FullerenesLesson(props) {
       </div> 
     )
   }
+
+
+  const [fadeDone, setFadeDone] = useState(false);
+  function handleFadeDoneAfter2Seconds() {
+    setTimeout( () => {
+      setFadeDone(true);
+    }, 2000 )
+  }; handleFadeDoneAfter2Seconds();
+
+
+
   const lesson = 'Fullerenes';
   // THREE.DefaultLoadingManager.onLoad = onPageLoad;
 
   return (
     <>
       <Suspense fallback={null}>
-        {/* <div className="blackFade"></div> */}
-        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 45, position: [0, 0, 3] }}>     
+        {!fadeDone ? <div className="blackFade"></div> : ""}
 
+
+        {/* <iframe src="/fullereneAudio1.mp3" type="audio/mp3" allow="autoplay" id="audio" style="display:none"></iframe> */}
+        <audio autoPlay >
+            <source src="/fullereneAudio1.mp3" type="audio/mp3" />
+        </audio>
+
+        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 45, position: [0, 0, 3] }}>     
             <OrbitControls noZoom minPolarAngle={0}  maxPolarAngle={Math.PI / 2}/>
- 
-            {/* <Suspense fallback={null}> */}
-              <Stars />
-              <Provider store={DataStore}>
-                <FullereneModelsCombined/>
-              </Provider>
-              {/* <spotLight position={[10, 10, -10] } intensity={.8}/> */}
-              <spotLight position={[-10, 10, 10] } intensity={.8}/>
-              <ambientLight intensity={.25} />
-            {/* </Suspense> */}
+            <Stars />
+            <Provider store={DataStore}>
+              <FullereneModelsCombined/>
+            </Provider>
+            <spotLight position={[-10, 10, 10] } intensity={.9}/>
+            <ambientLight intensity={.3} />
         </Canvas>
 
         <LessonOverlay lesson={lesson} setPage={props.setPage}/>

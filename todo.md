@@ -2,20 +2,24 @@
 
 Figure out if blender animations are more performant then Three Fiber useFrame....I think soo....
  
-0. Finish fixing caching of star points
-0. Compress thumbnail tiles from 1mb + to 200 or so kb
-1. Fix flipped model bug.
-2. Figure out new camera movement.
-3. Add animation to text.
-4. Add voice over for text.
-5. Refactor 
+- Finish fixing caching of star points
+- Compress thumbnail tiles from 1mb + to 200 or so kb
+- Fix flipped model bug.
+
+- Figure out new camera movement.
+- Add animation to text.
+- Add voice over for text.
+
+
+- Refactor 
       - Turn blackFade into 1 fn
       - Try to make everything as purely function as possible. Check if this impacts performance first.
+            - Consensus semms to be that fxn calls cost very little. 
       - Clean up console log statements and warnings.
 
-6. Fix context-lost bug -- seems to be losing context to the canvas of the previous page
+- Fix context-lost bug -- seems to be losing context to the canvas of the previous page
 
-
+- Cache all your models with useLoader();
 
 
 ### Optional
