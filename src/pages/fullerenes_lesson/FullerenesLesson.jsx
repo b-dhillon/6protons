@@ -10,6 +10,10 @@ import { OrbitControls } from '@react-three/drei'
 import FullereneModelsCombined from './FullereneModels'
 
 
+import { Stats } from '@react-three/drei';
+
+
+
 // function onPageLoad() {
 //   setTimeout( () => {
 //     document
@@ -47,16 +51,18 @@ function FullerenesLesson(props) {
 
   return (
     <>
+      {/* <Stats showPanel={0} className="stats" {...props} /> */}
+
       <Suspense fallback={null}>
         {!fadeDone ? <div className="blackFade"></div> : ""}
 
 
         {/* <iframe src="/fullereneAudio1.mp3" type="audio/mp3" allow="autoplay" id="audio" style="display:none"></iframe> */}
-        <audio autoPlay >
-            <source src="/fullereneAudio1.mp3" type="audio/mp3" />
+        <audio  autoPlay >
+            <source src="/music/fullerene2.mp3" type="audio/mp3" />
         </audio>
 
-        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 45, position: [0, 0, 3] }}>     
+        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 5, fov: 45, position: [0, 0, 5] }}>     
             <OrbitControls noZoom minPolarAngle={0}  maxPolarAngle={Math.PI / 2}/>
             <Stars />
             <Provider store={DataStore}>

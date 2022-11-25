@@ -70,18 +70,10 @@ function Model({ instances, ...props })
 
   function Levitate() {
     useFrame( (state, delta ) => {
-      const t = state.clock.getElapsedTime();
-      ref.current.position.y = (0.75 + Math.sin(t / 1.5 )) / 4
-      // ref.current.rotation.z = -0.2 - (1 + Math.sin( t / 1.5 )) / 20
+      // const t = state.clock.getElapsedTime();
+      ref.current.position.y = (0.75 + Math.sin(state.clock.elapsedTime / 1.5 )) / 4
       ref.current.rotation.y += (delta / 12)
-
-        ref.current.rotation.x = Math.cos( t / 4 ) / 2
-
-        // ref.current.position.x = (1 - Math.sin(t / 1.5 )) / 8
-        // ref.current.rotation.y = Math.sin(t / 4) / 8
-      
-
-
+      ref.current.rotation.x = Math.cos( state.clock.elapsedTime / 4 ) / 2
     })
   };
 
@@ -210,3 +202,13 @@ function Model({ instances, ...props })
 };
 
 // useGLTF.preload('/newFullerene15-transformed.glb')
+
+/* 
+
+Fullerene animation extras:
+
+ref.current.rotation.z = -0.2 - (1 + Math.sin( t / 1.5 )) / 20
+ref.current.position.x = (1 - Math.sin(t / 1.5 )) / 8
+ref.current.rotation.y = Math.sin(t / 4) / 8
+
+*/

@@ -25,7 +25,7 @@ export default function StartBtn({handleFlip, setPage}) {
       height: "44px", 
       backgroundColor: "transparent",
       border: open ? "2px solid #3272F4" : "",
-      marginBottom: open ? "150px" : "170px"
+      marginBottom: open ? "100px" : "170px"
     },
 
     to: {
@@ -34,7 +34,7 @@ export default function StartBtn({handleFlip, setPage}) {
       height: open ? "800px" : "44px",
       backgroundColor: open ? "rgba(0,0, 0, 0.1)" : "transparent",
       border: open ? "2px solid #3272F4" : "",
-      marginBottom: open ? "150px" : "170px"
+      marginBottom: open ? "100px" : "170px"
     }
   });
   const transApi = useSpringRef();
