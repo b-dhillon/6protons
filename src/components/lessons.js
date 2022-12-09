@@ -11,29 +11,66 @@ import GrapheneText from '../pages/fullerenes_lesson/FullereneText';
 // import GrapheneModels from '../../FullereneModels';
 
 
-const lessons = [
+export default [
     {
-        id: 'fullerenes',
+        id: 'fullerene',
         title: 'Fullerenes',
+        thumbnail: "url('./lesson_thumbnails/fullereneTile.png')",
+        sections: 6,
+        cameraPositions: {
+            p0: [0, 0, 0],
+            p1: [0.5, 0, 1]
+        },
+        cameraSettings: [
+            { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
+            { position: { x: 0.5, y: 0, z: 1 }, rotation: { x: 0.5, y: 0, z: 0 } },
+            { position: { x: 1, y: 0, z: 1.5 }, rotation: { x: 1, y: 0, z: 0 } },
+            { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
+            { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
+            { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
+        ],
+        // cameraSettings: {
+        //     s0: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
+        //     s1: { position: { x: 0.5, y: 0, z: 1 }, rotation: { x: 0.5, y: 0, z: 0 } },
+        //     s2: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
+        //     s3: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
+        //     s4: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
+        //     s5: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
+        // },
         text: FullerenesText,
-        maxCounter: 6
+        audio: null,
+        models: null,
     },
     {
-        id: 'nanotubes',
+        id: 'nanotube',
         title: 'Nanotubes',
-        text: NanotubeText,
-
+        thumbnail: "url('./lesson_thumbnails/nanotube.png')",
+        text: null,
+        audio: null,
+        models: null,
     },
     {
-        id: 'diamonds',
+        id: 'diamond',
         title: 'Diamonds',
-        text: DiamondText,
+        thumbnail: "url('./lesson_thumbnails/diamond.png')",
+        text: null,
+        audio: null,
+        models: null,
     },
     {
         id: 'graphenes',
         title: 'Graphenes',
-        text: GrapheneText,
+        thumbnail: "url('./lesson_thumbnails/graphene.png')",
+        text: null,
+        audio: null,
+        models: null,
+    },
+    {
+        id: 'chirality',
+        title: 'Chirality',
+        thumbnail: "url('./lesson_thumbnails/chirality.png')",
+        text: null,
+        audio: null,
+        models: null,
     }
 ]
-
-export default lessons;

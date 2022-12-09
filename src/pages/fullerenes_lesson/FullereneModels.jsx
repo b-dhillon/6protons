@@ -71,9 +71,10 @@ function Model({ instances, ...props })
   function Levitate() {
     useFrame( (state, delta ) => {
       // const t = state.clock.getElapsedTime();
-      ref.current.position.y = (0.75 + Math.sin(state.clock.elapsedTime / 1.5 )) / 4
+      const t = state.clock.elapsedTime;
+      ref.current.position.y = (0.75 + Math.sin(t / 1.5 )) / 4
       ref.current.rotation.y += (delta / 12)
-      ref.current.rotation.x = Math.cos( state.clock.elapsedTime / 4 ) / 2
+      ref.current.rotation.x = Math.cos( t / 4 ) / 2
     })
   };
 
@@ -185,14 +186,14 @@ function Model({ instances, ...props })
             <instances.SoccerInstanceSphere position={[-0.4, -0.17, 0.9]} scale={0.071} />
           </mesh>
 
-          { counter >= 4 ? <mesh geometry={nodes.dopeModel.geometry} material={materials.dopeMaterial} scale={0.62} /> : null }
+          {/* { counter >= 4 ? <mesh geometry={nodes.dopeModel.geometry} material={materials.dopeMaterial} scale={0.62} /> : null } */}
 
 
-          { counter === 5 ? <mesh geometry={nodes.proteaseModel.geometry} material={materials.proteaseMaterial} position={[0, 0.83, 0]} rotation={[0, -Math.PI / 1.66, 0]} scale={0.17} /> : null}
+          {/* { counter === 5 ? <mesh geometry={nodes.proteaseModel.geometry} material={materials.proteaseMaterial} position={[0, 0.83, 0]} rotation={[0, -Math.PI / 1.66, 0]} scale={0.17} /> : null} */}
         </group>
 
       
-        <mesh geometry={nodes.text.geometry} material={materials.textMaterial} position={[0, -3, 0]} rotation={[Math.PI / 2, 0, 0]} scale={counter === 5 ? .5 : 0} />
+        {/* <mesh geometry={nodes.text.geometry} material={materials.textMaterial} position={[0, -3, 0]} rotation={[Math.PI / 2, 0, 0]} scale={counter === 5 ? .5 : 0} /> */}
       </group> 
 
     </>

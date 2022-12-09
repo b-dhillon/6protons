@@ -1,32 +1,38 @@
 ## Next Push
-
-Figure out if blender animations are more performant then Three Fiber useFrame....I think soo....
- 
-- Finish fixing caching of star points
-- Compress thumbnail tiles from 1mb + to 200 or so kb
-- Fix flipped model bug.
-
-- Figure out new camera movement.
-- Add animation to text.
-- Add voice over for text.
-
-
 - Refactor 
+      - Create a whole new version of this project. Add typescript?
       - Turn blackFade into 1 fn
       - Try to make everything as purely function as possible. Check if this impacts performance first.
             - Consensus semms to be that fxn calls cost very little. 
       - Clean up console log statements and warnings.
+      - Compress thumbnail tiles from 1mb + to 200 or so kb
+      - Compress music too?
+      - Finish fixing caching of star points
+
+
+
+
+- Figure out new camera movement.
+
+- Fix flipped model bug.
+
+- Add animation to text.
+- Add voice over for text.
+
+
+
 
 - Fix context-lost bug -- seems to be losing context to the canvas of the previous page
-
 - Cache all your models with useLoader();
 
+
+Figure out if blender animations are more performant then useFrame?
 
 ### Optional
 1. Add doped buckyball text.
 2. Lerp the soccer pattern color change.
 3. Trim * imports on Three.
-~~4. Write your own inSphere method.
+4. Write your own inSphere method.
 
 
 

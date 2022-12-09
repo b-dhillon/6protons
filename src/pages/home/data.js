@@ -14,7 +14,7 @@ export default [
         css: "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)",
         height: 400,
         id: "graphene",
-        background: "url('./lesson_thumbnails/grapheneTile.png')"
+        background: "url('./lesson_thumbnails/graphene.png')"
 
     },
     {
@@ -23,7 +23,7 @@ export default [
         css: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
         height: 400,
         id: "nanotube",
-        background: "url('./lesson_thumbnails/nanotubeTile.png')",
+        background: "url('./lesson_thumbnails/nanotube.png')",
     },
     {
         name: "Rare Wind",
@@ -31,7 +31,7 @@ export default [
         // css: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
         height: 200,
         id: "diamond",
-        background: "url('./lesson_thumbnails/diamondTile.png')",
+        background: "url('./lesson_thumbnails/diamond.png')",
     },
     {
         name: "Perfect White",
@@ -39,7 +39,7 @@ export default [
         css: "linear-gradient(135deg, #E3FDF5 0%, #FFE6FA 100%)",
         height: 400,
         padding: '20px',
-        background: "url('./lesson_thumbnails/chiralityTile.png')",
+        background: "url('./lesson_thumbnails/chirality.png')",
     },
     {
         name: "Near Moon",

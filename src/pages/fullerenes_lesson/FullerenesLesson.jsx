@@ -62,8 +62,8 @@ function FullerenesLesson(props) {
             <source src="/music/fullerene2.mp3" type="audio/mp3" />
         </audio>
 
-        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 5, fov: 45, position: [0, 0, 5] }}>     
-            <OrbitControls noZoom minPolarAngle={0}  maxPolarAngle={Math.PI / 2}/>
+        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 200, fov: 45, position: [0, 0, 5] }}>     
+            {/* <OrbitControls noZoom minPolarAngle={0}  maxPolarAngle={Math.PI / 2}/> */}
             <Stars />
             <Provider store={DataStore}>
               <FullereneModelsCombined/>

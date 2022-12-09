@@ -14,7 +14,7 @@ const Stars = function Stars(props) {
     // const sphere = random.inSphere(new Float32Array(50000), { radius: 5 });
     
     // const start = performance.now(); 
-    const sphere2 = useMemo(() => random.inSphere(new Float32Array(30000), { radius: 5.25 }), [never] );
+    const sphere2 = useMemo(() => random.inSphere(new Float32Array(20000), { radius: 10 }), [never] );
     // const end = performance.now();
     // console.log(`Execution Time: ${(end - start).toFixed(5)} ms`);
 
@@ -54,11 +54,11 @@ const Stars = function Stars(props) {
     useFrame((state, delta) =>
     {
         // Rotating Stars:
-        ref.current.rotation.x -= delta / 11
-        // ref.current.rotation.y -= delta / 16
-        if(firstLoad) {
-            state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, 1, delta)  
-        }
+        ref.current.rotation.x -= delta / 20
+        ref.current.rotation.y -= delta / 20
+        // if(firstLoad) {
+        //     state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, 1, delta)  
+        // }
     })
 
     return (
