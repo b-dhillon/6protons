@@ -5,6 +5,13 @@ import { useSelector } from 'react-redux';
 import Stars from '../../components/Stars';
 
 
+/*
+nxt btn is clicked > counter updates > new camera properties are set in Scene() state object > 
+Scene() re-renders > UpdateCamera() is called by useEffect() > lerp() interpolates the difference between
+old camera properties and the new ones and renders them on each frame with useFrame().
+This is how the camera is changed and animated.
+*/
+
 export default function UpdateCamera( { sceneCamera, newCamera } ) {
 
     function lerp(o, n, s) {
@@ -32,27 +39,6 @@ export default function UpdateCamera( { sceneCamera, newCamera } ) {
 
 
 
-
-// To do 
-// 1. Fix constant lerp problem. 
-
-
-/*
-nxt btn is clicked > counter updates > new camera properties are set in Scene() state object > 
-Scene() re-renders > UpdateCamera() is called by useEffect() > lerp() interpolates the difference between
-old camera properties and the new ones and renders them on each frame with useFrame().
-This is how the camera is changed and animated.
-*/
-
-
-// cameraSettings = {
-//     s0: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
-//     s1: { position: { x: 0.5, y: 0, z: 1 }, rotation: { x: 0.5, y: 0, z: 0 } },
-//     s2: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
-//     s3: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
-//     s4: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
-//     s5: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
-// }
 
 
 

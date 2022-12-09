@@ -28,7 +28,7 @@ function HomePage(props)
 
 
   function handleFlip() {
-    if (!started) setFlipped(!flipped);
+    if (!started) setFlipped((flipped) => !flipped);
   }
 
   function Spinner() {

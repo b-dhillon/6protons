@@ -29,7 +29,6 @@ export default function Page() {
     );
 }
 
-
 // Renders the UI and creates event handlers to handle user input.
 function UI() {
     console.log('UI() is called');
@@ -49,13 +48,14 @@ function UI() {
     )
 }
 
-
-
 // Renders the 3D scene.
 function Scene() {
     console.log('Scene() is called');
     const counter = useSelector(state => state.counter);
     const [sceneCamera, setSceneCamera] = useState( new THREE.PerspectiveCamera(45, 1, .1, 10) );
+
+
+    // Is this necessary to hold in state?
     const [newCamera, setNewCamera] = useState(lesson.cameraSettings[0]);
 
     useEffect( () => {
