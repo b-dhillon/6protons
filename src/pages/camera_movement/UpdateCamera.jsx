@@ -1,8 +1,35 @@
-import { Suspense, useState } from 'react';
-import { Canvas, useFrame  } from '@react-three/fiber';
-import { Plane, OrbitControls } from '@react-three/drei';
-import { useSelector } from 'react-redux';
-import Stars from '../../components/Stars';
+import { useFrame } from '@react-three/fiber';
+
+export default function UpdateCamera( { sC, counter, page } ) {
+    
+    // Grabbing new camera values based on counter:
+    const nC = page.cameraSettings[counter];
+    const [x, y, z] = [nC.position.x, nC.position.y, nC.position.z];
+    const [rX, rY, rZ] = [nC.rotation.x, nC.rotation.y, nC.rotation.z];
+
+    // Updating old camera values:
+    useFrame((_, delta) => {
+        sC.position.set ( 
+            lerp(sC.position.x, x, delta), 
+            lerp(sC.position.y, y, delta), 
+            lerp(sC.position.z, z, delta) 
+        );
+
+        sC.rotation.set (
+            lerp(sC.rotation.x, rX, delta * 3),
+            lerp(sC.rotation.y, rY, delta * 3),
+            lerp(sC.rotation.z, rZ, delta * 3)
+        );
+
+        sC.updateMatrixWorld();
+    })
+}
+
+function lerp(o, n, s) {
+    const r = (1 - s) * o + s * n
+    return Math.abs(o - n) < 0.001 ? n : r
+}
+
 
 
 /*
@@ -12,50 +39,55 @@ old camera properties and the new ones and renders them on each frame with useFr
 This is how the camera is changed and animated.
 */
 
-export default function UpdateCamera( { sceneCamera, newCamera } ) {
 
-    function lerp(o, n, s) {
-        const r = (1 - s) * o + s * n
-        return Math.abs(o - n) < 0.001 ? n : r
-    }
+/* 
+next btn clicked > counter updates > Scene() re-renders > 
+UpdateCamera() is called again because counter changed > sC is updated >
+ Scene() re-renders because sC changed
 
-    useFrame((_, delta) => {
-
-        // translate 
-        sceneCamera.position.x = lerp(sceneCamera.position.x, newCamera.position.x, delta);
-        sceneCamera.position.y = lerp(sceneCamera.position.y, newCamera.position.y, delta);
-        sceneCamera.position.z = lerp(sceneCamera.position.z, newCamera.position.z, delta);
-
-        // rotate
-        sceneCamera.rotation.y = lerp(sceneCamera.rotation.x, newCamera.rotation.y, delta * 3);
-        sceneCamera.rotation.z = lerp(sceneCamera.rotation.x, newCamera.rotation.z, delta * 3);
-        sceneCamera.rotation.x = lerp(sceneCamera.rotation.x, newCamera.rotation.x, delta * 3);
-
-        // ^can I use .set() to change x,y,z in 1 line instead of 3?
-
-        sceneCamera.updateMatrixWorld();
-    })
-}
+*/
 
 
 
+// rotate
+// sC.rotation.x = lerp(sC.rotation.x, rX, delta * 3);
+// sC.rotation.y = lerp(sC.rotation.y, rY, delta * 3);
+// sC.rotation.z = lerp(sC.rotation.z, rZ, delta * 3);
 
 
+// translate 
+// sC.position.x = lerp(sC.position.x, nC.position.x, delta);
+// sC.position.y = lerp(sC.position.y, nC.position.y, delta);
+// sC.position.z = lerp(sC.position.z, nC.position.z, delta);
+// console.log(`rX:${sC.rotation.x}, rY:${sC.rotation.y}, rZ:${sC.rotation.z}`);
+
+
+// if(firstLoad) {
+//     state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, 1, delta)  
+// }
+
+
+// sC.position.set ( lerp(a, b, delta), lerp(c, d, delta), lerp(e, f, delta) );
+// sC.rotation.set ( lerp(g, h, delta), lerp(i, j, delta), lerp(k, l, delta) );
+
+// sC.rotation.x = lerp(g, h, delta * 3);
+// sC.rotation.y = lerp(i, j, delta * 3);
+// sC.rotation.z = lerp(k, l, delta * 3);
 
 
 // Animates changes to camera object:
-// export default function UpdateCamera( { newCamera } ) {
+// export default function UpdateCamera( { nC } ) {
 //     useFrame((_, delta) => {
 
 //         // translate 
-//         camera.position.x = lerp(camera.position.x, newCamera.position.x, delta);
-//         camera.position.y = lerp(camera.position.y, newCamera.position.y, delta);
-//         camera.position.z = lerp(camera.position.z, newCamera.position.z, delta);
+//         camera.position.x = lerp(camera.position.x, nC.position.x, delta);
+//         camera.position.y = lerp(camera.position.y, nC.position.y, delta);
+//         camera.position.z = lerp(camera.position.z, nC.position.z, delta);
 
 //         // rotate
-//         camera.rotation.x = lerp(camera.rotation.x, newCamera.rotation.x, delta * 3);
-//         camera.rotation.y = lerp(camera.rotation.x, newCamera.rotation.y, delta * 3);
-//         camera.rotation.z = lerp(camera.rotation.x, newCamera.rotation.z, delta * 3);
+//         camera.rotation.x = lerp(camera.rotation.x, nC.rotation.x, delta * 3);
+//         camera.rotation.y = lerp(camera.rotation.x, nC.rotation.y, delta * 3);
+//         camera.rotation.z = lerp(camera.rotation.x, nC.rotation.z, delta * 3);
 
 //         // ^can I use .set() to change x,y,z in 1 line instead of 3?
 
@@ -66,7 +98,7 @@ export default function UpdateCamera( { sceneCamera, newCamera } ) {
 // Calls the camera movement functions each time after the counter is updated.
 // useEffect(() => {
 
-//     UpdateCamera( { newCamera } );
+//     UpdateCamera( { nC } );
 // }, [counter])
 
 

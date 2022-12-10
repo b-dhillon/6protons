@@ -29,14 +29,7 @@ export default [
             { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
             { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
         ],
-        // cameraSettings: {
-        //     s0: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
-        //     s1: { position: { x: 0.5, y: 0, z: 1 }, rotation: { x: 0.5, y: 0, z: 0 } },
-        //     s2: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
-        //     s3: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
-        //     s4: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
-        //     s5: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
-        // },
+
         text: FullerenesText,
         audio: null,
         models: null,
@@ -74,3 +67,14 @@ export default [
         models: null,
     }
 ]
+
+
+
+        // cameraSettings: {
+        //     s0: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
+        //     s1: { position: { x: 0.5, y: 0, z: 1 }, rotation: { x: 0.5, y: 0, z: 0 } },
+        //     s2: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
+        //     s3: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
+        //     s4: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
+        //     s5: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
+        // },

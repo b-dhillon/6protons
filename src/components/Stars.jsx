@@ -56,9 +56,7 @@ const Stars = function Stars(props) {
         // Rotating Stars:
         ref.current.rotation.x -= delta / 20
         ref.current.rotation.y -= delta / 20
-        // if(firstLoad) {
-        //     state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, 1, delta)  
-        // }
+
     })
 
     return (

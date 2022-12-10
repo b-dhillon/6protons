@@ -5,18 +5,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { increment } from '../../redux/actions';
 import Stars from '../../components/Stars';
 import * as THREE from 'three';
-import lessons from '../../components/lessons.js';
+import pages from '../../components/lessons.js';
 import UpdateCamera from './UpdateCamera.jsx';
 
-const lesson = lessons.find( (lesson) => lesson.id === "fullerene" );
 
 // To do 
-// - Fix shaking camera bug...constant lerp problem?
-// - Re-factor
-// - Is it a big deal that Scene() is called twice? Once for updating counter and another 
-// for updating camera properties. Should we move camera properties up to Page() level?
-// that way UI and Scene will both have access to the same camera properties and Scene() shall 
-// only be called once. Buuuuuut, will this make Page() call twice? Idk, will have to test.
+
+
 
 // Renders everything that user sees on the screen, UI, 3D scene, audio and text.
 export default function Page() {
@@ -48,19 +43,25 @@ function UI() {
     )
 }
 
+
+
 // Renders the 3D scene.
 function Scene() {
     console.log('Scene() is called');
+    const page = pages.find( (page) => page.id === "fullerene" );
     const counter = useSelector(state => state.counter);
-    const [sceneCamera, setSceneCamera] = useState( new THREE.PerspectiveCamera(45, 1, .1, 10) );
+
+    function ConstructSceneCamera() {
+        const cam = new THREE.PerspectiveCamera(45, 1, .1, 10);
+        cam.position.set(0, 0, 5);
+        return cam;
+    }
+
+    const [sceneCamera, setSceneCamera] = useState( () => ConstructSceneCamera() );
 
 
-    // Is this necessary to hold in state?
-    const [newCamera, setNewCamera] = useState(lesson.cameraSettings[0]);
+    
 
-    useEffect( () => {
-        setNewCamera( lesson.cameraSettings[counter] );
-    }, [counter]); 
 
     function DevelopmentCamera () {
         const ref = useRef();
@@ -84,6 +85,8 @@ function Scene() {
             useFrame((state, delta) => controls.current.update(delta));
             return <OrbitControls ref={controls} args={[camera, gl.domElement]} />;
         }
+
+        // Need to disable controls when camera is moving
 
         return (
             <>
@@ -109,8 +112,20 @@ function Scene() {
             <ambientLight />
             <Plane position={[0,0,-1]} scale={[.4, .4, 1]} />
             <Stars />
-            <UpdateCamera sceneCamera={sceneCamera} newCamera={newCamera} />
+            {/* <UpdateCamera sceneCamera={sceneCamera} newCamera={newCamera} /> */}
+
+            {/* This fn should only be called when the camera is moving? */}            
+            <UpdateCamera sC={sceneCamera} counter={counter} page={page} />
         </Canvas>
     )
 }
 
+
+
+/*
+Is this necessary to hold in state? No because it doesn't need to be preserved between renders.
+const [newCamera, setNewCamera] = useState(lesson.cameraSettings[0]);
+useEffect( () => {
+    setNewCamera( lesson.cameraSettings[counter] );
+}, [counter]); 
+*/
