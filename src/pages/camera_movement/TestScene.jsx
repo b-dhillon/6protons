@@ -11,8 +11,6 @@ import UpdateCamera from './UpdateCamera.jsx';
 
 // To do 
 
-
-
 // Renders everything that user sees on the screen, UI, 3D scene, audio and text.
 export default function Page() {
     console.log('Page() is called');
@@ -44,23 +42,14 @@ function UI() {
 }
 
 
-
 // Renders the 3D scene.
 function Scene() {
     console.log('Scene() is called');
-    const page = pages.find( (page) => page.id === "fullerene" );
-    const counter = useSelector(state => state.counter);
-
     function ConstructSceneCamera() {
         const cam = new THREE.PerspectiveCamera(45, 1, .1, 10);
         cam.position.set(0, 0, 5);
         return cam;
     }
-
-    const [sceneCamera, setSceneCamera] = useState( () => ConstructSceneCamera() );
-
-
-    
 
 
     function DevelopmentCamera () {
@@ -96,23 +85,18 @@ function Scene() {
         )
     };
 
-    function SceneCamera() {
-        // sceneCamera = new THREE.PerspectiveCamera();
-        // sceneCamera.fov = 45;
-        // sceneCamera.aspect = 1;
-        // sceneCamera.near = 0.1;
-        // sceneCamera.far = 10;
-        return <cameraHelper args={[sceneCamera]}/>
-    };
+    const [sceneCamera, setSceneCamera] = useState( () => ConstructSceneCamera() );
+    const page = pages.find( (page) => page.id === "fullerene" );  // can be lifted, never changes everytime Scene() is called.
+    const counter = useSelector(state => state.counter);
+    
 
     return (
         <Canvas >
             <DevelopmentCamera  />
-            <SceneCamera />
+            <cameraHelper args={[sceneCamera]}/>
             <ambientLight />
             <Plane position={[0,0,-1]} scale={[.4, .4, 1]} />
             <Stars />
-            {/* <UpdateCamera sceneCamera={sceneCamera} newCamera={newCamera} /> */}
 
             {/* This fn should only be called when the camera is moving? */}            
             <UpdateCamera sC={sceneCamera} counter={counter} page={page} />

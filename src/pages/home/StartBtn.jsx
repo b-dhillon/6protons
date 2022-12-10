@@ -45,6 +45,7 @@ export default function StartBtn({handleFlip, setPage}) {
     enter: { opacity: 1, scale: 1 },
     leave: { opacity: 0, scale: 0 }
   });
+  
   // This will orchestrate the two animations above, comment the last arg and it creates a sequence
   useChain(open ? [springApi, transApi] : [transApi, springApi], [
     0,
@@ -62,7 +63,6 @@ export default function StartBtn({handleFlip, setPage}) {
     }
   }, [open])
 
-  // The problem is that when i set open to false 
 
 
   return (

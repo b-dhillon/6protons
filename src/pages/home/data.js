@@ -6,7 +6,7 @@ export default [
         css: "linear-gradient(135deg, #FFFEFF 0%, #D7FFFE 100%)",
         height: 200,
         id: "fullerene",
-        background: "url('./lesson_thumbnails/fullereneTile.png')",
+        background: "url('./lesson_thumbnails/fullerene.png')",
     },
     {
         name: "Deep Blue",
