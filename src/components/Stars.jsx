@@ -1,4 +1,4 @@
-import React, { useRef, memo, useMemo, useState } from 'react'
+import React, { useRef, memo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Points, PointMaterial } from '@react-three/drei'
 import { inSphere } from "maath/random";
@@ -23,10 +23,10 @@ function Stars(props) {
 }
 
 function generatePointPositions() {
-    const start = performance.now(); 
-    const x = inSphere(new Float32Array(25000), { radius: 5 });
-    const end = performance.now();
-    console.log(`execution time: ${(end - start).toFixed(5)} ms`);
+    // const start = performance.now(); 
+    const x = inSphere(new Float32Array(25000), { radius: 10 });
+    // const end = performance.now();
+    // console.log(`execution time: ${(end - start).toFixed(5)} ms`);
     return x;
 }
 

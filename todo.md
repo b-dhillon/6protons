@@ -1,20 +1,22 @@
 ## Next Push
 - Refactor 
-      - Create a whole new version of this project. Add typescript?
-      - Turn blackFade into 1 fn
-      - Try to make everything as purely function as possible. Check if this impacts performance first.
-            - Consensus semms to be that fxn calls cost very little. 
+      - Re-factor StartBtn and Home
+      - Fix flipped model bug.
       - Clean up console log statements and warnings.
-      - Compress thumbnail tiles from 1mb + to 200 or so kb
-      - Compress music too?
-      - Finish fixing caching of star points
+      - Make every function only responsible for 1 thing (SRP) 
+            - Turn blackFade into 1 fn
 
 
 
+
+- Write a program that can take text out of a markdown file (or any text file) and turn it into div's with the proper class applied.
+      This will allow you to crete new lessons programatically, simply type out the text and generate the 3D models and plug them in 
+      the data structure and have the program generate the scene and lesson for you.
 
 - Figure out new camera movement.
 
-- Fix flipped model bug.
+- Compress thumbnail tiles from 1mb + to 200 or so kb
+- Compress music too?
 
 - Add animation to text.
 - Add voice over for text.
@@ -24,6 +26,8 @@
 
 - Fix context-lost bug -- seems to be losing context to the canvas of the previous page
 - Cache all your models with useLoader();
+- Create a whole new version of this project. Add typescript?
+
 
 
 Figure out if blender animations are more performant then useFrame?
