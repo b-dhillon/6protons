@@ -1,3 +1,4 @@
+// @ts-ignore
 import { parse } from './react-three/gltfjsx'
 // import { parse } from '../modules/react-three/gltfjsx'
 import { GLTFLoader, DRACOLoader } from 'three-stdlib'
