@@ -2,11 +2,12 @@ import React, { useRef, memo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Points, PointMaterial } from '@react-three/drei';
 import { inSphere } from "maath/random";
+import { TypedArray } from 'maath/dist/declarations/src/ctypes';
 
 const star_positions = BigBang( 50000, 100 );
 
-function Universe( props ) {
-    const ref = useRef();
+function Universe( props: any ): JSX.Element {
+    const ref: any = useRef();
 
     useFrame((_, delta) => {
         ref.current.rotation.x -= delta / 20
@@ -27,7 +28,7 @@ function Universe( props ) {
 // size={.0045}
 
 // inCube
-function BigBang ( stars, radius ) {
+function BigBang ( stars: number, radius: number ): Float32Array {
     const p =  new Float32Array( stars );
 
     for ( let i = 0; i < stars; i++ ) {
@@ -46,12 +47,12 @@ function BigBang ( stars, radius ) {
 };
 
 // inSphere
-function BigBang2() {
+function BigBang2(): TypedArray {
     const x = inSphere( new Float32Array(25000), { radius: 10 } );
     return x;
 }
 
-function TestPerformnance( fn ) {
+function TestPerformnance( fn: Function ): any {
     const start = performance.now(); 
     const a = fn( 10000, 10 );
     const end = performance.now();

@@ -1,8 +1,6 @@
 // import FullereneText from '../pages/fullerenes_lesson/FullereneText';
 
-import { Vector3 } from "three"
-
-// can set some properties to null and then update them later as theyre created
+// can set some properties to null and then update them later as they're created
 
 const scene_configs = [
     {
