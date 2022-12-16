@@ -3,12 +3,12 @@ import { useDispatch } from 'react-redux';
 import { start } from '../redux/actions';
 import { useTransition, useSpring, useChain, config, animated, useSpringRef } from "@react-spring/web";
 // import lessons from '../../components/scenes.jsx';
-import data from "../scene_configs.jsx";
+import data from "../scene_configs";
 import styles from "../../styles.module.css";
 import { useGLTF } from '@react-three/drei';
 
 
-export default function StartBtn( {handleFlip, setPage} ) {
+export default function StartBtn( props: { handleFlip: any, setPage:  any }  ) {
   const [open, set] = useState(false);
   const dispatch = useDispatch();  
   // const started = useSelector(state => state.start);
@@ -54,7 +54,7 @@ export default function StartBtn( {handleFlip, setPage} ) {
     open ? 0.6 : 0.1
   ]);
 
-  const ref = useRef();
+  const ref: any = useRef();
 
   // Controlling the pink border hover animation:
   useEffect( () => {
@@ -77,8 +77,8 @@ export default function StartBtn( {handleFlip, setPage} ) {
   return (
     <animated.div ref={ref} style={{ ...rest, width: width, height: height }} className={styles.btn} 
       onClick={ handleClick } 
-      onMouseEnter={ handleFlip } 
-      onMouseLeave={ handleFlip } 
+      onMouseEnter={ props.handleFlip } 
+      onMouseLeave={ props.handleFlip } 
      >
 
       {!open ? <p className={styles.btnText} >Get Started</p> : ""}
@@ -90,8 +90,8 @@ export default function StartBtn( {handleFlip, setPage} ) {
         ? 
         <div className={styles.grid}>
           { thumbnailFade( (animationStyle, lesson) => (
-            <animated.div onClick={ (e) => { e.stopPropagation(); setPage(lesson.id); } } className={styles.itemContainer} style={{ ...animationStyle }}>
-              <div className={styles.items} style={{backgroundImage: `${lesson.background}`, padding: '20px'} }></div>
+            <animated.div onClick={ (e) => { e.stopPropagation(); props.setPage(lesson.id); } } className={styles.itemContainer} style={{ ...animationStyle }}>
+              <div className={styles.items} style={{backgroundImage: `${lesson.thumbnail}`, padding: '20px'} }></div>
             </animated.div>
             //   <p className={styles.caption}>Chirality</p>
           ))}
