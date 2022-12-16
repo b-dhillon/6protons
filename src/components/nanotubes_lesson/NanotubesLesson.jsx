@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import Stars from '../Stars';
+import Stars from '../Universe';
 import NanotubeModels from './NanotubeModels';
 import DataStore from '../redux/store';
 // import { TrackballControls } from '@react-three/drei'
@@ -19,7 +19,7 @@ function NanotubesLesson(props) {
         <div className="blackFade"></div>
 
         <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 75, position: [0,0,1.66] }}>
-          {/* <TrackballControls/> */}
+
           <Stars />
           <spotLight position={[10, 10, 10] } intensity={4}/>
           <spotLight position={[-10, 10, 10] } intensity={4}/>

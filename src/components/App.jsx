@@ -4,12 +4,15 @@ import FullerenesLesson from './fullerenes_lesson/FullerenesLesson.jsx';
 import DiamondsLesson from './diamonds_lesson/DiamondsLesson.jsx';
 import NanotubesLesson from './nanotubes_lesson/NanotubesLesson.jsx';
 import GrapheneLesson from './graphene_lesson/GrapheneLesson.jsx';
-import TestScene from './TestScene.jsx';
+import TestPage from './TestPage.jsx';
 
 export default function App() {
   // console.log('App() is called');
 
-  const [page, setPage] = useState('cameraTest');
+  // Should I store all app data (scene_configs) in App() state? 
+  // I think I should when I decide to programatically populate scene_configs in the future.
+
+  const [page, setPage] = useState('test_page');
   const [loading, setLoading] = useState(true);
 
   function handleLoading() {
@@ -24,7 +27,7 @@ export default function App() {
   if(page === 'fullerene') return <FullerenesLesson setPage={handlePage} /> ;
   if(page === 'diamond') return <DiamondsLesson setPage={handlePage} />;
   if(page === 'graphene') return <GrapheneLesson setPage={handlePage} />;
-  if (page === 'cameraTest') return <TestScene />;
+  if (page === 'test_page') return <TestPage page={page}/>;
   else return <NanotubesLesson setPage={handlePage} />;
 };
 

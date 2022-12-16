@@ -2,7 +2,7 @@ import { useState, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useSelector,  } from 'react-redux';
 import { useGLTF, Html, OrbitControls } from '@react-three/drei';
-import Stars from '../../components/Stars';
+import Stars from '../Universe';
 import Models from './Models';
 import '../../home-styles.css';
 import StartBtn from './StartBtn';

@@ -2,7 +2,7 @@ import { Suspense, useRef, useState } from 'react';
 import { Provider } from 'react-redux';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei'
-import Stars from '../../components/Stars';
+import Stars from '../Universe';
 import DataStore from '../redux/store';
 import DiamondModels from './DiamondModels';
 import LessonOverlay from '../../components/LessonOverlay';

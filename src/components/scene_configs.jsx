@@ -1,14 +1,21 @@
 // import FullereneText from '../pages/fullerenes_lesson/FullereneText';
 
+import { Vector3 } from "three"
+
 // can set some properties to null and then update them later as theyre created
 
-const scene_data = [
+const scene_configs = [
     {
-        id: 'fullerene',
+        id: 'test_page',
         title: 'Fullerenes',
+        univerase_size: '100 metres',
         thumbnail: "url('./lesson_thumbnails/fullereneTile.png')",
         maxSectionCount: 6,
-        camera: {
+        universe_config: {
+            size: 100,
+            radius: 10
+        },
+        camera_config: {
             0: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
             1: { position: { x: 0.5, y: 0, z: 1 }, rotation: { x: 0.5, y: 0, z: 0 } },
             2: { position: { x: 1, y: 0, z: 1.5 }, rotation: { x: 1, y: 0, z: 0 } },
@@ -16,7 +23,84 @@ const scene_data = [
             4: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
             5: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
         },
-        text: {
+
+        // model is positioned same as camera, but z-1. 
+        // how can I link camera position to model position but with z-1?
+        models_config: [
+            {
+                id: 'model0',
+                path: '/lesson4_models/model1.glb',
+                positions: [
+                    { x: 0, y: 0, z: -1 }
+                ],
+                mesh: null,
+                nodes: null, 
+                materials: null,
+                visible: true,
+                methods: {
+                    animations: [
+                        function rotate(ref, delta) {
+                            ref.current.rotation.y += delta;
+                        },
+                    ],
+                }
+
+            },
+            {
+                id: 'model1',
+                path: '/lesson3_models/model0.glb',
+                mesh: null, 
+                positions: [
+                    { x: 0, y: 0, z: -1 }
+                ],
+                visible: false,
+                methods: {
+                    animations: [
+                        function rotate(ref, delta) {
+                            ref.current.rotation.y -= delta;
+                        },
+                    ],
+                }
+            },
+            {
+                id: 'model2',
+                path: '/lesson3_models/model0.glb',
+                positions: [
+                    { x: 0, y: 0, z: -1 }
+                ],
+                mesh: null, 
+                visible: false,
+            },
+            {
+                id: 'model3',
+                path: '/lesson3_models/model0.glb',
+                positions: [
+                    { x: 0, y: 0, z: -1 }
+                ],
+                mesh: null, 
+                visible: false,
+            },
+            {
+                id: 'model4',
+                path: '/lesson3_models/model0.glb',
+                positions: [
+                    { x: 0, y: 0, z: -1 }
+                ],
+                mesh: null, 
+                visible: false,
+            },
+            {
+                id: 'model5',
+                path: '/lesson3_models/model0.glb',
+                positions: [
+                    { x: 0, y: 0, z: -1 }
+                ],
+                mesh: null, 
+                visible: false,
+            },
+        ],
+
+        text_config: {
             0: '',
             1: 'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas...',
             2: 'The result? Novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered. This molecule would go on to be named Buckminsterfullerene. Often shortened to fullerene, and nicknamed Buckyball.',
@@ -25,55 +109,7 @@ const scene_data = [
             5: 'How can buckyballs help cure aids? An enzyme (HIV-1-Protease) that is required for HIV to reproduce, exhibits a nonpolar pocket in its three-dimensional structure. On the model to the right, notice how the nonpolar Fullerene fits the exact diameter of the enzyme\'s binding pocket. If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible blockers.',
         },
 
-        // model is positioned same as camera, but z-1. 
-        // how can I link camera position to model position but with z-1?
-        models: {
-            0: {
-                id: 'model0',
-                path: '/lesson4_models/model1.glb',
-                initialPosition: { x: 0, y: 0, z: -1 },
-                mesh: null,
-                nodes: null, 
-                materials: null,
-                visible: true,
-            },
-            1: {
-                id: 'model1',
-                path: '/lesson3_models/model0.glb',
-                mesh: null, 
-                initialPosition: { x: 0.5, y: 0, z: 0 },
-                visible: false,
-            },
-            2: {
-                id: 'model2',
-                path: '/lesson3_models/model0.glb',
-                initialPosition: { x: 0.5, y: 0, z: 0 },
-                mesh: null, 
-                visible: false,
-            },
-            3: {
-                id: 'model3',
-                path: '/lesson3_models/model0.glb',
-                initialPosition: { x: 0.5, y: 0, z: 0 },
-                mesh: null, 
-                visible: false,
-            },
-            4: {
-                id: 'model4',
-                path: '/lesson3_models/model0.glb',
-                initialPosition: { x: 0.5, y: 0, z: 0 },
-                mesh: null, 
-                visible: false,
-            },
-            5: {
-                id: 'model5',
-                path: '/lesson3_models/model0.glb',
-                initialPosition: { x: 0.5, y: 0, z: 0 },
-                mesh: null, 
-                visible: false,
-            },
-        },
-        audio: {
+        speach_config: {
             0: null,
             1: null, 
             2: null,
@@ -120,7 +156,7 @@ const scene_data = [
     }
 ]
 
-export default scene_data;
+export default scene_configs;
 
 /* 
 import FullereneModels from '../../FullereneModels';

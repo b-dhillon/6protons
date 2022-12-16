@@ -1,4 +1,4 @@
-import data from './scenes.jsx';
+import data from './scene_configs.jsx';
 import { reset, start, increment, decrement } from './redux/actions';
 import { useSelector, useDispatch } from 'react-redux';
 import '../overlay-styles.css';

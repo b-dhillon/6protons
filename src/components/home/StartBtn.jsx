@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { start } from '../redux/actions';
 import { useTransition, useSpring, useChain, config, animated, useSpringRef } from "@react-spring/web";
 // import lessons from '../../components/scenes.jsx';
-import data from "../../components/scenes.jsx";
+import data from "../scene_configs.jsx";
 import styles from "../../styles.module.css";
 import { useGLTF } from '@react-three/drei';
 
