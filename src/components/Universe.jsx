@@ -56,11 +56,10 @@ function TestPerformnance( fn ) {
     const a = fn( 10000, 10 );
     const end = performance.now();
     console.log(`execution time: ${(end - start).toFixed(5)} ms`);
-    console.log( a);
     return a;
 };
 
-TestPerformnance( BigBang );
+// TestPerformnance( BigBang );
 
 export default memo( Universe );
 

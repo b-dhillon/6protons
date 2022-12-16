@@ -8,7 +8,6 @@ const scene_configs = [
     {
         id: 'test_page',
         title: 'Fullerenes',
-        univerase_size: '100 metres',
         thumbnail: "url('./lesson_thumbnails/fullereneTile.png')",
         maxSectionCount: 6,
         universe_config: {
@@ -33,30 +32,30 @@ const scene_configs = [
                 positions: [
                     { x: 0, y: 0, z: -1 }
                 ],
-                mesh: null,
-                nodes: null, 
-                materials: null,
+                mesh: {},
+                nodes: {}, 
+                materials: {},
                 visible: true,
                 methods: {
-                    animations: [
-                        function rotate(ref, delta) {
+                    animations: {
+                        rotate: function(ref: { current: { rotation: { y: number; }; }; }, delta: number) {
                             ref.current.rotation.y += delta;
                         },
-                    ],
+                    },
                 }
 
             },
             {
                 id: 'model1',
                 path: '/lesson3_models/model0.glb',
-                mesh: null, 
+                mesh: {}, 
                 positions: [
                     { x: 0, y: 0, z: -1 }
                 ],
                 visible: false,
                 methods: {
                     animations: [
-                        function rotate(ref, delta) {
+                        function rotate(ref: { current: { rotation: { y: number; }; }; }, delta: number) {
                             ref.current.rotation.y -= delta;
                         },
                     ],
@@ -68,7 +67,7 @@ const scene_configs = [
                 positions: [
                     { x: 0, y: 0, z: -1 }
                 ],
-                mesh: null, 
+                mesh: {}, 
                 visible: false,
             },
             {
@@ -77,7 +76,7 @@ const scene_configs = [
                 positions: [
                     { x: 0, y: 0, z: -1 }
                 ],
-                mesh: null, 
+                mesh: {}, 
                 visible: false,
             },
             {
@@ -86,7 +85,7 @@ const scene_configs = [
                 positions: [
                     { x: 0, y: 0, z: -1 }
                 ],
-                mesh: null, 
+                mesh: {}, 
                 visible: false,
             },
             {
@@ -95,7 +94,7 @@ const scene_configs = [
                 positions: [
                     { x: 0, y: 0, z: -1 }
                 ],
-                mesh: null, 
+                mesh: {}, 
                 visible: false,
             },
         ],
@@ -110,12 +109,6 @@ const scene_configs = [
         },
 
         speach_config: {
-            0: null,
-            1: null, 
-            2: null,
-            3: null,
-            4: null,
-            5: null,
         },
     },
 
@@ -123,36 +116,41 @@ const scene_configs = [
         id: 'nanotube',
         title: 'Nanotubes',
         thumbnail: "url('./lesson_thumbnails/nanotube.png')",
-        text: null,
-        audio: null,
-        models: null,
+        speach_config: {},
+        text_config: {},
+        models_config: [],
     },
 
     {
         id: 'diamond',
         title: 'Diamonds',
         thumbnail: "url('./lesson_thumbnails/diamond.png')",
-        text: null,
-        audio: null,
-        models: null,
+        speach_config: {
+
+        },
+        text_config: {},
+        models_config: [],
     },
 
     {
         id: 'graphenes',
         title: 'Graphenes',
         thumbnail: "url('./lesson_thumbnails/graphene.png')",
-        text: null,
-        audio: null,
-        models: null,
+        speach_config: {
+        },
+        text_config: {},
+        models_config: [],
     },
 
     {
         id: 'chirality',
         title: 'Chirality',
         thumbnail: "url('./lesson_thumbnails/chirality.png')",
-        text: null,
-        audio: null,
-        models: null,
+        speach_config: {
+
+        },
+        text_config: {},
+        models_config: [],
     }
 ]
 

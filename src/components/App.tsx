@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import Home from '../components/home/Home';
+import Home from './home/Home';
 import FullerenesLesson from './fullerenes_lesson/FullerenesLesson.jsx';
 import DiamondsLesson from './diamonds_lesson/DiamondsLesson.jsx';
 import NanotubesLesson from './nanotubes_lesson/NanotubesLesson.jsx';
 import GrapheneLesson from './graphene_lesson/GrapheneLesson.jsx';
-import TestPage from './TestPage.jsx';
+import TestPage from './TestPage';
 
 export default function App() {
   // console.log('App() is called');
@@ -12,6 +12,7 @@ export default function App() {
   // Should I store all app data (scene_configs) in App() state? 
   // I think I should when I decide to programatically populate scene_configs in the future.
 
+  // add typescript types to state:
   const [page, setPage] = useState('test_page');
   const [loading, setLoading] = useState(true);
 
@@ -19,7 +20,7 @@ export default function App() {
     setLoading(false);
   }
 
-  function handlePage(id){
+  function handlePage(id: string){
     setPage(`${id}`)
   }  
 
