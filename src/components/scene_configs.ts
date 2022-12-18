@@ -1,158 +1,283 @@
-// import FullereneText from '../pages/fullerenes_lesson/FullereneText';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+import { useLoader } from '@react-three/fiber';
+import { useEffect, useRef } from 'react';
+import { useGLTF } from '@react-three/drei';
+import { Suspense } from 'react';
+import * as THREE from 'three';
 
-// can set some properties to null and then update them later as they're created
+/*
+// Design questions to answer: 
+    - Will UI data be stored in the same object as the scene data? W
+        - What UI data do we have?
+            - Counter 
+            - Future data...?
+    
+    - Is it better to use React Three Fiber or Three.js directly? Or a mixter of the two. if mixture, what does that look like?
+*/
 
-const scene_configs = [
+type Vector3 = {
+    x: number;
+    y: number;
+    z: number;
+}
+
+type Euler = {
+    _x: number;
+    _y: number;
+    _z: number;
+};
+
+type AnimationAction = {
+    name: string;
+    duration: number;
+    time: number;
+    weight: number;
+    repetitions: number;
+    clampWhenFinished: boolean;
+    enabled: boolean;
+    zeroSlopeAtStart: boolean;
+    zeroSlopeAtEnd: boolean;
+};
+
+
+type Mesh = {
+    name: string;
+    position: THREE.Vector3;
+    rotation: THREE.Euler;
+    scale: THREE.Vector3;
+    children: THREE.Object3D[];
+    geometry: THREE.BufferGeometry;
+    material: THREE.Material;
+};
+
+
+
+type Model = {
+    id: string;
+    name: string;
+    // url: string;
+    path: string;
+    meshes: THREE.Mesh[] | null; 
+    positions: Vector3[];
+    rotations: Euler[];
+    scale: Vector3;
+    animations: THREE.AnimationAction[] | null; 
+    nodes: THREE.BufferGeometry[] | null;
+    materials: THREE.Material[] | null;
+    visible: boolean;
+}
+
+
+type Scene = {
+    id: string;
+    title: string;
+    thumbnail: string;
+    section_count: number;
+    universe: {
+        size: number;
+        radius: number;
+    };
+    camera: {
+        positions: Vector3[];
+        rotations: Euler[];
+        animations: THREE.AnimationAction[];
+    };
+    models: Model[];
+    text: any[] | null;
+    speach: any[] | null;
+    music: any[] | null;
+};
+
+
+
+const scene_configs: Scene[] = [
     {
         id: 'test_page',
         title: 'Fullerenes',
         thumbnail: "url('./lesson_thumbnails/fullereneTile.png')",
-        maxSectionCount: 6,
-        universe_config: {
-            size: 100,
-            radius: 10
-        },
-        camera_config: {
-            0: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
-            1: { position: { x: 0.5, y: 0, z: 1 }, rotation: { x: 0.5, y: 0, z: 0 } },
-            2: { position: { x: 1, y: 0, z: 1.5 }, rotation: { x: 1, y: 0, z: 0 } },
-            3: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
-            4: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
-            5: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
+        section_count: 6,
+        
+        universe: {
+            radius: 10,
+            size: 100
         },
 
-        // model is positioned same as camera, but z-1. 
-        // how can I link camera position to model position but with z-1?
-        models_config: [
+        camera: {
+            positions: [
+                { x: 0, y: 0, z: 0 },
+                { x: 0.5, y: 0, z: 1 },
+                { x: 1, y: 0, z: 1.5 },
+                { x: 0, y: 0, z: 0 },
+                { x: 0, y: 0, z: 0 },
+                { x: 0, y: 0, z: 0 },
+            ],
+            rotations: [
+                { _x: 0, _y: 0, _z: 0 },
+                { _x: 0.5, _y: 0, _z: 0 },
+                { _x: 1, _y: 0, _z: 0 },
+                { _x: 0, _y: 0, _z: 0 },
+                { _x: 0, _y: 0, _z: 0 },
+                { _x: 0, _y: 0, _z: 0 },
+            ],
+            animations: [
+                
+            ],
+        },
+
+        // model is positioned same as camera, but z-1. how can I link camera position to model position but with z-1?
+        models: [
             {
                 id: 'model0',
                 path: '/lesson4_models/model1.glb',
                 positions: [
-                    { x: 0, y: 0, z: -1 }
+                    { x: 0, y: 0, z: -1 },
                 ],
-                mesh: {},
-                nodes: {}, 
-                materials: {},
+                rotations: [
+                    { _x: 0, _y: 0, _z: 0 }
+                ],
+                animations: null,
+                meshes: null,
+                nodes: null, 
+                materials: null,
                 visible: true,
-                methods: {
-                    animations: {
-                        rotate: function(ref: { current: { rotation: { y: number; }; }; }, delta: number) {
-                            ref.current.rotation.y += delta;
-                        },
-                    },
-                }
-
+                name: 'model0',
+                scale: { x: 1, y: 1, z: 1 },
             },
             {
                 id: 'model1',
                 path: '/lesson3_models/model0.glb',
-                mesh: {}, 
                 positions: [
                     { x: 0, y: 0, z: -1 }
                 ],
-                visible: false,
-                methods: {
-                    animations: [
-                        function rotate(ref: { current: { rotation: { y: number; }; }; }, delta: number) {
-                            ref.current.rotation.y -= delta;
-                        },
-                    ],
-                }
-            },
-            {
-                id: 'model2',
-                path: '/lesson3_models/model0.glb',
-                positions: [
-                    { x: 0, y: 0, z: -1 }
+                rotations: [
+                    { _x: 0, _y: 0, _z: 0 }
                 ],
-                mesh: {}, 
-                visible: false,
-            },
-            {
-                id: 'model3',
-                path: '/lesson3_models/model0.glb',
-                positions: [
-                    { x: 0, y: 0, z: -1 }
-                ],
-                mesh: {}, 
-                visible: false,
-            },
-            {
-                id: 'model4',
-                path: '/lesson3_models/model0.glb',
-                positions: [
-                    { x: 0, y: 0, z: -1 }
-                ],
-                mesh: {}, 
-                visible: false,
-            },
-            {
-                id: 'model5',
-                path: '/lesson3_models/model0.glb',
-                positions: [
-                    { x: 0, y: 0, z: -1 }
-                ],
-                mesh: {}, 
-                visible: false,
+                animations: null,
+                meshes: null,
+                nodes: null, 
+                materials: null,
+                visible: true,
+                name: 'model0',
+                scale: { x: 1, y: 1, z: 1 },
             },
         ],
 
-        text_config: {
-            0: '',
-            1: 'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas...',
-            2: 'The result? Novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered. This molecule would go on to be named Buckminsterfullerene. Often shortened to fullerene, and nicknamed Buckyball.',
-            3: 'Each molecule of Fullerene is composed of pure carbon. The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball. Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.',
-            4: 'For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known. These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems. Scientists have even turned their attention to buckyballs in their quest for a cure for AIDS.',
-            5: 'How can buckyballs help cure aids? An enzyme (HIV-1-Protease) that is required for HIV to reproduce, exhibits a nonpolar pocket in its three-dimensional structure. On the model to the right, notice how the nonpolar Fullerene fits the exact diameter of the enzyme\'s binding pocket. If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible blockers.',
-        },
+        text: [
+            '',
+            'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas...',
+            'The result? Novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered. This molecule would go on to be named Buckminsterfullerene. Often shortened to fullerene, and nicknamed Buckyball.',
+            'Each molecule of Fullerene is composed of pure carbon. The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball. Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.',
+            'For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known. These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems. Scientists have even turned their attention to buckyballs in their quest for a cure for AIDS.',
+            'How can buckyballs help cure aids? An enzyme (HIV-1-Protease) that is required for HIV to reproduce, exhibits a nonpolar pocket in its three-dimensional structure. On the model to the right, notice how the nonpolar Fullerene fits the exact diameter of the enzyme\'s binding pocket. If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible blockers.',
+        ],
 
-        speach_config: {
-        },
+        speach: null,
+        music: null
     },
 
-    {
-        id: 'nanotube',
-        title: 'Nanotubes',
-        thumbnail: "url('./lesson_thumbnails/nanotube.png')",
-        speach_config: {},
-        text_config: {},
-        models_config: [],
-    },
+    // {
+    //     id: 'nanotube',
+    //     title: 'Nanotubes',
+    //     thumbnail: "url('./lesson_thumbnails/nanotube.png')",
+    //     speach: null,
+    //     text: null,
+    //     models: [],
+    // },
 
-    {
-        id: 'diamond',
-        title: 'Diamonds',
-        thumbnail: "url('./lesson_thumbnails/diamond.png')",
-        speach_config: {
+    // {
+    //     id: 'diamond',
+    //     title: 'Diamonds',
+    //     thumbnail: "url('./lesson_thumbnails/diamond.png')",
+    //     speach: null,
+    //     text: null,
+    //     models: [],
+    // },
 
-        },
-        text_config: {},
-        models_config: [],
-    },
+    // {
+    //     id: 'graphenes',
+    //     title: 'Graphenes',
+    //     thumbnail: "url('./lesson_thumbnails/graphene.png')",
+    //     speach: null,
+    //     text: null,
+    //     models: [],
+    // },
 
-    {
-        id: 'graphenes',
-        title: 'Graphenes',
-        thumbnail: "url('./lesson_thumbnails/graphene.png')",
-        speach_config: {
-        },
-        text_config: {},
-        models_config: [],
-    },
-
-    {
-        id: 'chirality',
-        title: 'Chirality',
-        thumbnail: "url('./lesson_thumbnails/chirality.png')",
-        speach_config: {
-
-        },
-        text_config: {},
-        models_config: [],
-    }
+    // {
+    //     id: 'chirality',
+    //     title: 'Chirality',
+    //     thumbnail: "url('./lesson_thumbnails/chirality.png')",
+    //     speach: null,
+    //     text: null,
+    //     models: [],
+    // }
 ]
+ 
 
+
+const gltfs: any = [];
+const scene: any = scene_configs.find( (scene: any) => scene.id === 'test_page' );
+
+async function LoadGLTFS() {
+
+    function ExtractGLTFMeshes(i: number) {
+        scene.models[i].mesh = gltfs[i].scene.children.filter( ( child: any ) => child.isMesh && child.__removed === undefined );
+        console.log(scene);
+    };
+
+    for (let i = 0; i < scene.models.length; i++) {
+        gltfs[i] = await LoadGLTF(i);
+        ExtractGLTFMeshes(i);
+    };
+
+};
+
+function LoadGLTF( i: number ) {
+    return new Promise( (resolve, reject) => {
+        const loader = new GLTFLoader();
+        const dracoLoader = new DRACOLoader();
+        dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/v1/decoders/' );
+        loader.setDRACOLoader( dracoLoader );
+        loader.load(
+            scene.models[i].path,
+            (gltf: any) => {
+                resolve(gltf);
+            },
+            (xhr: any) => {
+                console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+            },
+            (error: any) => {
+                console.error(error);
+                reject(error);
+            }
+        );
+    });
+};
+
+LoadGLTFS();
 export default scene_configs;
+
+
+// React Way: 
+// If using useLoader or useGLTF hook, you must use the <Suspense> component to wrap the component that uses the hook as loading is asynchronous 
+// requires suspension or promisification. 
+// Also, keep in mind that hooks are about React and jsx. The functions return jsx data, you need real vanilla object data here.
+
+/*
+function LoadGLTF_React( i: number ) {
+    const result: any = useLoader( GLTFLoader, scene.models[i].path );
+
+    return (
+        <Suspense fallback={ null }>
+            <primitive object={result.scene} />        
+        </Suspense>
+        
+    )
+};
+*/ 
+
+
+
 
 /* 
 import FullereneModels from '../../FullereneModels';
@@ -168,6 +293,28 @@ import GrapheneModels from '../../FullereneModels';
 */ 
 
 /* 
+
+
+// methods: {
+//     animations: [
+//         function rotate(ref: { current: { rotation: { y: number; }; }; }, delta: number) {
+//             ref.current.rotation.y -= delta;
+//         },
+//     ],
+// }
+
+
+
+// Old Camera Config Data Structure: 
+0: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
+1: { position: { x: 0.5, y: 0, z: 1 }, rotation: { x: 0.5, y: 0, z: 0 } },
+2: { position: { x: 1, y: 0, z: 1.5 }, rotation: { x: 1, y: 0, z: 0 } },
+3: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
+4: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
+5: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 } },
+
+
+
 
 textArrOfObj: [
     { section: 0, text: FullereneText[0] },

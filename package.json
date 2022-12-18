@@ -9,6 +9,7 @@
     "@react-three/drei": "9.38.0",
     "@react-three/fiber": "8.8.10",
     "@react-three/postprocessing": "^2.3.2",
+    "@types/three": "^0.146.0",
     "draco3dgltf": "1.4.1",
     "gltfjsx": "^5.0.2",
     "lamina": "1.0.6",

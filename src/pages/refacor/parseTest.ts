@@ -1,3 +1,4 @@
+// @ts-ignore
 // const fs = require('fs')
 // const path = require('path')
 // const prettier = require('prettier')
@@ -84,3 +85,5 @@
 
 // const check = gltfjsx('/lesson3_models/model0.glb', { output: 'jsx' });
 // console.log(check);
+const a = 1;
+export default a; 
