@@ -5,7 +5,7 @@ import { Canvas, useThree, useFrame  } from '@react-three/fiber';
 import { useSelector, useDispatch } from 'react-redux';
 import { increment } from './redux/actions';
 import Universe from './Universe';
-import scene_configs from './scene_configs';
+import scene_config_data from './scene_configs';
 import UpdateCamera from './UpdateCamera.jsx';
 import { CameraHelper } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
