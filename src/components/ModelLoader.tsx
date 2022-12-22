@@ -4,9 +4,6 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { useLoader } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
 
-
-
-
 const scene = {
     id: 'test_page',
     title: 'Fullerenes',
@@ -76,8 +73,7 @@ const scene = {
     },
 };
 
-
-// Getting all the gltfs into an array:
+// Pushing all gltfs into an array:
 const gltfs = [];
 
 function LoadGLTFS() {
@@ -87,15 +83,12 @@ function LoadGLTFS() {
 }
 
 function LoadGLTF(i) {
-
-    gltfs[i] = useLoader(GLTFLoader, scene.models[i].path, (loader: any) => {
+    gltfs[i] = useLoader( GLTFLoader, scene.models[i].path, (loader: any) => {
         const dracoLoader = new DRACOLoader();
         dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
         loader.setDRACOLoader(dracoLoader);
     });
-
-
-}
+};
 
 function ExtractMeshes() {
     for (let i = 0; i < scene.models.length; i++) {

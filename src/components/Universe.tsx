@@ -1,4 +1,4 @@
-import React, { useRef, memo } from 'react';
+import { useRef, memo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Points, PointMaterial } from '@react-three/drei';
 import { inSphere } from "maath/random";
@@ -28,7 +28,7 @@ function Universe( props: any ): JSX.Element {
 // size={.0045}
 
 // inCube
-function BigBang ( stars: number, radius: number ): Float32Array {
+function BigBang( stars: number, radius: number ): Float32Array {
     const p =  new Float32Array( stars );
 
     for ( let i = 0; i < stars; i++ ) {
