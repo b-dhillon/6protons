@@ -1,9 +1,9 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { reset } from '../../redux/actions';
+import { reset } from '../redux/actions';
 
 
-function GrapheneText(props){
-    const counter = useSelector(state => state.counter);
+function GrapheneText( props: any ){
+    const counter = useSelector(( state: any ) => state.counter);
     const dispatch = useDispatch();
 
     if (counter === 0)

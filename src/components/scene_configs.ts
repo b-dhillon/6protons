@@ -7,7 +7,7 @@ import { Suspense } from 'react';
 import * as THREE from 'three';
 
 /*
-// Design questions to answer: 
+// Architecture questions to answer: 
     - Will UI data be stored in the same object as the scene data? W
         - What UI data do we have?
             - Counter 
@@ -97,7 +97,7 @@ const scene_configs: Scene[] = [
         title: 'Fullerenes',
         thumbnail: "url('./lesson_thumbnails/fullereneTile.png')",
         section_count: 6,
-        
+
         universe: {
             radius: 10,
             size: 100
@@ -256,6 +256,14 @@ function LoadGLTF( i: number ) {
 
 LoadGLTFS();
 export default scene_configs;
+
+
+// Animations
+// https://threejs.org/examples/jsm/animation/AnimationClipCreator.js
+
+
+
+
 
 
 // React Way: 

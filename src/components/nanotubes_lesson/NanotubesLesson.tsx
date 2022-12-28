@@ -3,14 +3,11 @@ import { Canvas } from '@react-three/fiber';
 import Stars from '../Universe';
 import NanotubeModels from './NanotubeModels';
 import DataStore from '../redux/store';
-// import { TrackballControls } from '@react-three/drei'
 import { Provider } from 'react-redux';
 import '../../nanotube-styles.css'
 import LessonOverlay from '../LessonOverlay';
 
-
-
-function NanotubesLesson(props) {
+function NanotubesLesson( props: any ) {
   const lesson = 'Nanotubes';
 
   return (
@@ -34,6 +31,6 @@ function NanotubesLesson(props) {
       </Suspense>
     </>
   );
-}
+};
 
 export default NanotubesLesson; 

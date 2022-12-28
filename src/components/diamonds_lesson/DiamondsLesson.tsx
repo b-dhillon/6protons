@@ -5,22 +5,15 @@ import { OrbitControls } from '@react-three/drei'
 import Stars from '../Universe';
 import DataStore from '../redux/store';
 import DiamondModels from './DiamondModels';
-import LessonOverlay from '../../components/LessonOverlay';
+import LessonOverlay from '../LessonOverlay';
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 // import * as THREE from 'three'
 
 
-
-
-// function State() {
-//   const state = useThree();
-//   return state;
-// }
-
-function DiamondsLesson(props) {
+function DiamondsLesson(props: any) {
   const lesson = 'Diamonds';
 
-  const spotLight = useRef()
+  const spotLight: any = useRef();
   // useHelper(spotLight, BoxHelper, 'cyan')
 
 
@@ -46,7 +39,7 @@ function DiamondsLesson(props) {
           {/* <color attach="background" args={['white']} /> */}
 
 
-          <OrbitControls noZoom autoRotate autoRotateSpeed={.5} minPolarAngle={0} maxPolarAngle={Math.PI / 2}/>
+          <OrbitControls autoRotate autoRotateSpeed={.5} minPolarAngle={0} maxPolarAngle={Math.PI / 2}/>
           {/* <Environment files="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/aerodynamics_workshop_1k.hdr" /> */}
 
 

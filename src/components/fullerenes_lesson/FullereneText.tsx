@@ -4,8 +4,8 @@ import '../../global-styles.css'
 
 // Grabs the correct text for the lesson based on the counter state.
 export default function LessonText(){
-    const counter = useSelector(state => state.counter);
-    const [overflown, setOverflow] = useState();
+    const counter = useSelector((state: any) => state.counter);
+    const [overflown, setOverflow] = useState( false );
 
     // Checks if the text needs to be scrolled after each counter change
     // and updates overflown state.
@@ -13,22 +13,17 @@ export default function LessonText(){
         const element = document.querySelector('.text--wrapper2--p')
         if(element)
         {
-            const isOverflown = ({clientHeight, scrollHeight }) => {
-                return scrollHeight > clientHeight;
+            const isOverflown = ( element: { clientHeight: number, scrollHeight: number} ) => {
+                return element.scrollHeight > element.clientHeight;
             }
 
             // sets overflown to true or false
-            setOverflow(isOverflown(element));
+            setOverflow( isOverflown(element) );
         }
-    }, [counter])
+    }, [counter]);
 
-    if (counter === 0) {
-        return (
-            <>
-            </>
-        )
-    }
-
+    if (counter === 0) return (<></>);
+    
     if(counter === 1) {
         return (
             // Refactor all wrapper classes into one.
@@ -39,7 +34,7 @@ export default function LessonText(){
             </>
 
         )
-    }
+    };
 
     if(counter === 2) {
         return (

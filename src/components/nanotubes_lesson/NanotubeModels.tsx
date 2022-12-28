@@ -7,9 +7,9 @@ import { useGLTF } from '@react-three/drei';
 // useGLTF.preload('/lesson3_models/model0.glb');
 
 export default function NanotubeModels() {
-  const counter = useSelector(state => state.counter);
+  const counter = useSelector((state: any) => state.counter);
 
-  const ref = useRef();
+  const ref: any = useRef();
 
 
 
@@ -22,6 +22,7 @@ export default function NanotubeModels() {
       return (
         <group ref={ref} {...props} dispose={null} position={[0, .25, 0]} scale={0.5}>
           <group name="Scene" position={[0, -1, 0]}>
+            {/*@ts-ignore*/}
             <mesh name="Carbon_Nanotube" geometry={nodes.Carbon_Nanotube.geometry} material={materials['Carbon Nanotube Material']} position={[0, -4, 0]} />
           </group>
         </group>

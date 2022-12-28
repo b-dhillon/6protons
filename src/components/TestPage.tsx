@@ -10,7 +10,7 @@ import UpdateCamera from './UpdateCamera.jsx';
 import { CameraHelper } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
-import Test from './ModelLoader';
+import Test from './unused_components/ModelLoader';
 
 
 

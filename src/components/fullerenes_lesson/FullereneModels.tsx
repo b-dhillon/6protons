@@ -1,28 +1,29 @@
+// @ts-nocheck
 import React, { useRef, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useGLTF, Merged } from '@react-three/drei';
 // import { useFrame, } from '@react-three/fiber'
 
 
-export default function FullereneModels(props)
+export default function FullereneModels( props: any )
 {
   const { nodes } = useGLTF('lesson1_models/model0.glb');
-  const counter = useSelector(state => state.counter);
+  const counter = useSelector((state: any ) => state.counter);
 
   const centerPosition = [0, 0, 0];
   const leftPosition = [.3, 0, 0];
 
-  let scale;
+  let scale: number;
   if (counter === 0) scale = 0.24;
   else if (counter === 5) scale = 0.06;
   else scale = .15;
 
-  const instances = useMemo(
-  () => ({
+  const instances = useMemo( () => ({
     CarbonInstanceSphere: nodes.carbonInstanceSphere,
     SoccerInstanceSphere: nodes.soccerInstanceSphere
   }),
   [nodes]);
+
   nodes.soccerInstanceSphere.material = nodes.carbonBonds.material;
 
   /*

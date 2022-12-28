@@ -4,10 +4,10 @@ import { Provider } from 'react-redux';
 import Stars from '../Universe';
 import DataStore from '../redux/store';
 import GrapheneModels from './GrapheneModels.jsx';
-import LessonOverlay from '../../components/LessonOverlay';
+import LessonOverlay from '../LessonOverlay';
 
 
-function GrapheneLesson(props) {
+function GrapheneLesson( props: any  ) {
   const lesson = 'Graphenes';
 
   return (
