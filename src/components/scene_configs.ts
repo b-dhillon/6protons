@@ -16,7 +16,7 @@ import {
 
 /*
 // Architecture questions to answer: 
-    - Will UI data be stored in the same object as the scene data? W
+    - Will UI data be stored in the same object as the scene data?
         - What UI data do we have?
             - Counter 
             - Future data...?
@@ -48,7 +48,6 @@ type AnimationAction = {
     zeroSlopeAtEnd: boolean;
 };
 
-
 type Mesh = {
     name: string;
     position: THREE.Vector3;
@@ -58,8 +57,6 @@ type Mesh = {
     geometry: THREE.BufferGeometry;
     material: THREE.Material;
 };
-
-
 
 type Model = {
     id: string;
@@ -137,7 +134,7 @@ const scene_configs: Scene[] = [
         models: [
             {
                 id: 'model0',
-                path: '/lesson4_models/model1.glb',
+                path: '/lesson3_models/model0.glb',
                 positions: [
                     { x: 0, y: 0, z: -1 },
                 ],
@@ -154,7 +151,7 @@ const scene_configs: Scene[] = [
             },
             {
                 id: 'model1',
-                path: '/lesson3_models/model0.glb',
+                path: '/lesson4_models/model1.glb',
                 positions: [
                     { x: 0, y: 0, z: -1 }
                 ],
@@ -216,7 +213,7 @@ function LoadGLTF( i: number ) {
                 resolve(gltf);
             },
             (xhr: any) => {
-                console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+                // console.log((xhr.loaded / xhr.total * 100) + '% loaded');
             },
             (error: any) => {
                 console.error(error);

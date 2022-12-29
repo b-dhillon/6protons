@@ -31,11 +31,11 @@ To do
 */
 
 const _page: string = 'test_page';
-const _scene: object = scene_config_data.find( ( scene: { id: string; } ) => scene.id === page );
+const _scene: object = scene_config_data.find( ( scene: { id: string; } ) => scene.id === _page );
 const _models: object[] = _scene.models; 
 const _camera: object = _scene.camera;
 
-export default function Page( props: { page: string; } ) {
+export default function Page( ) {
 
     return (
         <Suspense>
@@ -53,9 +53,9 @@ function Scene( ) {
 
             <Canvas>
 
-                <Universe universe_config={ props.scene_config.universe_config }/>
-                <Camera counter={ counter } camera_config={ props.scene_config.camera_config } />
-                <Models scene_config={props.scene_config} models_config={ props.scene_config.models_config } set_scene_config={props.set_scene_config}/>
+                <Universe universe_config={ _scene.universe_config }/>
+                <Camera counter={ counter } camera_config={ _camera } />
+                {/* <Models scene_config={ _scene } models_config={ _models } /> */}
                 <ambientLight intensity={10}/>
                 <spotLight position={[-10, 10, 10] } intensity={.9}/>
                 <Plane position={[0,0,0]} scale={[.4, .4, 1]} />
@@ -88,16 +88,16 @@ function Camera( props: { counter: number, camera_config: any } ) {
 
 
 // Calls CreateModel() for each model in models_config and returns an array of models
-function Models() {
+// function Models() {
     
-    const models = _models.map( ( model_config: any , i: number ) => <CreateModel i={i} key={ model_config.id } model_config={ model_config }/>)
+//     const models = _models.map( ( model_config: any , i: number ) => <CreateModel i={i} key={ model_config.id } model_config={ model_config }/>)
 
-    return (
-        <>
-            {models}
-        </>
-    )
-};
+//     return (
+//         <>
+//             {models}
+//         </>
+//     )
+// };
 
 
 // Grabs meshes from scene_config_data and creates a new react mesh for each one: 
@@ -107,7 +107,7 @@ function CreateModel( props: { model_config: any, i: number } ) {
 
     modelRefs[props.i] = useRef();
 
-    const meshes = scene.models[i].meshes.map( ( mesh: any ) => {
+    const meshes = _scene.models[props.i].meshes.map( ( mesh: any ) => {
             return <mesh  key={ mesh.uuid } name={ mesh.name }  geometry={ mesh.geometry }  material={ mesh.material }  position={ mesh.position } />
         }
     );

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useGLTF, MeshRefractionMaterial } from '@react-three/drei';
@@ -11,7 +12,7 @@ import { MeshBasicMaterial } from 'three';
 
 function DiamondModels() {
   const ref = useRef();
-  const counter = useSelector(state => state.counter);
+  const counter = useSelector((state: any) => state.counter);
   const texture = useLoader(RGBELoader, 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/aerodynamics_workshop_1k.hdr')
 
 

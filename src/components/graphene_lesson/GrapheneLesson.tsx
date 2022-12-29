@@ -3,7 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { Provider } from 'react-redux';
 import Stars from '../Universe';
 import DataStore from '../redux/store';
-import GrapheneModels from './GrapheneModels.jsx';
+import GrapheneModels from './GrapheneModels';
 import LessonOverlay from '../LessonOverlay';
 
 

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import Home from './home/Home';
-import FullerenesLesson from './fullerenes_lesson/FullerenesLesson.jsx';
-import DiamondsLesson from './diamonds_lesson/DiamondsLesson.jsx';
-import NanotubesLesson from './nanotubes_lesson/NanotubesLesson.jsx';
-import GrapheneLesson from './graphene_lesson/GrapheneLesson.jsx';
+import FullerenesLesson from './fullerenes_lesson/FullerenesLesson';
+import DiamondsLesson from './diamonds_lesson/DiamondsLesson';
+import NanotubesLesson from './nanotubes_lesson/NanotubesLesson';
+import GrapheneLesson from './graphene_lesson/GrapheneLesson';
 import TestPage from './TestPage';
 
 export default function App() {
@@ -28,7 +28,7 @@ export default function App() {
   if(page === 'fullerene') return <FullerenesLesson setPage={handlePage} /> ;
   if(page === 'diamond') return <DiamondsLesson setPage={handlePage} />;
   if(page === 'graphene') return <GrapheneLesson setPage={handlePage} />;
-  if (page === 'test_page') return <TestPage page={page}/>;
+  if (page === 'test_page') return <TestPage />;
   else return <NanotubesLesson setPage={handlePage} />;
 };
 
