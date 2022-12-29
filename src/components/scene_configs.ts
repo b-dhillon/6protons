@@ -5,6 +5,14 @@ import { useEffect, useRef } from 'react';
 import { useGLTF } from '@react-three/drei';
 import { Suspense } from 'react';
 import * as THREE from 'three';
+import {
+	AnimationClip,
+	BooleanKeyframeTrack,
+	ColorKeyframeTrack,
+	NumberKeyframeTrack,
+	// Vector3,
+	VectorKeyframeTrack
+} from 'three';
 
 /*
 // Architecture questions to answer: 
@@ -175,43 +183,7 @@ const scene_configs: Scene[] = [
         speach: null,
         music: null
     },
-
-    // {
-    //     id: 'nanotube',
-    //     title: 'Nanotubes',
-    //     thumbnail: "url('./lesson_thumbnails/nanotube.png')",
-    //     speach: null,
-    //     text: null,
-    //     models: [],
-    // },
-
-    // {
-    //     id: 'diamond',
-    //     title: 'Diamonds',
-    //     thumbnail: "url('./lesson_thumbnails/diamond.png')",
-    //     speach: null,
-    //     text: null,
-    //     models: [],
-    // },
-
-    // {
-    //     id: 'graphenes',
-    //     title: 'Graphenes',
-    //     thumbnail: "url('./lesson_thumbnails/graphene.png')",
-    //     speach: null,
-    //     text: null,
-    //     models: [],
-    // },
-
-    // {
-    //     id: 'chirality',
-    //     title: 'Chirality',
-    //     thumbnail: "url('./lesson_thumbnails/chirality.png')",
-    //     speach: null,
-    //     text: null,
-    //     models: [],
-    // }
-]
+];
  
 
 
@@ -261,10 +233,51 @@ export default scene_configs;
 // Animations
 // https://threejs.org/examples/jsm/animation/AnimationClipCreator.js
 
+function RotationAnimation( period: number, axis = 'x' ) {
+    const times = [ 0, period ], values = [ 0, 360 ];
+    const trackName = '.rotation[' + axis + ']';
+    const track = new NumberKeyframeTrack( trackName, times, values );
+    return new AnimationClip( trackName, period, [ track ] );
+};
 
 
 
 
+// {
+//     id: 'nanotube',
+//     title: 'Nanotubes',
+//     thumbnail: "url('./lesson_thumbnails/nanotube.png')",
+//     speach: null,
+//     text: null,
+//     models: [],
+// },
+
+// {
+//     id: 'diamond',
+//     title: 'Diamonds',
+//     thumbnail: "url('./lesson_thumbnails/diamond.png')",
+//     speach: null,
+//     text: null,
+//     models: [],
+// },
+
+// {
+//     id: 'graphenes',
+//     title: 'Graphenes',
+//     thumbnail: "url('./lesson_thumbnails/graphene.png')",
+//     speach: null,
+//     text: null,
+//     models: [],
+// },
+
+// {
+//     id: 'chirality',
+//     title: 'Chirality',
+//     thumbnail: "url('./lesson_thumbnails/chirality.png')",
+//     speach: null,
+//     text: null,
+//     models: [],
+// }
 
 // React Way: 
 // If using useLoader or useGLTF hook, you must use the <Suspense> component to wrap the component that uses the hook as loading is asynchronous 
@@ -285,8 +298,6 @@ function LoadGLTF_React( i: number ) {
 */ 
 
 
-
-
 /* 
 import FullereneModels from '../../FullereneModels';
 
@@ -301,7 +312,6 @@ import GrapheneModels from '../../FullereneModels';
 */ 
 
 /* 
-
 
 // methods: {
 //     animations: [
