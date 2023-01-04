@@ -5,6 +5,8 @@ import DiamondsLesson from './diamonds_lesson/DiamondsLesson';
 import NanotubesLesson from './nanotubes_lesson/NanotubesLesson';
 import GrapheneLesson from './graphene_lesson/GrapheneLesson';
 import TestPage from './TestPage';
+import app_data from './scene_configs';
+
 
 export default function App() {
   // console.log('App() is called');
@@ -15,6 +17,7 @@ export default function App() {
   // add typescript types to state:
   const [page, setPage] = useState('test_page');
   const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(app_data);
 
   function handleLoading() {
     setLoading(false);

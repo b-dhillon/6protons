@@ -189,6 +189,7 @@ const scene: any = scene_configs.find( (scene: any) => scene.id === 'test_page' 
 
 async function LoadGLTFS() {
 
+    // Adds gltf meshes to the models array above:
     function ExtractGLTFMeshes(i: number) {
         scene.models[i].mesh = gltfs[i].scene.children.filter( ( child: any ) => child.isMesh && child.__removed === undefined );
         console.log(scene);
@@ -236,6 +237,47 @@ function RotationAnimation( period: number, axis = 'x' ) {
     const track = new NumberKeyframeTrack( trackName, times, values );
     return new AnimationClip( trackName, period, [ track ] );
 };
+
+const a = RotationAnimation( 1, 'x' );
+console.log(a); // AnimationClip { name: '.rotation[x]', duration: 1, tracks: [ NumberKeyframeTrack { name: '.rotation[x]', times: Float32Array(2), values: Float32Array(2) } ] }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -294,19 +336,6 @@ function LoadGLTF_React( i: number ) {
 };
 */ 
 
-
-/* 
-import FullereneModels from '../../FullereneModels';
-
-import NanotubeText from '../pages/fullerenes_lesson/FullereneText';
-import NanotubeModels from '../../FullereneModels';
-
-import DiamondText from '../pages/fullerenes_lesson/FullereneText';
-import DiamondModels from '../../FullereneModels';
-
-import GrapheneText from '../pages/fullerenes_lesson/FullereneText';
-import GrapheneModels from '../../FullereneModels';
-*/ 
 
 /* 
 

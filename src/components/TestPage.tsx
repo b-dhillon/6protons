@@ -30,10 +30,7 @@ To do
 - Clean up and get a high level understanding of everything that you've re-factored.
 */
 
-const _page: string = 'test_page';
-const _scene: object = scene_config_data.find( ( scene: { id: string; } ) => scene.id === _page );
-const _models: object[] = _scene.models; 
-const _camera: object = _scene.camera;
+
 
 export default function Page( ) {
 
@@ -47,6 +44,11 @@ export default function Page( ) {
 
 // Renders the 3D scene.
 function Scene( ) {
+    const _page: string = 'test_page';
+    const _scene: object = scene_config_data.find( ( scene: { id: string; } ) => scene.id === _page );
+    const _models: object[] = _scene.models; 
+    const _camera: object = _scene.camera;
+
     const counter = useSelector( ( state: any ) => state.counter );
     return (
         <Suspense>
@@ -55,7 +57,8 @@ function Scene( ) {
 
                 <Universe universe_config={ _scene.universe_config }/>
                 <Camera counter={ counter } camera_config={ _camera } />
-                {/* <Models scene_config={ _scene } models_config={ _models } /> */}
+                <Models _scene={ _scene } _models={ _models } />
+
                 <ambientLight intensity={10}/>
                 <spotLight position={[-10, 10, 10] } intensity={.9}/>
                 <Plane position={[0,0,0]} scale={[.4, .4, 1]} />
@@ -88,31 +91,32 @@ function Camera( props: { counter: number, camera_config: any } ) {
 
 
 // Calls CreateModel() for each model in models_config and returns an array of models
-// function Models() {
+function Models( props: any ) {
     
-//     const models = _models.map( ( model_config: any , i: number ) => <CreateModel i={i} key={ model_config.id } model_config={ model_config }/>)
-
-//     return (
-//         <>
-//             {models}
-//         </>
-//     )
-// };
+    const models = props._models.map( ( _model: any , i: number ) => <CreateModel i={i} key={ _model.id } _models={ props._models } _scene={ props._scene }/>)
+    return (
+        <>
+            { models }
+        </>
+    )
+};
 
 
 // Grabs meshes from scene_config_data and creates a new react mesh for each one: 
 // These will be mounted to the Three.state.scene.children array when you call Models();
 let modelRefs: any[] = [];
-function CreateModel( props: { model_config: any, i: number } ) {
+function CreateModel( props: any ) {
 
     modelRefs[props.i] = useRef();
 
-    const meshes = _scene.models[props.i].meshes.map( ( mesh: any ) => {
+    console.log(props._models[props.i].meshes);
+
+    const meshes = props._models[props.i].meshes.map( ( mesh: any ) => {
             return <mesh  key={ mesh.uuid } name={ mesh.name }  geometry={ mesh.geometry }  material={ mesh.material }  position={ mesh.position } />
         }
     );
 
-    const initial_position = scene.models[i].positions[0];
+    const initial_position = props._scene.models[i].positions[0];
     return (
         <group 
             scale={1} { ...props }
