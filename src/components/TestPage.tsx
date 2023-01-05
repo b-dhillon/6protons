@@ -1,16 +1,15 @@
 // @ts-nocheck
-import { Plane, OrbitControls, PerspectiveCamera, useGLTF, useAnimations, useHelper } from '@react-three/drei';
-import { Suspense, useState, useRef, useEffect, Key } from 'react';
+import { Plane, OrbitControls, PerspectiveCamera, useHelper } from '@react-three/drei';
+import { Suspense, useRef, useEffect } from 'react';
 import { Canvas, useThree, useFrame  } from '@react-three/fiber';
 import { useSelector, useDispatch } from 'react-redux';
 import { increment } from './redux/actions';
-import Universe from './Universe';
-import scene_config_data from './scene_configs';
-import UpdateCamera from './UpdateCamera.jsx';
 import { CameraHelper } from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
-import Test from './unused_components/ModelLoader';
+import Universe from './Universe';
+// import scene_config_data from './scene_configs';
+// import UpdateCamera from './UpdateCamera.jsx';
+// import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+// import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 
 
 

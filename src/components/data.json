@@ -1,0 +1,66 @@
+{
+    "test_page": {
+        "id": "test_page",
+        "title": "Fullerenes",
+        "thumbnail": "url('./lesson_thumbnails/fullereneTile.png')",
+        "section_count": 6,
+
+        "universe": {
+            "radius": 10,
+            "size": 100
+        },
+
+        "camera": {
+            "positions": [
+                { "x": 0, "y": 0, "z": 0 },
+                { "x": 0.5, "y": 0, "z": 1 },
+                { "x": 1, "y": 0, "z": 1.5 },
+                { "x": 0, "y": 0, "z": 0 },
+                { "x": 0, "y": 0, "z": 0 },
+                { "x": 0, "y": 0, "z": 0 }
+            ],
+            "rotations": [
+                { "_x": 0, "_y": 0, "_z": 0 },
+                { "_x": 0.5, "_y": 0, "_z": 0 },
+                { "_x": 1, "_y": 0, "_z": 0 },
+                { "_x": 0, "_y": 0, "_z": 0 },
+                { "_x": 0, "_y": 0, "_z": 0 },
+                { "_x": 0, "_y": 0, "_z": 0 }
+            ],
+            "animations": [
+            ]
+        },
+
+        "models": [
+            {
+                "id": "model0",
+                "path": "/lesson3_models/model0.glb",
+                "positions": [
+                    { "x": 0, "y": 0, "z": -1 }
+                ],
+                "rotations": [
+                    { "_x": 0, "_y": 0, "_z": 0 }
+                ],
+                "animations": [],
+                "meshes": null,
+                "nodes": null, 
+                "materials": null,
+                "visible": true,
+                "name": "model0",
+                "scale": { "x": 1, "y": 1, "z": 1 }
+            }
+        ],
+
+        "text": [
+            "",
+            "In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas...",
+            "The result? Novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered. This molecule would go on to be named Buckminsterfullerene. Often shortened to fullerene, and nicknamed Buckyball.",
+            "Each molecule of Fullerene is composed of pure carbon. The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball. Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.",
+            "For example, when a buckyball is doped via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known. These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems. Scientists have even turned their attention to buckyballs in their quest for a cure for AIDS.",
+            "How can buckyballs help cure aids? An enzyme (HIV-1-Protease) that is required for HIV to reproduce, exhibits a nonpolar pocket in its three-dimensional structure. On the model to the right, notice how the nonpolar Fullerene fits the exact diameter of the enzyme's binding pocket. If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible blockers."
+        ],
+
+        "speach": null,
+        "music": null
+    }
+}

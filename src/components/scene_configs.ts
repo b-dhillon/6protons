@@ -191,7 +191,7 @@ const pages = {
     },
 };
 
-function LoadGLTF( i: number ) {
+function LoadModel( i: number ) {
     return new Promise( (resolve, reject) => {
         const loader = new GLTFLoader();
         const dracoLoader = new DRACOLoader();
@@ -201,9 +201,10 @@ function LoadGLTF( i: number ) {
             pages.test_page.models[i].path,
             (gltf: any) => {
                 resolve(gltf);
+                console.log('loaded');
             },
             (xhr: any) => {
-                // console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+                // console.log((xhr.loaded / xhr.total) + 'loaded');
             },
             (error: any) => {
                 console.error(error);
@@ -213,31 +214,67 @@ function LoadGLTF( i: number ) {
     });
 };
 
-
-async function LoadAllGLTFSOfPage( ) {
-    const gltfs: any = [];
+async function LoadAllModelsOfPage() {
+    const models: any = [];
 
     for (let i = 0; i < pages.test_page.models.length; i++) {
-        gltfs[i] = await LoadGLTF(i);
+        models[i] = await LoadModel(i);
     };
 
-    return gltfs; // [model0, model1, model2, ...]
+    return models; // [model0, model1, model2, ...]
 };
 
-async function AddGLTFSTo_Page() {
-    const gltfs = await LoadAllGLTFSOfPage();
-    const loaded_meshes = gltfs.map( (gltf: any) => gltf.scene.children.filter( ( child: any ) => child.isMesh && child.__removed === undefined )); // [ [mesh0, mesh1, mesh2, ...], [mesh0, mesh1, mesh2, ...], [mesh0, mesh1, mesh2, ...], ... ]
+async function ExtractAllMeshesOfPage() {
+    const models = await LoadAllModelsOfPage();
+    const extracted_meshes = models.map( (gltf: any) => gltf.scene.children.filter( ( child: any ) => child.isMesh && child.__removed === undefined ));
 
-    // copy the pages object. then for each model[i], add loaded_meshes[i].
+    return extracted_meshes; // [ [mesh0, mesh1, mesh2, ...], [mesh0, mesh1, mesh2, ...], [mesh0, mesh1, mesh2, ...], ... ]
+}
+
+async function AddAllMeshesToPageData() {
+    const extracted_meshes = await ExtractAllMeshesOfPage();
     const new_pages = JSON.parse(JSON.stringify(pages));
     new_pages.test_page.models = new_pages.test_page.models.map( (model: any, i: number) => {
-        return {
-            ...model,
-            meshes: loaded_meshes[i]
-        };
+        return { ...model, meshes: extracted_meshes[i] }
     });
     return new_pages;
-}
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// copy the pages object. then for each model[i], add loaded_meshes[i].
+// const new_pages = JSON.parse(JSON.stringify(pages));
+// new_pages.test_page.models = new_pages.test_page.models.map( (model: any, i: number) => {
+//     return {
+//         ...model,
+//         meshes: loaded_meshes[i]
+//     };
+// });
+// return new_pages;
+
+// function AddAllMeshesToPageData() {
+//     ExtractAllMeshesOfPage().then( (extracted_meshes: any) => {
+//         const new_pages = JSON.parse(JSON.stringify(pages));
+//         new_pages.test_page.models = new_pages.test_page.models.map( (model: any, i: number) => {
+//             return {
+//                 ...model,
+//                 meshes: extracted_meshes[i]
+//             };
+//         });
+//         return new_pages;
+//     });
+// };
 
 // const loaded_meshes = gltfs[i].scene.children.filter( ( child: any ) => child.isMesh && child.__removed === undefined );
 // pages.test_page.models[i].meshes = loaded_meshes;

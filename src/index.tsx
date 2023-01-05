@@ -1,22 +1,12 @@
-import React, { Suspense } from 'react';
-import './global-styles.css';
-import App from './components/App';
 import { Provider } from 'react-redux';
-import store from './components/redux/store'
-
-// New way of rendering the app:
 import { createRoot } from 'react-dom/client';
+import React from 'react';
+import App from './components/App';
+import store from './components/redux/store'
+import './global-styles.css';
+
 const container = document.getElementById('root');
 const root = createRoot(container!); // createRoot(container!) if you use TypeScript
-
-// function MyComponent() {
-//   return (
-//     <Provider>
-//       <App >
-//     <Provider>
-//   )
-// }
-
 root.render(
   <React.StrictMode>
     <Provider store={store}>
@@ -25,6 +15,9 @@ root.render(
   </React.StrictMode>
 
 );
+
+
+/* Old way of rendering:
 
 // ReactDOM.render(<MyComponent />, document.getElementById('root'));
 
@@ -37,9 +30,5 @@ root.render(
 //   // </React.StrictMode>,
 //   document.getElementById('root')
 // )
-
-
-/* Old way of rendering:
-
 
 */
