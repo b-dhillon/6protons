@@ -216,18 +216,15 @@ function LoadModel( i: number ) {
 
 async function LoadAllModelsOfPage() {
     const models: any = [];
-
     for (let i = 0; i < pages.test_page.models.length; i++) {
         models[i] = await LoadModel(i);
     };
-
     return models; // [model0, model1, model2, ...]
 };
 
 async function ExtractAllMeshesOfPage() {
     const models = await LoadAllModelsOfPage();
     const extracted_meshes = models.map( (gltf: any) => gltf.scene.children.filter( ( child: any ) => child.isMesh && child.__removed === undefined ));
-
     return extracted_meshes; // [ [mesh0, mesh1, mesh2, ...], [mesh0, mesh1, mesh2, ...], [mesh0, mesh1, mesh2, ...], ... ]
 }
 
@@ -240,6 +237,7 @@ async function AddAllMeshesToPageData() {
     return new_pages;
 };
 
+console.log( AddAllMeshesToPageData() );
 
 
 
