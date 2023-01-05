@@ -5,7 +5,7 @@ import NanotubeModels from './NanotubeModels';
 import DataStore from '../redux/store';
 import { Provider } from 'react-redux';
 import '../../nanotube-styles.css'
-import LessonOverlay from '../LessonOverlay';
+// import LessonOverlay from '../LessonOverlay';
 
 function NanotubesLesson( props: any ) {
   const lesson = 'Nanotubes';
@@ -27,7 +27,7 @@ function NanotubesLesson( props: any ) {
           </Provider>
         </Canvas>
 
-        <LessonOverlay lesson={lesson} setPage={props.setPage}/>
+        {/* <LessonOverlay lesson={lesson} setPage={props.setPage}/> */}
       </Suspense>
     </>
   );

@@ -4,7 +4,8 @@ import { Provider } from 'react-redux';
 import Stars from '../Universe';
 import DataStore from '../redux/store';
 import GrapheneModels from './GrapheneModels';
-import LessonOverlay from '../LessonOverlay';
+
+// import LessonOverlay from '../LessonOverlay';
 
 
 function GrapheneLesson( props: any  ) {
@@ -26,7 +27,7 @@ function GrapheneLesson( props: any  ) {
           <ambientLight intensity={3} />
         </Canvas>
 
-        <LessonOverlay lesson={lesson} setPage={props.setPage}/>
+        {/* <LessonOverlay lesson={lesson} setPage={props.setPage}/> */}
       </Suspense>
     </>
   );

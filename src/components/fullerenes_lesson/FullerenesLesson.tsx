@@ -3,7 +3,7 @@ import { Canvas,  } from '@react-three/fiber';
 import { Provider } from 'react-redux';
 import Stars from '../Universe';
 import DataStore from '../redux/store';
-import LessonOverlay from '../LessonOverlay';
+// import LessonOverlay from '../LessonOverlay';
 import FullereneModelsCombined from './FullereneModels';
 // import { OrbitControls } from '@react-three/drei'
 // import { Stats } from '@react-three/drei';
@@ -40,7 +40,7 @@ export default function FullerenesLesson( props: any ) {
             <ambientLight intensity={.3} />
         </Canvas>
 
-        <LessonOverlay lesson={lesson} setPage={props.setPage}/>
+        {/* <LessonOverlay lesson={lesson} setPage={props.setPage}/> */}
 
       </Suspense>
     </>

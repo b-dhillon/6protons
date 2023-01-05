@@ -5,7 +5,7 @@ import { OrbitControls } from '@react-three/drei'
 import Stars from '../Universe';
 import DataStore from '../redux/store';
 import DiamondModels from './DiamondModels';
-import LessonOverlay from '../LessonOverlay';
+// import LessonOverlay from '../LessonOverlay';
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 // import * as THREE from 'three'
 
@@ -61,7 +61,7 @@ function DiamondsLesson(props: any) {
 
         </Canvas>
 
-        <LessonOverlay lesson={lesson} setPage={props.setPage}/>
+        {/* <LessonOverlay lesson={lesson} setPage={props.setPage}/> */}
       </Suspense>
     </>
   );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import './global-styles.css';
 import App from './components/App';
 import { Provider } from 'react-redux';
@@ -18,9 +18,12 @@ const root = createRoot(container!); // createRoot(container!) if you use TypeSc
 // }
 
 root.render(
+  <React.StrictMode>
     <Provider store={store}>
-      <App />
+        <App />
     </Provider>
+  </React.StrictMode>
+
 );
 
 // ReactDOM.render(<MyComponent />, document.getElementById('root'));

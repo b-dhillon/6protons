@@ -5,7 +5,7 @@ import DiamondsLesson from './diamonds_lesson/DiamondsLesson';
 import NanotubesLesson from './nanotubes_lesson/NanotubesLesson';
 import GrapheneLesson from './graphene_lesson/GrapheneLesson';
 import TestPage from './TestPage';
-import app_data from './scene_configs';
+import Datas from './scene_configs';
 
 
 export default function App() {
@@ -14,10 +14,11 @@ export default function App() {
   // Should I store all app data (scene_configs) in App() state? 
   // I think I should when I decide to programatically populate scene_configs in the future.
 
-  // add typescript types to state:
-  const [page, setPage] = useState('test_page');
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(app_data);
+  const [page, setPage] = useState( 'test_page' );
+  const [loading, setLoading] = useState( true );
+  const [datas, setDatas] = useState( Datas() );
+
+  const data = datas.then( (res: any ) => res.find( ( data: { id: string; } ) => data.id === page ));
 
   function handleLoading() {
     setLoading(false);
@@ -31,8 +32,12 @@ export default function App() {
   if(page === 'fullerene') return <FullerenesLesson setPage={handlePage} /> ;
   if(page === 'diamond') return <DiamondsLesson setPage={handlePage} />;
   if(page === 'graphene') return <GrapheneLesson setPage={handlePage} />;
-  if (page === 'test_page') return <TestPage />;
-  else return <NanotubesLesson setPage={handlePage} />;
+  if(page === 'nanotube') return <NanotubesLesson setPage={handlePage} />;
+  console.log(data);
+
+  //@ts-ignore
+  if (page === 'test_page' ) return <TestPage data={ data } />;
+  else return <p>Error</p>;
 };
 
 

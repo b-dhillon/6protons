@@ -32,22 +32,25 @@ To do
 
 
 
-export default function Page( ) {
+export default function Page( props ): any {
+
+    const _scene = props.data;
 
     return (
         <Suspense>
             <UI />
-            <Scene  />
+            <Scene _scene={ _scene } />
         </Suspense>
     );
 };
 
 // Renders the 3D scene.
-function Scene( ) {
-    const _page: string = 'test_page';
-    const _scene: object = scene_config_data.find( ( scene: { id: string; } ) => scene.id === _page );
-    const _models: object[] = _scene.models; 
-    const _camera: object = _scene.camera;
+function Scene( props ): any {
+
+    const _universe = props._scene.universe;
+    const _scene = props._scene;
+    const _models: object[] = props._scene.models; 
+    const _camera: object = props._scene.camera; 
 
     const counter = useSelector( ( state: any ) => state.counter );
     return (
@@ -55,9 +58,9 @@ function Scene( ) {
 
             <Canvas>
 
-                <Universe universe_config={ _scene.universe_config }/>
-                <Camera counter={ counter } camera_config={ _camera } />
-                <Models _scene={ _scene } _models={ _models } />
+                <Universe _universe={ _universe }/>
+                <Camera counter={ counter } _camera={ _camera } />
+                {/* <Models _scene={ _scene } _models={ _models } /> */}
 
                 <ambientLight intensity={10}/>
                 <spotLight position={[-10, 10, 10] } intensity={.9}/>
@@ -73,10 +76,10 @@ function Scene( ) {
 };
 
 // Creates the camera, handles its updates and renders the cameraHelper when called.
-function Camera( props: { counter: number, camera_config: any } ) {
+function Camera( props: { counter: number, _camera: any } ) {
     const ref = useRef();
     useHelper(ref, CameraHelper);
-    console.log( useThree( (state) => state ) );
+    // console.log( useThree( (state) => state ) );
     // const set = useThree( (state) => state.set ); 
     // useEffect( () => set({ camera: ref.current }) );
 
@@ -90,10 +93,11 @@ function Camera( props: { counter: number, camera_config: any } ) {
 };
 
 
-// Calls CreateModel() for each model in models_config and returns an array of models
+// Calls CreateModel() for each model in _models and returns an array of models to mount to scene graph
 function Models( props: any ) {
+    // console.log(props._models); // 2 objects
     
-    const models = props._models.map( ( _model: any , i: number ) => <CreateModel i={i} key={ _model.id } _models={ props._models } _scene={ props._scene }/>)
+    const models = props._models.map( ( _model: any , i: number ) => <CreateModel _i={i} key={ _model.id } _models={ props._models } _scene={ props._scene }/>)
     return (
         <>
             { models }
@@ -106,23 +110,31 @@ function Models( props: any ) {
 // These will be mounted to the Three.state.scene.children array when you call Models();
 let modelRefs: any[] = [];
 function CreateModel( props: any ) {
+    modelRefs[props._i] = useRef();
 
-    modelRefs[props.i] = useRef();
+    console.log('CreateModel() called');
+    // console.log(props._i);
+    // console.log(props._models[0]);
+    // console.log(props._models[0]._mesh);
 
-    console.log(props._models[props.i].meshes);
 
-    const meshes = props._models[props.i].meshes.map( ( mesh: any ) => {
-            return <mesh  key={ mesh.uuid } name={ mesh.name }  geometry={ mesh.geometry }  material={ mesh.material }  position={ mesh.position } />
+    // console.log(props._models[0].meshes);
+    // console.log(props._models[1]);
+
+    // console.log(props._models[props._i].meshes);
+
+    const meshes = props._models[props._i]._mesh.map( ( _mesh: any ) => {
+            return <mesh  key={ _mesh.uuid } name={ _mesh.name }  geometry={ _mesh.geometry }  material={ _mesh.material }  position={ _mesh.position } />
         }
     );
 
-    const initial_position = props._scene.models[i].positions[0];
+    const initial_position = props._scene.models[props._i].positions[0];
     return (
         <group 
             scale={1} { ...props }
-            animations={ [ rotate ] } 
+            animations={ null } 
             dispose={ null } 
-            name={`${page} model${ props.i }` } 
+            name={`model${ props.i }` } 
             key={ `model${ props.i }` } 
             ref={ modelRefs[ props.i ] } 
             position={ [ initial_position.x, initial_position.y, initial_position.z ]
