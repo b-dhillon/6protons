@@ -16,10 +16,10 @@ import {
 
 /*
 // Architecture questions to answer: 
-    - Will UI data be stored in the same object as the scene data?
-        - What UI data do we have?
+    - Will UI pages be stored in the same object as the scene pages?
+        - What UI pages do we have?
             - Counter 
-            - Future data...?
+            - Future pages...?
     
     - Is it better to use React Three Fiber or Three.js directly? Or a mixter of the two. if mixture, what does that look like?
 */
@@ -103,136 +103,145 @@ function Rotation( period: number, axis = 'x' ) {
     return new AnimationClip( trackName, period, [ track ] );
 };
 
-export default async function Data() {
 
-    const scene_configs: Scene[] = [
-        {
-            id: 'test_page',
-            title: 'Fullerenes',
-            thumbnail: "url('./lesson_thumbnails/fullereneTile.png')",
-            section_count: 6,
-    
-            universe: {
-                radius: 10,
-                size: 100
-            },
-    
-            camera: {
+const pages = {
+    test_page: {
+        id: 'test_page',
+        title: 'Fullerenes',
+        thumbnail: "url('./lesson_thumbnails/fullereneTile.png')",
+        section_count: 6,
+
+        universe: {
+            radius: 10,
+            size: 100
+        },
+
+        camera: {
+            positions: [
+                { x: 0, y: 0, z: 0 },
+                { x: 0.5, y: 0, z: 1 },
+                { x: 1, y: 0, z: 1.5 },
+                { x: 0, y: 0, z: 0 },
+                { x: 0, y: 0, z: 0 },
+                { x: 0, y: 0, z: 0 },
+            ],
+            rotations: [
+                { _x: 0, _y: 0, _z: 0 },
+                { _x: 0.5, _y: 0, _z: 0 },
+                { _x: 1, _y: 0, _z: 0 },
+                { _x: 0, _y: 0, _z: 0 },
+                { _x: 0, _y: 0, _z: 0 },
+                { _x: 0, _y: 0, _z: 0 },
+            ],
+            animations: [
+            ],
+        },
+
+        // model is positioned same as camera, but z-1. how can I link camera position to model position but with z-1?
+        models: [
+            {
+                id: 'model0',
+                path: '/lesson3_models/model0.glb',
                 positions: [
-                    { x: 0, y: 0, z: 0 },
-                    { x: 0.5, y: 0, z: 1 },
-                    { x: 1, y: 0, z: 1.5 },
-                    { x: 0, y: 0, z: 0 },
-                    { x: 0, y: 0, z: 0 },
-                    { x: 0, y: 0, z: 0 },
+                    { x: 0, y: 0, z: -1 },
                 ],
                 rotations: [
-                    { _x: 0, _y: 0, _z: 0 },
-                    { _x: 0.5, _y: 0, _z: 0 },
-                    { _x: 1, _y: 0, _z: 0 },
-                    { _x: 0, _y: 0, _z: 0 },
-                    { _x: 0, _y: 0, _z: 0 },
-                    { _x: 0, _y: 0, _z: 0 },
+                    { _x: 0, _y: 0, _z: 0 }
                 ],
                 animations: [
+                    Rotation( 1, 'x' ),
                 ],
+                meshes: null,
+                nodes: null, 
+                materials: null,
+                visible: true,
+                name: 'model0',
+                scale: { x: 1, y: 1, z: 1 },
             },
-    
-            // model is positioned same as camera, but z-1. how can I link camera position to model position but with z-1?
-            models: [
-                {
-                    id: 'model0',
-                    path: '/lesson3_models/model0.glb',
-                    positions: [
-                        { x: 0, y: 0, z: -1 },
-                    ],
-                    rotations: [
-                        { _x: 0, _y: 0, _z: 0 }
-                    ],
-                    animations: [
-                        Rotation( 1, 'x' ),
-                    ],
-                    // meshes: null,
-                    nodes: null, 
-                    materials: null,
-                    visible: true,
-                    name: 'model0',
-                    scale: { x: 1, y: 1, z: 1 },
-                },
-                // {
-                //     id: 'model1',
-                //     path: '/lesson4_models/model1.glb',
-                //     positions: [
-                //         { x: 0, y: 0, z: -1 }
-                //     ],
-                //     rotations: [
-                //         { _x: 0, _y: 0, _z: 0 }
-                //     ],
-                //     animations: null,
-                //     meshes: null,
-                //     nodes: null, 
-                //     materials: null,
-                //     visible: true,
-                //     name: 'model1',
-                //     scale: { x: 1, y: 1, z: 1 },
-                // },
-            ],
-    
-            text: [
-                '',
-                'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas...',
-                'The result? Novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered. This molecule would go on to be named Buckminsterfullerene. Often shortened to fullerene, and nicknamed Buckyball.',
-                'Each molecule of Fullerene is composed of pure carbon. The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball. Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.',
-                'For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known. These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems. Scientists have even turned their attention to buckyballs in their quest for a cure for AIDS.',
-                'How can buckyballs help cure aids? An enzyme (HIV-1-Protease) that is required for HIV to reproduce, exhibits a nonpolar pocket in its three-dimensional structure. On the model to the right, notice how the nonpolar Fullerene fits the exact diameter of the enzyme\'s binding pocket. If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible blockers.',
-            ],
-    
-            speach: null,
-            music: null
-        },
-    ];
+            // {
+            //     id: 'model1',
+            //     path: '/lesson4_models/model1.glb',
+            //     positions: [
+            //         { x: 0, y: 0, z: -1 }
+            //     ],
+            //     rotations: [
+            //         { _x: 0, _y: 0, _z: 0 }
+            //     ],
+            //     animations: null,
+            //     meshes: null,
+            //     nodes: null, 
+            //     materials: null,
+            //     visible: true,
+            //     name: 'model1',
+            //     scale: { x: 1, y: 1, z: 1 },
+            // },
+        ],
 
+        text: [
+            '',
+            'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas...',
+            'The result? Novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered. This molecule would go on to be named Buckminsterfullerene. Often shortened to fullerene, and nicknamed Buckyball.',
+            'Each molecule of Fullerene is composed of pure carbon. The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball. Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.',
+            'For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known. These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems. Scientists have even turned their attention to buckyballs in their quest for a cure for AIDS.',
+            'How can buckyballs help cure aids? An enzyme (HIV-1-Protease) that is required for HIV to reproduce, exhibits a nonpolar pocket in its three-dimensional structure. On the model to the right, notice how the nonpolar Fullerene fits the exact diameter of the enzyme\'s binding pocket. If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible blockers.',
+        ],
+
+        speach: null,
+        music: null
+    },
+};
+
+function LoadGLTF( i: number ) {
+    return new Promise( (resolve, reject) => {
+        const loader = new GLTFLoader();
+        const dracoLoader = new DRACOLoader();
+        dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/v1/decoders/' );
+        loader.setDRACOLoader( dracoLoader );
+        loader.load(
+            pages.test_page.models[i].path,
+            (gltf: any) => {
+                resolve(gltf);
+            },
+            (xhr: any) => {
+                // console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+            },
+            (error: any) => {
+                console.error(error);
+                reject(error);
+            }
+        );
+    });
+};
+
+
+async function LoadAllGLTFSOfPage( ) {
     const gltfs: any = [];
-    const scene: any = scene_configs.find( (scene: any) => scene.id === 'test_page' );
 
-    async function LoadGLTFS() {
-        for (let i = 0; i < scene.models.length; i++) {
-            gltfs[i] = await LoadGLTF(i);
-            scene.models[i]._mesh = gltfs[i].scene.children.filter( ( child: any ) => child.isMesh && child.__removed === undefined );
+    for (let i = 0; i < pages.test_page.models.length; i++) {
+        gltfs[i] = await LoadGLTF(i);
+    };
+
+    return gltfs; // [model0, model1, model2, ...]
+};
+
+async function AddGLTFSTo_Page() {
+    const gltfs = await LoadAllGLTFSOfPage();
+    const loaded_meshes = gltfs.map( (gltf: any) => gltf.scene.children.filter( ( child: any ) => child.isMesh && child.__removed === undefined )); // [ [mesh0, mesh1, mesh2, ...], [mesh0, mesh1, mesh2, ...], [mesh0, mesh1, mesh2, ...], ... ]
+
+    // copy the pages object. then for each model[i], add loaded_meshes[i].
+    const new_pages = JSON.parse(JSON.stringify(pages));
+    new_pages.test_page.models = new_pages.test_page.models.map( (model: any, i: number) => {
+        return {
+            ...model,
+            meshes: loaded_meshes[i]
         };
-
-        // Adds gltf meshes to the models array above:
-        // function ExtractGLTFMeshes(i: number) {
-        //     scene.models[i]._mesh = gltfs[i].scene.children.filter( ( child: any ) => child.isMesh && child.__removed === undefined );
-        //     // console.log(scene);
-        // };
-    };
-
-    function LoadGLTF( i: number ) {
-        return new Promise( (resolve, reject) => {
-            const loader = new GLTFLoader();
-            const dracoLoader = new DRACOLoader();
-            dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/v1/decoders/' );
-            loader.setDRACOLoader( dracoLoader );
-            loader.load(
-                scene.models[i].path,
-                (gltf: any) => {
-                    resolve(gltf);
-                },
-                (xhr: any) => {
-                    // console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-                },
-                (error: any) => {
-                    console.error(error);
-                    reject(error);
-                }
-            );
-        });
-    };
-
-    await LoadGLTFS();
-    return scene_configs;
+    });
+    return new_pages;
 }
+
+// const loaded_meshes = gltfs[i].scene.children.filter( ( child: any ) => child.isMesh && child.__removed === undefined );
+// pages.test_page.models[i].meshes = loaded_meshes;
+
 
 
 
@@ -244,6 +253,11 @@ export default async function Data() {
 
 
 // export default scene_configs;
+// Adds gltf meshes to the models array above:
+// function ExtractGLTFMeshes(i: number) {
+//     scene.models[i]._mesh = gltfs[i].scene.children.filter( ( child: any ) => child.isMesh && child.__removed === undefined );
+//     // console.log(scene);
+// };
 
 
 
@@ -332,7 +346,7 @@ function RotationAnimation(arg0: number, arg1: string): THREE.AnimationAction
 // React Way: 
 // If using useLoader or useGLTF hook, you must use the <Suspense> component to wrap the component that uses the hook as loading is asynchronous 
 // requires suspension or promisification. 
-// Also, keep in mind that hooks are about React and jsx. The functions return jsx data, you need real vanilla object data here.
+// Also, keep in mind that hooks are about React and jsx. The functions return jsx pages, you need real vanilla object pages here.
 
 /*
 function LoadGLTF_React( i: number ) {

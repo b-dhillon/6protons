@@ -5,7 +5,7 @@ import DiamondsLesson from './diamonds_lesson/DiamondsLesson';
 import NanotubesLesson from './nanotubes_lesson/NanotubesLesson';
 import GrapheneLesson from './graphene_lesson/GrapheneLesson';
 import TestPage from './TestPage';
-import Datas from './scene_configs';
+import data from './scene_configs';
 
 
 export default function App() {
@@ -16,9 +16,8 @@ export default function App() {
 
   const [page, setPage] = useState( 'test_page' );
   const [loading, setLoading] = useState( true );
-  const [datas, setDatas] = useState( Datas() );
+  const [ appData, setAppData ] = useState( data );
 
-  const data = datas.then( (res: any ) => res.find( ( data: { id: string; } ) => data.id === page ));
 
   function handleLoading() {
     setLoading(false);
