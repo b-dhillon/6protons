@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { useState } from 'react';
 import { Plane, OrbitControls, PerspectiveCamera, useHelper } from '@react-three/drei';
 import { Suspense, useRef, useEffect } from 'react';
 import { Canvas, useThree, useFrame  } from '@react-three/fiber';
@@ -6,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { increment } from './redux/actions';
 import { CameraHelper } from 'three';
 import Universe from './Universe';
+import reactThreeFiber from '../react-three/fiber/dist/react-three-fiber.cjs';
 // import scene_config_data from './scene_configs';
 // import UpdateCamera from './UpdateCamera.jsx';
 // import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -33,7 +35,7 @@ To do
 
 export default function Page( props ): any {
 
-    const _scene = props.data;
+    const [ _scene, setScene ] = useState( props.data )
 
     return (
         <Suspense>
@@ -46,20 +48,15 @@ export default function Page( props ): any {
 // Renders the 3D scene.
 function Scene( props ): any {
 
-    const _universe = props._scene.universe;
-    const _scene = props._scene;
-    const _models: object[] = props._scene.models; 
-    const _camera: object = props._scene.camera; 
-
     const counter = useSelector( ( state: any ) => state.counter );
     return (
         <Suspense>
 
             <Canvas>
 
-                <Universe _universe={ _universe }/>
-                <Camera counter={ counter } _camera={ _camera } />
-                {/* <Models _scene={ _scene } _models={ _models } /> */}
+                <Universe _universe={ props._scene[0].universe } />
+                <Camera counter={ counter } _camera={ props._scene[0].camera } />
+                <Models _scene={ props._scene[0] } />
 
                 <ambientLight intensity={10}/>
                 <spotLight position={[-10, 10, 10] } intensity={.9}/>
@@ -92,11 +89,9 @@ function Camera( props: { counter: number, _camera: any } ) {
 };
 
 
-// Calls CreateModel() for each model in _models and returns an array of models to mount to scene graph
-function Models( props: any ) {
-    // console.log(props._models); // 2 objects
-    
-    const models = props._models.map( ( _model: any , i: number ) => <CreateModel _i={i} key={ _model.id } _models={ props._models } _scene={ props._scene }/>)
+// Calls CreateModel() for each model in _models[] and returns an array of models to mount to scene graph
+function Models( props: any ) {    
+    const models = props._scene.models.map( ( _model: any , i: number ) => <CreateModel _i={i} key={ _model.id } _models={ props._scene.models } _scene={ props._scene }/>)
     return (
         <>
             { models }
@@ -112,20 +107,14 @@ function CreateModel( props: any ) {
     modelRefs[props._i] = useRef();
 
     console.log('CreateModel() called');
-    // console.log(props._i);
-    // console.log(props._models[0]);
-    // console.log(props._models[0]._mesh);
 
 
-    // console.log(props._models[0].meshes);
-    // console.log(props._models[1]);
 
-    // console.log(props._models[props._i].meshes);
 
-    const meshes = props._models[props._i]._mesh.map( ( _mesh: any ) => {
-            return <mesh  key={ _mesh.uuid } name={ _mesh.name }  geometry={ _mesh.geometry }  material={ _mesh.material }  position={ _mesh.position } />
-        }
-    );
+    const meshes = props._models[props._i].meshes.map( ( _mesh: any ) => {
+        return <mesh  key={ _mesh.uuid } name={ _mesh.name }  geometry={ _mesh.geometry }  material={ _mesh.material }  position={ _mesh.position } />
+    });
+
 
     const initial_position = props._scene.models[props._i].positions[0];
     return (

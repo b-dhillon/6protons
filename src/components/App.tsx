@@ -1,6 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+ 
+import TestPage from './TestPage';
+
 
 const _pages = [
     {
@@ -146,14 +149,13 @@ const _pages = [
     }
 ];
 
-// const modelPaths = [ [ '/lesson3_models/model0.glb', '/lesson4_models/model1.glb' ], ['/lesson3_models/model0.glb', '/lesson4_models/model1.glb'], ['/lesson3_models/model0.glb', '/lesson4_models/model1.glb'], ['/lesson3_models/model0.glb', '/lesson4_models/model1.glb'] ]
 
 
 export default function App() {
-
     console.log('App Called');
 
     const [ pages , setPages ] = useState( _pages );
+    const [ loading, setLoading ] = useState( true )
 
     async function AddAllMeshesOfAppToData() {
         const allMeshesOfApp: any = await ExtractAllMeshesOfApp(); 
@@ -229,16 +231,20 @@ export default function App() {
         };
     };
 
-
     useEffect( () => {
         AddAllMeshesOfAppToData();
     }, [] );
 
     setTimeout( () => {
-        console.log( pages );
-    }, 3000 )
+        setLoading( false )
+    }, 2000 )
 
-    return <p>Error</p>;
+    if(loading) return <h1>Loading</h1>;
+    if(!loading) return <TestPage data={ pages }/>
+
+
+
+
 };
 
 
