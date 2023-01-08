@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 
@@ -91,7 +91,13 @@ const _pages = [
         thumbnail: "url('./lesson_thumbnails/nanotube.png')",
         speach: null,
         text: null,
-        models: [],
+        models: [
+            {
+                id: "model0", 
+                path: '/lesson3_models/model0.glb', 
+                meshes: null
+            }
+        ],
     },
 
     {
@@ -145,11 +151,12 @@ const _pages = [
 
 export default function App() {
 
+    console.log('App Called');
+
     const [ pages , setPages ] = useState( _pages );
 
     async function AddAllMeshesOfAppToData() {
-        const allMeshesOfApp = await ExtractAllMeshesOfApp(); 
-    
+        const allMeshesOfApp: any = await ExtractAllMeshesOfApp(); 
         setPages( oldPages  => {
             return oldPages.map( (oldPage: any, i: number) => {
                 return {
@@ -162,8 +169,11 @@ export default function App() {
                     })
                 }
             }) 
+
         });
-    
+
+        return pages;
+
         function LoadModel( path: any ) {
             return new Promise( (resolve, reject) => {
                 const loader = new GLTFLoader();
@@ -188,30 +198,45 @@ export default function App() {
         };
         
         async function LoadAllModelsOfApp() {
-            const allModelsOfApp: any = [] // [ [ model0, model1, model2 ], [ model0, model1, model2 ], [ model0, model1, model2  ] ]
+            // const allModelsOfApp: any = [] // [ [ model0, model1, model2 ], [ model0, model1, model2 ], [ model0, model1, model2  ] ]
                                             //         ^ models[] of page0             ^models[] of page1               ^models[] of page2
         
-            _pages.forEach( async (page: any ) => {
-                const models: any = []; // [ model0, model1, model2 ]
-        
-                for( let i = 0; i < page.models.length; i++) {
-                    models[i] = await LoadModel(page.models[i].path);
+            const all_pages_models = _pages.map(async (page: any) =>
+            {
+                const page_models: any = []; // [ model0, model1, model2 ]
+                for (let i = 0; i < page.models.length; i++)
+                {
+                    page_models[i] = LoadModel(page.models[i].path);
+                    // console.log(`model loaded`);
                 }
-                allModelsOfApp.push(models)
+                return Promise.all(page_models);
             })
-            return allModelsOfApp; 
+
+            return Promise.all(all_pages_models); 
         }
         
         async function ExtractAllMeshesOfApp() {
             const allModelsOfApp = await LoadAllModelsOfApp();
+            // console.log(allModelsOfApp); // [ [gltf0, gltf1], [gltf0], [gltf0], [gltf0] ]
         
-            const allMeshesOfApp = allModelsOfApp.map( (modelsArr: any) => {
-                modelsArr.map( (gltf: any) => gltf.scene.children.filter( ( child: any ) => child.isMesh && child.__removed === undefined ) );
+            const allMeshesOfApp = allModelsOfApp.map( (arrayOfGltfs: any) => {
+                return arrayOfGltfs.map( ( gltf: any ) => {
+                    return gltf.scene.children.filter( ( child: any ) => child.isMesh && child.__removed === undefined )
+                });
             } ) // [ [[Mesh], [Mesh], [Mesh]], [[Mesh], [Mesh], [Mesh]], [[Mesh], [Mesh],  [Mesh]]
         
             return allMeshesOfApp; 
         };
     };
+
+
+    useEffect( () => {
+        AddAllMeshesOfAppToData();
+    }, [] );
+
+    setTimeout( () => {
+        console.log( pages );
+    }, 3000 )
 
     return <p>Error</p>;
 };
