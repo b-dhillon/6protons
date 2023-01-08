@@ -155,7 +155,6 @@ export default function App() {
     console.log('App Called');
 
     const [ pages , setPages ] = useState( _pages );
-    const [ loading, setLoading ] = useState( true )
 
     async function AddAllMeshesOfAppToData() {
         const allMeshesOfApp: any = await ExtractAllMeshesOfApp(); 
@@ -235,15 +234,16 @@ export default function App() {
         AddAllMeshesOfAppToData();
     }, [] );
 
+
+    // Make this less hacky:  
+    const [ loading, setLoading ] = useState( true )
     setTimeout( () => {
         setLoading( false )
     }, 2000 )
 
     if(loading) return <h1>Loading</h1>;
     if(!loading) return <TestPage data={ pages }/>
-
-
-
+    else return <h1>Something is broken.</h1>
 
 };
 

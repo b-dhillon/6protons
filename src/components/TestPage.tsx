@@ -17,7 +17,7 @@ import reactThreeFiber from '../react-three/fiber/dist/react-three-fiber.cjs';
 
 /* 
 To do 
-- RE DO PROPS
+- Finish props -- Need to turn data[0] into data.find( (data)  => data.thisLesson ) 
 - Turn your custom animations into AnimationAction instead of using useFrame(); 
     - This should enhance performance as the computations should be done ahead of time.
     - It will also increase animation control with .start(), .stop(), .clampWhenFinished() etc... methods on the AnimtionAction object. 
@@ -35,12 +35,12 @@ To do
 
 export default function Page( props ): any {
 
-    const [ _scene, setScene ] = useState( props.data )
+    const [ data, setData ] = useState( props.data )
 
     return (
         <Suspense>
             <UI />
-            <Scene _scene={ _scene } />
+            <Scene data={ data } />
         </Suspense>
     );
 };
@@ -54,9 +54,9 @@ function Scene( props ): any {
 
             <Canvas>
 
-                <Universe _universe={ props._scene[0].universe } />
-                <Camera counter={ counter } _camera={ props._scene[0].camera } />
-                <Models _scene={ props._scene[0] } />
+                <Universe _universe={ props.data[0].universe } />
+                <Camera counter={ counter } _camera={ props.data[0].camera } />
+                <Models data={ props.data[0] } />
 
                 <ambientLight intensity={10}/>
                 <spotLight position={[-10, 10, 10] } intensity={.9}/>
@@ -91,7 +91,7 @@ function Camera( props: { counter: number, _camera: any } ) {
 
 // Calls CreateModel() for each model in _models[] and returns an array of models to mount to scene graph
 function Models( props: any ) {    
-    const models = props._scene.models.map( ( _model: any , i: number ) => <CreateModel _i={i} key={ _model.id } _models={ props._scene.models } _scene={ props._scene }/>)
+    const models = props.data.models.map( ( _model: any , i: number ) => <CreateModel _i={i} key={ _model.id } _models={ props.data.models } data={ props.data }/>)
     return (
         <>
             { models }
@@ -116,7 +116,7 @@ function CreateModel( props: any ) {
     });
 
 
-    const initial_position = props._scene.models[props._i].positions[0];
+    const initial_position = props.data.models[props._i].positions[0];
     return (
         <group 
             scale={1} { ...props }
