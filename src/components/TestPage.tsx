@@ -17,7 +17,6 @@ import reactThreeFiber from '../react-three/fiber/dist/react-three-fiber.cjs';
 
 /* 
 To do 
-- Finish props -- Need to turn data[0] into data.find( (data)  => data.thisLesson ) 
 - Turn your custom animations into AnimationAction instead of using useFrame(); 
     - This should enhance performance as the computations should be done ahead of time.
     - It will also increase animation control with .start(), .stop(), .clampWhenFinished() etc... methods on the AnimtionAction object. 
@@ -34,6 +33,8 @@ To do
 
 
 export default function Page( props ): any {
+
+    console.log( props.data ); // object with .id === test_page
 
     const [ data, setData ] = useState( props.data )
 
@@ -54,9 +55,9 @@ function Scene( props ): any {
 
             <Canvas>
 
-                <Universe _universe={ props.data[0].universe } />
-                <Camera counter={ counter } _camera={ props.data[0].camera } />
-                <Models data={ props.data[0] } />
+                <Universe _universe={ props.data.universe } />
+                <Camera counter={ counter } _camera={ props.data.camera } />
+                <Models data={ props.data } />
 
                 <ambientLight intensity={10}/>
                 <spotLight position={[-10, 10, 10] } intensity={.9}/>
@@ -91,7 +92,10 @@ function Camera( props: { counter: number, _camera: any } ) {
 
 // Calls CreateModel() for each model in _models[] and returns an array of models to mount to scene graph
 function Models( props: any ) {    
-    const models = props.data.models.map( ( _model: any , i: number ) => <CreateModel _i={i} key={ _model.id } _models={ props.data.models } data={ props.data }/>)
+    const models = props.data.models.map( ( _model: any , i: number ) => 
+        <CreateModel _i={i} key={ _model.id } models={ props.data.models } data={ props.data }/>
+    )
+        
     return (
         <>
             { models }
@@ -100,23 +104,19 @@ function Models( props: any ) {
 };
 
 
-// Grabs meshes from scene_config_data and creates a new react mesh for each one: 
-// These will be mounted to the Three.state.scene.children array when you call Models();
+// Grabs meshes from data and creates a new react-mesh for each one: 
+// [ meshes ] are mounted to the scene graph (Three.state.scene.children array) when you call Models();
 let modelRefs: any[] = [];
 function CreateModel( props: any ) {
     modelRefs[props._i] = useRef();
 
-    console.log('CreateModel() called');
 
-
-
-
-    const meshes = props._models[props._i].meshes.map( ( _mesh: any ) => {
+    const meshes = props.models[ props._i ].meshes.map( ( _mesh: any ) => {
         return <mesh  key={ _mesh.uuid } name={ _mesh.name }  geometry={ _mesh.geometry }  material={ _mesh.material }  position={ _mesh.position } />
     });
 
 
-    const initial_position = props.data.models[props._i].positions[0];
+    const initial_position = props.data.models[ props._i ].positions[0];
     return (
         <group 
             scale={1} { ...props }

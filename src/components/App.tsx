@@ -155,6 +155,7 @@ export default function App() {
     console.log('App Called');
 
     const [ pages , setPages ] = useState( _pages );
+    const [ currentPage, setCurrentPage ] = useState( 'test_page' )
 
     async function AddAllMeshesOfAppToData() {
         const allMeshesOfApp: any = await ExtractAllMeshesOfApp(); 
@@ -241,8 +242,11 @@ export default function App() {
         setLoading( false )
     }, 2000 )
 
-    if(loading) return <h1>Loading</h1>;
-    if(!loading) return <TestPage data={ pages }/>
+
+
+
+    if( loading ) return <h1>Loading</h1>;
+    if( !loading && currentPage === 'test_page' ) return <TestPage data={ pages.find( ( page ) => page.id === currentPage  ) }/>
     else return <h1>Something is broken.</h1>
 
 };
