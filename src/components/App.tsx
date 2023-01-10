@@ -3,6 +3,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
  
 import TestPage from './TestPage';
+import { AnimationClip, NumberKeyframeTrack } from 'three';
+
 
 
 const _pages = [
@@ -34,7 +36,7 @@ const _pages = [
                 { _x: 0, _y: 0, _z: 0 },
                 { _x: 0, _y: 0, _z: 0 },
             ],
-            animations: [
+            animations: [ 
             ],
         },
 
@@ -48,7 +50,8 @@ const _pages = [
                 rotations: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
-                animations: [
+                animations: [ 
+                    Rotation(200, 'x')
                 ],
                 meshes: null,
                 nodes: null, 
@@ -152,87 +155,89 @@ const _pages = [
 
 
 export default function App() {
-    console.log('App Called');
 
     const [ pages , setPages ] = useState( _pages );
     const [ currentPage, setCurrentPage ] = useState( 'test_page' )
 
-    async function AddAllMeshesOfAppToData() {
-        const allMeshesOfApp: any = await ExtractAllMeshesOfApp(); 
-        setPages( oldPages  => {
-            return oldPages.map( (oldPage: any, i: number) => {
-                return {
-                    ...oldPage, 
-                    models: oldPage.models.map( ( model: any, j: number ) => {
-                        return {
-                            ...model, 
-                            meshes: allMeshesOfApp[i][j]
-                        }
-                    })
-                }
-            }) 
-
-        });
-
-        return pages;
-
-        function LoadModel( path: any ) {
-            return new Promise( (resolve, reject) => {
-                const loader = new GLTFLoader();
-                const dracoLoader = new DRACOLoader();
-                dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/v1/decoders/' );
-                loader.setDRACOLoader( dracoLoader );
-                loader.load(
-                    path,
-                    (gltf: any) => {
-                        resolve(gltf);
-                        console.log('loaded');
-                    },
-                    (xhr: any) => {
-                        // console.log((xhr.loaded / xhr.total) + 'loaded');
-                    },
-                    (error: any) => {
-                        console.error(error);
-                        reject(error);
+    function LoadData() {
+        async function AddAllMeshesOfAppToData() {
+            const allMeshesOfApp: any = await ExtractAllMeshesOfApp(); 
+            setPages( oldPages  => {
+                return oldPages.map( (oldPage: any, i: number) => {
+                    return {
+                        ...oldPage, 
+                        models: oldPage.models.map( ( model: any, j: number ) => {
+                            return {
+                                ...model, 
+                                meshes: allMeshesOfApp[i][j]
+                            }
+                        })
                     }
-                );
+                }) 
+    
             });
-        };
-        
-        async function LoadAllModelsOfApp() {
-            // const allModelsOfApp: any = [] // [ [ model0, model1, model2 ], [ model0, model1, model2 ], [ model0, model1, model2  ] ]
-                                            //         ^ models[] of page0             ^models[] of page1               ^models[] of page2
-        
-            const all_pages_models = _pages.map(async (page: any) =>
-            {
-                const page_models: any = []; // [ model0, model1, model2 ]
-                for (let i = 0; i < page.models.length; i++)
-                {
-                    page_models[i] = LoadModel(page.models[i].path);
-                    // console.log(`model loaded`);
-                }
-                return Promise.all(page_models);
-            })
-
-            return Promise.all(all_pages_models); 
-        }
-        
-        async function ExtractAllMeshesOfApp() {
-            const allModelsOfApp = await LoadAllModelsOfApp();
-            // console.log(allModelsOfApp); // [ [gltf0, gltf1], [gltf0], [gltf0], [gltf0] ]
-        
-            const allMeshesOfApp = allModelsOfApp.map( (arrayOfGltfs: any) => {
-                return arrayOfGltfs.map( ( gltf: any ) => {
-                    return gltf.scene.children.filter( ( child: any ) => child.isMesh && child.__removed === undefined )
+    
+            return pages;
+    
+            function LoadModel( path: any ) {
+                return new Promise( (resolve, reject) => {
+                    const loader = new GLTFLoader();
+                    const dracoLoader = new DRACOLoader();
+                    dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/v1/decoders/' );
+                    loader.setDRACOLoader( dracoLoader );
+                    loader.load(
+                        path,
+                        (gltf: any) => {
+                            resolve(gltf);
+                            console.log('loaded');
+                        },
+                        (xhr: any) => {
+                            // console.log((xhr.loaded / xhr.total) + 'loaded');
+                        },
+                        (error: any) => {
+                            console.error(error);
+                            reject(error);
+                        }
+                    );
                 });
-            } ) // [ [[Mesh], [Mesh], [Mesh]], [[Mesh], [Mesh], [Mesh]], [[Mesh], [Mesh],  [Mesh]]
-        
-            return allMeshesOfApp; 
+            };
+            
+            async function LoadAllModelsOfApp() {
+                // const allModelsOfApp: any = [] // [ [ model0, model1, model2 ], [ model0, model1, model2 ], [ model0, model1, model2  ] ]
+                                                //         ^ models[] of page0             ^models[] of page1               ^models[] of page2
+            
+                const all_pages_models = _pages.map(async (page: any) =>
+                {
+                    const page_models: any = []; // [ model0, model1, model2 ]
+                    for (let i = 0; i < page.models.length; i++)
+                    {
+                        page_models[i] = LoadModel(page.models[i].path);
+                        // console.log(`model loaded`);
+                    }
+                    return Promise.all(page_models);
+                })
+    
+                return Promise.all(all_pages_models); 
+            }
+            
+            async function ExtractAllMeshesOfApp() {
+                const allModelsOfApp = await LoadAllModelsOfApp();
+                // console.log(allModelsOfApp); // [ [gltf0, gltf1], [gltf0], [gltf0], [gltf0] ]
+            
+                const allMeshesOfApp = allModelsOfApp.map( (arrayOfGltfs: any) => {
+                    return arrayOfGltfs.map( ( gltf: any ) => {
+                        return gltf.scene.children.filter( ( child: any ) => child.isMesh && child.__removed === undefined )
+                    });
+                } ) // [ [[Mesh], [Mesh], [Mesh]], [[Mesh], [Mesh], [Mesh]], [[Mesh], [Mesh],  [Mesh]]
+            
+                return allMeshesOfApp; 
+            };
         };
+        return AddAllMeshesOfAppToData();
     };
 
     useEffect( () => {
-        AddAllMeshesOfAppToData();
+        LoadData();
     }, [] );
 
 
@@ -252,6 +257,22 @@ export default function App() {
 };
 
 
+
+
+
+
+
+
+
+
+
+function Rotation( period: number, axis = 'x' ) {
+    const times = [ 0, period ], values = [ 0, 360 ];
+    const trackName = '.rotation[' + axis + ']';
+    const track = new NumberKeyframeTrack( trackName, times, values );
+    return new AnimationClip( trackName, period, [ track ] );
+};
+// RotationClip( 1, 'x' ),
 
 
 

@@ -1,42 +1,54 @@
 // @ts-nocheck
 import { useState } from 'react';
-import { Plane, OrbitControls, PerspectiveCamera, useHelper } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera, useHelper, useAnimations } from '@react-three/drei';
 import { Suspense, useRef, useEffect } from 'react';
 import { Canvas, useThree, useFrame  } from '@react-three/fiber';
 import { useSelector, useDispatch } from 'react-redux';
 import { increment } from './redux/actions';
 import { CameraHelper } from 'three';
 import Universe from './Universe';
-import reactThreeFiber from '../react-three/fiber/dist/react-three-fiber.cjs';
+import * as THREE from 'three'
 // import scene_config_data from './scene_configs';
 // import UpdateCamera from './UpdateCamera.jsx';
-// import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-// import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+
 
 
 
 /* 
-To do 
-- Turn your custom animations into AnimationAction instead of using useFrame(); 
+To do: 
+ - Get the test animation to play.
+
+
+- Develop all camera animations 
+- After camera, add test models to all proper locations of lesson -- need to figure out what these locations are first.
+- Get models visibility and animation toggling properly based on counter.
+- Figure out why Models() is being called twice.
+- Clean up and get a high level understanding of everything that you've re-factored.
+
+
+
+- Reasonging for switching from useFrame() to AnimationActions
     - This should enhance performance as the computations should be done ahead of time.
     - It will also increase animation control with .start(), .stop(), .clampWhenFinished() etc... methods on the AnimtionAction object. 
         - https://threejs.org/docs/#api/en/animation/AnimationAction
     - This will allow you to have central stores of data and a proper pipeline.
     - Implement this with the UpdateCamera animation as well. 
-- Develop all camera animations 
-- After camera, add test models to all locations.
-- Get models visibility and animation toggling properly.
-- Figure out why Models() is being called twice.
-- Clean up and get a high level understanding of everything that you've re-factored.
 */
+
+
+// Either the animation is bunk or you are not connecting the animation to the proper model object.
+// You could perhaps be connecting it to the data object and not the scene obj
+
+
+
 
 
 
 export default function Page( props ): any {
 
-    console.log( props.data ); // object with .id === test_page
+    const [ data, setData ] = useState( props.data );
 
-    const [ data, setData ] = useState( props.data )
+
 
     return (
         <Suspense>
@@ -50,18 +62,21 @@ export default function Page( props ): any {
 function Scene( props ): any {
 
     const counter = useSelector( ( state: any ) => state.counter );
+
+
+
+
     return (
         <Suspense>
 
             <Canvas>
 
-                <Universe _universe={ props.data.universe } />
-                <Camera counter={ counter } _camera={ props.data.camera } />
+                <Universe universe_data={ props.data.universe } />
+                <Camera counter={ counter } camera_data={ props.data.camera } />
                 <Models data={ props.data } />
 
                 <ambientLight intensity={10}/>
                 <spotLight position={[-10, 10, 10] } intensity={.9}/>
-                <Plane position={[0,0,0]} scale={[.4, .4, 1]} />
                 <DevelopmentCamera  />
 
 
@@ -73,17 +88,18 @@ function Scene( props ): any {
 };
 
 // Creates the camera, handles its updates and renders the cameraHelper when called.
-function Camera( props: { counter: number, _camera: any } ) {
+function Camera( props: { counter: number, camera_data: any } ) {
     const ref = useRef();
     useHelper(ref, CameraHelper);
-    // console.log( useThree( (state) => state ) );
+    // console.log( 'scene graph', useThree( (state) => state ) );
+
     // const set = useThree( (state) => state.set ); 
     // useEffect( () => set({ camera: ref.current }) );
 
     return (
         <>
             <PerspectiveCamera ref={ref} position={[0,0,5]} fov={45} near={.1} far={2}/>
-            {/* <UpdateCamera _ref={ref} counter={counter} camera_config={camera_config} /> */}
+            {/* <UpdateCamera _ref={ref} counter={ counter } camera_data={ camera_data } /> */}
             {/* ^ this fn should only be called when the camera is moving? */}            
         </>
     );
@@ -91,11 +107,12 @@ function Camera( props: { counter: number, _camera: any } ) {
 
 
 // Calls CreateModel() for each model in _models[] and returns an array of models to mount to scene graph
-function Models( props: any ) {    
+function Models( props: any ) {  
+
     const models = props.data.models.map( ( _model: any , i: number ) => 
         <CreateModel _i={i} key={ _model.id } models={ props.data.models } data={ props.data }/>
     )
-        
+
     return (
         <>
             { models }
@@ -106,29 +123,55 @@ function Models( props: any ) {
 
 // Grabs meshes from data and creates a new react-mesh for each one: 
 // [ meshes ] are mounted to the scene graph (Three.state.scene.children array) when you call Models();
-let modelRefs: any[] = [];
 function CreateModel( props: any ) {
-    modelRefs[props._i] = useRef();
+
+    // modelRefs[props._i] = useRef();
+    const ref = useRef();
+    const initial_position = props.data.models[ props._i ].positions[0];
 
 
-    const meshes = props.models[ props._i ].meshes.map( ( _mesh: any ) => {
-        return <mesh  key={ _mesh.uuid } name={ _mesh.name }  geometry={ _mesh.geometry }  material={ _mesh.material }  position={ _mesh.position } />
+
+    const meshesOfModel = props.models[ props._i ].meshes.map( ( _mesh: any ) => {
+        return <mesh 
+            ref={ ref }
+            scale={1} 
+            key={ _mesh.uuid } 
+            name={ _mesh.name }  
+            geometry={ _mesh.geometry } 
+            material={ _mesh.material }  
+            position={ [ initial_position.x, initial_position.y, initial_position.z ]}
+            // position={ _mesh.position } 
+        />
     });
 
+    let mixer; 
+    const animationData  = props.data.models[0].animations[0]
+    console.log(animationData);
+    useEffect(() => {
+        console.log( 'Firing effect after CreateModel() call' );
 
-    const initial_position = props.data.models[ props._i ].positions[0];
+        console.log( 'root', ref.current );
+
+        mixer = new THREE.AnimationMixer( ref.current ); // will we ever have more than 1 mesh per model? In other words, does it need to be an array of meshes 
+        const clips = animationData;
+        const clip = animationData;
+        console.log( 'clip', clip );
+
+        const action = mixer.clipAction( clip )
+        console.log( 'actions', action);
+
+        action.play();
+    }, [mixer])
+
+    useFrame( ( _, delta ) => {
+        if( mixer ) mixer.update( delta );
+    } ) 
+
+
     return (
-        <group 
-            scale={1} { ...props }
-            animations={ null } 
-            dispose={ null } 
-            name={`model${ props.i }` } 
-            key={ `model${ props.i }` } 
-            ref={ modelRefs[ props.i ] } 
-            position={ [ initial_position.x, initial_position.y, initial_position.z ]
-        }>
-            { meshes }
-        </group>
+        <>
+            { meshesOfModel }
+        </>
     )
 };
 

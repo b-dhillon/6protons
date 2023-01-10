@@ -201,7 +201,7 @@ function LoadModel( i: number ) {
             pages.test_page.models[i].path,
             (gltf: any) => {
                 resolve(gltf);
-                console.log('loaded');
+                console.log(gltf);
             },
             (xhr: any) => {
                 // console.log((xhr.loaded / xhr.total) + 'loaded');
