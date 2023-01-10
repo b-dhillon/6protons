@@ -51,7 +51,8 @@ const _pages = [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animations: [ 
-                    Rotation(200, 'x')
+                    Rotation(200, 'x'),
+                    
                 ],
                 meshes: null,
                 nodes: null, 
@@ -69,7 +70,9 @@ const _pages = [
                 rotations: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
-                animations: null,
+                animations: [
+                    Rotation(200, 'y')
+                ],
                 meshes: null,
                 nodes: null, 
                 materials: null,

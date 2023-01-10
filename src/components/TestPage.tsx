@@ -121,16 +121,11 @@ function Models( props: any ) {
 };
 
 
-// Grabs meshes from data and creates a new react-mesh for each one: 
-// [ meshes ] are mounted to the scene graph (Three.state.scene.children array) when you call Models();
+// Grabs meshes from data and creates a react-mesh for each one: 
+// [ meshes ] are mounted to the scene graph when you call Models();
 function CreateModel( props: any ) {
 
-    // modelRefs[props._i] = useRef();
-    const ref = useRef();
     const initial_position = props.data.models[ props._i ].positions[0];
-
-
-
     const meshesOfModel = props.models[ props._i ].meshes.map( ( _mesh: any ) => {
         return <mesh 
             ref={ ref }
@@ -144,23 +139,30 @@ function CreateModel( props: any ) {
         />
     });
 
+
+    // Animation System --> Need to create controller and get rid of hard coded data
+    const ref = useRef();
     let mixer; 
     const animationData  = props.data.models[0].animations[0]
-    console.log(animationData);
+    const animationData2  = props.data.models[1].animations[0]
+    function StartAnimation() {
+        if (props._i === 1) {
+            mixer = new THREE.AnimationMixer( ref.current ); // will we ever have more than 1 mesh per model? In other words, does it need to be an array of meshes 
+            const clips = animationData;
+            const clip = animationData;
+            const action = mixer.clipAction( clip )
+            action.play();
+        } else {
+            mixer = new THREE.AnimationMixer( ref.current ); // will we ever have more than 1 mesh per model? In other words, does it need to be an array of meshes 
+            const clips = animationData;
+            const clip = animationData2;
+            const action = mixer.clipAction( clip )
+            action.play();
+        }
+    }
+
     useEffect(() => {
-        console.log( 'Firing effect after CreateModel() call' );
-
-        console.log( 'root', ref.current );
-
-        mixer = new THREE.AnimationMixer( ref.current ); // will we ever have more than 1 mesh per model? In other words, does it need to be an array of meshes 
-        const clips = animationData;
-        const clip = animationData;
-        console.log( 'clip', clip );
-
-        const action = mixer.clipAction( clip )
-        console.log( 'actions', action);
-
-        action.play();
+        StartAnimation();
     }, [mixer])
 
     useFrame( ( _, delta ) => {
