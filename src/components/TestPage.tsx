@@ -48,8 +48,6 @@ export default function Page( props ): any {
 
     const [ data, setData ] = useState( props.data );
 
-
-
     return (
         <Suspense>
             <UI />
@@ -62,10 +60,6 @@ export default function Page( props ): any {
 function Scene( props ): any {
 
     const counter = useSelector( ( state: any ) => state.counter );
-
-
-
-
     return (
         <Suspense>
 
@@ -87,31 +81,33 @@ function Scene( props ): any {
     );
 };
 
-// Creates the camera, handles its updates and renders the cameraHelper when called.
-function Camera( props: { counter: number, camera_data: any } ) {
-    const ref = useRef();
-    useHelper(ref, CameraHelper);
-    // console.log( 'scene graph', useThree( (state) => state ) );
-
-    // const set = useThree( (state) => state.set ); 
-    // useEffect( () => set({ camera: ref.current }) );
-
-    return (
-        <>
-            <PerspectiveCamera ref={ref} position={[0,0,5]} fov={45} near={.1} far={2}/>
-            {/* <UpdateCamera _ref={ref} counter={ counter } camera_data={ camera_data } /> */}
-            {/* ^ this fn should only be called when the camera is moving? */}            
-        </>
-    );
-};
 
 
-// Calls CreateModel() for each model in _models[] and returns an array of models to mount to scene graph
-function Models( props: any ) {  
 
-    const models = props.data.models.map( ( _model: any , i: number ) => 
-        <CreateModel _i={i} key={ _model.id } models={ props.data.models } data={ props.data }/>
+// Loops data.models[] --> returns array of models to mount to scene graph
+function Models( props: any )  {  
+
+    const models = props.data.models.map( ( model: any , i: number ) => 
+        // console.log(model)
+
+        (<CreateModel 
+            key={ model.id } 
+            geometry={ model.meshes[0].geometry }
+            material={ model.meshes[0].material }
+            position={ model.positions[0] }
+            name={ model.name }
+            // models={ props.data.models } 
+            // data={ props.data }
+            _i={i} 
+        />)
     )
+
+    useEffect( () => {
+        console.log( 'models', models );
+    }, [models])
+
+
+
 
     return (
         <>
@@ -125,23 +121,39 @@ function Models( props: any ) {
 // [ meshes ] are mounted to the scene graph when you call Models();
 function CreateModel( props: any ) {
 
-    const initial_position = props.data.models[ props._i ].positions[0];
-    const meshesOfModel = props.models[ props._i ].meshes.map( ( _mesh: any ) => {
-        return <mesh 
-            ref={ ref }
-            scale={1} 
-            key={ _mesh.uuid } 
-            name={ _mesh.name }  
-            geometry={ _mesh.geometry } 
-            material={ _mesh.material }  
-            position={ [ initial_position.x, initial_position.y, initial_position.z ]}
-            // position={ _mesh.position } 
+
+    const ref = useRef();
+    return (
+        <mesh 
+            ref={ ref } 
+            geometry={props.geometry}
+            material={props.material}
+            position={ [ props.position.x, props.position.y, props.position.z ] }
+            name={props.name}
         />
-    });
+    )
+
+
+
+
+
+    // const initial_position = props.data.models[ props._i ].positions[0];
+    // const meshesOfModel = props.models[ props._i ].meshes.map( ( _mesh: any ) => {
+
+    //     return <mesh 
+    //         ref={ ref }
+    //         scale={1} 
+    //         key={ _mesh.uuid } 
+    //         name={ _mesh.name }  
+    //         geometry={ _mesh.geometry } 
+    //         material={ _mesh.material }  
+    //         position={ [ initial_position.x, initial_position.y, initial_position.z ]}
+    //     />
+    // });
 
 
     // Animation System --> Need to create controller and get rid of hard coded data
-    const ref = useRef();
+    /*
     let mixer; 
     const animationData  = props.data.models[0].animations[0]
     const animationData2  = props.data.models[1].animations[0]
@@ -151,23 +163,24 @@ function CreateModel( props: any ) {
             const clips = animationData;
             const clip = animationData;
             const action = mixer.clipAction( clip )
-            action.play();
+            // action.play();
         } else {
             mixer = new THREE.AnimationMixer( ref.current ); // will we ever have more than 1 mesh per model? In other words, does it need to be an array of meshes 
             const clips = animationData;
             const clip = animationData2;
             const action = mixer.clipAction( clip )
-            action.play();
+            // action.play();
         }
     }
+    */
 
-    useEffect(() => {
-        StartAnimation();
-    }, [mixer])
+    // useEffect(() => {
+    //     StartAnimation();
+    // }, [mixer])
 
-    useFrame( ( _, delta ) => {
-        if( mixer ) mixer.update( delta );
-    } ) 
+    // useFrame( ( _, delta ) => {
+    //     if( mixer ) mixer.update( delta );
+    // } ) 
 
 
     return (
@@ -177,6 +190,24 @@ function CreateModel( props: any ) {
     )
 };
 
+
+
+// Creates camera, handles its updates and renders the cameraHelper when called.
+function Camera( props: { counter: number, camera_data: any } ) {
+    const ref = useRef();
+    useHelper(ref, CameraHelper);
+    // console.log( 'scene graph', useThree( (state) => state ) );
+
+    // const set = useThree( (state) => state.set ); 
+    // useEffect( () => set({ camera: ref.current }) );
+
+    return (
+        <>
+            <PerspectiveCamera ref={ref} position={[0,0,5]} fov={45} near={.1} far={2}/>
+            {/* <UpdateCamera _ref={ref} counter={ counter } camera_data={ camera_data } /> */}
+        </>
+    );
+};
 
 
 // Renders the UI and creates event handlers to handle user input.
