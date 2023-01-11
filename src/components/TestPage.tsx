@@ -11,21 +11,14 @@ import * as THREE from 'three'
 // import scene_config_data from './scene_configs';
 // import UpdateCamera from './UpdateCamera.jsx';
 
-
-
-
 /* 
-To do: 
- - Get the test animation to play.
-
-
+To-do: 
 - Develop all camera animations 
+
 - After camera, add test models to all proper locations of lesson -- need to figure out what these locations are first.
 - Get models visibility and animation toggling properly based on counter.
 - Figure out why Models() is being called twice.
 - Clean up and get a high level understanding of everything that you've re-factored.
-
-
 
 - Reasonging for switching from useFrame() to AnimationActions
     - This should enhance performance as the computations should be done ahead of time.
@@ -36,77 +29,45 @@ To do:
 */
 
 
-// Either the animation is bunk or you are not connecting the animation to the proper model object.
-// You could perhaps be connecting it to the data object and not the scene obj
-
-
-
-
-
-
 export default function Page( props ): any {
-
-    const [ data, setData ] = useState( props.data );
+    const [ page ] = useState( props.data );
 
     return (
         <Suspense>
             <UI />
-            <Scene data={ data } />
+            <Scene data={ page } />
         </Suspense>
     );
 };
 
-// Creates scene graph and renders 3D scene.
+// Mounts components to scene graph and renders 3D scene.
 function Scene( props ): any {
     const counter = useSelector( ( state: any ) => state.counter );
 
-
-    // function update () {
-    //     const clock = new THREE.Clock();
-    //     const deltaSeconds = clock.getDelta();
-    //     if(mixers[0]) mixers[0].update( deltaSeconds );
-    //     console.log('updating')
-    //     window.requestAnimationFrame(update)
-    // }
-
-    // update();
-
-
-
     return (
         <Suspense>
-
             <Canvas>
 
-                <Universe universe_data={ props.data.universe } />
-                <Camera counter={ counter } camera_data={ props.data.camera } />
-                <Models data={ props.data } counter={ counter }/>
+                < Universe universe_data={ props.data.universe } />
+                < Camera counter={ counter } camera_data={ props.data.camera } />
+                < Models data={ props.data } counter={ counter } />
 
-                <ambientLight intensity={10}/>
-                <spotLight position={[-10, 10, 10] } intensity={.9}/>
-                <DevelopmentCamera  />
+                < ambientLight intensity={10} />
+                < spotLight position={[-10, 10, 10] } intensity={.9} />
+                < DevelopmentCamera  />
 
             </Canvas>
-
-
         </Suspense>
     );
 };
 
-function AnimationController() {
-    
-    return (
-        <>
-        </>
-    )
-}
 
 
 
-// Loops data.models[] --> returns array of models to mount to scene graph
-// After each time counter changes, the animations array is updated and the animation at the current counter index is played.
+
+// Loops data.models[] --> returns array of fiber models to mount to scene graph
+// Creates AnimationController: Counter changes --> animation at the current counter index is played.
 function Models( props: any )  {  
-
     const [ animations, setAnimations ] = useState( [] );
     const [ mixers, setMixers ] = useState( [] );
 
@@ -121,29 +82,22 @@ function Models( props: any )  {
         />)
     )
 
-
-    useEffect( () => {
-        if(animations.length){
-            console.log(props.counter);
-
+    function AnimationController() {
+        if( animations.length ) {
+            // This is a side effect...change to setAnimations?
             animations.forEach( ( animation: any ) => {
                 animation.stop();
                 animation.reset();
             });
-            console.log(animations[props.counter]);
-            // console.log(mixers[0]);
-            animations[props.counter].play();
+            animations[ props.counter ].play();
         }
-    }, [ animations ] );
+    }
+
+    useEffect( AnimationController, [ animations, props.counter ] );
 
     useFrame( ( _, delta ) => {
-        if( mixers.length ) {
-            console.log('updating');
-            mixers[ props.counter ].update( delta )
-        };
+        if( mixers.length ) mixers[ props.counter ].update( delta );
     });
-
-
 
     return (
         <>
@@ -153,28 +107,13 @@ function Models( props: any )  {
 };
 
 
-// Grabs meshes from data and creates a group of all the meshes per model:
-// [ meshes ] are mounted to the scene graph when you call Models();
+// Grabs meshes and animations from data --> creates a group of all the meshes per model:
+// [ meshes ] mounted to the scene graph when Models();
 function CreateModel( props: any ) {
 
-    // Animation System --> Need to create controller and get rid of hard coded data
-    function AddAnimation(ref) {
-        const mixer = new THREE.AnimationMixer( ref );
-        const clip = props.model.animations[0];
-        const animation = mixer.clipAction( clip )
-        props.setAnimations( ( animations: any ) => [...animations, animation ] );
-        props.setMixers( ( mixers: any ) => [...mixers, mixer ] );
-    };
-
+    // Creating fiber mesh:
     const ref = useRef();    
-    useEffect(() => {
-        console.log('adding animation');
-        AddAnimation(ref.current);
-    }, []);
-
-
-
-    const meshesOfModel = props.model.meshes.map( ( mesh: any ) => {
+    const fiber_model = props.model.meshes.map( ( mesh: any ) => {
         return <mesh 
             geometry={ mesh.geometry } 
             material={ mesh.material }  
@@ -185,9 +124,22 @@ function CreateModel( props: any ) {
         />
     });
 
+    // Adding animation to fiber model:
+    function AddAnimationTo( fiber_model ) {
+        const mixer = new THREE.AnimationMixer( fiber_model );
+        const animation_data = props.model.animations[0];
+        const animation = mixer.clipAction( animation_data )
+        props.setAnimations( ( animations: any ) => [...animations, animation ] );
+        props.setMixers( ( mixers: any ) => [...mixers, mixer ] );
+    };
+
+    useEffect(() => {
+        AddAnimationTo( ref.current );
+    }, []);
+
     return (
         <group ref={ref} position={ [ props.position.x, props.position.y, props.position.z ] } >
-            { meshesOfModel }
+            { fiber_model }
         </group>
     );
 };
@@ -258,19 +210,5 @@ function DevelopmentCamera() {
 };
 
 // console.log( 'scene graph', useThree( (state) => state ) );
-
 // const set = useThree( (state) => state.set ); 
 // useEffect( () => set({ camera: ref.current }) );
-
-
-// return (
-//     <group ref={ref} position={ [ props.position.x, props.position.y, props.position.z ] } >
-//         <mesh 
-//             ref={ ref } 
-//             geometry={ props.geometry }
-//             material={ props.material }
-//             // position={ [ props.position.x, props.position.y, props.position.z ] }
-//             name={ props.name }
-//         />
-//     </group>
-// )

@@ -1,7 +1,6 @@
 import { useState, useEffect, Suspense } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
- 
 import TestPage from './TestPage';
 import { AnimationClip, NumberKeyframeTrack } from 'three';
 
@@ -160,7 +159,7 @@ const _pages = [
 export default function App() {
 
     const [ pages , setPages ] = useState( _pages );
-    const [ currentPage, setCurrentPage ] = useState( 'test_page' )
+    const [ current_page, setCurrentPage ] = useState( 'test_page' )
 
     function LoadData() {
         async function AddAllMeshesOfAppToData() {
@@ -251,22 +250,11 @@ export default function App() {
     }, 2000 )
 
 
-
-
     if( loading ) return <h1>Loading</h1>;
-    if( !loading && currentPage === 'test_page' ) return <TestPage data={ pages.find( ( page ) => page.id === currentPage  ) }/>
+    if( !loading && current_page === 'test_page' ) return <TestPage data={ pages.find( ( page ) => page.id === current_page  ) }/>
     else return <h1>Something is broken.</h1>
 
 };
-
-
-
-
-
-
-
-
-
 
 
 function Rotation( period: number, axis = 'x' ) {
@@ -275,7 +263,6 @@ function Rotation( period: number, axis = 'x' ) {
     const track = new NumberKeyframeTrack( trackName, times, values );
     return new AnimationClip( trackName, period, [ track ] );
 };
-// RotationClip( 1, 'x' ),
 
 
 
