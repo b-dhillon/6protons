@@ -56,10 +56,23 @@ export default function Page( props ): any {
     );
 };
 
-// Renders the 3D scene.
+// Creates scene graph and renders 3D scene.
 function Scene( props ): any {
-
     const counter = useSelector( ( state: any ) => state.counter );
+
+
+    // function update () {
+    //     const clock = new THREE.Clock();
+    //     const deltaSeconds = clock.getDelta();
+    //     if(mixers[0]) mixers[0].update( deltaSeconds );
+    //     console.log('updating')
+    //     window.requestAnimationFrame(update)
+    // }
+
+    // update();
+
+
+
     return (
         <Suspense>
 
@@ -67,12 +80,11 @@ function Scene( props ): any {
 
                 <Universe universe_data={ props.data.universe } />
                 <Camera counter={ counter } camera_data={ props.data.camera } />
-                <Models data={ props.data } />
+                <Models data={ props.data } counter={ counter }/>
 
                 <ambientLight intensity={10}/>
                 <spotLight position={[-10, 10, 10] } intensity={.9}/>
                 <DevelopmentCamera  />
-
 
             </Canvas>
 
@@ -81,11 +93,22 @@ function Scene( props ): any {
     );
 };
 
+function AnimationController() {
+    
+    return (
+        <>
+        </>
+    )
+}
 
 
 
 // Loops data.models[] --> returns array of models to mount to scene graph
+// After each time counter changes, the animations array is updated and the animation at the current counter index is played.
 function Models( props: any )  {  
+
+    const [ animations, setAnimations ] = useState( [] );
+    const [ mixers, setMixers ] = useState( [] );
 
     const sceneModels = props.data.models.map( ( model: any , i: number ) => 
         (<CreateModel 
@@ -93,8 +116,34 @@ function Models( props: any )  {
             position={ model.positions[0] }
             name={ model.name }
             model={ model }
+            setAnimations={ setAnimations }
+            setMixers={ setMixers }
         />)
     )
+
+
+    useEffect( () => {
+        if(animations.length){
+            console.log(props.counter);
+
+            animations.forEach( ( animation: any ) => {
+                animation.stop();
+                animation.reset();
+            });
+            console.log(animations[props.counter]);
+            // console.log(mixers[0]);
+            animations[props.counter].play();
+        }
+    }, [ animations ] );
+
+    useFrame( ( _, delta ) => {
+        if( mixers.length ) {
+            console.log('updating');
+            mixers[ props.counter ].update( delta )
+        };
+    });
+
+
 
     return (
         <>
@@ -109,25 +158,22 @@ function Models( props: any )  {
 function CreateModel( props: any ) {
 
     // Animation System --> Need to create controller and get rid of hard coded data
-    let mixer; 
-    const animationData  = props.model.animations[0]
-    function StartAnimation() {
-        mixer = new THREE.AnimationMixer( ref.current ); // will we ever have more than 1 mesh per model? In other words, does it need to be an array of meshes 
-        const clips = animationData;
-        const clip = animationData;
-        const action = mixer.clipAction( clip )
-        action.play();
-    }
-    
+    function AddAnimation(ref) {
+        const mixer = new THREE.AnimationMixer( ref );
+        const clip = props.model.animations[0];
+        const animation = mixer.clipAction( clip )
+        props.setAnimations( ( animations: any ) => [...animations, animation ] );
+        props.setMixers( ( mixers: any ) => [...mixers, mixer ] );
+    };
+
+    const ref = useRef();    
     useEffect(() => {
-        StartAnimation();
-    }, [mixer]);
+        console.log('adding animation');
+        AddAnimation(ref.current);
+    }, []);
 
-    useFrame( ( _, delta ) => {
-        if( mixer ) mixer.update( delta );
-    });
 
-    const ref = useRef();
+
     const meshesOfModel = props.model.meshes.map( ( mesh: any ) => {
         return <mesh 
             geometry={ mesh.geometry } 
@@ -163,7 +209,7 @@ function Camera( props: { counter: number, camera_data: any } ) {
 
 
 // Renders the UI and creates event handlers to handle user input.
-function UI() {
+function UI(): JSX.Element {
     // console.log('UI() called');
 
     const dispatch = useDispatch();
@@ -180,7 +226,7 @@ function UI() {
         Next
         </button> 
     )
-}
+};
 
 
 // Creates a zoomed out camera with 360 orbit controls to make dev easier:
