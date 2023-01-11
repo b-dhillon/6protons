@@ -32,6 +32,10 @@ To-do:
 export default function Page( props ): any {
     const [ page ] = useState( props.data );
 
+    useEffect( () => {
+        console.log('camera data', page.camera);
+    }, []);
+
     return (
         <Suspense>
             <UI />
@@ -58,6 +62,57 @@ function Scene( props ): any {
 
             </Canvas>
         </Suspense>
+    );
+};
+
+// Creates camera, handles its updates and renders the cameraHelper when called.
+function Camera( props: { counter: number, camera_data: any } ) {
+    const ref = useRef();
+    const [ animations, setAnimations ] = useState( [] );
+    const [ mixers, setMixers ] = useState( [] );
+
+
+    // Adding animation to fiber model:
+    function AddAnimationTo( fiber_camera ) {
+        const mixer = new THREE.AnimationMixer( fiber_camera );
+        const animation_data = props.camera_data.animations[ 0 ];
+        console.log('camera animation data', animation_data);
+        const animation = mixer.clipAction( animation_data )
+        animation.repetitions = 1;
+        animation.clampWhenFinished = true;
+        setAnimations( ( animations: any ) => [...animations, animation ] );
+        setMixers( ( mixers: any ) => [...mixers, mixer ] );
+    };
+
+    useEffect(() => {
+        AddAnimationTo( ref.current );
+    }, []);
+
+    function AnimationController() {
+        if( animations.length ) {
+            // This is a side effect...change to setAnimations?
+            animations.forEach( ( animation: any ) => {
+                animation.stop();
+                animation.reset();
+            });
+            animations[ props.counter ].play();
+        }
+    }
+
+    useEffect( AnimationController, [ animations, props.counter ] );
+
+    useFrame( ( _, delta ) => {
+        if( mixers.length ) mixers[ props.counter ].update( delta );
+    });
+
+
+    useHelper(ref, CameraHelper);
+
+    return (
+        <>
+            <PerspectiveCamera ref={ref} position={[0,0,5]} fov={45} near={.1} far={2}/>
+            {/* <UpdateCamera _ref={ref} counter={ counter } camera_data={ camera_data } /> */}
+        </>
     );
 };
 
@@ -146,18 +201,7 @@ function CreateModel( props: any ) {
 
 
 
-// Creates camera, handles its updates and renders the cameraHelper when called.
-function Camera( props: { counter: number, camera_data: any } ) {
-    const ref = useRef();
-    useHelper(ref, CameraHelper);
 
-    return (
-        <>
-            <PerspectiveCamera ref={ref} position={[0,0,5]} fov={45} near={.1} far={2}/>
-            {/* <UpdateCamera _ref={ref} counter={ counter } camera_data={ camera_data } /> */}
-        </>
-    );
-};
 
 
 // Renders the UI and creates event handlers to handle user input.

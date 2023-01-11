@@ -2,7 +2,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import TestPage from './TestPage';
-import { AnimationClip, NumberKeyframeTrack } from 'three';
+import { AnimationClip, NumberKeyframeTrack, VectorKeyframeTrack } from 'three';
 
 
 
@@ -35,7 +35,9 @@ const _pages = [
                 { _x: 0, _y: 0, _z: 0 },
                 { _x: 0, _y: 0, _z: 0 },
             ],
-            animations: [ 
+            animations: [
+                TranslateCamera( 2, [ 0, 0, 25 ], [ 0, 0, 0 ] ),
+                TranslateCamera( 1, [ 0, 0, 0 ], [ 0.5, 0, 1 ] ),
             ],
         },
 
@@ -50,7 +52,7 @@ const _pages = [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animations: [ 
-                    Rotation(200, 'x'),
+                    RotateModel(300, 'x'),
                     
                 ],
                 meshes: null,
@@ -70,7 +72,7 @@ const _pages = [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animations: [
-                    Rotation(200, 'y')
+                    RotateModel(200, 'y')
                 ],
                 meshes: null,
                 nodes: null, 
@@ -257,7 +259,7 @@ export default function App() {
 };
 
 
-function Rotation( period: number, axis = 'x' ) {
+function RotateModel( period: number, axis = 'x' ) {
     const times = [ 0, period ], values = [ 0, 360 ];
     const trackName = '.rotation[' + axis + ']';
     const track = new NumberKeyframeTrack( trackName, times, values );
@@ -265,7 +267,38 @@ function Rotation( period: number, axis = 'x' ) {
 };
 
 
+// Need to check if the track has all the values already computed after the clip is created. 
+function TranslateCamera( period: number, initial_position: number[], final_position: number[] ) {
+    const times = [ 0, period ], values = [ ...initial_position, ...final_position ];
+    const trackName = '.position';
+    const track = new VectorKeyframeTrack( trackName, times, values );
+    return new AnimationClip( trackName, period, [ track ] );
+};
 
+
+/*
+function CreatePulsationAnimation( duration, pulseScale ) {
+
+    const times = [], values = [], tmp = new Vector3();
+
+    for ( let i = 0; i < duration * 10; i ++ ) {
+
+        times.push( i / 10 );
+
+        const scaleFactor = Math.random() * pulseScale;
+        tmp.set( scaleFactor, scaleFactor, scaleFactor ).
+            toArray( values, values.length );
+
+    }
+
+    const trackName = '.scale';
+
+    const track = new VectorKeyframeTrack( trackName, times, values );
+
+    return new AnimationClip( null, duration, [ track ] );
+
+}
+*/
 
 
 
