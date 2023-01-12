@@ -71,10 +71,8 @@ function Camera( props: { counter: number, camera_data: any } ) {
     const [ animationActions, setAnimationActions ] = useState( [] );
     const [ mixers, setMixers ] = useState( [] );
 
-
-    // Adding animation to fiber model:
-    function CreateAnimationActions( fiber_camera, allAnimationData: any ) {
-
+    // Loops through camera animations[] --> creates an AnimationAction for each:
+    function CreateAllAnimationActions( fiber_camera, allAnimationData: any ) {
         let mixers = [];
         function CreateAnimationAction( animationData ) {
             const mixer = new THREE.AnimationMixer( fiber_camera );
@@ -84,25 +82,10 @@ function Camera( props: { counter: number, camera_data: any } ) {
             mixers.push( mixer );
             return animationAction
         }
-        const allAnimationActions = allAnimationData.map( ( animationData: any ) => {
-            return CreateAnimationAction( animationData );
-        });
-
-        console.log('allAnimationActions', allAnimationActions);
-
+        const allAnimationActions = allAnimationData.map( ( animationData: any ) => CreateAnimationAction( animationData ) );
         setAnimationActions( allAnimationActions );
         setMixers( mixers );
-    }; 
-    
-    useEffect( () => {
-        CreateAnimationActions( ref.current, props.camera_data.animations )
-    }, [] );
-
-
-
-
-
-
+    }; useEffect( () => CreateAllAnimationActions( ref.current, props.camera_data.animations ), [] );
 
     // Trigger proper camera animation based on counter:
     function AnimationController() {
