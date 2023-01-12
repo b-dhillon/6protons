@@ -68,38 +68,53 @@ function Scene( props ): any {
 // Creates camera, handles its updates and renders the cameraHelper when called.
 function Camera( props: { counter: number, camera_data: any } ) {
     const ref = useRef();
-    const [ animations, setAnimations ] = useState( [] );
+    const [ animationActions, setAnimationActions ] = useState( [] );
     const [ mixers, setMixers ] = useState( [] );
 
 
     // Adding animation to fiber model:
-    function AddAnimationTo( fiber_camera ) {
-        const mixer = new THREE.AnimationMixer( fiber_camera );
-        const animation_data = props.camera_data.animations[ 0 ];
-        console.log('camera animation data', animation_data);
-        const animation = mixer.clipAction( animation_data )
-        animation.repetitions = 1;
-        animation.clampWhenFinished = true;
-        setAnimations( ( animations: any ) => [...animations, animation ] );
-        setMixers( ( mixers: any ) => [...mixers, mixer ] );
-    };
+    function CreateAnimationActions( fiber_camera, allAnimationData: any ) {
 
-    useEffect(() => {
-        AddAnimationTo( ref.current );
-    }, []);
-
-    function AnimationController() {
-        if( animations.length ) {
-            // This is a side effect...change to setAnimations?
-            animations.forEach( ( animation: any ) => {
-                animation.stop();
-                animation.reset();
-            });
-            animations[ props.counter ].play();
+        let mixers = [];
+        function CreateAnimationAction( animationData ) {
+            const mixer = new THREE.AnimationMixer( fiber_camera );
+            const animationAction = mixer.clipAction( animationData )
+            animationAction.repetitions = 1;
+            animationAction.clampWhenFinished = true;
+            mixers.push( mixer );
+            return animationAction
         }
-    }
+        const allAnimationActions = allAnimationData.map( ( animationData: any ) => {
+            return CreateAnimationAction( animationData );
+        });
 
-    useEffect( AnimationController, [ animations, props.counter ] );
+        console.log('allAnimationActions', allAnimationActions);
+
+        setAnimationActions( allAnimationActions );
+        setMixers( mixers );
+    }; 
+    
+    useEffect( () => {
+        CreateAnimationActions( ref.current, props.camera_data.animations )
+    }, [] );
+
+
+
+
+
+
+
+    // Trigger proper camera animation based on counter:
+    function AnimationController() {
+        if( animationActions.length ) {
+            // This is a side effect...change to setAnimations?
+            // animationActions.forEach( ( animation: any ) => {
+            //     animation.stop();
+            //     animation.reset();
+            // });
+            animationActions[ props.counter ].play();
+        }
+    }; useEffect( AnimationController, [ animationActions, props.counter ] );
 
     useFrame( ( _, delta ) => {
         if( mixers.length ) mixers[ props.counter ].update( delta );

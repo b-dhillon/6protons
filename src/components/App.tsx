@@ -2,7 +2,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import TestPage from './TestPage';
-import THREE, { AnimationClip, NumberKeyframeTrack, VectorKeyframeTrack } from 'three';
+import { AnimationClip, NumberKeyframeTrack, VectorKeyframeTrack, InterpolateSmooth, InterpolateDiscrete } from 'three';
 
 
 
@@ -271,7 +271,7 @@ function RotateModel( period: number, axis = 'x' ) {
 function TranslateCamera( period: number, initial_position: number[], final_position: number[] ) {
     const times = [ 0, period ], values = [ ...initial_position, ...final_position ];
     const trackName = '.position';
-    const track = new VectorKeyframeTrack( trackName, times, values, THREE.InterpolateSmooth );
+    const track = new VectorKeyframeTrack( trackName, times, values, InterpolateSmooth );
     return new AnimationClip( trackName, period, [ track ] );
 };
 
