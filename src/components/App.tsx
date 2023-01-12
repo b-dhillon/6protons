@@ -36,8 +36,8 @@ const _pages = [
                 { _x: 0, _y: 0, _z: 0 },
             ],
             animations: [
-                TranslateCamera( 2, [ 0, 0, 25 ], [ 0, 0, 0 ] ),
-                TranslateCamera( 1, [ 0, 0, 0 ], [ 0.5, 0, 1 ] ),
+                [ Translate( 2, [ 0, 0, 25 ], [ 0, 0, 0 ] ), Rotate( 1, 'y', 0, 0) ],
+                [ Translate( 1, [ 0, 0, 0 ], [ 0.5, 0, 1 ] ), Rotate( 1, 'x', 0, 30 ) ],
             ],
         },
 
@@ -52,8 +52,7 @@ const _pages = [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animations: [ 
-                    RotateModel(300, 'x'),
-                    
+                    Rotate(300, 'x', 0, 360),  
                 ],
                 meshes: null,
                 nodes: null, 
@@ -72,7 +71,7 @@ const _pages = [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animations: [
-                    RotateModel(200, 'y')
+                    Rotate(200, 'y', 0, 360)
                 ],
                 meshes: null,
                 nodes: null, 
@@ -259,8 +258,8 @@ export default function App() {
 };
 
 
-function RotateModel( period: number, axis = 'x' ) {
-    const times = [ 0, period ], values = [ 0, 360 ];
+function Rotate( period: number, axis = 'x', initial_angle: number, final_angle: number ) {
+    const times = [ 0, period ], values = [ initial_angle, final_angle ];
     const trackName = '.rotation[' + axis + ']';
     const track = new NumberKeyframeTrack( trackName, times, values );
     return new AnimationClip( trackName, period, [ track ] );
@@ -268,7 +267,7 @@ function RotateModel( period: number, axis = 'x' ) {
 
 
 // Need to check if the track has all the values already computed after the clip is created. 
-function TranslateCamera( period: number, initial_position: number[], final_position: number[] ) {
+function Translate( period: number, initial_position: number[], final_position: number[] ) {
     const times = [ 0, period ], values = [ ...initial_position, ...final_position ];
     const trackName = '.position';
     const track = new VectorKeyframeTrack( trackName, times, values, InterpolateSmooth );

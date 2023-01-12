@@ -13,10 +13,8 @@ import * as THREE from 'three'
 
 /* 
 To-do: 
-- Develop all camera animations 
-
 - After camera, add test models to all proper locations of lesson -- need to figure out what these locations are first.
-- Get models visibility and animation toggling properly based on counter.
+- Get models visibility toggling properly based on counter.
 - Figure out why Models() is being called twice.
 - Clean up and get a high level understanding of everything that you've re-factored.
 
@@ -68,42 +66,42 @@ function Scene( props ): any {
 // Creates camera, handles its updates and renders the cameraHelper when called.
 function Camera( props: { counter: number, camera_data: any } ) {
     const ref = useRef();
-    const [ animationActions, setAnimationActions ] = useState( [] );
+    const [ translateAnimationActions, setTranslateAnimationActions ] = useState( [] );
+    const [ rotateAnimationActions, setRotateAnimationActions ] = useState( [] );
     const [ mixers, setMixers ] = useState( [] );
 
-    // Loops through camera animations[] --> creates an AnimationAction for each:
+
+    // Loops through camera animations[] --> creates an AnimationAction for each rotation and translation animation:
     function CreateAllAnimationActions( fiber_camera, allAnimationData: any ) {
         let mixers = [];
         function CreateAnimationAction( animationData ) {
             const mixer = new THREE.AnimationMixer( fiber_camera );
-            const animationAction = mixer.clipAction( animationData )
+            const animationAction = mixer.clipAction( animationData );
             animationAction.repetitions = 1;
             animationAction.clampWhenFinished = true;
             mixers.push( mixer );
             return animationAction
         }
-        const allAnimationActions = allAnimationData.map( ( animationData: any ) => CreateAnimationAction( animationData ) );
-        setAnimationActions( allAnimationActions );
+        const allTranslateAnimationActions = allAnimationData.map( ( animationData: any ) => CreateAnimationAction( animationData[0] ) );
+        const allRotateAnimationActions = allAnimationData.map( ( animationData: any ) => CreateAnimationAction( animationData[1] ) );
+        setTranslateAnimationActions( allTranslateAnimationActions );
+        setRotateAnimationActions( allRotateAnimationActions );
         setMixers( mixers );
+
     }; useEffect( () => CreateAllAnimationActions( ref.current, props.camera_data.animations ), [] );
+                                                                    // ^  [ [ t, r ], [ t, r ] ]
 
     // Trigger proper camera animation based on counter:
     function AnimationController() {
-        if( animationActions.length ) {
-            // This is a side effect...change to setAnimations?
-            // animationActions.forEach( ( animation: any ) => {
-            //     animation.stop();
-            //     animation.reset();
-            // });
-            animationActions[ props.counter ].play();
-        }
-    }; useEffect( AnimationController, [ animationActions, props.counter ] );
+        if( translateAnimationActions.length ) translateAnimationActions[ props.counter ].play();
+        if( rotateAnimationActions.length ) rotateAnimationActions[ props.counter ].play();
+        
+    }; useEffect( AnimationController, [ translateAnimationActions, props.counter ] );
 
+    
     useFrame( ( _, delta ) => {
         if( mixers.length ) mixers[ props.counter ].update( delta );
     });
-
-
     useHelper(ref, CameraHelper);
 
     return (
@@ -113,9 +111,6 @@ function Camera( props: { counter: number, camera_data: any } ) {
         </>
     );
 };
-
-
-
 
 
 // Loops data.models[] --> returns array of fiber models to mount to scene graph
