@@ -1,7 +1,7 @@
 # 3D Textbook
 
 ### Project Description:
-- Six Protons is a web application -- specifically it is an eLearning minimum viable product (mvp). It is designed to teach math & science by visualizing abstract concepts using 3D models. The app in its current form focuses on carbon crystals (carbon is the only atom with 6 protons), however this framework can be applied to teach any STEM subject. 
+- Six Protons is a web application -- specifically it is an eLearning minimum viable product (mvp). It is designed to teach math & science by visualizing abstract concepts using 3D models. The app in its current form focuses on carbon crystals (carbon is the only atom with 6 protons), however this framework can be applied to teach any STEM subject. This app is currently under development and undergoing heavy re-writing. 
 
 
 ## Application Structure:
@@ -74,18 +74,6 @@
 ```
 
 
-### UI Design && Demo:
-
-https://user-images.githubusercontent.com/88413313/189790878-cce9cd87-a22e-47e4-b969-2855c318bf8e.mp4
-
-##### The user simply selects a lesson and navigates through it as seen below:
-https://user-images.githubusercontent.com/88413313/189790929-5481ab51-bced-4ead-adb4-fdb05ef6385c.mp4
-
-##### The UI is responsive and scalable:
-https://user-images.githubusercontent.com/88413313/190004640-e058fe2b-e85b-453f-bf7c-51be5e2a056b.mp4
-
-##### And works with tablets as well: 
-https://user-images.githubusercontent.com/88413313/190005139-403e5162-d019-4523-8d03-f6aa2287a619.mp4
 
 
 ### Architecture:
@@ -97,15 +85,20 @@ Six Protons is written using a functional paradigm and is built as a single page
 <img src="./img-ui/ui-3.png" style="width:750px;"/>
 <img src="./img-ui/ui-4.jpg" style="width:750px;"/>
 
+### UI Design && Demo:
+
+##### UI is responsive and scalable:
+https://user-images.githubusercontent.com/88413313/190004640-e058fe2b-e85b-453f-bf7c-51be5e2a056b.mp4
+
+##### And works with tablets as well: 
+https://user-images.githubusercontent.com/88413313/190005139-403e5162-d019-4523-8d03-f6aa2287a619.mp4
+
+
 ### Built With:
-- React (JavaScript)
-    - To render and update the DOM in a declarative manner. 
-- Redux
-    - To pass data between sibling components and synchronize state across seperate components.
-- Blender
-    - To create 3D assets. 
-- Three.JS / React-3-Fiber
-    - To import, render, and animate the 3D assets.
+- TypeScript
+- React
+- WebGL 
+- Blender 
 
 
 ## Development Environment Set-up:
@@ -131,16 +124,12 @@ Instructions:
     ```bash
     npm start
     ``` 
-5. Happy hacking!
+5. Happy hacking.
 
-
-
-## Authors:
-- B. Dhillon - Designer && Developer
 
 ## License:
 ```
-Six Protons (https://6protons.app)
+Six Protons
 Copyright (c) 2022, Bhavandeep Dhillon
 
 Six Protons is free software: you can redistribute it and/or modify
@@ -155,5 +144,3 @@ GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with Six Protons.  If not, see <http://www.gnu.org/licenses>.
 ```
-## Acknowledgements:
-Special thanks to the open source developer collective, Poimandres. For their development of the incredible React renderer for Three.js (react-three-fiber) as well as their useful GLTF to JSX transformer (gltfjsx).
