@@ -76,7 +76,7 @@ const _pages = [
                 meshes: null,
                 nodes: null, 
                 materials: null,
-                visible: true,
+                visible: false,
                 name: 'model1',
                 scale: { x: 1, y: 1, z: 1 },
             },

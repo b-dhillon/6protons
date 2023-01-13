@@ -13,8 +13,15 @@ import * as THREE from 'three'
 
 /* 
 To-do: 
-- After camera, add test models to all proper locations of lesson -- need to figure out what these locations are first.
 - Get models visibility toggling properly based on counter.
+    - Two ways: 
+        - 1. Mount only a single model based on the counter.
+        - 2. Mount all the models and toggle their visibility based on counter.
+
+    I need to figure out to proper toggle the model's visibility.
+
+
+- After camera, add test models to all proper locations of lesson -- need to figure out what these locations are first.
 - Figure out why Models() is being called twice.
 - Clean up and get a high level understanding of everything that you've re-factored.
 
@@ -30,10 +37,6 @@ To-do:
 export default function Page( props ): any {
     const [ page ] = useState( props.data );
 
-    useEffect( () => {
-        console.log('camera data', page.camera);
-    }, []);
-
     return (
         <Suspense>
             <UI />
@@ -44,7 +47,17 @@ export default function Page( props ): any {
 
 // Mounts components to scene graph and renders 3D scene.
 function Scene( props ): any {
+    console.log( 'Scene() Called' );
     const counter = useSelector( ( state: any ) => state.counter );
+
+    function StateCheck() {
+        useThree( ( state ) => {
+            console.log('state', state);
+        });
+    }
+
+
+
 
     return (
         <Suspense>
@@ -57,6 +70,7 @@ function Scene( props ): any {
                 < ambientLight intensity={10} />
                 < spotLight position={[-10, 10, 10] } intensity={.9} />
                 < DevelopmentCamera  />
+                < StateCheck />
 
             </Canvas>
         </Suspense>
@@ -98,7 +112,7 @@ function Camera( props: { counter: number, camera_data: any } ) {
         
     }; useEffect( AnimationController, [ translateAnimationActions, props.counter ] );
 
-    
+
     useFrame( ( _, delta ) => {
         if( mixers.length ) mixers[ props.counter ].update( delta );
     });
@@ -116,19 +130,44 @@ function Camera( props: { counter: number, camera_data: any } ) {
 // Loops data.models[] --> returns array of fiber models to mount to scene graph
 // Creates AnimationController: Counter changes --> animation at the current counter index is played.
 function Models( props: any )  {  
+    console.log('Models() Called');
+
+
+    const [ refs, setRefs ] = useState( [] );
     const [ animations, setAnimations ] = useState( [] );
     const [ mixers, setMixers ] = useState( [] );
 
-    const sceneModels = props.data.models.map( ( model: any , i: number ) => 
-        (<CreateModel 
-            key={ model.id } 
-            position={ model.positions[0] }
-            name={ model.name }
-            model={ model }
-            setAnimations={ setAnimations }
-            setMixers={ setMixers }
-        />)
-    )
+    // Adding animation to fiber model:
+    function AddAnimationTo( fiber_model, i ) {
+        const mixer = new THREE.AnimationMixer( fiber_model );
+
+
+        const animation_data = props.data.models[i].animations[0];
+
+
+
+        const animation = mixer.clipAction( animation_data );
+        return [animation, mixer];
+
+        // I want to set this once
+        // setAnimations( ( animations: any ) => [...animations, animation ] );
+        // setMixers( ( mixers: any ) => [...mixers, mixer ] );
+    }; 
+
+
+
+    // Need to update dependency array so that this is called after all refs are set.
+    // Do I even need to do this. Lets walk through what I am even trying to accomplish here.
+    useEffect(() => {
+            const animationsAndMixers = refs.map( ( ref: any, i: number ) => AddAnimationTo( ref.current, i ));
+            console.log('animationsAndMixers', animationsAndMixers);
+            // [ [a0, m0] [a1, m1] [a2, m2] ]
+            setAnimations( animationsAndMixers.map( ( animationAndMixer: any ) => animationAndMixer[0] ) );
+            setMixers( animationsAndMixers.map( ( animationAndMixer: any ) => animationAndMixer[1] ) );
+        
+    }, [ refs ]);
+
+
 
     function AnimationController() {
         if( animations.length ) {
@@ -139,13 +178,30 @@ function Models( props: any )  {
             });
             animations[ props.counter ].play();
         }
-    }
-
-    useEffect( AnimationController, [ animations, props.counter ] );
+    } useEffect( AnimationController, [ animations, props.counter ] );
 
     useFrame( ( _, delta ) => {
         if( mixers.length ) mixers[ props.counter ].update( delta );
     });
+
+
+    useEffect( () => {
+        console.log('animations', animations);
+    }, [ animations ]);
+
+    const sceneModels = props.data.models.map( ( model: any , i: number ) => 
+        (<CreateModel 
+            key={ model.id } 
+            position={ model.positions[0] }
+            name={ model.name }
+            model={ model }
+            setAnimations={ setAnimations }
+            setMixers={ setMixers }
+            setRefs={ setRefs }
+
+            visible={ (props.counter === i ? true : false) }
+        />)
+    )
 
     return (
         <>
@@ -158,39 +214,81 @@ function Models( props: any )  {
 // Grabs meshes and animations from data --> creates a group of all the meshes per model:
 // [ meshes ] mounted to the scene graph when Models();
 function CreateModel( props: any ) {
+    console.log('CreateModel() Called');
+
+    let modelName;
 
     // Creating fiber mesh:
-    const ref = useRef();    
+    const ref = useRef();
+    useEffect( () => {
+        props.setRefs( (refs: any) => [...refs, ref] )
+    }, []);
+
     const fiber_model = props.model.meshes.map( ( mesh: any ) => {
+        modelName = mesh.name;
         return <mesh 
             geometry={ mesh.geometry } 
             material={ mesh.material }  
             ref={ ref }
             scale={ 1 } 
             key={ mesh.uuid } 
-            name={ mesh.name }  
+            name={ mesh.name }
         />
     });
 
-    // Adding animation to fiber model:
-    function AddAnimationTo( fiber_model ) {
-        const mixer = new THREE.AnimationMixer( fiber_model );
-        const animation_data = props.model.animations[0];
-        const animation = mixer.clipAction( animation_data )
-        props.setAnimations( ( animations: any ) => [...animations, animation ] );
-        props.setMixers( ( mixers: any ) => [...mixers, mixer ] );
-    };
 
-    useEffect(() => {
-        AddAnimationTo( ref.current );
-    }, []);
 
     return (
-        <group ref={ref} position={ [ props.position.x, props.position.y, props.position.z ] } >
+        <group visible={ props.visible }isModel={true} name={ modelName } ref={ref} position={ [ props.position.x, props.position.y, props.position.z ] } >
             { fiber_model }
         </group>
     );
 };
+
+
+
+function ModelController() {
+    const counter = useSelector( ( state: any ) => state.counter );
+    const oldScene = useThree( ( state: any ) => state.scene );
+    console.log('oldScene', oldScene);
+
+    const sceneGraphChildren = useThree( ( state: any ) => state.scene.children );
+
+    const newSceneGraphChildren = sceneGraphChildren.map( ( child: any ) => {
+        return {
+            ...child,
+            visible: child.isModel ? false : true
+        }
+    });
+
+    const newScene = {
+        ...oldScene, 
+        children: newSceneGraphChildren
+    }
+
+
+
+
+
+    const set = useThree( ( state: any ) => state.set );
+    console.log('setter', set);
+    console.log( useThree( ( state: any ) => state) );
+
+    // .filter( ( child: any ) => child.name === 'Carbon_Nanotube' 
+
+
+    useEffect( () => {
+        console.log('newScene', newScene);
+        set({ scene: newScene })
+    }, []);
+
+    return (
+        <></>
+    )
+    // return (
+    //     <Models counter={ counter } data={ data } />
+    // )
+}
 
 
 
