@@ -11,8 +11,8 @@ const root = createRoot(container!); // createRoot(container!) if you use TypeSc
 root.render(
   // <React.StrictMode>
     <Provider store={store}>
-      {/* <__App /> */}
-      <App />
+      <__App />
+      {/* <App /> */}
     </Provider>
   // </React.StrictMode>
 

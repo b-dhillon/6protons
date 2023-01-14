@@ -2,27 +2,45 @@ import { useFrame } from '@react-three/fiber';
 import { useEffect } from 'react';
 // import { dampE } from 'maath/easing';
 
-export default function UpdateCamera( { _ref, counter, camera_config } ) {
+function lerp(o, n, s) {
+    const r = (1 - s) * o + s * n;
+    return Math.abs(o - n) < 0.005 ? n : r;
+};
+
+
+// This is increasing the z position by 0.0017 each frame. 
+export default function UpdateCamera( { _ref, counter, camera_data } ) {
+
+    console.log(camera_data);
+
+    let i = 0; 
 
     // Grabbing new camera values from global data object based on counter:
-    const newPosition = camera_config[counter].position;
-    const c = camera_config[counter];
-    const [rX, rY, rZ] = [c.rotation.x, c.rotation.y, c.rotation.z];
+    // const newPosition = camera_data[counter].positions;
+    const newPosition =  { x: 0, y: 0, z: 0 }
+    // const c = camera_config[counter];
+    // const [rX, rY, rZ] = [c.rotation.x, c.rotation.y, c.rotation.z];
 
     // Updating old camera values:
         // Can improve performance by running all lerps before hand and storing them in an array. You'll need to do this with a delta
         // Also, interpolating rotation is a bit more complicated, I dont think you can just lerp here, can cause gimbal lock and imprecise rotations.
     useFrame((_, delta) => {
-        _ref.current.position.lerp(newPosition, delta * 2);
-        _ref.current.rotation.set(lerp(_ref.current.rotation.x, rX, delta*2), lerp(_ref.current.rotation.y, rY, delta*2), lerp(_ref.current.rotation.z, rZ, delta*2));
+
+        // I never define the time so this thing keeps appraoching 0 to infinity and never stops, this is why it is so smooth.
+        _ref.current.position.lerp( newPosition, delta );
         _ref.current.updateMatrixWorld();
+
+
+
+
+
+
+        // _ref.current.rotation.set(lerp(_ref.current.rotation.x, rX, delta*2), lerp(_ref.current.rotation.y, rY, delta*2), lerp(_ref.current.rotation.z, rZ, delta*2));
+        // console.log( _ref.current.position );
     });
 };
 
-function lerp(o, n, s) {
-    const r = (1 - s) * o + s * n;
-    return Math.abs(o - n) < 0.005 ? n : r;
-};
+
 
 
 

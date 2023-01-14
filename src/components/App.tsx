@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import TestPage from './TestPage';
-import { AnimationClip, NumberKeyframeTrack, VectorKeyframeTrack, InterpolateSmooth } from 'three';
+import { AnimationClip, NumberKeyframeTrack, VectorKeyframeTrack, InterpolateSmooth, AdditiveAnimationBlendMode } from 'three';
 
 
 
@@ -36,30 +36,31 @@ const _pages = [
                 { _x: 0, _y: 0, _z: 0 },
             ],
             animations: [
-                [ Translate( 3, [ 0, 0, 10 ], [ 0, 0, 1 ] ), Rotate( 1, 'y', 0, 0) ],
-                [ Translate( 1, [ 0, 0, 0 ], [ 0.5, 0, 1 ] ), Rotate( 1, 'x', 0, 30 ) ],
+                // [ TranslateZ( 1, 5, 0 ), Rotate( 1, 'y', 0, 0) ],
+                [ Translate( 3.37, [0,0,5], [0,0,0] ), Rotate( 1, 'y', 0, 0) ],
+                // [ Translate( 1, [ 0, 0, 0 ], [ 0.5, 0, 1 ] ), Rotate( 1, 'x', 0, 30 ) ],
             ],
         },
 
         models: [
             {
                 id: 'model0',
+                name: 'nanotube',
                 path: '/lesson3_models/model0.glb',
                 positions: [
-                    { x: 0, y: 0, z: -1 },
+                    { x: 0, y: 0, z: 0 },
                 ],
                 rotations: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animations: [ 
-                    Rotate(300, 'x', 0, 360),  
+                    Rotate( 2000, 'y', 0, 360 ),  
                 ],
                 meshes: null,
                 nodes: null, 
                 materials: null,
                 visible: true,
-                name: 'model0',
-                scale: .1
+                scale: 0.33
                 // scale: { x: .1, y: .1, z: .1 },
             },
             {
@@ -259,21 +260,56 @@ export default function App() {
 };
 
 
-function Rotate( period: number, axis = 'x', initial_angle: number, final_angle: number ) {
-    const times = [ 0, period ], values = [ initial_angle, final_angle ];
+function Rotate( duration: number, axis = 'x', initial_angle: number, final_angle: number ) {
+    const times = [ 0, duration ], values = [ initial_angle, final_angle ];
     const trackName = '.rotation[' + axis + ']';
     const track = new NumberKeyframeTrack( trackName, times, values );
-    return new AnimationClip( trackName, period, [ track ] );
+    return new AnimationClip( trackName, duration, [ track ] );
 };
 
 
 // Need to check if the track has all the values already computed after the clip is created. 
+// function TranslateZ( duration: number, initial_position: number, final_position: number ) {
+//     const [ times, values ] = calulateAllTimesAndAllValues( duration, initial_position, final_position );
+
+//     // const times = , values = [ initial_position, final_position ];
+//     const trackName = '.position[z]';
+//     const track = new NumberKeyframeTrack( trackName, times, values );
+//     console.log( track );
+//     return new AnimationClip( trackName, duration, [ track ] );
+// };
+
 function Translate( duration: number, initial_position: number[], final_position: number[] ) {
     const times = [ 0, duration ], values = [ ...initial_position, ...final_position ];
     const trackName = '.position';
     const track = new VectorKeyframeTrack( trackName, times, values, InterpolateSmooth );
+    console.log( track );
     return new AnimationClip( trackName, duration, [ track ] );
 };
+
+function myLerp(o: number, n: number, s: number) {
+    const r = (1 - s) * o + s * n;
+    return Math.abs(o - n) < 0.005 ? n : r;
+};
+
+function calulateAllTimesAndAllValues( _duration: number, _initial: number, _final: number ) {
+    const delta = .008
+    const allTimes = [], allValues = [];
+    const animationTime = _duration;
+    const numberSteps = animationTime / delta;
+    const initial = _initial;; 
+    const final = _final;
+
+    for (let i = 0; i < numberSteps; i++) {
+        allTimes.push( i * delta ); // refresh rate. 
+        allValues.push( myLerp( initial, final, i / numberSteps ) );
+    };
+
+    return [ allTimes, allValues ];
+}
+
+
+
 
 
 /*

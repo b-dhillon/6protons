@@ -8,10 +8,12 @@ import { increment } from './redux/actions';
 import { CameraHelper } from 'three';
 import Universe from './Universe';
 import * as THREE from 'three'
-// import UpdateCamera from './UpdateCamera.jsx';
+import UpdateCamera from './UpdateCamera.jsx';
 
 /* 
 To-do: 
+    - Create smooth animation endings for camera.
+        - Try to not use a Vector3 keyframe track and just change the Z position. Interpolate through Z smoothly. npm st
     - Add test models to all proper locations of lesson -- need to figure out what these locations are first.
     - Add easing to animations.
     - Clean up and get a high level understanding of everything that you've re-factored.
@@ -63,8 +65,14 @@ function Camera( props: { counter: number, camera_data: any } ) {
         function CreateAnimationAction( animationData ) {
             const mixer = new THREE.AnimationMixer( fiber_camera );
             const animationAction = mixer.clipAction( animationData );
-            animationAction.repetitions = 1;
+            animationAction.loop = THREE.LoopOnce;
             animationAction.clampWhenFinished = true;
+
+            animationAction.startAt( 1 )
+
+
+            console.log( animationAction);
+
             mixers.push( mixer );
             return animationAction
         }
@@ -79,26 +87,49 @@ function Camera( props: { counter: number, camera_data: any } ) {
 
     // Trigger proper camera animation based on counter:
     function AnimationController() {
-        if( translateAnimationActions.length ) translateAnimationActions[ props.counter ].warp( 1, 0, 5 ).play()
-        if( rotateAnimationActions.length ) rotateAnimationActions[ props.counter ].play();
+        if( translateAnimationActions.length ) translateAnimationActions[ props.counter ].play()
+        // if( translateAnimationActions.length ) translateAnimationActions[ props.counter ].warp( 1, .01, 5 ).play();
+
+        // Do we achieve smooth ending by setting halt time to double duration? Idk, test this out next:
+        // if( translateAnimationActions.length ) translateAnimationActions[ props.counter ].play().halt( 2 )
+        // if( rotateAnimationActions.length ) rotateAnimationActions[ props.counter ].play();
         
-    }; useEffect( AnimationController, [ translateAnimationActions, props.counter ] );
+    }; 
+    useEffect( AnimationController, [ translateAnimationActions, props.counter ] );
 
 
     useFrame( ( _, delta ) => {
         if( mixers.length ) mixers[ props.counter ].update( delta );
+
+        // final position drop is .051, and then it is a sudden stop fixed at the value. Perhaps after this animation is done, we can 
+        // blend another animation where it trends to another value? Because the other one doesn't stop suddenly, it keeps going and going. 
+        // so we do one animation where we go from initial to final-1, and then another from final-1 to final. 
+
+        // final position using TranslateZ = .039, final delta = .051
+        // final position using Translate at 1s = 0, final delta = 0.5
+        // final position using Translate at 3.37s  with smooth interpolation = 0, final delta = 0.0072
+        
+        // final position using Translate at 3.37s  with linear interpolation = 0, final delta = 0.0364
+
+        // final posiition using UpdateCamera = 0.08, final delta = 0.00017
+
+
+
+
+        // console.log(ref.current.position);
     });
+
     useHelper(ref, CameraHelper);
 
-    const set = useThree((state) => state.set);
+    // const set = useThree((state) => state.set);
 
     // Makes the camera known to the system:
-    useEffect( () => set({ camera: ref.current }) );
+    // useEffect( () => set({ camera: ref.current }) );
 
     return (
         <>
-            <PerspectiveCamera ref={ref} position={[0,0,5]} fov={45} near={.1} far={20}/>
-            {/* <UpdateCamera _ref={ref} counter={ counter } camera_data={ camera_data } /> */}
+            < PerspectiveCamera ref={ref} position={ [ 0,0,5 ] } fov={ 45 } near={.1} far={ 10 } />
+            {/* < UpdateCamera _ref={ref} counter={ props.counter } camera_data={ props.camera_data } /> */}
         </>
     );
 };
@@ -224,7 +255,7 @@ function DevelopmentCamera() {
     // Need to disable controls when camera is moving
     return (
         <>
-            <PerspectiveCamera ref={ref} position={[0,0,40]} fov={45} aspect={1}/>
+            <PerspectiveCamera ref={ref} position={[40,0,0]} rotation={ [0, (Math.PI/2) , 0] } fov={45} aspect={1}/>
             <CameraControls />
         </>
     );
