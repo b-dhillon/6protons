@@ -1,19 +1,18 @@
-// import { useState } from 'react';
+import { useState } from 'react';
 
-// import Home from './home/Home';
-// import FullerenesLesson from './fullerenes_lesson/FullerenesLesson';
-// import DiamondsLesson from './diamonds_lesson/DiamondsLesson';
-// import NanotubesLesson from './nanotubes_lesson/NanotubesLesson';
-// import GrapheneLesson from './graphene_lesson/GrapheneLesson';
-// import TestPage from './TestPage';
-// import data from './scene_configs';
+import Home from './home/Home';
+import FullerenesLesson from './fullerenes_lesson/FullerenesLesson';
+import DiamondsLesson from './diamonds_lesson/DiamondsLesson';
+import NanotubesLesson from './nanotubes_lesson/NanotubesLesson';
+import GrapheneLesson from './graphene_lesson/GrapheneLesson';
+import TestPage from './TestPage';
 
 
 export default function App() {
   // console.log('App() is called');
 
-  /*
-  const [page, setPage] = useState( 'test_page' );
+  
+  const [page, setPage] = useState( 'diamond' );
   const [loading, setLoading] = useState( true );
   // const [ appData, setAppData ] = useState( data );
 
@@ -25,16 +24,16 @@ export default function App() {
   function handlePage(id: string){
     setPage(`${id}`)
   }  
-  */
+  
 
-  // if(page === 'home') return <Home setPage={handlePage} loading={loading} setLoading={handleLoading} />;
-  // if(page === 'fullerene') return <FullerenesLesson setPage={handlePage} /> ;
-  // if(page === 'diamond') return <DiamondsLesson setPage={handlePage} />;
-  // if(page === 'graphene') return <GrapheneLesson setPage={handlePage} />;
-  // if(page === 'nanotube') return <NanotubesLesson setPage={handlePage} />;
+  if(page === 'home') return <Home setPage={handlePage} loading={loading} setLoading={handleLoading} />;
+  if(page === 'fullerene') return <FullerenesLesson setPage={handlePage} /> ;
+  if(page === 'diamond') return <DiamondsLesson setPage={handlePage} />;
+  if(page === 'graphene') return <GrapheneLesson setPage={handlePage} />;
+  if(page === 'nanotube') return <NanotubesLesson setPage={handlePage} />;
 
   //@ts-ignore
-  // if (page === 'test_page' ) return <TestPage data={ data } />;
+  if (page === 'test_page' ) return <TestPage data={ data } />;
   return <p>Error</p>;
 };
 

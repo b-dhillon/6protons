@@ -1,8 +1,8 @@
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import TestPage from './TestPage';
-import { AnimationClip, NumberKeyframeTrack, VectorKeyframeTrack, InterpolateSmooth, InterpolateDiscrete } from 'three';
+import { AnimationClip, NumberKeyframeTrack, VectorKeyframeTrack, InterpolateSmooth } from 'three';
 
 
 
@@ -36,7 +36,7 @@ const _pages = [
                 { _x: 0, _y: 0, _z: 0 },
             ],
             animations: [
-                [ Translate( 2, [ 0, 0, 25 ], [ 0, 0, 0 ] ), Rotate( 1, 'y', 0, 0) ],
+                [ Translate( 3, [ 0, 0, 10 ], [ 0, 0, 1 ] ), Rotate( 1, 'y', 0, 0) ],
                 [ Translate( 1, [ 0, 0, 0 ], [ 0.5, 0, 1 ] ), Rotate( 1, 'x', 0, 30 ) ],
             ],
         },
@@ -59,7 +59,8 @@ const _pages = [
                 materials: null,
                 visible: true,
                 name: 'model0',
-                scale: { x: 1, y: 1, z: 1 },
+                scale: .1
+                // scale: { x: .1, y: .1, z: .1 },
             },
             {
                 id: 'model1',
@@ -267,11 +268,11 @@ function Rotate( period: number, axis = 'x', initial_angle: number, final_angle:
 
 
 // Need to check if the track has all the values already computed after the clip is created. 
-function Translate( period: number, initial_position: number[], final_position: number[] ) {
-    const times = [ 0, period ], values = [ ...initial_position, ...final_position ];
+function Translate( duration: number, initial_position: number[], final_position: number[] ) {
+    const times = [ 0, duration ], values = [ ...initial_position, ...final_position ];
     const trackName = '.position';
     const track = new VectorKeyframeTrack( trackName, times, values, InterpolateSmooth );
-    return new AnimationClip( trackName, period, [ track ] );
+    return new AnimationClip( trackName, duration, [ track ] );
 };
 
 

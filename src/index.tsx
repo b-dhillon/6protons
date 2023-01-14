@@ -2,6 +2,7 @@ import { Provider } from 'react-redux';
 import { createRoot } from 'react-dom/client';
 import React from 'react';
 import App from './components/App';
+import __App from './components/__App';
 import store from './components/redux/store'
 import './global-styles.css';
 
@@ -10,7 +11,8 @@ const root = createRoot(container!); // createRoot(container!) if you use TypeSc
 root.render(
   // <React.StrictMode>
     <Provider store={store}>
-        <App />
+      {/* <__App /> */}
+      <App />
     </Provider>
   // </React.StrictMode>
 

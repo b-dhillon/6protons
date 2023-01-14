@@ -1,10 +1,11 @@
 ## Next Push
-- Refactor 
-      - Re-factor StartBtn and Home
-      - Fix flipped model bug.
-      - Clean up console log statements and warnings.
-      - Make every function only responsible for 1 thing (SRP) 
-            - Turn blackFade into 1 fn
+
+- Make every function only responsible for 1 thing (SRP) 
+      - Turn blackFade into 1 fn
+
+
+
+
 
 
 
@@ -21,16 +22,17 @@
 - Add animation to text.
 - Add voice over for text.
 
-
-
-
 - Fix context-lost bug -- seems to be losing context to the canvas of the previous page
-- Cache all your models with useLoader();
-- Create a whole new version of this project. Add typescript?
+- Create a whole new version of this project, Next?
 
 
 
-Figure out if blender animations are more performant then useFrame?
+- Reasonging for switching from useFrame() to AnimationActions
+    - This should enhance performance as the computations should be done ahead of time.
+    - It will also increase animation control with .start(), .stop(), .clampWhenFinished() etc... methods on the AnimtionAction object. 
+        - https://threejs.org/docs/#api/en/animation/AnimationAction
+    - This will allow you to have central stores of data and a proper data pipeline.
+
 
 ### Optional
 1. Add doped buckyball text.

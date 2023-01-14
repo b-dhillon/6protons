@@ -3,8 +3,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from 'react-redux';
 import { start } from '../redux/actions';
 import { useTransition, useSpring, useChain, config, animated, useSpringRef } from "@react-spring/web";
-// import lessons from '../../components/scenes.jsx';
-import data from "../scene_configs";
+import lessons from '../../components/scenes.jsx';
+import lesson from "./oldData";
 import styles from "../../styles.module.css";
 import { useGLTF } from '@react-three/drei';
 
@@ -39,10 +39,10 @@ export default function StartBtn( props: { handleFlip: any, setPage:  any }  ) {
   });
 
   const thumbnailRef = useSpringRef();
-  const thumbnailFade = useTransition( open ? data : [], 
+  const thumbnailFade = useTransition( open ? lesson : [], 
     {
       ref: thumbnailRef,
-      trail: 400 / data.length,
+      trail: 400 / lesson.length,
       from: { opacity: 0, scale: 0 },
       enter: { opacity: 1, scale: 1 },
       leave: { opacity: 0, scale: 0 }

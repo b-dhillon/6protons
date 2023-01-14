@@ -1,35 +1,24 @@
 // @ts-nocheck
 import { useState } from 'react';
-import { OrbitControls, PerspectiveCamera, useHelper, useAnimations } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera, useHelper } from '@react-three/drei';
 import { Suspense, useRef, useEffect } from 'react';
 import { Canvas, useThree, useFrame  } from '@react-three/fiber';
 import { useSelector, useDispatch } from 'react-redux';
 import { increment } from './redux/actions';
-import { AnimationAction, CameraHelper } from 'three';
+import { CameraHelper } from 'three';
 import Universe from './Universe';
 import * as THREE from 'three'
-// import scene_config_data from './scene_configs';
 // import UpdateCamera from './UpdateCamera.jsx';
 
 /* 
 To-do: 
-
-- Add test models to all proper locations of lesson -- need to figure out what these locations are first.
-- Figure out why Models() is being called twice.
-- Clean up and get a high level understanding of everything that you've re-factored.
-
-- Reasonging for switching from useFrame() to AnimationActions
-    - This should enhance performance as the computations should be done ahead of time.
-    - It will also increase animation control with .start(), .stop(), .clampWhenFinished() etc... methods on the AnimtionAction object. 
-        - https://threejs.org/docs/#api/en/animation/AnimationAction
-    - This will allow you to have central stores of data and a proper pipeline.
-    - Implement this with the UpdateCamera animation as well. 
+    - Add test models to all proper locations of lesson -- need to figure out what these locations are first.
+    - Add easing to animations.
+    - Clean up and get a high level understanding of everything that you've re-factored.
 */
-
 
 export default function Page( props ): any {
     const [ page ] = useState( props.data );
-
     return (
         <Suspense>
             <UI />
@@ -43,15 +32,6 @@ function Scene( props ): any {
     console.log( 'Scene() Called' );
     const counter = useSelector( ( state: any ) => state.counter );
 
-    function StateCheck() {
-        useThree( ( state ) => {
-            console.log('state', state);
-        });
-    }
-
-
-
-
     return (
         <Suspense>
             <Canvas>
@@ -63,7 +43,6 @@ function Scene( props ): any {
                 < ambientLight intensity={10} />
                 < spotLight position={[-10, 10, 10] } intensity={.9} />
                 < DevelopmentCamera  />
-                < StateCheck />
 
             </Canvas>
         </Suspense>
@@ -72,7 +51,7 @@ function Scene( props ): any {
 
 // Creates camera, handles its updates and renders the cameraHelper when called.
 function Camera( props: { counter: number, camera_data: any } ) {
-    const ref = useRef();
+    const ref: string = useRef();
     const [ translateAnimationActions, setTranslateAnimationActions ] = useState( [] );
     const [ rotateAnimationActions, setRotateAnimationActions ] = useState( [] );
     const [ mixers, setMixers ] = useState( [] );
@@ -100,7 +79,7 @@ function Camera( props: { counter: number, camera_data: any } ) {
 
     // Trigger proper camera animation based on counter:
     function AnimationController() {
-        if( translateAnimationActions.length ) translateAnimationActions[ props.counter ].play();
+        if( translateAnimationActions.length ) translateAnimationActions[ props.counter ].warp( 1, 0, 5 ).play()
         if( rotateAnimationActions.length ) rotateAnimationActions[ props.counter ].play();
         
     }; useEffect( AnimationController, [ translateAnimationActions, props.counter ] );
@@ -111,18 +90,21 @@ function Camera( props: { counter: number, camera_data: any } ) {
     });
     useHelper(ref, CameraHelper);
 
+    const set = useThree((state) => state.set);
+
+    // Makes the camera known to the system:
+    useEffect( () => set({ camera: ref.current }) );
+
     return (
         <>
-            <PerspectiveCamera ref={ref} position={[0,0,5]} fov={45} near={.1} far={2}/>
+            <PerspectiveCamera ref={ref} position={[0,0,5]} fov={45} near={.1} far={20}/>
             {/* <UpdateCamera _ref={ref} counter={ counter } camera_data={ camera_data } /> */}
         </>
     );
 };
 
 
-// Loops data.models[] --> returns array of fiber models to mount to scene graph
-// Creates AnimationController: Counter changes --> animation at the current counter index is played.
-
+// Loops data.models[] --> returns array of fiber models to mount to scene graph. Controls animations: counter changes --> animation at the current counter index is played.
 function Models( props: any )  {  
 
     const [ animationActions, setAnimationActions ] = useState( [] );
@@ -167,7 +149,7 @@ function CreateModel( props: any ) {
             geometry={ mesh.geometry } 
             material={ mesh.material }  
             ref={ ref }
-            scale={ 1 } 
+            scale={ props.model.scale } 
             key={ mesh.uuid } 
             name={ mesh.name }
         />
