@@ -34,9 +34,9 @@ export default function FullereneModels( props: any )
   */
   if (counter === 0) {
     return (
-      <Merged meshes={instances} {...props}>
-        { (instances) => <Model instances={instances} position={centerPosition} scale={scale}/> }
-      </Merged>
+      < Merged meshes={ instances } { ...props } >
+        { (instances) => <Model instances={ instances } position={ centerPosition } scale={scale}/> }
+      </ Merged >
     ) 
   };
 

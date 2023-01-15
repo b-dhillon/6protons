@@ -19,7 +19,7 @@ To-do:
 */
 
 export default function Page( props ): any {
-    
+
     const [ page ] = useState( props.data );
 
     return (
@@ -63,26 +63,26 @@ function Camera( props: { counter: number, camera_data: any } ) {
 
     // Loops through camera animations[] --> creates an AnimationAction for each rotation and translation animation:
     function CreateAllAnimationActions( fiber_camera, allAnimationData: any ) {
-        let mixers = [];
+        // let mixers = [];
         function CreateAnimationAction( animationData ) {
             const mixer = new THREE.AnimationMixer( fiber_camera );
             const animationAction = mixer.clipAction( animationData );
             animationAction.loop = THREE.LoopOnce;
             animationAction.clampWhenFinished = true;
 
-            animationAction.startAt( 1 )
-
-
-            console.log( animationAction);
-
-            mixers.push( mixer );
-            return animationAction
+            animationAction.startAt( 1 );
+            return animationAction;
+            // mixers.push( mixer );
         }
-        const allTranslateAnimationActions = allAnimationData.map( ( animationData: any ) => CreateAnimationAction( animationData[0] ) );
-        const allRotateAnimationActions = allAnimationData.map( ( animationData: any ) => CreateAnimationAction( animationData[1] ) );
+
+        const [ allTranslateAnimationActions, allRotateAnimationActions ] = allAnimationData.map( ( animationData: any ) => 
+            [ CreateAnimationAction( animationData[0] ), allAnimationData.map( ( animationData: any ) => CreateAnimationAction( animationData[1] ) ) ] );
+
+        // const allTranslateAnimationActions = allAnimationData.map( ( animationData: any ) => CreateAnimationAction( animationData[0] ) );
+        // const allRotateAnimationActions = allAnimationData.map( ( animationData: any ) => CreateAnimationAction( animationData[1] ) );
         setTranslateAnimationActions( allTranslateAnimationActions );
         setRotateAnimationActions( allRotateAnimationActions );
-        setMixers( mixers );
+        // setMixers( mixers );
 
     }; useEffect( () => CreateAllAnimationActions( ref.current, props.camera_data.animations ), [] );
                                                                     // ^  [ [ t, r ], [ t, r ] ]
