@@ -12,7 +12,7 @@ export default function App() {
   // console.log('App() is called');
 
   
-  const [page, setPage] = useState( 'diamond' );
+  const [page, setPage] = useState( 'home' );
   const [loading, setLoading] = useState( true );
   // const [ appData, setAppData ] = useState( data );
 
@@ -34,7 +34,7 @@ export default function App() {
 
   //@ts-ignore
   if (page === 'test_page' ) return <TestPage data={ data } />;
-  return <p>Error</p>;
+  return <h2>Error</h2>;
 };
 
 

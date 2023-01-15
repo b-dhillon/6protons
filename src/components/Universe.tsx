@@ -4,13 +4,13 @@ import { Points, PointMaterial } from '@react-three/drei';
 import { inSphere } from "maath/random";
 import { TypedArray } from 'maath/dist/declarations/src/ctypes';
 
-const star_positions = BigBang2( 50000, 10 );
+const star_positions = BigBang2( 25000, 5 );
 
 function Universe( props: any ): JSX.Element {
     const ref: any = useRef();
 
     useFrame((_, delta) => {
-        ref.current.rotation.x -= delta / 25
+        ref.current.rotation.x -= delta / 20
         // ref.current.rotation.y -= delta / 20
     });
 
@@ -18,7 +18,7 @@ function Universe( props: any ): JSX.Element {
         <group  rotation={[0, 0, Math.PI / 4]} >
             <group  >
                 <Points ref={ref}  positions={ star_positions } stride={3} frustumCulled={false} {...props}>
-                    <PointMaterial transparent color="#fff" size={ 0.005 } sizeAttenuation={true} depthWrite={false} />
+                    <PointMaterial transparent color="#fff" size={ 0.0035 } sizeAttenuation={true} depthWrite={false} />
                 </Points>
             </group>
 

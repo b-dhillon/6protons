@@ -1,70 +1,91 @@
-import { Suspense, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { Provider } from 'react-redux';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei'
-import Stars from '../Universe';
+import { OrbitControls } from '@react-three/drei';
+import UpdateCamera from '../UpdateCamera';
+import Universe from '../Universe';
 import DataStore from '../redux/store';
 import DiamondModels from './DiamondModels';
-// import LessonOverlay from '../LessonOverlay';
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
+// import LessonOverlay from '../LessonOverlay';
 // import * as THREE from 'three'
 
 
-function DiamondsLesson(props: any) {
+function DiamondsLesson( props: any ) {
   const lesson = 'Diamonds';
 
-  const spotLight: any = useRef();
-  // useHelper(spotLight, BoxHelper, 'cyan')
+  const [ fadeDone, setFadeDone ] = useState( false );
 
-
-
-  const [fadeDone, setFadeDone] = useState(false);
-  function handleFadeDoneAfter2Seconds() {
-    setTimeout( () => {
-      setFadeDone(true);
-    }, 2000 )
-  }; handleFadeDoneAfter2Seconds();
-
-
-
+  function handleFadeDoneAfter( seconds: number ) {
+    setTimeout( () => setFadeDone( true ), seconds );
+  }; useEffect( () => handleFadeDoneAfter( 2000 ) )
 
   return (
     <>
-      <Suspense fallback={null}>
-        {!fadeDone ? <div className="blackFade"></div> : ""}
+      < Suspense fallback={null} >
 
+        < IntroFade fadeDone={ fadeDone } />
 
-        {/* <div className="blackFade"></div> */}
-        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 10, fov: 75, position: [0,0,2] }}>
-          {/* <color attach="background" args={['white']} /> */}
+        < Canvas gl={ { alpha: false } } dpr={ [ 1, 2 ] } camera={ { near: 0.01, far: 10, fov: 75, position: [ 0, 0, 4 ] } } >
 
+          < Universe />
+          < Lights />
+          < Models />
+          < DiamondGlow />
 
-          <OrbitControls autoRotate autoRotateSpeed={.5} minPolarAngle={0} maxPolarAngle={Math.PI / 2}/>
-          {/* <Environment files="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/aerodynamics_workshop_1k.hdr" /> */}
+          { !fadeDone ? < UpdateCamera /> : "" }
+          { fadeDone ? < OrbitControls autoRotate autoRotateSpeed={ 0.5 } minPolarAngle={ 0 }  maxPolarAngle={ Math.PI / 2 } /> : "" }
 
+        </ Canvas >
 
-          <Stars />
-
-          <Provider store={DataStore}>
-            <DiamondModels />
-          </Provider>
-
-          <ambientLight intensity={0.5} />
-          <spotLight position={[5, 5, -10]} angle={0.15} penumbra={1} ref={spotLight} />
-          <pointLight position={[-10, -10, -10]} />
-
-
-
-          <EffectComposer>
-            <Bloom luminanceThreshold={2} intensity={2.5} levels={9} mipmapBlur />
-          </EffectComposer>
-
-        </Canvas>
-
-        {/* <LessonOverlay lesson={lesson} setPage={props.setPage}/> */}
-      </Suspense>
+      </ Suspense >
     </>
   );
 }
 
 export default DiamondsLesson;
+
+function IntroFade( props: any ) {
+  return (
+    <>
+      { !props.fadeDone ? <div className="blackFade"></div> : "" }
+    </>
+  );
+};
+
+function Lights() {
+
+  return (
+    <>
+      < ambientLight intensity={0.1} />
+      < spotLight position={ [ 5, 5, -10 ] } angle={ 0.15 } penumbra={ 1 } />
+      < pointLight position={ [ -10, -10, -10 ] } />
+    </>
+  );
+};
+
+function Models() {
+  return (
+    < Provider store={ DataStore } >
+      < DiamondModels />
+    </ Provider >
+  );
+};
+
+function DiamondGlow() {
+  return (
+    < EffectComposer >
+      < Bloom luminanceThreshold={ 2 } intensity={ .18 } levels={ 9 } mipmapBlur />
+    </ EffectComposer >
+  );
+};
+
+
+
+/*
+const spotLight: any = useRef();
+useHelper(spotLight, BoxHelper, 'cyan') 
+*/
+{/* <color attach="background" args={['white']} /> */}
+{/* <Environment files="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/aerodynamics_workshop_1k.hdr" /> */}
+{/* <LessonOverlay lesson={lesson} setPage={props.setPage}/> */}

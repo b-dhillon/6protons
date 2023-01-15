@@ -13,14 +13,15 @@ import UpdateCamera from './UpdateCamera.jsx';
 /* 
 To-do: 
     - Create smooth animation endings for camera.
-        - Try to not use a Vector3 keyframe track and just change the Z position. Interpolate through Z smoothly. npm st
     - Add test models to all proper locations of lesson -- need to figure out what these locations are first.
     - Add easing to animations.
     - Clean up and get a high level understanding of everything that you've re-factored.
 */
 
 export default function Page( props ): any {
+    
     const [ page ] = useState( props.data );
+
     return (
         <Suspense>
             <UI />
@@ -31,6 +32,7 @@ export default function Page( props ): any {
 
 // Mounts components to scene graph and renders 3D scene.
 function Scene( props ): any {
+
     console.log( 'Scene() Called' );
     const counter = useSelector( ( state: any ) => state.counter );
 
@@ -114,12 +116,11 @@ function Camera( props: { counter: number, camera_data: any } ) {
         // final posiition using UpdateCamera = 0.08, final delta = 0.00017
 
 
-
-
         // console.log(ref.current.position);
     });
 
     useHelper(ref, CameraHelper);
+    console.log( CameraHelper );
 
     // const set = useThree((state) => state.set);
 
@@ -167,8 +168,7 @@ function Models( props: any )  {
 };
 
 
-// Grabs meshes and animations from data --> creates a group of all the meshes per model:
-// [ meshes ] mounted to the scene graph when Models();
+// Grabs meshes and animations from data --> returns a group of all the meshes of the model. [ meshes ] mounted to the scene graph when Models();
 function CreateModel( props: any ) {
     console.log('CreateModel() Called');
 
@@ -212,7 +212,7 @@ function AnimationController(animations: any, counter: number) {
 }
 
 
-// Renders the UI and creates event handlers to handle user input.
+// Renders UI + creates event handlers to handle user input.
 function UI(): JSX.Element {
     // console.log('UI() called');
 
@@ -255,8 +255,8 @@ function DevelopmentCamera() {
     // Need to disable controls when camera is moving
     return (
         <>
-            <PerspectiveCamera ref={ref} position={[40,0,0]} rotation={ [0, (Math.PI/2) , 0] } fov={45} aspect={1}/>
-            <CameraControls />
+            < PerspectiveCamera ref={ref} position={[40,0,0]} rotation={ [0, (Math.PI/2) , 0] } fov={45} aspect={1} />
+            < CameraControls />
         </>
     );
 };

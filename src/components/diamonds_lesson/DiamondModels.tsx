@@ -36,11 +36,21 @@ function DiamondModels() {
       
       return (
       <>
-        <group scale={.35}>
-          <mesh geometry={nodes.Diamond_1_0.geometry} {...props} position={[0,-.25,0]}>
-            <MeshRefractionMaterial envMap={texture} bounces={4} ior={2.4} color={'white'} aberrationStrength={.03} fresnel={.0002} fastChrom={true} toneMapped={false} />
-          </mesh>
-        </group>
+
+        < group  >
+          < mesh scale={ .33 } geometry={ nodes.Diamond_1_0.geometry } { ...props } position={ [ 0, -0.1, 0 ] } >
+            < MeshRefractionMaterial 
+              envMap={ texture } 
+              bounces={ 4 } 
+              ior={ 2.4 }
+              color={ 'white' }
+              aberrationStrength={ .03 } 
+              fresnel={ .0002 } 
+              fastChrom={ true } 
+              toneMapped={ false } 
+            />
+          </ mesh >
+        </ group >
 
 
         {/* <Tetrahedron  castShadow ref={ref} {...props} position={[0, 0, 0]} scale={.25}>

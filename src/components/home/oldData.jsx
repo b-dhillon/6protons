@@ -6,7 +6,7 @@ export default [
         css: "linear-gradient(135deg, #FFFEFF 0%, #D7FFFE 100%)",
         height: 200,
         id: "fullerene",
-        background: "url('./lesson_thumbnails/fullerene.png')",
+        thumbnail: "url('./lesson_thumbnails/fullerene.png')",
     },
     {
         name: "Deep Blue",
@@ -14,7 +14,7 @@ export default [
         css: "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)",
         height: 400,
         id: "graphene",
-        background: "url('./lesson_thumbnails/graphene.png')"
+        thumbnail: "url('./lesson_thumbnails/graphene.png')"
 
     },
     {
@@ -23,7 +23,7 @@ export default [
         css: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
         height: 400,
         id: "nanotube",
-        background: "url('./lesson_thumbnails/nanotube.png')",
+        thumbnail: "url('./lesson_thumbnails/nanotube.png')",
     },
     {
         name: "Rare Wind",
@@ -31,7 +31,7 @@ export default [
         // css: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
         height: 200,
         id: "diamond",
-        background: "url('./lesson_thumbnails/diamond.png')",
+        thumbnail: "url('./lesson_thumbnails/diamond.png')",
     },
     {
         name: "Perfect White",
@@ -39,14 +39,14 @@ export default [
         css: "linear-gradient(135deg, #E3FDF5 0%, #FFE6FA 100%)",
         height: 400,
         padding: '20px',
-        background: "url('./lesson_thumbnails/chirality.png')",
+        thumbnail: "url('./lesson_thumbnails/chirality.png')",
     },
     {
         name: "Near Moon",
         description: "#5ee7df → #b490ca",
         css: "linear-gradient(135deg, #5ee7df 0%, #b490ca 100%)",
         height: 400,
-        // background: "url('./diamondTile7.png')",
+        // thumbnail: "url('./diamondTile7.png')",
 
 
     },
@@ -55,7 +55,7 @@ export default [
         description: "#d299c2 → #fef9d7",
         css: "linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)",
         height: 200,
-        // background: "url('./grapheneTile4.png')",
+        // thumbnail: "url('./grapheneTile4.png')",
 
 
     },
@@ -64,7 +64,7 @@ export default [
         description: "#ebc0fd → #d9ded8",
         css: "linear-gradient(135deg, #ebc0fd 0%, #d9ded8 100%)",
         height: 400,
-        // background:
+        // thumbnail:
         //     "url('./nanotubeTile8.png')",
     },
     {
@@ -72,7 +72,7 @@ export default [
         description: "#f6d365 → #fda085",
         css: "linear-gradient(135deg, #f6d365 0%, #fda085 100%)",
         height: 200,
-        // background:
+        // thumbnail:
         //     "url('./nanotubeTile9.png')",
     },
     {
@@ -80,7 +80,7 @@ export default [
         description: "#96fbc4 → #f9f586",
         css: "linear-gradient(135deg, #96fbc4 0%, #f9f586 100%)",
         height: 400,
-        // background:
+        // thumbnail:
         //     "url('./nanotubeTile10.png')",
     },
     {

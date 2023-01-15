@@ -1,5 +1,6 @@
 import { useFrame } from '@react-three/fiber';
 import { useEffect } from 'react';
+import { useThree } from '@react-three/fiber';
 // import { dampE } from 'maath/easing';
 
 function lerp(o, n, s) {
@@ -9,35 +10,41 @@ function lerp(o, n, s) {
 
 
 // This is increasing the z position by 0.0017 each frame. 
-export default function UpdateCamera( { _ref, counter, camera_data } ) {
+export default function UpdateCamera( ) {
 
-    console.log(camera_data);
+    const camera = useThree( ( state ) => state.camera  );
 
-    let i = 0; 
+    // console.log(camera_data);
+
 
     // Grabbing new camera values from global data object based on counter:
     // const newPosition = camera_data[counter].positions;
-    const newPosition =  { x: 0, y: 0, z: 0 }
+    const newPosition =  { x: 0, y: 0, z: 1 }
     // const c = camera_config[counter];
     // const [rX, rY, rZ] = [c.rotation.x, c.rotation.y, c.rotation.z];
 
     // Updating old camera values:
         // Can improve performance by running all lerps before hand and storing them in an array. You'll need to do this with a delta
         // Also, interpolating rotation is a bit more complicated, I dont think you can just lerp here, can cause gimbal lock and imprecise rotations.
-    useFrame((_, delta) => {
+    useFrame( (_, delta) => {
+
+        camera.position.lerp( newPosition, delta );
+        camera.updateMatrixWorld();
+
+
+
 
         // I never define the time so this thing keeps appraoching 0 to infinity and never stops, this is why it is so smooth.
-        _ref.current.position.lerp( newPosition, delta );
-        _ref.current.updateMatrixWorld();
-
-
-
+        // _ref.current.position.lerp( newPosition, delta );
+        // _ref.current.updateMatrixWorld();
 
 
 
         // _ref.current.rotation.set(lerp(_ref.current.rotation.x, rX, delta*2), lerp(_ref.current.rotation.y, rY, delta*2), lerp(_ref.current.rotation.z, rZ, delta*2));
         // console.log( _ref.current.position );
     });
+
+    return <></>
 };
 
 

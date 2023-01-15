@@ -2,6 +2,7 @@
 import React, { useRef, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useGLTF, Merged } from '@react-three/drei';
+import { useFrame } from '@react-three/fiber'
 // import { useFrame, } from '@react-three/fiber'
 
 
@@ -27,7 +28,7 @@ export default function FullereneModels( props: any )
   nodes.soccerInstanceSphere.material = nodes.carbonBonds.material;
 
   /*
-  In this parent function we are conditionally controlling the color of the soccer instances as well as the positioning of the model (center or left), and scale
+  In parent function we conditionally controll color of the soccer instances + positioning (center or left) and scale of model 
   because these cant be conditionally set in the child Model() function with all the other conditions without causing problems.
   Both if statements below are to prevent the model from rendering in the centerPosition for a split seconds.
   */
@@ -61,6 +62,10 @@ function Model({ instances, ...props })
 
   /* In this child fn we conditionally render the meshes and change the material of the soccer bonds when counter = 3. */
   const ref = useRef();
+
+  Levitate( ref );
+
+
 
   return (
     counter !== 1
@@ -161,6 +166,16 @@ function Model({ instances, ...props })
   )
 };
 
+function Levitate( ref ) {
+  useFrame( (state, delta ) => {
+    // const t = state.clock.getElapsedTime();
+    const t = state.clock.elapsedTime;
+    ref.current.position.y = (0.75 + Math.sin(t / 1.5 )) / 4
+    ref.current.rotation.y += (delta / 12)
+    ref.current.rotation.x = Math.cos( t / 4 ) / 2
+  })
+};
+
 
 // if(counter < 5) {
 //   Levitate(); 
@@ -179,15 +194,7 @@ function Model({ instances, ...props })
 //   })
 // };
 
-// function Levitate() {
-//   useFrame( (state, delta ) => {
-//     // const t = state.clock.getElapsedTime();
-//     const t = state.clock.elapsedTime;
-//     ref.current.position.y = (0.75 + Math.sin(t / 1.5 )) / 4
-//     ref.current.rotation.y += (delta / 12)
-//     ref.current.rotation.x = Math.cos( t / 4 ) / 2
-//   })
-// };
+
 
 // function Oscilate() {
 //   useFrame( (state) => {
@@ -198,7 +205,6 @@ function Model({ instances, ...props })
 
 // function Scale() {
 //   useFrame(() => {
-
 //   })
 // }
 

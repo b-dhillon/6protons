@@ -2,6 +2,7 @@ import { useState, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useSelector,  } from 'react-redux';
 import { useGLTF, Html, OrbitControls } from '@react-three/drei';
+import UpdateCamera from '../UpdateCamera';
 import Stars from '../Universe';
 import Models from './Models';
 import '../../home-styles.css';
@@ -11,17 +12,21 @@ useGLTF.preload( `/home_models/model0.glb`);
 useGLTF.preload( `/diamond_models/model0.glb`);
 
 export default function HomePage(props) {
-  const [flipped, setFlipped] = useState(false);
-  const [fadeDone, setFadeDone] = useState(false);
+
+  const [ flipped, setFlipped ] = useState( false );
+  const [ fadeDone, setFadeDone ] = useState( false );
   const started = useSelector(state => state.start);
+
   function handleFlip() {
-    if (!started) setFlipped((flipped) => !flipped);
+    if ( !started ) setFlipped( ( flipped ) => !flipped);
   }
+
   function handleFadeDoneAfter2Seconds() {
     setTimeout( () => {
       setFadeDone(true);
-    }, 2000 )
+    }, 3500 )
   }; handleFadeDoneAfter2Seconds();
+
   return ( 
     <>
       <Suspense fallback={null}>
@@ -38,31 +43,34 @@ export default function HomePage(props) {
 
         <UI handleFlip={handleFlip} setPage={props.setPage}/>
 
-        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 8, fov: 75, position: [0,0,4] }}>
+        <Canvas gl={{alpha: false}} dpr={[1, 2]} camera={{ near: 0.01, far: 8, fov: 75, position: [ 0,0,3 ] }}>
 
           <OrbitControls/>
 
           {
             flipped && !started 
             ?
-            <Html scale={.33} rotation={[0, 0, 0]} position={[0, 0, -1]} transform  >
+            < Html scale={.33} rotation={[0, 0, 0]} position={[0, 0, -1]} transform  >
                   <div className="annotation">
                       Steroid Hormone
                   </div>
-            </Html> 
+            </Html > 
             : 
             ""
           }
 
-          <spotLight position={[10, 10, 10] } intensity={1}/>
+          < spotLight position={[10, 10, 10] } intensity={1}/>
 
-          <ambientLight intensity={.3} />
+          < ambientLight intensity={.3} />
 
-          <Models flipped={flipped}/>
+          < Models flipped={flipped}/>
 
-          <Stars />
+          < Stars />
 
-        </Canvas>
+          { !fadeDone ? < UpdateCamera /> : "" }
+
+
+        </ Canvas >
 
 
       </Suspense>
