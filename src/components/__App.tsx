@@ -1,5 +1,4 @@
 import { useState } from 'react';
-
 import Home from './home/Home';
 import FullerenesLesson from './fullerenes_lesson/FullerenesLesson';
 import DiamondsLesson from './diamonds_lesson/DiamondsLesson';

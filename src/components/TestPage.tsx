@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { OrbitControls, PerspectiveCamera, useHelper } from '@react-three/drei';
 import { Suspense, useRef, useEffect } from 'react';
 import { Canvas, useThree, useFrame  } from '@react-three/fiber';
@@ -13,25 +13,14 @@ import UpdateCamera from './UpdateCamera.jsx';
 /* 
 To-do: 
     - Create smooth animation endings for camera.
-    - Add test models to all proper locations of lesson -- need to figure out what these locations are first.
+
+
     - Clean up and get a high level understanding of everything that you've re-factored.
+    - Add test models to all proper locations of lesson -- need to figure out what these locations are first.
     - Run TestPage with AllFullereneModelsCombined
 */
 
-export default function Page( props ): any {
-
-    function getLerpValues( final, initial ) {
-        let _initial = initial;
-        const lerpValues = [ 5 ];
-        for( let i = 0; i < 70; i++ ) {
-            lerpValues.push( _initial + ( ( final - _initial ) * .008 ) );
-            _initial += ( ( final - initial ) * .008 );
-        };
-
-        console.log( lerpValues );
-    };
-    
-    getLerpValues( 0, 5 );
+export default function Page( props ): JSX.Element {
 
     const [ page ] = useState( props.data );
 
@@ -44,9 +33,8 @@ export default function Page( props ): any {
 };
 
 // Mounts components to scene graph and renders 3D scene.
-function Scene( props ): any {
+function Scene( props ): JSX.Element {
 
-    console.log( 'Scene() Called' );
     const counter = useSelector( ( state: any ) => state.counter );
 
     return (
@@ -67,115 +55,58 @@ function Scene( props ): any {
 };
 
 // Creates camera, handles its updates and renders the cameraHelper when called.
-function Camera( props: { counter: number, camera_data: any } ) {
+function Camera( props: { counter: number, camera_data: any } ): JSX.Element {
 
     const ref: string = useRef();
     const [ translateAnimationActions, setTranslateAnimationActions ] = useState( [] );
     const [ rotateAnimationActions, setRotateAnimationActions ] = useState( [] );
 
-    // const [ mixers, setMixers ] = useState( [] );
-
-
     // Loops through camera animations[] --> creates an AnimationAction for each rotation and translation animation:
-    function CreateAllAnimationActions( fiber_camera, allAnimationData: any ) {
-        // let mixers = [];
-        function CreateAnimationAction( animationData ) {
+    function CreateAllAnimationActions( fiber_camera, allAnimationData: [][] ) {
+
+        function CreateCameraAnimationAction( animationData ): THREE.AnimationAction {
             const mixer = new THREE.AnimationMixer( fiber_camera );
-            // console.log('break');
-            // console.log( mixer );
-            // console.log( 'animationData', animationData );
             const animationAction = mixer.clipAction( animationData );
             animationAction.loop = THREE.LoopOnce;
             animationAction.clampWhenFinished = true;
-
-            // animationAction.startAt( 1 );
             return animationAction;
-            // mixers.push( mixer );
         };
 
+        const allTranslateAnimationActions = allAnimationData.map( ( animationData: [] ) => CreateCameraAnimationAction( animationData[0] ) );
+        const allRotateAnimationActions = allAnimationData.map( ( animationData: [] ) => CreateCameraAnimationAction( animationData[1] ) );
+        setRotateAnimationActions( allRotateAnimationActions );
+        setTranslateAnimationActions( allTranslateAnimationActions );
+        /*
         const [ allTranslateAnimationActions, allRotateAnimactionActions ] = allAnimationData.map( ( animationData: any ) => {
             console.log( 'animationData', animationData );
-            return [ 
-                [ CreateAnimationAction( animationData[0][0] ), CreateAnimationAction( animationData[0][1] ) ], 
-                CreateAnimationAction( animationData[ 1 ] ) 
-            ]
+            return [ CreateAnimationAction( animationData[ 0 ] ), CreateAnimationAction( animationData[ 1 ] ) ]
         });
-
-        // const allTranslateAnimationActions = allAnimationData.map( ( animationData: any ) => CreateAnimationAction( animationData[0] ) );
-        // const allRotateAnimationActions = allAnimationData.map( ( animationData: any ) => CreateAnimationAction( animationData[1] ) );
-        setTranslateAnimationActions( allTranslateAnimationActions );
-        // setRotateAnimationActions( allRotateAnimationActions );
-        // setMixers( mixers );
-
+        */
     }; 
+
     useEffect( () => {
-        console.log('allAnimationData' ,props.camera_data.animations); // [ [ t0, t1 ], r ]
         CreateAllAnimationActions( ref.current, props.camera_data.animations ) 
+        // console.log('allAnimationData' ,props.camera_data.animations); // [ [ t, r ], [ t, r ] ]
     }, [] );
-                                                         // ^  [ [ t, r ], [ t, r ] ]
+                                                         
 
     // Trigger proper camera animation based on counter:
     function AnimationController() {
         if( translateAnimationActions.length ) {
-            translateAnimationActions[ props.counter ][0].play().halt( 8 )
+            translateAnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 )
+            // translateAnimationActions[ props.counter ].play().halt( 5 )
 
-            // translateAnimationActions[ props.counter ][1].play().crossFadeFrom( translateAnimationActions[ props.counter ][0], 2, true );
-
-            // translateAnimationActions[ props.counter ][0].play()
-            // translateAnimationActions[ props.counter ][1].startAt( 2.5 ).play();
-
-            // Try warping the 2nd slower animation once you reach a specific position, like .05 from where you need to be
-            // That way, even if the warp doesn't take you exactly where you need to go at leasy you'll be close enough to. 
-            // This can be a problem though if you do enough animations, you might get rounding errors.
-
-
-
-            // crossFadeTo( translateAnimationActions[ props.counter ][ 1 ], 1, true );
+            rotateAnimationActions[ props.counter ].play()
         }
-
-
-        // if( translateAnimationActions.length ) translateAnimationActions[ props.counter ].warp( 1, .01, 5 ).play();
-
-        // Do we achieve smooth ending by setting halt time to double duration? Idk, test this out next:
-        // if( translateAnimationActions.length ) translateAnimationActions[ props.counter ].play().halt( 2 )
         // if( rotateAnimationActions.length ) rotateAnimationActions[ props.counter ].play();
-        
     }; 
     useEffect( AnimationController, [ translateAnimationActions, props.counter ] );
 
 
     useFrame( ( _, delta ) => {
         if( translateAnimationActions.length ) {
-            translateAnimationActions[0][0]._mixer.update( delta )
-            translateAnimationActions[0][1]._mixer.update( delta )
-
+            translateAnimationActions[0]._mixer.update( delta )
         };
-
-        /*
-        // delta = .008
-
-        /*
-
-
-        //    ^initial
-        //          ^final 
-                        ^initial
-
-
-        
-
-        final position drop is .051, and then it is a sudden stop fixed at the value. Perhaps after this animation is done, we can 
-        blend another animation where it trends to another value? Because the other one doesn't stop suddenly, it keeps going and going. 
-        so we do one animation where we go from initial to final-1, and then another from final-1 to final. 
-
-        final position using TranslateZ = .039, final delta = .051
-        final position using Translate at 1s = 0, final delta = 0.5
-        final position using Translate at 3.37s  with smooth interpolation = 0, final delta = 0.0072
-        final position using Translate at 3.37s  with linear interpolation = 0, final delta = 0.0364
-        final posiition using UpdateCamera = 0.08, final delta = 0.00017
-        */
-
-        // console.log(ref.current.position);
     });
 
     useHelper( ref, CameraHelper );
@@ -186,7 +117,7 @@ function Camera( props: { counter: number, camera_data: any } ) {
 
     return (
         <>
-            < PerspectiveCamera ref={ref} position={ [ 0, 0, 5 ] } fov={ 45 } near={.1} far={ 10 } />
+            < PerspectiveCamera ref={ref} position={ [ 0, 0, 3 ] } fov={ 45 } near={.1} far={ 10 } />
             {/* < UpdateCamera _ref={ref} counter={ props.counter } camera_data={ props.camera_data } /> */}
         </>
     );
@@ -199,7 +130,7 @@ function SetCamera( _camera ) {
 
 
 // Loops data.models[] --> returns array of fiber models to mount to scene graph. Controls animations: counter changes --> animation at the current counter index is played.
-function Models( props: any )  {  
+function Models( props: any ): JSX.Element  {  
 
     const [ animationActions, setAnimationActions ] = useState( [] );
 
@@ -231,8 +162,7 @@ function Models( props: any )  {
 
 
 // Grabs meshes and animations from data --> returns a group of all the meshes of the model. [ meshes ] mounted to the scene graph when Models();
-function CreateModel( props: any ) {
-    console.log('CreateModel() Called');
+function CreateModel( props: any ): JSX.Element{
 
     const ref = useRef(), animationData = props.model.animations[0];
     let modelName;
@@ -258,6 +188,7 @@ function CreateModel( props: any ) {
     );
 };
 
+
 function CreateAnimationAction( fiber_model, animationData ) {
     const mixer = new THREE.AnimationMixer( fiber_model );
     const animationAction = mixer.clipAction( animationData );
@@ -274,7 +205,6 @@ function AnimationController( animations: any, counter: number ) {
         animations[ counter ].play();
     }
 }
-
 
 // Renders UI + creates event handlers to handle user input.
 function UI(): JSX.Element {
@@ -327,10 +257,42 @@ function DevelopmentCamera() {
 
 // console.log( 'scene graph', useThree( (state) => state ) );
 // const set = useThree( (state) => state.set ); 
-// useEffect( () => set({ camera: ref.current }) );
 
 
 
+/*
+delta = .008, 8ms.
+
+
+final position drop is .051, and then it is a sudden stop fixed at the value. Perhaps after this animation is done, we can 
+blend another animation where it trends to another value? Because the other one doesn't stop suddenly, it keeps going and going. 
+so we do one animation where we go from initial to final-1, and then another from final-1 to final. 
+
+final position using TranslateZ = .039, final delta = .051
+final position using Translate at 1s = 0, final delta = 0.5
+final position using Translate at 3.37s  with smooth interpolation = 0, final delta = 0.0072
+final position using Translate at 3.37s  with linear interpolation = 0, final delta = 0.0364
+final posiition using UpdateCamera = 0.08, final delta = 0.00017
+
+
+function getLerpValues( final, initial ) {
+    let _initial = initial;
+    const lerpValues = [ 5 ];
+    for( let i = 0; i < 70; i++ ) {
+        lerpValues.push( _initial + ( ( final - _initial ) * .008 ) );
+        _initial += ( ( final - initial ) * .008 );
+    };
+
+    // console.log( lerpValues );
+};
+    
+    getLerpValues( 0, 5 );
+*/
+
+
+
+// console.log(ref.current.position);
+        
 
 // function getLerpValues( initial, final ) {
 //     const lerpValues = [];
@@ -343,6 +305,10 @@ function DevelopmentCamera() {
 // getLerpValues( 0, 5 );
 
 // this.z = 5 --> z = 0 
+
+
+// detlaZ = newZ - oldZ
+// newZ = newZ + ( deltaZ * alpha )
 
 // i = i - ( ( f - i ) * .008 )
 // 1 --> 4.96 = 5 - ( ( 0 - 5 ) * .008 )

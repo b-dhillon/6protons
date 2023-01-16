@@ -19,6 +19,7 @@ root.render(
 );
 
 
+
 /* Old way of rendering:
 
 // ReactDOM.render(<MyComponent />, document.getElementById('root'));

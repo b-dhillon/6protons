@@ -31,7 +31,7 @@ const data = [
             ],
             animations: [
                 // [ TranslateZ( 1, 5, 0 ), Rotate( 1, 'y', 0, 0) ],
-                [ [ Translate( 4, [ 0, 0, 5 ], [ 0, 0, 0 ] ), Translate( 4, [ 0, 0, 2 ], [ 0, 0, 0 ] ) ],  Rotate( 1, 'y', 0, 0) ],
+                [ Translate( 3, [ 0, 0, 3 ], [ 0, 0, 0 ] ),  Rotate( 1, 'y', 0, 0) ],
                 // [ Translate( 1, [ 0, 0, 0 ], [ 0.5, 0, 1 ] ), Rotate( 1, 'x', 0, 30 ) ],
             ],
         },
@@ -175,12 +175,11 @@ function TranslateZ( duration: number, initial_position: number, final_position:
 function Translate( duration: number, initial_position: number[], final_position: number[] ) {
     const times = [ 0, duration ], values = [ ...initial_position, ...final_position ];
     const trackName = '.position';
-    const track = new VectorKeyframeTrack( trackName, times, values, InterpolateSmooth );
-    console.log( track );
+    const track = new VectorKeyframeTrack( trackName, times, values, InterpolateLinear );
     return new AnimationClip( trackName, duration, [ track ] );
 };
 
-function myLerp(o: number, n: number, s: number) {
+function myLerp( o: number, n: number, s: number ) {
     const r = (1 - s) * o + s * n;
     return Math.abs(o - n) < 0.005 ? n : r;
 };

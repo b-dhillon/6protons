@@ -6,9 +6,6 @@ import { AnimationClip, NumberKeyframeTrack, VectorKeyframeTrack, InterpolateSmo
 import _pages from '../data';
 
 
-
-
-
 export default function App() {
 
     const [ pages , setPages ] = useState( _pages );
@@ -80,7 +77,7 @@ export default function App() {
                     return arrayOfGltfs.map( ( gltf: any ) => {
                         return gltf.scene.children.filter( ( child: any ) => child.isMesh && child.__removed === undefined )
                     });
-                } ) // [ [[Mesh], [Mesh], [Mesh]], [[Mesh], [Mesh], [Mesh]], [[Mesh], [Mesh],  [Mesh]]
+                } ) // [ [ [Mesh], [Mesh], [Mesh] ], [ [Mesh], [Mesh], [Mesh] ], [ [Mesh], [Mesh], [Mesh] ]
             
                 return allMeshesOfApp; 
             };
@@ -101,7 +98,7 @@ export default function App() {
     setTimeout( () => {
         setLoading( false )
     }, 2000 );
-    
+
 
 
     if( loading ) return <h2>Loading</h2>;

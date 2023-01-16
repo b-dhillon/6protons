@@ -1,15 +1,11 @@
 ## Next Push
 - Create easing in camera animations
+
 - Add types to everything 
 - Reorganize all the directories 
 
 - Make every function only responsible for 1 thing (SRP) 
       - Turn blackFade into 1 fn
-
-
-
-
-
 
 
 
