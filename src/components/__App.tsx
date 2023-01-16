@@ -12,25 +12,25 @@ export default function App() {
   // console.log('App() is called');
 
   
-  const [page, setPage] = useState( 'home' );
+  const [ page, setPage ] = useState( 'home' );
   const [loading, setLoading] = useState( true );
   // const [ appData, setAppData ] = useState( data );
 
 
   function handleLoading() {
-    setLoading(false);
-  }
+    setLoading( false );
+  };
 
-  function handlePage(id: string){
-    setPage(`${id}`)
-  }  
+  function handlePage( id: string ){
+    setPage( `${id}` );
+  };
   
 
-  if(page === 'home') return <Home setPage={handlePage} loading={loading} setLoading={handleLoading} />;
-  if(page === 'fullerene') return <FullerenesLesson setPage={handlePage} /> ;
-  if(page === 'diamond') return <DiamondsLesson setPage={handlePage} />;
-  if(page === 'graphene') return <GrapheneLesson setPage={handlePage} />;
-  if(page === 'nanotube') return <NanotubesLesson setPage={handlePage} />;
+  if( page === 'home' ) return <Home setPage={handlePage} loading={loading} setLoading={handleLoading} />;
+  if( page === 'fullerene' ) return <FullerenesLesson setPage={handlePage} /> ;
+  if( page === 'diamond' ) return <DiamondsLesson setPage={handlePage} />;
+  if( page === 'graphene' ) return <GrapheneLesson setPage={handlePage} />;
+  if( page === 'nanotube' ) return <NanotubesLesson setPage={handlePage} />;
 
   //@ts-ignore
   if (page === 'test_page' ) return <TestPage data={ data } />;

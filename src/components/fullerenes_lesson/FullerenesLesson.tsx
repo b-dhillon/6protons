@@ -11,11 +11,11 @@ import UpdateCamera from '../UpdateCamera';
 
 export default function FullerenesLesson( props: any ) {
 
-  const [fadeDone, setFadeDone] = useState(false);
+  const [ fadeDone, setFadeDone ] = useState( false );
 
-  function handleFadeDoneAfter(seconds: number ) {
-    setTimeout( () => setFadeDone(true), seconds )
-  }; handleFadeDoneAfter(5500);
+  function handleFadeDoneAfter( seconds: number ) {
+    setTimeout( () => setFadeDone( true ), seconds )
+  }; handleFadeDoneAfter( 5500 );
 
   const lesson = 'Fullerenes';
 
@@ -23,9 +23,9 @@ export default function FullerenesLesson( props: any ) {
     <>
       {/* <Stats showPanel={0} className="stats" {...props} /> */}
 
-      < Suspense fallback={null} >
+      < Suspense fallback={ null } >
         
-        {!fadeDone ? <div className="blackFade"></div> : ""}
+        {!fadeDone ? <div className="blackFade"></div> : "" }
 
         < Audio />
 

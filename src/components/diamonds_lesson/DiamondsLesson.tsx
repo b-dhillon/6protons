@@ -18,13 +18,13 @@ function DiamondsLesson( props: any ) {
 
   function handleFadeDoneAfter( seconds: number ) {
     setTimeout( () => setFadeDone( true ), seconds );
-  }; useEffect( () => handleFadeDoneAfter( 2000 ) )
+  }; useEffect( () => handleFadeDoneAfter( 5500 ) )
 
   return (
     <>
-      < Suspense fallback={null} >
 
-        < IntroFade fadeDone={ fadeDone } />
+      < Suspense fallback={null} >
+        { !fadeDone ?  < IntroFade /> : ""}
 
         < Canvas gl={ { alpha: false } } dpr={ [ 1, 2 ] } camera={ { near: 0.01, far: 10, fov: 75, position: [ 0, 0, 4 ] } } >
 
@@ -45,11 +45,9 @@ function DiamondsLesson( props: any ) {
 
 export default DiamondsLesson;
 
-function IntroFade( props: any ) {
+function IntroFade() {
   return (
-    <>
-      { !props.fadeDone ? <div className="blackFade"></div> : "" }
-    </>
+    <div className="blackFade"></div>
   );
 };
 
