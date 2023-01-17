@@ -14,10 +14,11 @@ import UpdateCamera from './UpdateCamera.jsx';
 To-do: 
     - Create smooth animation endings for camera.
 
-
     - Clean up and get a high level understanding of everything that you've re-factored.
     - Add test models to all proper locations of lesson -- need to figure out what these locations are first.
-    - Run TestPage with AllFullereneModelsCombined
+    - Create all move and rotate camera functions.
+    - Run TestPage with AllFullereneModelsCombined.
+    - Make visible to invisible transition smoother.
 */
 
 export default function Page( props ): JSX.Element {
@@ -45,8 +46,8 @@ function Scene( props ): JSX.Element {
                 < Camera counter={ counter } camera_data={ props.data.camera } />
                 < Models data={ props.data } counter={ counter } />
 
-                < ambientLight intensity={10} />
-                < spotLight position={[-10, 10, 10] } intensity={.9} />
+                < ambientLight intensity={ 10 } />
+                < spotLight position={ [ -10, 10, 10 ] } intensity={ 0.9 } />
                 < DevelopmentCamera  />
 
             </ Canvas >
@@ -62,10 +63,10 @@ function Camera( props: { counter: number, camera_data: any } ): JSX.Element {
     const [ rotateAnimationActions, setRotateAnimationActions ] = useState( [] );
 
     // Loops through camera animations[] --> creates an AnimationAction for each rotation and translation animation:
-    function CreateAllAnimationActions( fiber_camera, allAnimationData: [][] ) {
+    function CreateAllAnimationActions( fiberCameraRef, allAnimationData: [][] ) {
 
         function CreateCameraAnimationAction( animationData ): THREE.AnimationAction {
-            const mixer = new THREE.AnimationMixer( fiber_camera );
+            const mixer = new THREE.AnimationMixer( fiberCameraRef );
             const animationAction = mixer.clipAction( animationData );
             animationAction.loop = THREE.LoopOnce;
             animationAction.clampWhenFinished = true;
@@ -96,7 +97,7 @@ function Camera( props: { counter: number, camera_data: any } ): JSX.Element {
             translateAnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 )
             // translateAnimationActions[ props.counter ].play().halt( 5 )
 
-            rotateAnimationActions[ props.counter ].play()
+            rotateAnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 )
         }
         // if( rotateAnimationActions.length ) rotateAnimationActions[ props.counter ].play();
     }; 
@@ -105,7 +106,8 @@ function Camera( props: { counter: number, camera_data: any } ): JSX.Element {
 
     useFrame( ( _, delta ) => {
         if( translateAnimationActions.length ) {
-            translateAnimationActions[0]._mixer.update( delta )
+            translateAnimationActions[ props.counter ]._mixer.update( delta );
+            rotateAnimationActions[ props.counter ]._mixer.update( delta )
         };
     });
 
@@ -117,13 +119,13 @@ function Camera( props: { counter: number, camera_data: any } ): JSX.Element {
 
     return (
         <>
-            < PerspectiveCamera ref={ref} position={ [ 0, 0, 3 ] } fov={ 45 } near={.1} far={ 10 } />
+            < PerspectiveCamera ref={ref} position={ props.camera_data.initialPosition } fov={ 45 } near={.1} far={ 10 } />
             {/* < UpdateCamera _ref={ref} counter={ props.counter } camera_data={ props.camera_data } /> */}
         </>
     );
 };
 
-function SetCamera( _camera ) {
+function SetCamera( _camera ): void {
     const set = useThree((state) => state.set);
     set( { camera: _camera } );
 }
@@ -162,7 +164,7 @@ function Models( props: any ): JSX.Element  {
 
 
 // Grabs meshes and animations from data --> returns a group of all the meshes of the model. [ meshes ] mounted to the scene graph when Models();
-function CreateModel( props: any ): JSX.Element{
+function CreateModel( props: any ): JSX.Element {
 
     const ref = useRef(), animationData = props.model.animations[0];
     let modelName;
@@ -172,7 +174,7 @@ function CreateModel( props: any ): JSX.Element{
             geometry={ mesh.geometry } 
             material={ mesh.material }  
             ref={ ref }
-            scale={ props.model.scale } 
+            // scale={ props.model.scale } 
             key={ mesh.uuid } 
             name={ mesh.name }
         />
@@ -182,20 +184,20 @@ function CreateModel( props: any ): JSX.Element{
     useEffect( () => props.setAnimationActions( ( animationAction: any ) => [ ...animationAction, CreateAnimationAction( ref.current, animationData ) ] ), []);
     
     return (
-        <group visible={ props.visible } name={ modelName } ref={ref} position={ [ props.position.x, props.position.y, props.position.z ] } >
+        <group scale={ props.model.scale }  visible={ props.visible } name={ modelName } ref={ref} position={ [ props.position.x, props.position.y, props.position.z ] } >
             { fiber_model }
         </group>
     );
 };
 
 
-function CreateAnimationAction( fiber_model, animationData ) {
+function CreateAnimationAction( fiber_model, animationData ): THREE.AnimationAction {
     const mixer = new THREE.AnimationMixer( fiber_model );
     const animationAction = mixer.clipAction( animationData );
     return animationAction;
 }; 
 
-function AnimationController( animations: any, counter: number ) {
+function AnimationController( animations: any, counter: number ): void {
     if( animations.length ) {
         // This is a side effect...change to setAnimations?
         animations.forEach( ( animation: any ) => {
@@ -228,14 +230,12 @@ function UI(): JSX.Element {
 
 
 // Creates a zoomed out camera with 360 orbit controls to make dev easier:
-function DevelopmentCamera() {
+function DevelopmentCamera(): JSX.Element {
     const ref: any = useRef();
     const set = useThree(( state ) => state.set );
 
     // // Makes the camera known to the system:
     // useEffect( () => set( { camera: ref.current } ) );
-
-    // // Updates camera every frame:
     // useFrame( () => { ref.current.updateMatrixWorld() } );
 
     // Adds 3D OrbitControls:
@@ -250,7 +250,7 @@ function DevelopmentCamera() {
     return (
         <>
             < PerspectiveCamera ref={ref} position={[40,0,0]} rotation={ [0, (Math.PI/2) , 0] } fov={45} aspect={1} />
-            < CameraControls />
+            {/* < CameraControls /> */}
         </>
     );
 };

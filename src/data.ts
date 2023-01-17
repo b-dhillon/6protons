@@ -13,6 +13,7 @@ const data = [
         },
 
         camera: {
+            initialPosition: [ 0, 0, 3 ],
             positions: [
                 { x: 0, y: 0, z: 0 },
                 { x: 0.5, y: 0, z: 1 },
@@ -30,9 +31,9 @@ const data = [
                 { _x: 0, _y: 0, _z: 0 },
             ],
             animations: [
-                // [ TranslateZ( 1, 5, 0 ), Rotate( 1, 'y', 0, 0) ],
-                [ Translate( 3, [ 0, 0, 3 ], [ 0, 0, 0 ] ),  Rotate( 1, 'y', 0, 0) ],
-                // [ Translate( 1, [ 0, 0, 0 ], [ 0.5, 0, 1 ] ), Rotate( 1, 'x', 0, 30 ) ],
+                [ Translate( 3, [ 0, 0, 3 ], [ 0, 0, 0 ] ),  Rotate( 3, 'x', 0, 0) ],
+                [ Translate( 3, [ 0, 0, 0 ], [ 0.5, 0, 1 ] ), Rotate( 3, 'x', 0, 0.66 ) ], 
+
             ],
         },
 
@@ -40,28 +41,28 @@ const data = [
             {
                 id: 'model0',
                 name: 'nanotube',
-                path: '/lesson3_models/model0.glb',
+                path: '/lesson1_models/model0.glb',
                 positions: [
-                    { x: 0, y: 0, z: 0 },
+                    { x: 0, y: 0, z: -1 },
                 ],
                 rotations: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animations: [ 
-                    Rotate( 2000, 'y', 0, 360 ),  
+                    Rotate( 5000, 'y', 0, 360 ),  
                 ],
                 meshes: null,
                 nodes: null, 
                 materials: null,
                 visible: true,
-                scale: 0.33
+                scale: 0.02
                 // scale: { x: .1, y: .1, z: .1 },
             },
             {
                 id: 'model1',
                 path: '/lesson4_models/model1.glb',
                 positions: [
-                    { x: 0, y: 0, z: -1 }
+                    { x: 0.5, y: 0.66, z: 0 }
                 ],
                 rotations: [
                     { _x: 0, _y: 0, _z: 0 }
@@ -74,7 +75,8 @@ const data = [
                 materials: null,
                 visible: false,
                 name: 'model1',
-                scale: { x: 1, y: 1, z: 1 },
+                scale: 0.02
+                // scale: { x: 1, y: 1, z: 1 },
             },
         ],
 
