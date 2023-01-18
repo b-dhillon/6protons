@@ -16,6 +16,8 @@ To-do:
     - Make visible to invisible transition smoother.
         - Make the model scale to near zero right after counter is incremented.
         - Make the next model scale backwards from zero to its original scale, after the camera approaches. 
+            - Set the scale on all models initially to zero. Have the model scale to its original scale after the camera approaches. 
+        
 
     - Add test models to all proper locations of lesson -- need to figure out what these locations are first.
     - Create all move and rotate camera functions.
@@ -142,13 +144,14 @@ function SetCamera( _camera ): void {
 function Models( props: any ): JSX.Element  {  
 
     const [ animationActions, setAnimationActions ] = useState( [] );
-    // [ [ mainModelAnimation, scaleAnimation ], [], [] ]
+    // [ [ mainModelAnimation, scaleOutAnimation ], [], [] ]
 
     useEffect( () => AnimationController( animationActions, props.counter ), [ animationActions, props.counter ] );
 
     useFrame( ( _, delta ) => {
         if( animationActions.length ) animationActions[ props.counter ][0]._mixer.update( delta );
-        if( animationActions.length && props.counter > 0 ) animationActions[ (props.counter - 1) ][1]._mixer.update( delta );
+        if( animationActions.length ) animationActions[ ( props.counter ) ][1]._mixer.update( delta );
+        if( animationActions.length && props.counter > 0 ) animationActions[ ( props.counter - 1 ) ][1]._mixer.update( delta );
     });
 
     const sceneModels = props.data.models.map( ( model: any , i: number ) => {
@@ -167,14 +170,6 @@ function Models( props: any ): JSX.Element  {
 
     const sceneGraphModels = useThree( (state) => state.scene.children );
 
-    useEffect( () => {
-        console.log(
-            'sceneGraphModels',
-            sceneGraphModels
-        );
-    }, [sceneGraphModels] );
-
-
     return (
         <>
             { sceneModels }
@@ -183,24 +178,19 @@ function Models( props: any ): JSX.Element  {
 };
 
 function AnimationController( animationActions: any, counter: number ): void {
+
     if( animationActions.length ) {
-        // This is a side effect...change to setAnimations?
-        // animationActions.forEach( ( animationAction: any ) => {
-        //     animationAction.stop();
-        //     animationAction.reset();
-        // });
-        // console.log( 'animationActions', animationActions);
-        // animationActions[ counter ][0].play();
+        animationActions.forEach( ( animationAction: any ) => {
+            animationAction[0].stop();
+        });
 
-        // animationActions[ counter ][1].startAt( 1 );
-        // animationActions[ counter ][1].play()
-
-
-        // animationActions[ counter ][1]._mixer._root.modelNumber === (counter - 1) ? animationActions[ counter-1 ][1].play() : animationActions[ counter-1 ][1].stop();
+        animationActions[ counter ][1].startAt( 4 ).setEffectiveTimeScale( -1 ).play()
+        animationActions[ counter ][0].startAt( 5 ).play();
     }
 
     if( animationActions.length && counter > 0) {
-        animationActions[ (counter - 1) ][1].play();
+        animationActions[ (counter - 1) ][1].reset().setEffectiveTimeScale( 1.5 ).play();
+        // animationActions[ (counter - 1) ][1].play();
     }
 
 }
@@ -247,24 +237,31 @@ function CreateModel( props: any ): JSX.Element {
     });
 
     // Creates AnimationAction from _data, attaches it to this model, and pushes it to Model()'s state
-    useEffect( () => props.setAnimationActions( ( animationAction: any ) => [ ...animationAction, [ CreateAnimationAction( ref.current, animationData[0] ), CreateAnimationAction( ref.current, animationData[1], true, true ) ] ] ), []);
+    useEffect( () => props.setAnimationActions( ( animationAction: any ) => [ ...animationAction, [ CreateAnimationAction( ref.current, animationData[0] ), CreateAnimationAction( ref.current, animationData[1], true, 1 ) ] ] ), []);
 
     return (
-        <group modelNumber={ props.modelNumber } visible={ props.model.visible } name={ modelName } ref={ref} position={ [ props.position.x, props.position.y, props.position.z ] } >
+        <group scale={ props.model.scale } modelNumber={ props.modelNumber } visible={ props.model.visible } name={ modelName } ref={ref} position={ [ props.position.x, props.position.y, props.position.z ] } >
             { fiber_model }
         </group>
     );
 };
 
 
-function CreateAnimationAction( fiber_model, animationData, clamped, noLoop ): THREE.AnimationAction {
+function CreateAnimationAction( fiber_model, animationData: THREE.AnimationClip, clamped: boolean, repetitions: number ): THREE.AnimationAction {
 
     const mixer = new THREE.AnimationMixer( fiber_model );
     const animationAction = mixer.clipAction( animationData );
     animationAction.clampWhenFinished = clamped;
-    if ( noLoop ) animationAction.setLoop( THREE.LoopOnce );
+    // if ( noLoop ) animationAction.setLoop( THREE.LoopOnce );
+    animationAction.repetitions = repetitions;
     return animationAction;
 }; 
+
+
+
+
+
+
 
 
 

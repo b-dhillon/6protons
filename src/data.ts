@@ -32,7 +32,7 @@ const data = [
             ],
             animations: [
                 [ Translate( 3, [ 0, 0, 3 ], [ 0, 0, 0 ] ),  Rotate( 3, 'x', 0, 0) ],
-                [ Translate( 3, [ 0, 0, 0 ], [ 0.5, 0, 1 ] ), Rotate( 3, 'x', 0, 0.66 ) ], 
+                [ Translate( 3, [ 0, 0, 0 ], [ 0.75, 0, 1 ] ), Rotate( 3, 'x', 0, 0.66 ) ], 
 
             ],
         },
@@ -45,7 +45,7 @@ const data = [
                 path: '/lesson1_models/instance0.glb',
                 meshes: null,
                 visible: true,
-                // scale: 0.2,
+                scale: 0,
                 positions: [
                     { x: 0, y: 0, z: -1 },
                 ],
@@ -54,7 +54,8 @@ const data = [
                 ],
                 animations: [ 
                     Rotate( 5000, 'y', 0, 360 ),  
-                    Scale( 1, [ 0.5, 0.5, 0.5 ], [ 0, 0, 0 ] )
+                    Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] )
+                    // Scale( 1, [ 0, 0, 0 ], [ 0.2, 0.2, 0.2 ],  )
                 ],
             },
             {
@@ -63,17 +64,17 @@ const data = [
                 modelNumber: 1,
                 path: '/lesson1_models/instance1.glb',
                 meshes: null,
-                visible: false,
-                scale: 0.2,
+                visible: true,
+                scale: 0,
                 positions: [
-                    { x: 0.5, y: 0.66, z: 0 }
+                    { x: 0.75, y: 0.66, z: 0 }
                 ],
                 rotations: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animations: [
                     Rotate( 5000, 'y', 0, 360 ),
-                    Scale( 1000, [ 0.2, 0.2, 0.2 ], [ 0, 0, 0 ] )
+                    Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] )
                 ]
             },
             {
