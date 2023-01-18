@@ -41,7 +41,7 @@ const data = [
             {
                 id: 'model0',
                 name: 'nanotube',
-                path: '/lesson1_models/model0.glb',
+                path: '/lesson1_models/instanceFullerene.glb',
                 positions: [
                     { x: 0, y: 0, z: -1 },
                 ],
@@ -55,7 +55,7 @@ const data = [
                 nodes: null, 
                 materials: null,
                 visible: true,
-                scale: 0.02
+                scale: 0.2
                 // scale: { x: .1, y: .1, z: .1 },
             },
             {
@@ -75,7 +75,7 @@ const data = [
                 materials: null,
                 visible: false,
                 name: 'model1',
-                scale: 0.02
+                scale: 0.2
                 // scale: { x: 1, y: 1, z: 1 },
             },
         ],

@@ -46,7 +46,7 @@ function Scene( props ): JSX.Element {
                 < Camera counter={ counter } camera_data={ props.data.camera } />
                 < Models data={ props.data } counter={ counter } />
 
-                < ambientLight intensity={ 10 } />
+                < ambientLight intensity={ .5 } />
                 < spotLight position={ [ -10, 10, 10 ] } intensity={ 0.9 } />
                 < DevelopmentCamera  />
 
@@ -170,14 +170,38 @@ function CreateModel( props: any ): JSX.Element {
     let modelName;
     const fiber_model = props.model.meshes.map( ( mesh: any ) => {
         modelName = mesh.name;
-        return <mesh 
-            geometry={ mesh.geometry } 
-            material={ mesh.material }  
-            ref={ ref }
-            // scale={ props.model.scale } 
-            key={ mesh.uuid } 
-            name={ mesh.name }
-        />
+        console.log( 'mesh', mesh );
+        
+        // Are these really instances? Or is Three making a seperate draw call for each sphere?
+        let instances = [];
+        if ( mesh.children.length ) {
+            instances = mesh.children.map( ( child: any ) => {
+                return <mesh 
+                    geometry={ child.geometry } 
+                    material={ child.material }  
+                    ref={ ref }
+                    key={ child.uuid } 
+                    name={ child.name }
+                    position={ child.position }
+                    scale={ child.scale }
+                />
+            });
+        }
+
+
+        return (
+            <mesh 
+                geometry={ mesh.geometry } 
+                material={ mesh.material }  
+                ref={ ref }
+                key={ mesh.uuid } 
+                name={ mesh.name }
+                position={ mesh.position }
+                scale={ mesh.scale }
+            >
+                { instances }
+            </mesh>
+        )
     });
 
     // Creates AnimationAction from _data, attaches it to this model, and pushes it to Model()'s state
