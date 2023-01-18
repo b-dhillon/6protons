@@ -31,9 +31,10 @@ const data = [
                 { _x: 0, _y: 0, _z: 0 },
             ],
             animations: [
-                [ Translate( 3, [ 0, 0, 3 ], [ 0, 0, 0 ] ),  Rotate( 3, 'x', 0, 0) ],
+                [ Translate( 3, [ 0, 0, 3 ], [ 0, 0, 0 ] ),  Rotate( 0, 'x', 0, 0) ],
                 [ Translate( 3, [ 0, 0, 0 ], [ 0.75, 0, 1 ] ), Rotate( 3, 'x', 0, 0.66 ) ], 
-
+                [ Translate( 3, [ 0.75, 0, 1 ], [ 0.75, 0, -2 ] ), Rotate( 3, 'x', 0.66, 0 ) ], 
+                [ Translate( 0, [ 0.75, 0, -2 ], [ 0.75, 0, -2 ] ), Rotate( 3, 'y', 0, 1.5 ) ], 
             ],
         },
 
@@ -52,11 +53,7 @@ const data = [
                 rotations: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
-                animations: [ 
-                    Rotate( 5000, 'y', 0, 360 ),  
-                    Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] )
-                    // Scale( 1, [ 0, 0, 0 ], [ 0.2, 0.2, 0.2 ],  )
-                ],
+                animations: [ Rotate( 5000, 'y', 0, 360 ), Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] ) ],
             },
             {
                 id: 'model1',
@@ -67,7 +64,7 @@ const data = [
                 visible: true,
                 scale: 0,
                 positions: [
-                    { x: 0.75, y: 0.66, z: 0 }
+                    { x: 0.75, y: 0.71, z: 0 }
                 ],
                 rotations: [
                     { _x: 0, _y: 0, _z: 0 }
@@ -83,19 +80,39 @@ const data = [
                 modelNumber: 2,
                 path: '/lesson1_models/instance2.glb',
                 meshes: null,
-                visible: false,
-                scale: 0.2,
+                visible: true,
+                scale: 0,
                 positions: [
-                    { x: 0.5, y: -0.66, z: 0 }
+                    { x: 0.75, y: 0, z: -3 }
                 ],
                 rotations: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animations: [
                     Rotate( 5000, 'y', 0, 360 ),
-                    Scale( 2000, [0.2, 0.2, 0.2], [0, 0, 0] )
+                    Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] )
+                ]
+            },
+            {
+                id: 'model3',
+                name: 'model3',
+                modelNumber: 3,
+                path: '/lesson1_models/instance2.glb',
+                meshes: null,
+                visible: true,
+                scale: 0,
+                positions: [
+                    { x: -0.75, y: 0, z: -2.15 }
+                ],
+                rotations: [
+                    { _x: 0, _y: 0, _z: 0 }
+                ],
+                animations: [
+                    Rotate( 5000, 'y', 0, 360 ),
+                    Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] )
                 ]
             }
+            
         ],
 
         text: [

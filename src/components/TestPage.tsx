@@ -123,12 +123,16 @@ function Camera( props: { counter: number, camera_data: any } ): JSX.Element {
     useHelper( ref, CameraHelper );
 
     // useEffect( () => SetCamera( ref.current ) ); 
-    const set = useThree((state) => state.set);
-    useEffect( () => set({ camera: ref.current }) );
+    // const set = useThree((state) => state.set);
+    // useEffect( () => set({ camera: ref.current }) );
+
+    useEffect( () => {
+        console.log( 'camera position', ref.current.position );
+    }, [props.counter] )
 
     return (
         <>
-            < PerspectiveCamera ref={ref} position={ props.camera_data.initialPosition } fov={ 45 } near={.1} far={ 10 } />
+            < PerspectiveCamera ref={ref} position={ props.camera_data.initialPosition } fov={ 45 } near={.1} far={ 8 } />
             {/* < UpdateCamera _ref={ref} counter={ props.counter } camera_data={ props.camera_data } /> */}
         </>
     );
@@ -291,9 +295,9 @@ function DevelopmentCamera(): JSX.Element {
     const ref: any = useRef();
     const set = useThree(( state ) => state.set );
 
-    // // Makes the camera known to the system:
-    // useEffect( () => set( { camera: ref.current } ) );
-    // useFrame( () => { ref.current.updateMatrixWorld() } );
+    // Makes the Dev Camera the default camera:
+    useEffect( () => set( { camera: ref.current } ) );
+    useFrame( () => { ref.current.updateMatrixWorld() } );
 
     // Adds 3D OrbitControls:
     function CameraControls() {
@@ -306,8 +310,8 @@ function DevelopmentCamera(): JSX.Element {
     // Need to disable controls when camera is moving
     return (
         <>
-            < PerspectiveCamera ref={ref} position={[40,0,0]} rotation={ [0, (Math.PI/2) , 0] } fov={45} aspect={1} />
-            {/* < CameraControls /> */}
+            < PerspectiveCamera ref={ref} position={ [ 20, 0, 0 ] } rotation={ [0, (Math.PI/2) , 0] } fov={45} aspect={1} />
+            < CameraControls />
         </>
     );
 };
