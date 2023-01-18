@@ -1,4 +1,4 @@
-import { AnimationClip, NumberKeyframeTrack, VectorKeyframeTrack, InterpolateSmooth, AdditiveAnimationBlendMode, InterpolateLinear } from 'three';
+import { AnimationClip, NumberKeyframeTrack, VectorKeyframeTrack, InterpolateSmooth, AdditiveAnimationBlendMode, InterpolateLinear, BooleanKeyframeTrack } from 'three';
 
 const data = [
     {
@@ -39,9 +39,13 @@ const data = [
 
         models: [
             {
-                id: 'model0',
-                name: 'nanotube',
-                path: '/lesson1_models/instanceFullerene.glb',
+                id: '0',
+                name: 'model0',
+                modelNumber: 0,
+                path: '/lesson1_models/instance0.glb',
+                meshes: null,
+                visible: true,
+                // scale: 0.2,
                 positions: [
                     { x: 0, y: 0, z: -1 },
                 ],
@@ -50,17 +54,17 @@ const data = [
                 ],
                 animations: [ 
                     Rotate( 5000, 'y', 0, 360 ),  
+                    Scale( 1, [ 0.5, 0.5, 0.5 ], [ 0, 0, 0 ] )
                 ],
-                meshes: null,
-                nodes: null, 
-                materials: null,
-                visible: true,
-                scale: 0.2
-                // scale: { x: .1, y: .1, z: .1 },
             },
             {
                 id: 'model1',
-                path: '/lesson4_models/model1.glb',
+                name: 'model1',
+                modelNumber: 1,
+                path: '/lesson1_models/instance1.glb',
+                meshes: null,
+                visible: false,
+                scale: 0.2,
                 positions: [
                     { x: 0.5, y: 0.66, z: 0 }
                 ],
@@ -68,16 +72,29 @@ const data = [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animations: [
-                    Rotate( 200, 'y', 0, 360 )
-                ],
-                meshes: null,
-                nodes: null, 
-                materials: null,
-                visible: false,
-                name: 'model1',
-                scale: 0.2
-                // scale: { x: 1, y: 1, z: 1 },
+                    Rotate( 5000, 'y', 0, 360 ),
+                    Scale( 1000, [ 0.2, 0.2, 0.2 ], [ 0, 0, 0 ] )
+                ]
             },
+            {
+                id: 'model2',
+                name: 'model2',
+                modelNumber: 2,
+                path: '/lesson1_models/instance2.glb',
+                meshes: null,
+                visible: false,
+                scale: 0.2,
+                positions: [
+                    { x: 0.5, y: -0.66, z: 0 }
+                ],
+                rotations: [
+                    { _x: 0, _y: 0, _z: 0 }
+                ],
+                animations: [
+                    Rotate( 5000, 'y', 0, 360 ),
+                    Scale( 2000, [0.2, 0.2, 0.2], [0, 0, 0] )
+                ]
+            }
         ],
 
         text: [
@@ -181,10 +198,29 @@ function Translate( duration: number, initial_position: number[], final_position
     return new AnimationClip( trackName, duration, [ track ] );
 };
 
+function Scale( duration: number, initial_scale: number[], final_scale: number[] ) {
+    const times = [ 0, duration ], values = [ ...initial_scale, ...final_scale ];
+    const trackName = '.scale';
+    const track = new VectorKeyframeTrack( trackName, times, values, InterpolateLinear );
+    return new AnimationClip( trackName, duration, [ track ] );
+};
+
 function myLerp( o: number, n: number, s: number ) {
     const r = (1 - s) * o + s * n;
     return Math.abs(o - n) < 0.005 ? n : r;
 };
+
+function VisibilityAnimation( duration: number ) {
+    const times = [ 0, duration / 2, duration ], values = [ true, false, true ];
+
+    const trackName = '.visible';
+
+    const track = new BooleanKeyframeTrack( trackName, times, values );
+
+    return new AnimationClip( trackName, duration, [ track ] );
+
+}
+
 
 function calulateAllTimesAndAllValues( _duration: number, _initial: number, _final: number ) {
     const delta = .008

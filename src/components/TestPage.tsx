@@ -12,13 +12,18 @@ import UpdateCamera from './UpdateCamera.jsx';
 
 /* 
 To-do: 
-    - Create smooth animation endings for camera.
+    
+    - Make visible to invisible transition smoother.
+        - Make the model scale to near zero right after counter is incremented.
+        - Make the next model scale backwards from zero to its original scale, after the camera approaches. 
 
-    - Clean up and get a high level understanding of everything that you've re-factored.
     - Add test models to all proper locations of lesson -- need to figure out what these locations are first.
     - Create all move and rotate camera functions.
     - Run TestPage with AllFullereneModelsCombined.
-    - Make visible to invisible transition smoother.
+    
+
+    - Clean up and get a high level understanding of everything that you've re-factored.
+
 */
 
 export default function Page( props ): JSX.Element {
@@ -38,6 +43,8 @@ function Scene( props ): JSX.Element {
 
     const counter = useSelector( ( state: any ) => state.counter );
 
+
+
     return (
         < Suspense >
             < Canvas >
@@ -46,7 +53,7 @@ function Scene( props ): JSX.Element {
                 < Camera counter={ counter } camera_data={ props.data.camera } />
                 < Models data={ props.data } counter={ counter } />
 
-                < ambientLight intensity={ .5 } />
+                < ambientLight intensity={ .25 } />
                 < spotLight position={ [ -10, 10, 10 ] } intensity={ 0.9 } />
                 < DevelopmentCamera  />
 
@@ -95,9 +102,9 @@ function Camera( props: { counter: number, camera_data: any } ): JSX.Element {
     function AnimationController() {
         if( translateAnimationActions.length ) {
             translateAnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 )
+            rotateAnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 )
             // translateAnimationActions[ props.counter ].play().halt( 5 )
 
-            rotateAnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 )
         }
         // if( rotateAnimationActions.length ) rotateAnimationActions[ props.counter ].play();
     }; 
@@ -135,25 +142,38 @@ function SetCamera( _camera ): void {
 function Models( props: any ): JSX.Element  {  
 
     const [ animationActions, setAnimationActions ] = useState( [] );
+    // [ [ mainModelAnimation, scaleAnimation ], [], [] ]
 
     useEffect( () => AnimationController( animationActions, props.counter ), [ animationActions, props.counter ] );
 
     useFrame( ( _, delta ) => {
-        if( animationActions.length ) animationActions[ props.counter ]._mixer.update( delta );
+        if( animationActions.length ) animationActions[ props.counter ][0]._mixer.update( delta );
+        if( animationActions.length && props.counter > 0 ) animationActions[ (props.counter - 1) ][1]._mixer.update( delta );
     });
 
     const sceneModels = props.data.models.map( ( model: any , i: number ) => {
         return (
             <CreateModel 
                 key={ model.id } 
+                modelNumber={ model.modelNumber }
                 position={ model.positions[0] }
                 name={ model.name }
                 model={ model }
                 setAnimationActions={ setAnimationActions }
-                visible={ ( props.counter === i ? true : false ) }
+                // visible={ ( props.counter === i ? true : false ) }
             />
         );
     });
+
+    const sceneGraphModels = useThree( (state) => state.scene.children );
+
+    useEffect( () => {
+        console.log(
+            'sceneGraphModels',
+            sceneGraphModels
+        );
+    }, [sceneGraphModels] );
+
 
     return (
         <>
@@ -162,15 +182,37 @@ function Models( props: any ): JSX.Element  {
     );
 };
 
+function AnimationController( animationActions: any, counter: number ): void {
+    if( animationActions.length ) {
+        // This is a side effect...change to setAnimations?
+        // animationActions.forEach( ( animationAction: any ) => {
+        //     animationAction.stop();
+        //     animationAction.reset();
+        // });
+        // console.log( 'animationActions', animationActions);
+        // animationActions[ counter ][0].play();
+
+        // animationActions[ counter ][1].startAt( 1 );
+        // animationActions[ counter ][1].play()
+
+
+        // animationActions[ counter ][1]._mixer._root.modelNumber === (counter - 1) ? animationActions[ counter-1 ][1].play() : animationActions[ counter-1 ][1].stop();
+    }
+
+    if( animationActions.length && counter > 0) {
+        animationActions[ (counter - 1) ][1].play();
+    }
+
+}
+
 
 // Grabs meshes and animations from data --> returns a group of all the meshes of the model. [ meshes ] mounted to the scene graph when Models();
 function CreateModel( props: any ): JSX.Element {
 
-    const ref = useRef(), animationData = props.model.animations[0];
-    let modelName;
+    const ref = useRef(), animationData = props.model.animations;
+    let modelName = props.name;
     const fiber_model = props.model.meshes.map( ( mesh: any ) => {
-        modelName = mesh.name;
-        console.log( 'mesh', mesh );
+        // modelName = mesh.name;
         
         // Are these really instances? Or is Three making a seperate draw call for each sphere?
         let instances = [];
@@ -205,32 +247,26 @@ function CreateModel( props: any ): JSX.Element {
     });
 
     // Creates AnimationAction from _data, attaches it to this model, and pushes it to Model()'s state
-    useEffect( () => props.setAnimationActions( ( animationAction: any ) => [ ...animationAction, CreateAnimationAction( ref.current, animationData ) ] ), []);
-    
+    useEffect( () => props.setAnimationActions( ( animationAction: any ) => [ ...animationAction, [ CreateAnimationAction( ref.current, animationData[0] ), CreateAnimationAction( ref.current, animationData[1], true, true ) ] ] ), []);
+
     return (
-        <group scale={ props.model.scale }  visible={ props.visible } name={ modelName } ref={ref} position={ [ props.position.x, props.position.y, props.position.z ] } >
+        <group modelNumber={ props.modelNumber } visible={ props.model.visible } name={ modelName } ref={ref} position={ [ props.position.x, props.position.y, props.position.z ] } >
             { fiber_model }
         </group>
     );
 };
 
 
-function CreateAnimationAction( fiber_model, animationData ): THREE.AnimationAction {
+function CreateAnimationAction( fiber_model, animationData, clamped, noLoop ): THREE.AnimationAction {
+
     const mixer = new THREE.AnimationMixer( fiber_model );
     const animationAction = mixer.clipAction( animationData );
+    animationAction.clampWhenFinished = clamped;
+    if ( noLoop ) animationAction.setLoop( THREE.LoopOnce );
     return animationAction;
 }; 
 
-function AnimationController( animations: any, counter: number ): void {
-    if( animations.length ) {
-        // This is a side effect...change to setAnimations?
-        animations.forEach( ( animation: any ) => {
-            animation.stop();
-            animation.reset();
-        });
-        animations[ counter ].play();
-    }
-}
+
 
 // Renders UI + creates event handlers to handle user input.
 function UI(): JSX.Element {
