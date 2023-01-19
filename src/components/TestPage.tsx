@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { ReactElement, useState } from 'react';
+import { useState } from 'react';
 import { OrbitControls, PerspectiveCamera, useHelper } from '@react-three/drei';
 import { Suspense, useRef, useEffect } from 'react';
 import { Canvas, useThree, useFrame  } from '@react-three/fiber';
@@ -12,18 +12,13 @@ import UpdateCamera from './UpdateCamera.jsx';
 
 /* 
 To-do: 
-    
-    - Make visible to invisible transition smoother.
-        - Make the model scale to near zero right after counter is incremented.
-        - Make the next model scale backwards from zero to its original scale, after the camera approaches. 
-            - Set the scale on all models initially to zero. Have the model scale to its original scale after the camera approaches. 
-        
 
-    - Add test models to all proper locations of lesson -- need to figure out what these locations are first.
+    - Add test models to all proper locations of lesson 
+        - Need to create new doped model 
+        - Need to add Protease model and figure out it's position
+    
     - Create all move and rotate camera functions.
     - Run TestPage with AllFullereneModelsCombined.
-    
-
     - Clean up and get a high level understanding of everything that you've re-factored.
 
 */
@@ -71,7 +66,7 @@ function Camera( props: { counter: number, camera_data: any } ): JSX.Element {
     const [ translateAnimationActions, setTranslateAnimationActions ] = useState( [] );
     const [ rotateAnimationActions, setRotateAnimationActions ] = useState( [] );
 
-    // Loops through camera animations[] --> creates an AnimationAction for each rotation and translation animation:
+    // Loops through camera.animations[] --> creates AnimationAction for each rotation and translation animation:
     function CreateAllAnimationActions( fiberCameraRef, allAnimationData: [][] ) {
 
         function CreateCameraAnimationAction( animationData ): THREE.AnimationAction {
@@ -95,8 +90,7 @@ function Camera( props: { counter: number, camera_data: any } ): JSX.Element {
     }; 
 
     useEffect( () => {
-        CreateAllAnimationActions( ref.current, props.camera_data.animations ) 
-        // console.log('allAnimationData' ,props.camera_data.animations); // [ [ t, r ], [ t, r ] ]
+        CreateAllAnimationActions( ref.current, props.camera_data.animations ) // props.camera_data.animations); // [ [ t, r ], [ t, r ] ]
     }, [] );
                                                          
 
@@ -105,10 +99,7 @@ function Camera( props: { counter: number, camera_data: any } ): JSX.Element {
         if( translateAnimationActions.length ) {
             translateAnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 )
             rotateAnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 )
-            // translateAnimationActions[ props.counter ].play().halt( 5 )
-
         }
-        // if( rotateAnimationActions.length ) rotateAnimationActions[ props.counter ].play();
     }; 
     useEffect( AnimationController, [ translateAnimationActions, props.counter ] );
 
@@ -122,9 +113,8 @@ function Camera( props: { counter: number, camera_data: any } ): JSX.Element {
 
     useHelper( ref, CameraHelper );
 
-    // useEffect( () => SetCamera( ref.current ) ); 
-    // const set = useThree((state) => state.set);
-    // useEffect( () => set({ camera: ref.current }) );
+    const set = useThree((state) => state.set);
+    useEffect( () => set({ camera: ref.current }) );
 
     useEffect( () => {
         console.log( 'camera position', ref.current.position );
@@ -148,7 +138,7 @@ function SetCamera( _camera ): void {
 function Models( props: any ): JSX.Element  {  
 
     const [ animationActions, setAnimationActions ] = useState( [] );
-    // [ [ mainModelAnimation, scaleOutAnimation ], [], [] ]
+    // [ [ mainAnimationModel0, scaleAnimationModel0 ], [ mainAnimationModel1, scaleAnimationModel1 ], [ mainAnimationModel2, scaleAnimationModel2 ] ]
 
     useEffect( () => AnimationController( animationActions, props.counter ), [ animationActions, props.counter ] );
 
@@ -171,8 +161,6 @@ function Models( props: any ): JSX.Element  {
             />
         );
     });
-
-    const sceneGraphModels = useThree( (state) => state.scene.children );
 
     return (
         <>
@@ -264,14 +252,8 @@ function CreateAnimationAction( fiber_model, animationData: THREE.AnimationClip,
 
 
 
-
-
-
-
-
 // Renders UI + creates event handlers to handle user input.
 function UI(): JSX.Element {
-    // console.log('UI() called');
 
     const dispatch = useDispatch();
     return (
@@ -290,14 +272,14 @@ function UI(): JSX.Element {
 };
 
 
-// Creates a zoomed out camera with 360 orbit controls to make dev easier:
+// Creates zoomed out camera with orbit controls to make dev easier:
 function DevelopmentCamera(): JSX.Element {
     const ref: any = useRef();
     const set = useThree(( state ) => state.set );
 
     // Makes the Dev Camera the default camera:
-    useEffect( () => set( { camera: ref.current } ) );
-    useFrame( () => { ref.current.updateMatrixWorld() } );
+    // useEffect( () => set( { camera: ref.current } ) );
+    // useFrame( () => { ref.current.updateMatrixWorld() } );
 
     // Adds 3D OrbitControls:
     function CameraControls() {
@@ -311,7 +293,7 @@ function DevelopmentCamera(): JSX.Element {
     return (
         <>
             < PerspectiveCamera ref={ref} position={ [ 20, 0, 0 ] } rotation={ [0, (Math.PI/2) , 0] } fov={45} aspect={1} />
-            < CameraControls />
+            {/* < CameraControls /> */}
         </>
     );
 };

@@ -33,8 +33,11 @@ const data = [
             animations: [
                 [ Translate( 3, [ 0, 0, 3 ], [ 0, 0, 0 ] ),  Rotate( 0, 'x', 0, 0) ],
                 [ Translate( 3, [ 0, 0, 0 ], [ 0.75, 0, 1 ] ), Rotate( 3, 'x', 0, 0.66 ) ], 
-                [ Translate( 3, [ 0.75, 0, 1 ], [ 0.75, 0, -2 ] ), Rotate( 3, 'x', 0.66, 0 ) ], 
-                [ Translate( 0, [ 0.75, 0, -2 ], [ 0.75, 0, -2 ] ), Rotate( 3, 'y', 0, 1.5 ) ], 
+                [ Translate( 3, [ 0.75, 0, 1 ], [ 0.75, 0, -2 ] ), Rotate( 3, 'x', 0.66, 0 ) ], // favorite animation, rotates down and translates z
+                [ Translate( 3, [ 0.75, 0, -2 ], [ 0, 0, 0 ] ), Rotate( 3, 'x', 0, -0.66 ) ], 
+                [ Translate( 3, [ 0, 0, 0 ], [ 0, 0, -2 ] ), Rotate( 3, 'x', -0.66, 0 ) ], 
+
+                // [ Translate( 0, [ 0.75, 0, -2 ], [ 0.75, 0, -2 ] ), Rotate( 3, 'y', 0, 1.5 ) ], 
             ],
         },
 
@@ -97,12 +100,13 @@ const data = [
                 id: 'model3',
                 name: 'model3',
                 modelNumber: 3,
-                path: '/lesson1_models/instance2.glb',
+                path: '/lesson1_models/instance3.glb',
                 meshes: null,
                 visible: true,
                 scale: 0,
                 positions: [
-                    { x: -0.75, y: 0, z: -2.15 }
+                    { x: 0, y: -0.675, z: -1 },
+                    // { x: -0.75, y: 0, z: -2.15 }
                 ],
                 rotations: [
                     { _x: 0, _y: 0, _z: 0 }
@@ -110,6 +114,25 @@ const data = [
                 animations: [
                     Rotate( 5000, 'y', 0, 360 ),
                     Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] )
+                ]
+            },
+            {
+                id: 'model4',
+                name: 'model4',
+                modelNumber: 4,
+                path: '/lesson1_models/instance4.glb',
+                meshes: null,
+                visible: true,
+                scale: 0,
+                positions: [
+                    { x: 0, y: 0, z: -3 },
+                ],
+                rotations: [
+                    { _x: 0, _y: 0, _z: 0 }
+                ],
+                animations: [
+                    Rotate( 5000, 'y', 0, 360 ),
+                    Scale( 1, [ 0.1, 0.1, 0.1 ], [ 0, 0, 0 ] )
                 ]
             }
             
