@@ -113,14 +113,15 @@ const data = [
                 ],
                 animations: [
                     Rotate( 5000, 'y', 0, 360 ),
-                    Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] )
+                    Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] ),
+                    Oscilate( 4, [ 0, -0.2, 0 ], [ 0, 0.2, 0 ] )
                 ]
             },
             {
                 id: 'model4',
                 name: 'model4',
                 modelNumber: 4,
-                path: '/lesson1_models/instance4.glb',
+                path: '/lesson1_models/_instance4.glb',
                 meshes: null,
                 visible: true,
                 scale: 0,
@@ -131,8 +132,9 @@ const data = [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animations: [
-                    Rotate( 5000, 'y', 0, 360 ),
-                    Scale( 1, [ 0.1, 0.1, 0.1 ], [ 0, 0, 0 ] )
+                    Rotate( 4000, 'y', 0, 360 ),
+                    Scale( 1, [ 0.1, 0.1, 0.1 ], [ 0, 0, 0 ] ),
+                    Scale( 3, [ 0.075, 0.075, 0.075 ], [ 0, 0, 0 ] ),
                 ]
             }
             
@@ -242,6 +244,13 @@ function Translate( duration: number, initial_position: number[], final_position
 function Scale( duration: number, initial_scale: number[], final_scale: number[] ) {
     const times = [ 0, duration ], values = [ ...initial_scale, ...final_scale ];
     const trackName = '.scale';
+    const track = new VectorKeyframeTrack( trackName, times, values, InterpolateLinear );
+    return new AnimationClip( trackName, duration, [ track ] );
+};
+
+function Oscilate( duration: number, initial_position: number[], final_position: number[] ) {
+    const times = [ 0, duration / 2, duration ], values = [ ...initial_position, ...final_position, ...initial_position ];
+    const trackName = '.position';
     const track = new VectorKeyframeTrack( trackName, times, values, InterpolateLinear );
     return new AnimationClip( trackName, duration, [ track ] );
 };

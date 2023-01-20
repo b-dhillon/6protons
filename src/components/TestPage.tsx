@@ -12,13 +12,16 @@ import UpdateCamera from './UpdateCamera.jsx';
 
 /* 
 To-do: 
+    - Figure out a way to animate nested mesehs -- i.e. animate the doped model and animate the fullerene 
+    - Perhaps just do these in blender?
+    - Of try animating with ref2
 
-    - Add test models to all proper locations of lesson 
-        - Need to create new doped model 
-        - Need to add Protease model and figure out it's position
+    - Create new doped model 
+    - Create levitate animation for model0.
+    - Add text.
+    - Add speach.
+
     
-    - Create all move and rotate camera functions.
-    - Run TestPage with AllFullereneModelsCombined.
     - Clean up and get a high level understanding of everything that you've re-factored.
 
 */
@@ -116,9 +119,6 @@ function Camera( props: { counter: number, camera_data: any } ): JSX.Element {
     const set = useThree((state) => state.set);
     useEffect( () => set({ camera: ref.current }) );
 
-    useEffect( () => {
-        console.log( 'camera position', ref.current.position );
-    }, [props.counter] )
 
     return (
         <>
@@ -138,13 +138,17 @@ function SetCamera( _camera ): void {
 function Models( props: any ): JSX.Element  {  
 
     const [ animationActions, setAnimationActions ] = useState( [] );
-    // [ [ mainAnimationModel0, scaleAnimationModel0 ], [ mainAnimationModel1, scaleAnimationModel1 ], [ mainAnimationModel2, scaleAnimationModel2 ] ]
+    // [ [ mainAnimationModel0, scaleAnimationModel0, nestedAnimationModel0 ], [ mainAnimationModel1, scaleAnimationModel1 ], [ mainAnimationModel2, scaleAnimationModel2 ] ]
 
     useEffect( () => AnimationController( animationActions, props.counter ), [ animationActions, props.counter ] );
 
     useFrame( ( _, delta ) => {
-        if( animationActions.length ) animationActions[ props.counter ][0]._mixer.update( delta );
-        if( animationActions.length ) animationActions[ ( props.counter ) ][1]._mixer.update( delta );
+        if( animationActions.length ) {
+            animationActions[ props.counter ][0]._mixer.update( delta );
+            animationActions[ props.counter ][1]._mixer.update( delta );
+            animationActions[ props.counter ][2]?._mixer.update( delta );
+        };
+
         if( animationActions.length && props.counter > 0 ) animationActions[ ( props.counter - 1 ) ][1]._mixer.update( delta );
     });
 
@@ -157,6 +161,7 @@ function Models( props: any ): JSX.Element  {
                 name={ model.name }
                 model={ model }
                 setAnimationActions={ setAnimationActions }
+                counter={ props.counter }
                 // visible={ ( props.counter === i ? true : false ) }
             />
         );
@@ -176,15 +181,22 @@ function AnimationController( animationActions: any, counter: number ): void {
             animationAction[0].stop();
         });
 
+        // scale up animation:
         animationActions[ counter ][1].startAt( 4 ).setEffectiveTimeScale( -1 ).play()
+
+        // main animation
         animationActions[ counter ][0].startAt( 5 ).play();
     }
 
     if( animationActions.length && counter > 0) {
+        // scale down animation:
         animationActions[ (counter - 1) ][1].reset().setEffectiveTimeScale( 1.5 ).play();
         // animationActions[ (counter - 1) ][1].play();
     }
 
+    if( animationActions.length && animationActions[ counter ][2] ) {
+        animationActions[ counter ][2].play();
+    };
 }
 
 
@@ -192,6 +204,8 @@ function AnimationController( animationActions: any, counter: number ): void {
 function CreateModel( props: any ): JSX.Element {
 
     const ref = useRef(), animationData = props.model.animations;
+    const ref2 = useRef(); 
+
     let modelName = props.name;
     const fiber_model = props.model.meshes.map( ( mesh: any ) => {
         // modelName = mesh.name;
@@ -199,11 +213,12 @@ function CreateModel( props: any ): JSX.Element {
         // Are these really instances? Or is Three making a seperate draw call for each sphere?
         let instances = [];
         if ( mesh.children.length ) {
+            
             instances = mesh.children.map( ( child: any ) => {
                 return <mesh 
                     geometry={ child.geometry } 
                     material={ child.material }  
-                    ref={ ref }
+                    // ___ref={ (child.name === "dopeModel" ? ref2 : ref) }
                     key={ child.uuid } 
                     name={ child.name }
                     position={ child.position }
@@ -217,7 +232,7 @@ function CreateModel( props: any ): JSX.Element {
             <mesh 
                 geometry={ mesh.geometry } 
                 material={ mesh.material }  
-                ref={ ref }
+                ref={ (mesh.name === "dopeModel" || "fullereneModel" ? ref2 : ref) }
                 key={ mesh.uuid } 
                 name={ mesh.name }
                 position={ mesh.position }
@@ -228,8 +243,20 @@ function CreateModel( props: any ): JSX.Element {
         )
     });
 
+
+
     // Creates AnimationAction from _data, attaches it to this model, and pushes it to Model()'s state
-    useEffect( () => props.setAnimationActions( ( animationAction: any ) => [ ...animationAction, [ CreateAnimationAction( ref.current, animationData[0] ), CreateAnimationAction( ref.current, animationData[1], true, 1 ) ] ] ), []);
+    useEffect( () => props.setAnimationActions( ( animationAction: any ) => [ ...animationAction, [ CreateAnimationAction( ref.current, animationData[0] ), CreateAnimationAction( ref.current, animationData[1], true, false, 1 ), CreateAnimationAction( ref2.current, animationData[2], true, true, 1 )  ] ] ), []);
+
+    // useEffect( () => console.log( 'ref', ref.current ), [ props.counter ] );
+    // useFrame( ( state, delta ) => {
+    //     if( props.counter >= 3 && ref2.current ) {
+    //         const t = state.clock.elapsedTime;
+    //         ref2.current.position.y = ( Math.sin(t )) / 4
+    //     };
+    // });
+
+
 
     return (
         <group scale={ props.model.scale } modelNumber={ props.modelNumber } visible={ props.model.visible } name={ modelName } ref={ref} position={ [ props.position.x, props.position.y, props.position.z ] } >
@@ -239,13 +266,16 @@ function CreateModel( props: any ): JSX.Element {
 };
 
 
-function CreateAnimationAction( fiber_model, animationData: THREE.AnimationClip, clamped: boolean, repetitions: number ): THREE.AnimationAction {
+function CreateAnimationAction( fiber_model, animationData: THREE.AnimationClip, clamped: boolean, loop: boolean, repetitions: number ): THREE.AnimationAction {
+    if ( !fiber_model || !animationData ) return null;
+    console.log( 'fiber_model', fiber_model );
+
 
     const mixer = new THREE.AnimationMixer( fiber_model );
     const animationAction = mixer.clipAction( animationData );
     animationAction.clampWhenFinished = clamped;
-    // if ( noLoop ) animationAction.setLoop( THREE.LoopOnce );
-    animationAction.repetitions = repetitions;
+    if( !loop ) animationAction.repetitions = repetitions;
+    if ( loop ) animationAction.setLoop( THREE.LoopPingPong, Infinity );
     return animationAction;
 }; 
 
