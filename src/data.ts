@@ -39,6 +39,7 @@ const data = [
 
                 // [ Translate( 0, [ 0.75, 0, -2 ], [ 0.75, 0, -2 ] ), Rotate( 3, 'y', 0, 1.5 ) ], 
             ],
+            // Write the Translate and Rotate methods here and then change their parameters to this variables
         },
 
         models: [
@@ -56,7 +57,8 @@ const data = [
                 rotations: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
-                animations: [ Rotate( 5000, 'y', 0, 360 ), Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] ) ],
+                // animations: [ Rotate( 5000, 'y', 0, 360 ), Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] ) ],
+                animations: [ Levitate( 0 ), Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] ) ],
             },
             {
                 id: 'model1',
@@ -212,6 +214,64 @@ const data = [
         ],
     }
 ];
+
+
+// function Levitate( ref ) {
+//     useFrame( (state, delta ) => {
+//       // const t = state.clock.getElapsedTime();
+//       const t = state.clock.elapsedTime;
+//       ref.current.position.y = (0.75 + Math.sin(t / 1.5 )) / 4 // sin up and down 
+//       ref.current.rotation.y += (delta / 12) // continous rotation
+//       ref.current.rotation.x = Math.cos( t / 4 ) / 2 // cos wobble 
+//     })
+//   };
+
+
+
+
+
+// Just need to figure out how to stop the animation from jumping rotation. It's jumping because the first value is 0;
+function Levitate( positionY: number ) {
+    const duration = 100;
+
+
+    const trackNamePositionY = '.position[y]';
+    let timesPositionY: number[] = [];
+    let valuesPositionY: number[] = [];
+    for( let i = 0; i < duration; i++ ) {
+        timesPositionY.push( i );
+        valuesPositionY.push( ( Math.sin(i / 2 ) ) / 10 );
+        //                                 ^velocity ^amplitude
+    };
+    const trackPositionY = new NumberKeyframeTrack( trackNamePositionY, timesPositionY, valuesPositionY, InterpolateSmooth );
+
+
+
+    const trackNameRotationY = '.rotation[y]';
+    const timesRotationY = [ 0, duration ];
+    const valuesRotationY = [ 0, (Math.PI * 2) ];
+    const trackRotationY = new NumberKeyframeTrack( trackNameRotationY, timesRotationY, valuesRotationY );
+
+
+    const trackNameRotationX= '.rotation[x]';
+    let timesRotationX: number[] = [];
+    let valuesRotationX: number[] = [];
+    for( let i = 0; i < duration; i++ ) {
+        timesRotationX.push( i );
+        valuesRotationX.push( ( Math.cos( i / 10 ) ) / 2 );
+        //                                 ^velocity   ^amplitude
+    };
+
+
+
+    const trackRotationX = new NumberKeyframeTrack( trackNameRotationX, timesRotationX, valuesRotationX );
+    // const trackRotationX = new NumberKeyframeTrack( trackNameRotationX, [0,0], [0,0] );
+
+
+    return new AnimationClip( 'Levitate', duration, [ /*trackPositionY, trackRotationY,*/ trackRotationX ] );
+}
+
+
 
 function Rotate( duration: number, axis = 'x', initial_angle: number, final_angle: number ) {
     const times = [ 0, duration ], values = [ initial_angle, final_angle ];

@@ -12,17 +12,21 @@ import UpdateCamera from './UpdateCamera.jsx';
 
 /* 
 To-do: 
-    - Figure out a way to animate nested mesehs -- i.e. animate the doped model and animate the fullerene 
-    - Perhaps just do these in blender?
-    - Of try animating with ref2
 
-    - Create new doped model 
     - Create levitate animation for model0.
-    - Add text.
-    - Add speach.
+    - Create new doped model 
+
+
 
     
     - Clean up and get a high level understanding of everything that you've re-factored.
+        - Get rid of all hard coded data, both in data.ts and here in TestPage.tsx.
+        - Any way to make updating mixers more efficient?
+
+
+    - Add text.
+    - Add speach.
+    - Juice up camera transitions?
 
 */
 
@@ -138,7 +142,7 @@ function SetCamera( _camera ): void {
 function Models( props: any ): JSX.Element  {  
 
     const [ animationActions, setAnimationActions ] = useState( [] );
-    // [ [ mainAnimationModel0, scaleAnimationModel0, nestedAnimationModel0 ], [ mainAnimationModel1, scaleAnimationModel1 ], [ mainAnimationModel2, scaleAnimationModel2 ] ]
+    // [ [ mainAnimation, scaleAnimation, nestedAnimation], [ mainAnimation, scaleAnimation, nestedAnimation ], etc... ]
 
     useEffect( () => AnimationController( animationActions, props.counter ), [ animationActions, props.counter ] );
 
@@ -147,9 +151,10 @@ function Models( props: any ): JSX.Element  {
             animationActions[ props.counter ][0]._mixer.update( delta );
             animationActions[ props.counter ][1]._mixer.update( delta );
             animationActions[ props.counter ][2]?._mixer.update( delta );
-        };
 
-        if( animationActions.length && props.counter > 0 ) animationActions[ ( props.counter - 1 ) ][1]._mixer.update( delta );
+            if ( props.counter > 0 ) animationActions[ ( props.counter - 1 ) ][1]._mixer.update( delta );
+        };
+        // if( animationActions.length && props.counter > 0 ) animationActions[ ( props.counter - 1 ) ][1]._mixer.update( delta );
     });
 
     const sceneModels = props.data.models.map( ( model: any , i: number ) => {
@@ -178,7 +183,12 @@ function AnimationController( animationActions: any, counter: number ): void {
 
     if( animationActions.length ) {
         animationActions.forEach( ( animationAction: any ) => {
+            
+            // stops every model's main animation
             animationAction[0].stop();
+
+            // stops every model's nested animation
+            animationAction[2]?.stop();
         });
 
         // scale up animation:
@@ -191,10 +201,10 @@ function AnimationController( animationActions: any, counter: number ): void {
     if( animationActions.length && counter > 0) {
         // scale down animation:
         animationActions[ (counter - 1) ][1].reset().setEffectiveTimeScale( 1.5 ).play();
-        // animationActions[ (counter - 1) ][1].play();
     }
 
     if( animationActions.length && animationActions[ counter ][2] ) {
+        // nested animation
         animationActions[ counter ][2].play();
     };
 }
@@ -207,6 +217,7 @@ function CreateModel( props: any ): JSX.Element {
     const ref2 = useRef(); 
 
     let modelName = props.name;
+    console.log( props.model.meshes );
     const fiber_model = props.model.meshes.map( ( mesh: any ) => {
         // modelName = mesh.name;
         
@@ -237,6 +248,8 @@ function CreateModel( props: any ): JSX.Element {
                 name={ mesh.name }
                 position={ mesh.position }
                 scale={ mesh.scale }
+                // quaternion={ [0,0,0,0] }
+                // rotation={ [0, 0, 0] }
             >
                 { instances }
             </mesh>
@@ -246,7 +259,7 @@ function CreateModel( props: any ): JSX.Element {
 
 
     // Creates AnimationAction from _data, attaches it to this model, and pushes it to Model()'s state
-    useEffect( () => props.setAnimationActions( ( animationAction: any ) => [ ...animationAction, [ CreateAnimationAction( ref.current, animationData[0] ), CreateAnimationAction( ref.current, animationData[1], true, false, 1 ), CreateAnimationAction( ref2.current, animationData[2], true, true, 1 )  ] ] ), []);
+    useEffect( () => props.setAnimationActions( ( animationAction: any ) => [ ...animationAction, [ CreateAnimationAction( ref.current, animationData[0], false, true, 5 ), CreateAnimationAction( ref.current, animationData[1], true, false, 1 ), CreateAnimationAction( ref2.current, animationData[2], true, true, 1 )  ] ] ), []);
 
     // useEffect( () => console.log( 'ref', ref.current ), [ props.counter ] );
     // useFrame( ( state, delta ) => {
@@ -259,23 +272,23 @@ function CreateModel( props: any ): JSX.Element {
 
 
     return (
-        <group scale={ props.model.scale } modelNumber={ props.modelNumber } visible={ props.model.visible } name={ modelName } ref={ref} position={ [ props.position.x, props.position.y, props.position.z ] } >
+        <group  scale={ props.model.scale } modelNumber={ props.modelNumber } visible={ props.model.visible } name={ modelName } ref={ref} position={ [ props.position.x, props.position.y, props.position.z ] } >
             { fiber_model }
         </group>
     );
 };
 
 
+// This might be able to be moved to the data object as a method. You wont have access to the ref there, but perhaps you can just push it to the meshes animations[].
 function CreateAnimationAction( fiber_model, animationData: THREE.AnimationClip, clamped: boolean, loop: boolean, repetitions: number ): THREE.AnimationAction {
     if ( !fiber_model || !animationData ) return null;
-    console.log( 'fiber_model', fiber_model );
-
 
     const mixer = new THREE.AnimationMixer( fiber_model );
     const animationAction = mixer.clipAction( animationData );
     animationAction.clampWhenFinished = clamped;
     if( !loop ) animationAction.repetitions = repetitions;
-    if ( loop ) animationAction.setLoop( THREE.LoopPingPong, Infinity );
+    if ( loop ) animationAction.setLoop( THREE.LoopRepeat );
+    // if ( loop ) animationAction.setLoop( THREE.LoopPingPong, Infinity );
     return animationAction;
 }; 
 
