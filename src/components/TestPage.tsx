@@ -218,7 +218,7 @@ function AnimationController( animationActions: any, counter: number ): void {
 function CreateModel( props: any ): JSX.Element {
 
     const ref = useRef(), animationData = props.model.animations;
-    const ref2 = useRef(); 
+    const nestedRef = useRef(); 
 
     let modelName = props.name;
     const fiber_model = props.model.meshes.map( ( mesh: any ) => {
@@ -232,7 +232,7 @@ function CreateModel( props: any ): JSX.Element {
                 return <mesh 
                     geometry={ child.geometry } 
                     material={ child.material }  
-                    // ___ref={ (child.name === "dopeModel" ? ref2 : ref) }
+                    // ___ref={ (child.name === "dopeModel" ? nestedRef : ref) }
                     key={ child.uuid } 
                     name={ child.name }
                     position={ child.position }
@@ -246,13 +246,11 @@ function CreateModel( props: any ): JSX.Element {
             <mesh 
                 geometry={ mesh.geometry } 
                 material={ mesh.material }  
-                ref={ (mesh.name === "dopeModel" || "fullereneModel" ? ref2 : ref) }
+                ref={ ( mesh.name === "nestedModel" ? nestedRef : ref ) }
                 key={ mesh.uuid } 
                 name={ mesh.name }
                 position={ mesh.position }
                 scale={ mesh.scale }
-                // quaternion={ [0,0,0,0] }
-                // rotation={ [0, 0, 0] }
             >
                 { instances }
             </mesh>
@@ -262,13 +260,13 @@ function CreateModel( props: any ): JSX.Element {
 
 
     // Creates AnimationAction from _data, attaches it to this model, and pushes it to Model()'s state
-    useEffect( () => props.setAnimationActions( ( animationAction: any ) => [ ...animationAction, [ CreateAnimationAction( ref.current, animationData[0], false, true, 5 ), CreateAnimationAction( ref.current, animationData[1], true, false, 1 ), CreateAnimationAction( ref2.current, animationData[2], true, true, 1 )  ] ] ), []);
+    useEffect( () => props.setAnimationActions( ( animationAction: any ) => [ ...animationAction, [ CreateAnimationAction( ref.current, animationData[0], false, true, 5 ), CreateAnimationAction( ref.current, animationData[1], true, false, 1 ), CreateAnimationAction( nestedRef.current, animationData[2], true, true, 1 )  ] ] ), []);
 
     useEffect( () => console.log( 'ref', ref.current ), [ props.counter ] );
     // useFrame( ( state, delta ) => {
-    //     if( props.counter >= 3 && ref2.current ) {
+    //     if( props.counter >= 3 && nestedRef.current ) {
     //         const t = state.clock.elapsedTime;
-    //         ref2.current.position.y = ( Math.sin(t )) / 4
+    //         nestedRef.current.position.y = ( Math.sin(t )) / 4
     //     };
     // });
 
