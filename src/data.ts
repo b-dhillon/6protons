@@ -47,10 +47,10 @@ const data = [
                 id: '0',
                 name: 'model0',
                 modelNumber: 0,
-                path: '/lesson1_models/instance0.glb',
+                path: '/lesson1_models/_instance0.glb',
                 meshes: null,
                 visible: true,
-                scale: 0,
+                scale: 0.18,
                 positions: [
                     { x: 0, y: 0, z: -1 },
                 ],
@@ -258,17 +258,14 @@ function Levitate( positionY: number ) {
     let valuesRotationX: number[] = [];
     for( let i = 0; i < duration; i++ ) {
         timesRotationX.push( i );
-        valuesRotationX.push( ( Math.cos( i / 10 ) ) / 2 );
+        valuesRotationX.push( ( Math.sin( i / 7 ) ) / 2 );
         //                                 ^velocity   ^amplitude
     };
-
-
-
     const trackRotationX = new NumberKeyframeTrack( trackNameRotationX, timesRotationX, valuesRotationX );
     // const trackRotationX = new NumberKeyframeTrack( trackNameRotationX, [0,0], [0,0] );
 
 
-    return new AnimationClip( 'Levitate', duration, [ /*trackPositionY, trackRotationY,*/ trackRotationX ] );
+    return new AnimationClip( 'Levitate', duration, [ trackPositionY, trackRotationY, trackRotationX ] );
 }
 
 

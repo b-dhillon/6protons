@@ -146,13 +146,16 @@ function Models( props: any ): JSX.Element  {
 
     useEffect( () => AnimationController( animationActions, props.counter ), [ animationActions, props.counter ] );
 
+
     useFrame( ( _, delta ) => {
         if( animationActions.length ) {
             animationActions[ props.counter ][0]._mixer.update( delta );
-            animationActions[ props.counter ][1]._mixer.update( delta );
             animationActions[ props.counter ][2]?._mixer.update( delta );
-
-            if ( props.counter > 0 ) animationActions[ ( props.counter - 1 ) ][1]._mixer.update( delta );
+            
+            if ( props.counter > 0 ) {
+                animationActions[ props.counter ][1]._mixer.update( delta );
+                animationActions[ ( props.counter - 1 ) ][1]._mixer.update( delta );
+            }
         };
         // if( animationActions.length && props.counter > 0 ) animationActions[ ( props.counter - 1 ) ][1]._mixer.update( delta );
     });
@@ -195,7 +198,8 @@ function AnimationController( animationActions: any, counter: number ): void {
         animationActions[ counter ][1].startAt( 4 ).setEffectiveTimeScale( -1 ).play()
 
         // main animation
-        animationActions[ counter ][0].startAt( 5 ).play();
+        if (counter === 0 ) animationActions[ counter ][0].play();
+        else animationActions[ counter ][0].startAt( 5 ).play();
     }
 
     if( animationActions.length && counter > 0) {
@@ -217,7 +221,6 @@ function CreateModel( props: any ): JSX.Element {
     const ref2 = useRef(); 
 
     let modelName = props.name;
-    console.log( props.model.meshes );
     const fiber_model = props.model.meshes.map( ( mesh: any ) => {
         // modelName = mesh.name;
         
