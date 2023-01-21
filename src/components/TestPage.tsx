@@ -12,16 +12,19 @@ import UpdateCamera from './UpdateCamera.jsx';
 
 /* 
 To-do: 
+    - Confirm that nestedModels are being animated properly. 
+        - Juice up their animations
 
 
     - Clean up and get a high level understanding of everything that you've re-factored.
         - Get rid of all hard coded data, both in data.ts and here in TestPage.tsx.
         - Any way to make updating mixers more efficient?
 
+    - Juice up camera transitions?
+        - Get models positioned properly to right middle half of screen
 
     - Add text.
     - Add speach.
-    - Juice up camera transitions?
 
 */
 
