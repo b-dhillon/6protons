@@ -13,8 +13,6 @@ import UpdateCamera from './UpdateCamera.jsx';
 /* 
 To-do: 
 
-    - Create new doped model 
-
 
     - Clean up and get a high level understanding of everything that you've re-factored.
         - Get rid of all hard coded data, both in data.ts and here in TestPage.tsx.
@@ -266,7 +264,7 @@ function CreateModel( props: any ): JSX.Element {
     // Creates AnimationAction from _data, attaches it to this model, and pushes it to Model()'s state
     useEffect( () => props.setAnimationActions( ( animationAction: any ) => [ ...animationAction, [ CreateAnimationAction( ref.current, animationData[0], false, true, 5 ), CreateAnimationAction( ref.current, animationData[1], true, false, 1 ), CreateAnimationAction( ref2.current, animationData[2], true, true, 1 )  ] ] ), []);
 
-    // useEffect( () => console.log( 'ref', ref.current ), [ props.counter ] );
+    useEffect( () => console.log( 'ref', ref.current ), [ props.counter ] );
     // useFrame( ( state, delta ) => {
     //     if( props.counter >= 3 && ref2.current ) {
     //         const t = state.clock.elapsedTime;

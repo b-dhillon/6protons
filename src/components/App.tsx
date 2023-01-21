@@ -75,7 +75,7 @@ export default function App() {
             
                 const allMeshesOfApp = allModelsOfApp.map( (arrayOfGltfs: any) => {
                     return arrayOfGltfs.map( ( gltf: any ) => {
-                        return gltf.scene.children.filter( ( child: any ) => child.isMesh && child.__removed === undefined )
+                        return gltf.scene.children.filter( ( child: any ) => child.isMesh || child.isGroup && child.__removed === undefined )
                     });
                 } ) // [ [ [Mesh], [Mesh], [Mesh] ], [ [Mesh], [Mesh], [Mesh] ], [ [Mesh], [Mesh],[Mesh] ]
             
