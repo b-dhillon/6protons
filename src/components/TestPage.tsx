@@ -13,12 +13,9 @@ import UpdateCamera from './UpdateCamera.jsx';
 /* 
 To-do: 
 
-    - Create levitate animation for model0.
     - Create new doped model 
 
 
-
-    
     - Clean up and get a high level understanding of everything that you've re-factored.
         - Get rid of all hard coded data, both in data.ts and here in TestPage.tsx.
         - Any way to make updating mixers more efficient?
@@ -47,10 +44,15 @@ function Scene( props ): JSX.Element {
 
     const counter = useSelector( ( state: any ) => state.counter );
 
-
+    const [ fadeDone, setFadeDone ] = useState( false );
+    function handleFadeDoneAfter( seconds: number ) {
+      setTimeout( () => setFadeDone( true ), seconds )
+    }; handleFadeDoneAfter( 5500 );
 
     return (
         < Suspense >
+            {!fadeDone ? <div className="blackFade"></div> : "" }
+
             < Canvas >
 
                 < Universe universe_data={ props.data.universe } />
