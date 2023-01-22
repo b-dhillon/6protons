@@ -30,22 +30,9 @@ export default function Page( props ): JSX.Element {
 
     const [ page, setPage ] = useState( props.data );
 
-    function handleIncrement() {
-        setPage( (oldData) => {
-            return {
-                ...oldData, 
-                section_counter: oldData.section_counter + 1
-            };
-        });
-    };
-
-    useEffect( () => {
-        console.log( page.section_counter );
-    }, [ page ] )
-
     return (
         < Suspense >
-            < UI data={ page } handleIncrement={ handleIncrement } />
+            < UI data={ page } setData={ setPage } />
             < Scene data={ page } />
         </ Suspense >
     );
@@ -311,6 +298,16 @@ function CreateAnimationAction( fiber_model, animationData: THREE.AnimationClip,
 // Renders UI + creates event handlers to handle user input.
 function UI( props ): JSX.Element {
 
+    function handleIncrement() {
+        props.setData( (oldData) => {
+            return {
+                ...oldData, 
+                section_counter: oldData.section_counter + 1
+            };
+        });
+    };
+
+
     const dispatch = useDispatch();
     return (
         <button 
@@ -322,9 +319,8 @@ function UI( props ): JSX.Element {
             }} 
             onClick={ () => {
                 dispatch( increment() );
-                props.handleIncrement();
+                handleIncrement();
             }}
-            // onClick={ () => props.handleIncrement() } 
         >
         Next
         </button> 
