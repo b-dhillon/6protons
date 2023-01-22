@@ -12,10 +12,9 @@ import UpdateCamera from './UpdateCamera.jsx';
 
 /* 
 To-do: 
-    - Camera rotations and translations can be done in one clip with multiple tracks. (Line 117)
-    
-    - Confirm that model4 is being animated properly. 
-        - Juice up it's animation if needed.
+
+    - Add text.
+    - Add speach.
 
     - Clean up and get a high level understanding of everything that you've re-factored.
         - Get rid of all hard coded data, both in data.ts and here in TestPage.tsx.
@@ -23,9 +22,6 @@ To-do:
 
     - Juice up camera transitions?
         - Get models positioned properly to right middle half of screen
-
-    - Add text.
-    - Add speach.
 
 */
 
@@ -44,6 +40,12 @@ export default function Page( props ): JSX.Element {
 // Mounts components to scene graph and renders 3D scene.
 function Scene( props ): JSX.Element {
 
+    const [ data, setData ] = useState( props.data );
+
+
+
+
+
     const counter = useSelector( ( state: any ) => state.counter );
 
     const [ fadeDone, setFadeDone ] = useState( false );
@@ -53,12 +55,14 @@ function Scene( props ): JSX.Element {
 
     return (
         < Suspense >
+
             {!fadeDone ? <div className="blackFade"></div> : "" }
 
+            < Audio />
             < Canvas >
 
-                < Universe universe_data={ props.data.universe } />
-                < Camera counter={ counter } camera_data={ props.data.camera } />
+                < Universe data={ props.data.universe } />
+                < Camera data={ props.data.camera } counter={ counter }  />
                 < Models data={ props.data } counter={ counter } />
 
                 < ambientLight intensity={ .25 } />
@@ -70,12 +74,18 @@ function Scene( props ): JSX.Element {
     );
 };
 
+function Audio() {
+    return (
+      <audio  autoPlay >
+        <source src="/music/fullerene2.mp3" type="audio/mp3" />
+      </audio>
+    );
+  };
+
 // Creates camera, handles its updates and renders the cameraHelper when called.
-function Camera( props: { counter: number, camera_data: any } ): JSX.Element {
+function Camera( props: { counter: number, data: any } ): JSX.Element {
 
     const ref: string = useRef();
-    const [ translateAnimationActions, setTranslateAnimationActions ] = useState( [] );
-    const [ rotateAnimationActions, setRotateAnimationActions ] = useState( [] );
 
     const [ translateRotateAnimationActions, setTranslateRotateAnimationActions ] = useState( [] );
 
@@ -90,46 +100,22 @@ function Camera( props: { counter: number, camera_data: any } ): JSX.Element {
             return animationAction;
         };
 
-        // const allTranslateAnimationActions = allAnimationData.map( ( animationData: [] ) => CreateCameraAnimationAction( animationData[0] ) );
-        // const allRotateAnimationActions = allAnimationData.map( ( animationData: [] ) => CreateCameraAnimationAction( animationData[1] ) );
-        // setRotateAnimationActions( allRotateAnimationActions );
-        // setTranslateAnimationActions( allTranslateAnimationActions );
-
         const allTranslateRotateAnimationActions = allAnimationData.map( ( animationData: [] ) => CreateCameraAnimationAction( animationData[0] ) );
         setTranslateRotateAnimationActions( allTranslateRotateAnimationActions );
-
-
-        /*
-        const [ allTranslateAnimationActions, allRotateAnimactionActions ] = allAnimationData.map( ( animationData: any ) => {
-            console.log( 'animationData', animationData );
-            return [ CreateAnimationAction( animationData[ 0 ] ), CreateAnimationAction( animationData[ 1 ] ) ]
-        });
-        */
     }; 
 
     useEffect( () => {
-        CreateAllAnimationActions( ref.current, props.camera_data.animations ) // props.camera_data.animations); // [ [ tr ], [ t, r ] ]
+        CreateAllAnimationActions( ref.current, props.data.animations ) // propsdata.animations); // [ [ tr ], [ t, r ] ]
     }, [] );
                                                          
-
-    // Trigger proper camera animation based on counter:
     function AnimationController() {
-        if( translateAnimationActions.length || translateRotateAnimationActions.length ) {
-            // translateAnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 )
-            // rotateAnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 )
-            console.log( 'translateRotateAnimationActions', translateRotateAnimationActions);
-            translateRotateAnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 )
-        }
+        if( translateRotateAnimationActions.length ) translateRotateAnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 );
     }; 
-    useEffect( AnimationController, [ /*translateAnimationActions*/ translateRotateAnimationActions, props.counter ] );
+    useEffect( AnimationController, [ translateRotateAnimationActions, props.counter ] );
 
 
     useFrame( ( _, delta ) => {
-        if( translateRotateAnimationActions.length) {
-            translateRotateAnimationActions[ props.counter ]._mixer.update( delta )
-            // translateAnimationActions[ props.counter ]._mixer.update( delta );
-            // rotateAnimationActions[ props.counter ]._mixer.update( delta )
-        };
+        if( translateRotateAnimationActions.length ) translateRotateAnimationActions[ props.counter ]._mixer.update( delta );
     });
 
     useHelper( ref, CameraHelper );
@@ -140,7 +126,7 @@ function Camera( props: { counter: number, camera_data: any } ): JSX.Element {
 
     return (
         <>
-            < PerspectiveCamera ref={ref} position={ props.camera_data.initialPosition } fov={ 45 } near={.1} far={ 8 } />
+            < PerspectiveCamera ref={ref} position={ props.data.positions[ 0 ] } fov={ 45 } near={.1} far={ 8 } />
             {/* < UpdateCamera _ref={ref} counter={ props.counter } camera_data={ props.camera_data } /> */}
         </>
     );
@@ -156,9 +142,9 @@ function SetCamera( _camera ): void {
 function Models( props: any ): JSX.Element  {  
 
     const [ animationActions, setAnimationActions ] = useState( [] );
-    // [ [ mainAnimation, scaleAnimation, nestedAnimation], [ mainAnimation, scaleAnimation, nestedAnimation ], etc... ]
+    // [ [ mainAnimation, scaleAnimation, nestedAnimation], [ ], etc... ]
 
-    useEffect( () => AnimationController( animationActions, props.counter ), [ animationActions, props.counter ] );
+    useEffect( () => ModelAnimationController( animationActions, props.counter ), [ animationActions, props.counter ] );
 
 
     useFrame( ( _, delta ) => {
@@ -192,7 +178,6 @@ function Models( props: any ): JSX.Element  {
                 model={ model }
                 setAnimationActions={ setAnimationActions }
                 counter={ props.counter }
-                // visible={ ( props.counter === i ? true : false ) }
             />
         );
     });
@@ -204,7 +189,7 @@ function Models( props: any ): JSX.Element  {
     );
 };
 
-function AnimationController( animationActions: any, counter: number ): void {
+function ModelAnimationController( animationActions: any, counter: number ): void {
 
     if( animationActions.length ) {
         animationActions.forEach( ( animationAction: any ) => {
@@ -250,7 +235,6 @@ function CreateModel( props: any ): JSX.Element {
         // Are these really instances? Or is Three making a seperate draw call for each sphere?
         let instances = [];
         if ( mesh.children.length ) {
-            
             instances = mesh.children.map( ( child: any ) => {
                 return <mesh 
                     geometry={ child.geometry } 

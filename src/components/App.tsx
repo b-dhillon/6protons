@@ -88,6 +88,7 @@ export default function App() {
         AddAllMeshesOfAppToData();
         // AddAllMeshesOfAppToData().then( setLoading(false) ) here when the async function returns
         // return AddAllMeshesOfAppToData();
+
     };
 
     useEffect( () => LoadData(), [] );
@@ -101,7 +102,7 @@ export default function App() {
 
 
 
-    if( loading ) return <h2>Loading</h2>;
+    if( loading ) return <h2 style={ { position: 'absolute', top: '500px', left: '800px' } }>Loading...</h2>;
     if( !loading && current_page === 'test_page' ) return <TestPage data={ pages.find( ( page ) => page.id === current_page  ) }/>
     else return <h2>Something is broken.</h2>
 };
