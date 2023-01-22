@@ -5,16 +5,17 @@ import { Suspense, useRef, useEffect } from 'react';
 import { Canvas, useThree, useFrame  } from '@react-three/fiber';
 import { useSelector, useDispatch } from 'react-redux';
 import { increment } from './redux/actions';
-import { CameraHelper } from 'three';
+import { CameraHelper, LoopPingPong } from 'three';
 import Universe from './Universe';
 import * as THREE from 'three'
 import UpdateCamera from './UpdateCamera.jsx';
 
 /* 
 To-do: 
-    - Confirm that nestedModels are being animated properly. 
-        - Juice up their animations
-
+    - Camera rotations and translations can be done in one clip with multiple tracks. (Line 117)
+    
+    - Confirm that model4 is being animated properly. 
+        - Juice up it's animation if needed.
 
     - Clean up and get a high level understanding of everything that you've re-factored.
         - Get rid of all hard coded data, both in data.ts and here in TestPage.tsx.
@@ -76,10 +77,12 @@ function Camera( props: { counter: number, camera_data: any } ): JSX.Element {
     const [ translateAnimationActions, setTranslateAnimationActions ] = useState( [] );
     const [ rotateAnimationActions, setRotateAnimationActions ] = useState( [] );
 
+    const [ translateRotateAnimationActions, setTranslateRotateAnimationActions ] = useState( [] );
+
     // Loops through camera.animations[] --> creates AnimationAction for each rotation and translation animation:
     function CreateAllAnimationActions( fiberCameraRef, allAnimationData: [][] ) {
 
-        function CreateCameraAnimationAction( animationData ): THREE.AnimationAction {
+        function CreateCameraAnimationAction( animationData: Three.AnimationClip ): THREE.AnimationAction {
             const mixer = new THREE.AnimationMixer( fiberCameraRef );
             const animationAction = mixer.clipAction( animationData );
             animationAction.loop = THREE.LoopOnce;
@@ -87,10 +90,15 @@ function Camera( props: { counter: number, camera_data: any } ): JSX.Element {
             return animationAction;
         };
 
-        const allTranslateAnimationActions = allAnimationData.map( ( animationData: [] ) => CreateCameraAnimationAction( animationData[0] ) );
-        const allRotateAnimationActions = allAnimationData.map( ( animationData: [] ) => CreateCameraAnimationAction( animationData[1] ) );
-        setRotateAnimationActions( allRotateAnimationActions );
-        setTranslateAnimationActions( allTranslateAnimationActions );
+        // const allTranslateAnimationActions = allAnimationData.map( ( animationData: [] ) => CreateCameraAnimationAction( animationData[0] ) );
+        // const allRotateAnimationActions = allAnimationData.map( ( animationData: [] ) => CreateCameraAnimationAction( animationData[1] ) );
+        // setRotateAnimationActions( allRotateAnimationActions );
+        // setTranslateAnimationActions( allTranslateAnimationActions );
+
+        const allTranslateRotateAnimationActions = allAnimationData.map( ( animationData: [] ) => CreateCameraAnimationAction( animationData[0] ) );
+        setTranslateRotateAnimationActions( allTranslateRotateAnimationActions );
+
+
         /*
         const [ allTranslateAnimationActions, allRotateAnimactionActions ] = allAnimationData.map( ( animationData: any ) => {
             console.log( 'animationData', animationData );
@@ -100,24 +108,27 @@ function Camera( props: { counter: number, camera_data: any } ): JSX.Element {
     }; 
 
     useEffect( () => {
-        CreateAllAnimationActions( ref.current, props.camera_data.animations ) // props.camera_data.animations); // [ [ t, r ], [ t, r ] ]
+        CreateAllAnimationActions( ref.current, props.camera_data.animations ) // props.camera_data.animations); // [ [ tr ], [ t, r ] ]
     }, [] );
                                                          
 
     // Trigger proper camera animation based on counter:
     function AnimationController() {
-        if( translateAnimationActions.length ) {
-            translateAnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 )
-            rotateAnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 )
+        if( translateAnimationActions.length || translateRotateAnimationActions.length ) {
+            // translateAnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 )
+            // rotateAnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 )
+            console.log( 'translateRotateAnimationActions', translateRotateAnimationActions);
+            translateRotateAnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 )
         }
     }; 
-    useEffect( AnimationController, [ translateAnimationActions, props.counter ] );
+    useEffect( AnimationController, [ /*translateAnimationActions*/ translateRotateAnimationActions, props.counter ] );
 
 
     useFrame( ( _, delta ) => {
-        if( translateAnimationActions.length ) {
-            translateAnimationActions[ props.counter ]._mixer.update( delta );
-            rotateAnimationActions[ props.counter ]._mixer.update( delta )
+        if( translateRotateAnimationActions.length) {
+            translateRotateAnimationActions[ props.counter ]._mixer.update( delta )
+            // translateAnimationActions[ props.counter ]._mixer.update( delta );
+            // rotateAnimationActions[ props.counter ]._mixer.update( delta )
         };
     });
 
@@ -152,15 +163,23 @@ function Models( props: any ): JSX.Element  {
 
     useFrame( ( _, delta ) => {
         if( animationActions.length ) {
+
+            // Main animation
             animationActions[ props.counter ][0]._mixer.update( delta );
+
+            // Nested animation
             animationActions[ props.counter ][2]?._mixer.update( delta );
             
+
             if ( props.counter > 0 ) {
+
+                // Scale In animation
                 animationActions[ props.counter ][1]._mixer.update( delta );
+
+                // Scale Out animation
                 animationActions[ ( props.counter - 1 ) ][1]._mixer.update( delta );
             }
         };
-        // if( animationActions.length && props.counter > 0 ) animationActions[ ( props.counter - 1 ) ][1]._mixer.update( delta );
     });
 
     const sceneModels = props.data.models.map( ( model: any , i: number ) => {
@@ -212,6 +231,7 @@ function AnimationController( animationActions: any, counter: number ): void {
 
     if( animationActions.length && animationActions[ counter ][2] ) {
         // nested animation
+        animationActions[ counter ][2].setLoop( LoopPingPong, Infinity )
         animationActions[ counter ][2].play();
     };
 }
@@ -265,15 +285,7 @@ function CreateModel( props: any ): JSX.Element {
     // Creates AnimationAction from _data, attaches it to this model, and pushes it to Model()'s state
     useEffect( () => props.setAnimationActions( ( animationAction: any ) => [ ...animationAction, [ CreateAnimationAction( ref.current, animationData[0], false, true, 5 ), CreateAnimationAction( ref.current, animationData[1], true, false, 1 ), CreateAnimationAction( nestedRef.current, animationData[2], true, true, 1 )  ] ] ), []);
 
-    useEffect( () => console.log( 'ref', ref.current ), [ props.counter ] );
-    // useFrame( ( state, delta ) => {
-    //     if( props.counter >= 3 && nestedRef.current ) {
-    //         const t = state.clock.elapsedTime;
-    //         nestedRef.current.position.y = ( Math.sin(t )) / 4
-    //     };
-    // });
-
-
+    // useEffect( () => console.log( 'ref', ref.current ), [ props.counter ] );
 
     return (
         <group  scale={ props.model.scale } modelNumber={ props.modelNumber } visible={ props.model.visible } name={ modelName } ref={ref} position={ [ props.position.x, props.position.y, props.position.z ] } >

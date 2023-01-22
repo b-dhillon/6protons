@@ -30,15 +30,23 @@ const data = [
                 { _x: 0, _y: 0, _z: 0 },
                 { _x: 0, _y: 0, _z: 0 },
             ],
-            animations: [
-                [ Translate( 3, [ 0, 0, 3 ], [ 0, 0, 0 ] ),  Rotate( 0, 'x', 0, 0) ],
-                [ Translate( 3, [ 0, 0, 0 ], [ 0.75, 0, 1 ] ), Rotate( 3, 'x', 0, 0.66 ) ], 
-                [ Translate( 3, [ 0.75, 0, 1 ], [ 0.75, 0, -2 ] ), Rotate( 3, 'x', 0.66, 0 ) ], // favorite animation, rotates down and translates z
-                [ Translate( 3, [ 0.75, 0, -2 ], [ 0, 0, 0 ] ), Rotate( 3, 'x', 0, -0.66 ) ], 
-                [ Translate( 3, [ 0, 0, 0 ], [ 0, 0, -2 ] ), Rotate( 3, 'x', -0.66, 0 ) ], 
+            // animations: [
+            //     [ Translate( 3, [ 0, 0, 3 ], [ 0, 0, 0 ] ),  Rotate( 0, 'x', 0, 0) ],
+            //     [ Translate( 3, [ 0, 0, 0 ], [ 0.75, 0, 1 ] ), Rotate( 3, 'x', 0, 0.66 ) ], 
+            //     [ Translate( 3, [ 0.75, 0, 1 ], [ 0.75, 0, -2 ] ), Rotate( 3, 'x', 0.66, 0 ) ], // favorite animation, rotates down and translates z
+            //     [ Translate( 3, [ 0.75, 0, -2 ], [ 0, 0, 0 ] ), Rotate( 3, 'x', 0, -0.66 ) ], 
+            //     [ Translate( 3, [ 0, 0, 0 ], [ 0, 0, -2 ] ), Rotate( 3, 'x', -0.66, 0 ) ], 
 
-                // [ Translate( 0, [ 0.75, 0, -2 ], [ 0.75, 0, -2 ] ), Rotate( 3, 'y', 0, 1.5 ) ], 
+            //     // [ Translate( 0, [ 0.75, 0, -2 ], [ 0.75, 0, -2 ] ), Rotate( 3, 'y', 0, 1.5 ) ], 
+            // ],
+            animations: [
+                [ TranslateRotateCamera( 3, [ 0, 0, 3 ], [ 0, 0, 0 ], 'x', 0, 0 ) ],
+                [ TranslateRotateCamera( 3, [ 0, 0, 0 ], [ 0.75, 0, 1 ], 'x', 0, 0.66 ) ],
+                [ TranslateRotateCamera( 3, [ 0.75, 0, 1 ], [ 0.75, 0, -2 ], 'x', 0.66, 0 ) ],
+                [ TranslateRotateCamera( 3, [ 0.75, 0, -2 ], [ 0, 0, 0 ], 'x', 0, -0.66 ) ],
+                [ TranslateRotateCamera( 3, [ 0, 0, 0 ], [ 0, 0, -2 ], 'x', -0.66, 0 ) ],
             ],
+
             // Write the Translate and Rotate methods here and then change their parameters to this variables
         },
 
@@ -137,7 +145,7 @@ const data = [
                 animations: [
                     Rotate( 4000, 'y', 0, 360 ),
                     Scale( 1, [ 0.1, 0.1, 0.1 ], [ 0, 0, 0 ] ),
-                    Scale( 3, [ 0.075, 0.075, 0.075 ], [ 0, 0, 0 ] ),
+                    Scale( 3, [ 0.01, 0.01, 0.01 ], [ 0.075, 0.075, 0.075 ] ),
                 ]
             }
             
@@ -233,7 +241,17 @@ const data = [
 
 // Just need to figure out how to stop the animation from jumping rotation. It's jumping because the first value is 0;
 function Levitate( positionY: number ) {
-    const duration = 100;
+    const duration = 90;
+
+    const trackNamePositionX = '.position[x]';
+    let timesPositionX: number[] = [];
+    let valuesPositionX: number[] = [];
+    for( let i = 0; i < duration; i++ ) {
+        timesPositionX.push( i );
+        valuesPositionX.push( ( Math.sin(i / 4) ) / 30 );
+                                        //  ^velocity ^amplitude
+    };
+    const trackPositionX = new NumberKeyframeTrack( trackNamePositionX, timesPositionX, valuesPositionX, InterpolateSmooth );
 
 
     const trackNamePositionY = '.position[y]';
@@ -241,11 +259,10 @@ function Levitate( positionY: number ) {
     let valuesPositionY: number[] = [];
     for( let i = 0; i < duration; i++ ) {
         timesPositionY.push( i );
-        valuesPositionY.push( ( Math.sin(i / 2 ) ) / 10 );
+        valuesPositionY.push( ( 0.5 + Math.sin(i / 2 ) ) / 12 );
         //                                 ^velocity ^amplitude
     };
     const trackPositionY = new NumberKeyframeTrack( trackNamePositionY, timesPositionY, valuesPositionY, InterpolateSmooth );
-
 
 
     const trackNameRotationY = '.rotation[y]';
@@ -259,16 +276,31 @@ function Levitate( positionY: number ) {
     let valuesRotationX: number[] = [];
     for( let i = 0; i < duration; i++ ) {
         timesRotationX.push( i );
-        valuesRotationX.push( ( Math.sin( i / 7 ) ) / 2 );
+        valuesRotationX.push( ( Math.sin( i / 7 ) ) );
         //                                 ^velocity   ^amplitude
     };
     const trackRotationX = new NumberKeyframeTrack( trackNameRotationX, timesRotationX, valuesRotationX );
-    // const trackRotationX = new NumberKeyframeTrack( trackNameRotationX, [0,0], [0,0] );
 
-
-    return new AnimationClip( 'Levitate', duration, [ trackPositionY, trackRotationY, trackRotationX ] );
+    return new AnimationClip( 'Levitate', duration, [ trackPositionY, trackRotationY, trackRotationX, trackPositionX ] );
 }
 
+function TranslateRotateCamera( duration: number, initial_position: number[], final_position: number[], axis = 'x', initial_angle: number, final_angle: number ) {
+
+    // duration = 3;
+
+    const times_Position = [ 0, duration ];
+    const values_Position = [ ...initial_position, ...final_position ];
+    const trackName_Position = '.position';
+    const track_Position = new VectorKeyframeTrack( trackName_Position, times_Position, values_Position, InterpolateLinear );
+
+    const times_Rotation = [ 0, duration ];
+    const values_Rotation = [ initial_angle, final_angle ];
+    const trackName_Rotation = '.rotation[' + axis + ']';
+    const track_Rotation = new NumberKeyframeTrack( trackName_Rotation, times_Rotation, values_Rotation );
+
+
+    return new AnimationClip( 'TranslateRotateCamera', duration, [ track_Position, track_Rotation  ] );
+};
 
 
 function Rotate( duration: number, axis = 'x', initial_angle: number, final_angle: number ) {
@@ -303,6 +335,8 @@ function Scale( duration: number, initial_scale: number[], final_scale: number[]
     const times = [ 0, duration ], values = [ ...initial_scale, ...final_scale ];
     const trackName = '.scale';
     const track = new VectorKeyframeTrack( trackName, times, values, InterpolateLinear );
+
+
     return new AnimationClip( trackName, duration, [ track ] );
 };
 
