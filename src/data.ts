@@ -67,7 +67,7 @@ const data = [
 
 
             TranslateRotate_x: function ( duration: number, initial_position: number[], final_position: number[], axis: string, initial_angle: number[], final_angle: number[] ) {
-                console.log( 'positions', this.positions );
+                // console.log( 'positions', this.positions );
     
                 const times_Position = [ 0, duration ];
                 const values_Position = [ ...initial_position, ...final_position ];

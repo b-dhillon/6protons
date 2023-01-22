@@ -18,6 +18,7 @@ To-do:
 
     - Clean up and get a high level understanding of everything that you've re-factored.
         - Get rid of all hard coded data, both in data.ts and here in TestPage.tsx.
+           - Update LoadData() in App() to include the creation of all the animation clips from the data.page.camera.positions_rotations[][]
         - Any way to make updating mixers more efficient?
 
     - Juice up camera transitions?
@@ -27,11 +28,24 @@ To-do:
 
 export default function Page( props ): JSX.Element {
 
-    const [ page ] = useState( props.data );
+    const [ page, setPage ] = useState( props.data );
+
+    function handleIncrement() {
+        setPage( (oldData) => {
+            return {
+                ...oldData, 
+                section_counter: oldData.section_counter + 1
+            };
+        });
+    };
+
+    useEffect( () => {
+        console.log( page.section_counter );
+    }, [ page ] )
 
     return (
         < Suspense >
-            < UI />
+            < UI data={ page } handleIncrement={ handleIncrement } />
             < Scene data={ page } />
         </ Suspense >
     );
@@ -39,12 +53,6 @@ export default function Page( props ): JSX.Element {
 
 // Mounts components to scene graph and renders 3D scene.
 function Scene( props ): JSX.Element {
-
-    const [ data, setData ] = useState( props.data );
-
-
-
-
 
     const counter = useSelector( ( state: any ) => state.counter );
 
@@ -62,7 +70,7 @@ function Scene( props ): JSX.Element {
             < Canvas >
 
                 < Universe data={ props.data.universe } />
-                < Camera data={ props.data.camera } counter={ counter }  />
+                < Camera data={ props.data } counter={ counter }  />
                 < Models data={ props.data } counter={ counter } />
 
                 < ambientLight intensity={ .25 } />
@@ -83,7 +91,12 @@ function Audio() {
   };
 
 // Creates camera, handles its updates and renders the cameraHelper when called.
+// Is wired to data.section_counter NOT redux counter!
 function Camera( props: { counter: number, data: any } ): JSX.Element {
+
+    const counter = props.data.section_counter
+    const camera = props.data.camera
+
 
     const ref: string = useRef();
 
@@ -105,17 +118,17 @@ function Camera( props: { counter: number, data: any } ): JSX.Element {
     }; 
 
     useEffect( () => {
-        CreateAllAnimationActions( ref.current, props.data.animations ) // propsdata.animations); // [ [ tr ], [ t, r ] ]
+        CreateAllAnimationActions( ref.current, camera.animations ) // propsdata.animations); // [ [ tr ], [ t, r ] ]
     }, [] );
                                                          
     function AnimationController() {
-        if( translateRotateAnimationActions.length ) translateRotateAnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 );
+        if( translateRotateAnimationActions.length ) translateRotateAnimationActions[ counter ].play().warp( 1.3, 0.01, 4.5 );
     }; 
-    useEffect( AnimationController, [ translateRotateAnimationActions, props.counter ] );
+    useEffect( AnimationController, [ translateRotateAnimationActions, counter ] );
 
 
     useFrame( ( _, delta ) => {
-        if( translateRotateAnimationActions.length ) translateRotateAnimationActions[ props.counter ]._mixer.update( delta );
+        if( translateRotateAnimationActions.length ) translateRotateAnimationActions[ counter ]._mixer.update( delta );
     });
 
     useHelper( ref, CameraHelper );
@@ -126,7 +139,7 @@ function Camera( props: { counter: number, data: any } ): JSX.Element {
 
     return (
         <>
-            < PerspectiveCamera ref={ref} position={ props.data.positions[ 0 ] } fov={ 45 } near={.1} far={ 8 } />
+            < PerspectiveCamera ref={ref} position={ camera.positions[ 0 ] } fov={ 45 } near={.1} far={ 8 } />
             {/* < UpdateCamera _ref={ref} counter={ props.counter } camera_data={ props.camera_data } /> */}
         </>
     );
@@ -296,7 +309,7 @@ function CreateAnimationAction( fiber_model, animationData: THREE.AnimationClip,
 
 
 // Renders UI + creates event handlers to handle user input.
-function UI(): JSX.Element {
+function UI( props ): JSX.Element {
 
     const dispatch = useDispatch();
     return (
@@ -307,7 +320,11 @@ function UI(): JSX.Element {
                 width: '100px', 
                 height: '33px'
             }} 
-            onClick={ () => dispatch( increment() ) } 
+            onClick={ () => {
+                dispatch( increment() );
+                props.handleIncrement();
+            }}
+            // onClick={ () => props.handleIncrement() } 
         >
         Next
         </button> 
