@@ -14,25 +14,13 @@ import UpdateCamera from './UpdateCamera.jsx';
 To-do: 
 
     - Add text.
+    - Link model positions to camera positions with z-1
 
-    - Get rid of all hard coded data, both in data.ts and here in TestPage.tsx.
-        - Rename LoadData() to Init() in App() and update it to include the creation of all the animation clips from the data.page.camera.positions_rotations[][]
-            - Test out new animation clips
-                - If they work, go re-factor LoadData() to use the Single Responsibility Principle.
-
-
-
-
-
-
-
-
-
-
-
-
+    
+    
     - Add speach.
     - Any way to make updating mixers more efficient?
+    - Get rid of all hard coded data, both in data.ts and here in TestPage.tsx.
     - Clean up and get a high level understanding of everything that you've re-factored.
     - Juice up camera transitions?
         - Get models positioned properly to right middle half of screen
@@ -66,12 +54,12 @@ function Scene( props ): JSX.Element {
     return (
         < Suspense >
 
-            {!fadeDone ? <div className="blackFade"></div> : "" }
+            { !fadeDone ? <div className="blackFade"></div> : "" }
 
             < Audio />
             < Canvas >
 
-                < Universe data={ props.data.universe } />
+                < Universe data={ props.data } />
                 < Camera data={ props.data } counter={ counter }  />
                 < Models data={ props.data } counter={ counter } />
 
@@ -172,13 +160,12 @@ function Camera( props: { counter: number, data: any } ): JSX.Element {
     }; 
 
     useEffect( () => {
-        CreateAnimationActions( ref.current, camera.animation_clips ) // propsdata.animations); // [ [ tr ], [ t, r ] ]
+        CreateAnimationActions( ref.current, camera.animation_clips )
     }, [] );
                                                          
     function AnimationController() {
         if( AnimationActions.length ) AnimationActions[ section ].play().warp( 1.3, 0.01, 4.5 );
-    }; 
-    useEffect( AnimationController, [ AnimationActions, section ] );
+    }; useEffect( AnimationController, [ AnimationActions, section ] );
 
 
     useFrame( ( _, delta ) => {

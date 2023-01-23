@@ -44,22 +44,31 @@ export default function App() {
                 return oldPages.map( ( oldPage: any, i: number ) => {
                     return {
                         ...oldPage, 
+
+                        // add animation clips to camera
                         camera: {
                             ...oldPage.camera, 
                             animation_clips: oldPage.camera.animation_data.map( ( datum:[][], i: number ) => {
                                 return [ TranslateRotate_x( 3, datum[ 0 ] , datum[ 1 ], 'x', datum[ 2 ], datum[ 3 ] ) ];
                             })
                         },
+
+                        // add meshes and positions to each model
                         models: oldPage.models.map( ( model: any, j: number ) => {
                             return {
                                 ...model, 
-                                meshes: allMeshesOfApp[i][j]
-                            }
+                                meshes: allMeshesOfApp[i][j],
+                                _positions: CameraPositionToModelPosition( oldPage.camera.positions[ j+1 ] )
+                            };
                         })
-                    }
-                }) 
-    
+                    };
+                }); 
             });
+
+
+            function CameraPositionToModelPosition( camera_position: number[] ) {
+                return [ camera_position[0], camera_position[1], (camera_position[2] - 1) ];
+            }
     
             function LoadModel( path: any ) {
                 return new Promise( (resolve, reject) => {
