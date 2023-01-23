@@ -14,13 +14,26 @@ import UpdateCamera from './UpdateCamera.jsx';
 To-do: 
 
     - Add text.
+
+    - Get rid of all hard coded data, both in data.ts and here in TestPage.tsx.
+        - Rename LoadData() to Init() in App() and update it to include the creation of all the animation clips from the data.page.camera.positions_rotations[][]
+            - Test out new animation clips
+                - If they work, go re-factor LoadData() to use the Single Responsibility Principle.
+
+
+
+
+
+
+
+
+
+
+
+
     - Add speach.
-
+    - Any way to make updating mixers more efficient?
     - Clean up and get a high level understanding of everything that you've re-factored.
-        - Get rid of all hard coded data, both in data.ts and here in TestPage.tsx.
-           - Update LoadData() in App() to include the creation of all the animation clips from the data.page.camera.positions_rotations[][]
-        - Any way to make updating mixers more efficient?
-
     - Juice up camera transitions?
         - Get models positioned properly to right middle half of screen
 
@@ -29,6 +42,8 @@ To-do:
 export default function Page( props ): JSX.Element {
 
     const [ page, setPage ] = useState( props.data );
+
+    useEffect( () => console.log( 'page _data', page ), [] )
 
     return (
         < Suspense >
@@ -69,53 +84,105 @@ function Scene( props ): JSX.Element {
     );
 };
 
+function Text( props ): JSX.Element {
+    const data = props.data
+
+    if ( data.textType[ data.section ] === 'centered' ) {
+        return (
+            <>
+                <div className='text--wrapper'>
+                    <p> { data.text[ data.section ] } </p>
+                 </div>
+            </>
+        )
+    }
+    if ( data.textType[ data.section ] === 'left' ) {
+        return (
+            <>
+                <div className='text--wrapper2'>
+                    <p> { data.text[ data.section ] } </p>
+                </div>
+            </>
+        )
+    }
+}
+
+// Renders UI + creates event handlers to handle user input.
+function UI( props ): JSX.Element {
+
+    function nextSection() {
+        props.setData( (oldData) => {
+            return {
+                ...oldData, 
+                section: oldData.section + 1
+            };
+        });
+    };
+
+    const dispatch = useDispatch();
+    return (
+        <button 
+            style={{
+                position: 'absolute', 
+                zIndex: '5', 
+                width: '100px', 
+                height: '33px'
+            }} 
+            onClick={ () => {
+                dispatch( increment() );
+                nextSection();
+            }}
+        >
+        Next
+        </button> 
+    )
+};
+
 function Audio() {
     return (
       <audio  autoPlay >
         <source src="/music/fullerene2.mp3" type="audio/mp3" />
       </audio>
     );
-  };
+};
 
 // Creates camera, handles its updates and renders the cameraHelper when called.
 // Is wired to data.section_counter NOT redux counter!
 function Camera( props: { counter: number, data: any } ): JSX.Element {
 
-    const counter = props.data.section_counter
-    const camera = props.data.camera
-
-
+    const section = props.data.section;
+    const camera = props.data.camera;
     const ref: string = useRef();
 
-    const [ translateRotateAnimationActions, setTranslateRotateAnimationActions ] = useState( [] );
+    const [ AnimationActions, setAnimationActions ] = useState( [] );
 
-    // Loops through camera.animations[] --> creates AnimationAction for each rotation and translation animation:
-    function CreateAllAnimationActions( fiberCameraRef, allAnimationData: [][] ) {
+    // Loops through camera.animation_clips[] --> creates AnimationAction for each rotation and translation animation:
+    function CreateAnimationActions( fiberCameraRef, allAnimationClips: [][] ) {
 
-        function CreateCameraAnimationAction( animationData: Three.AnimationClip ): THREE.AnimationAction {
+        function CreateAnimationAction_Cam( clip: Three.AnimationClip ): THREE.AnimationAction {
             const mixer = new THREE.AnimationMixer( fiberCameraRef );
-            const animationAction = mixer.clipAction( animationData );
+            const animationAction = mixer.clipAction( clip );
             animationAction.loop = THREE.LoopOnce;
             animationAction.clampWhenFinished = true;
             return animationAction;
         };
 
-        const allTranslateRotateAnimationActions = allAnimationData.map( ( animationData: [] ) => CreateCameraAnimationAction( animationData[0] ) );
-        setTranslateRotateAnimationActions( allTranslateRotateAnimationActions );
+        const allAnimationActions = allAnimationClips.map( ( animationClip: [] ) => CreateAnimationAction_Cam( animationClip[0] ) );
+        setAnimationActions( allAnimationActions );
     }; 
 
     useEffect( () => {
-        CreateAllAnimationActions( ref.current, camera.animations ) // propsdata.animations); // [ [ tr ], [ t, r ] ]
+        CreateAnimationActions( ref.current, camera.animation_clips ) // propsdata.animations); // [ [ tr ], [ t, r ] ]
     }, [] );
                                                          
     function AnimationController() {
-        if( translateRotateAnimationActions.length ) translateRotateAnimationActions[ counter ].play().warp( 1.3, 0.01, 4.5 );
+        if( AnimationActions.length ) AnimationActions[ section ].play().warp( 1.3, 0.01, 4.5 );
     }; 
-    useEffect( AnimationController, [ translateRotateAnimationActions, counter ] );
+    useEffect( AnimationController, [ AnimationActions, section ] );
 
 
     useFrame( ( _, delta ) => {
-        if( translateRotateAnimationActions.length ) translateRotateAnimationActions[ counter ]._mixer.update( delta );
+        if( AnimationActions.length ) AnimationActions[ section ]._mixer.update( delta );
     });
 
     useHelper( ref, CameraHelper );
@@ -126,7 +193,7 @@ function Camera( props: { counter: number, data: any } ): JSX.Element {
 
     return (
         <>
-            < PerspectiveCamera ref={ref} position={ camera.positions[ 0 ] } fov={ 45 } near={.1} far={ 8 } />
+            < PerspectiveCamera ref={ref} position={ camera.animation_data[ 0 ][ 0 ] } fov={ 45 } near={ 0.2 } far={ 8 } />
             {/* < UpdateCamera _ref={ref} counter={ props.counter } camera_data={ props.camera_data } /> */}
         </>
     );
@@ -295,37 +362,7 @@ function CreateAnimationAction( fiber_model, animationData: THREE.AnimationClip,
 
 
 
-// Renders UI + creates event handlers to handle user input.
-function UI( props ): JSX.Element {
 
-    function handleIncrement() {
-        props.setData( (oldData) => {
-            return {
-                ...oldData, 
-                section_counter: oldData.section_counter + 1
-            };
-        });
-    };
-
-
-    const dispatch = useDispatch();
-    return (
-        <button 
-            style={{
-                position: 'absolute', 
-                zIndex: '5', 
-                width: '100px', 
-                height: '33px'
-            }} 
-            onClick={ () => {
-                dispatch( increment() );
-                handleIncrement();
-            }}
-        >
-        Next
-        </button> 
-    )
-};
 
 
 // Creates zoomed out camera with orbit controls to make dev easier:

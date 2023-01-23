@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import TestPage from './TestPage';
-import { AnimationClip, NumberKeyframeTrack, VectorKeyframeTrack, InterpolateSmooth, AdditiveAnimationBlendMode } from 'three';
 import _pages from '../data';
+import { AnimationClip, NumberKeyframeTrack, VectorKeyframeTrack, InterpolateSmooth, AdditiveAnimationBlendMode, InterpolateLinear, BooleanKeyframeTrack } from 'three';
+
 
 
 export default function App() {
@@ -13,12 +14,42 @@ export default function App() {
 
     function LoadData() {
 
-        async function AddAllMeshesOfAppToData() {
+        // Move this function to a separate file where all the animation methods will be stored.
+        function TranslateRotate_x ( duration: number, initial_position: number[], final_position: number[], axis: string, initial_angle: number[], final_angle: number[] ) {
+
+            const times_Position = [ 0, duration ];
+            const values_Position = [ ...initial_position, ...final_position ];
+            const trackName_Position = '.position';
+            const track_Position = new VectorKeyframeTrack( trackName_Position, times_Position, values_Position, InterpolateLinear );
+        
+            const times_Rotation = [ 0, duration ];
+
+            let values_Rotation: number[];
+            values_Rotation = [ initial_angle[ 0 ], final_angle[ 0 ] ];
+            
+            const trackName_Rotation = '.rotation[' + axis + ']';
+            const track_Rotation = new NumberKeyframeTrack( trackName_Rotation, times_Rotation, values_Rotation );
+        
+            return new AnimationClip( 'TranslateRotateCamera', duration, [ track_Position, track_Rotation  ] );
+        };
+
+        // This is essentially the Init() fn. It is responsible for the following
+            // Loading and extracting all meshes for each page. 
+            // Creating all AnimationClips for the camera of each page. 
+            // Creating all AnimationClips for the models of each page. <-- Still need to do this.
+        async function Initialize() {
             const allMeshesOfApp: any = await ExtractAllMeshesOfApp(); 
+
             setPages( oldPages  => {
                 return oldPages.map( ( oldPage: any, i: number ) => {
                     return {
                         ...oldPage, 
+                        camera: {
+                            ...oldPage.camera, 
+                            animation_clips: oldPage.camera.animation_data.map( ( datum:[][], i: number ) => {
+                                return [ TranslateRotate_x( 3, datum[ 0 ] , datum[ 1 ], 'x', datum[ 2 ], datum[ 3 ] ) ];
+                            })
+                        },
                         models: oldPage.models.map( ( model: any, j: number ) => {
                             return {
                                 ...model, 
@@ -85,7 +116,7 @@ export default function App() {
             // return pages;
         };
 
-        AddAllMeshesOfAppToData();
+        Initialize();
         // AddAllMeshesOfAppToData().then( setLoading(false) ) here when the async function returns
         // return AddAllMeshesOfAppToData();
 

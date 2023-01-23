@@ -42,8 +42,8 @@ const data = [
     {
         id: 'test_page',
         page_title: 'Fullerenes',
-        section_counter: 0,
-        section_count: 6,
+        section: 0,
+        max_section: 6,
         thumbnail: "url('./lesson_thumbnails/fullereneTile.png')",
 
         universe: {
@@ -57,13 +57,23 @@ const data = [
             //                  0                   1                   2                   3                   4                   5              6       
             positions: [ [ 0.0, 0.0, 3.0 ], [ 0.0, 0.0, 0.0 ], [ 0.5, 0.0, 1.0 ], [ 1.0, 0.0, 1.5 ], [ 0.0, 0.0, 0.0 ], [ 0.0, 0.0, 0.0 ], [ 0.0, 0.0, 0.0 ] ],
             rotations: [ [ 0.0, 0.0, 0.0 ], [ 0.5, 0.0, 0.0 ], [ 1.0, 0.0, 0.0 ], [ 0.0, 0.0, 0.0 ], [ 0.0, 0.0, 0.0 ], [ 0.0, 0.0, 0.0 ] ],
-            animations: [
-                [ TranslateRotateCamera( 3, [ 0, 0, 3 ], [ 0, 0, 0 ], 'x', 0, 0 ) ],
-                [ TranslateRotateCamera( 3, [ 0, 0, 0 ], [ 0.75, 0, 1 ], 'x', 0, 0.66 ) ],
-                [ TranslateRotateCamera( 3, [ 0.75, 0, 1 ], [ 0.75, 0, -2 ], 'x', 0.66, 0 ) ],
-                [ TranslateRotateCamera( 3, [ 0.75, 0, -2 ], [ 0, 0, 0 ], 'x', 0, -0.66 ) ],
-                [ TranslateRotateCamera( 3, [ 0, 0, 0 ], [ 0, 0, -2 ], 'x', -0.66, 0 ) ],
+            // animations: [
+            //     [ TranslateRotateCamera( 3, [ 0, 0, 3 ], [ 0, 0, 0 ], 'x', 0, 0 ) ],
+            //     [ TranslateRotateCamera( 3, [ 0, 0, 0 ], [ 0.75, 0, 1 ], 'x', 0, 0.66 ) ],
+            //     [ TranslateRotateCamera( 3, [ 0.75, 0, 1 ], [ 0.75, 0, -2 ], 'x', 0.66, 0 ) ],
+            //     [ TranslateRotateCamera( 3, [ 0.75, 0, -2 ], [ 0, 0, 0 ], 'x', 0, -0.66 ) ],
+            //     [ TranslateRotateCamera( 3, [ 0, 0, 0 ], [ 0, 0, -2 ], 'x', -0.66, 0 ) ],
+            // ],
+            animation_data: [
+                //  initial position      final poisition        initial rotation       final rotation
+                [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ],
+                [ [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ] ],
+                [ [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ],  [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ],
+                [ [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ] ],
+                [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ],  [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ],
             ],
+
+            animation_clips: null,
 
 
             TranslateRotate_x: function ( duration: number, initial_position: number[], final_position: number[], axis: string, initial_angle: number[], final_angle: number[] ) {
@@ -182,7 +192,7 @@ const data = [
                 visible: true,
                 scale: 0,
                 positions: [
-                    { x: 0, y: -0.2, z: -3 },
+                    { x: 0, y: -0.1, z: -3 },
                 ],
                 rotations: [
                     { _x: 0, _y: 0, _z: 0 }
@@ -203,6 +213,15 @@ const data = [
             'Each molecule of Fullerene is composed of pure carbon. The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball. Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.',
             'For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known. These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems. Scientists have even turned their attention to buckyballs in their quest for a cure for AIDS.',
             'How can buckyballs help cure aids? An enzyme (HIV-1-Protease) that is required for HIV to reproduce, exhibits a nonpolar pocket in its three-dimensional structure. On the model to the right, notice how the nonpolar Fullerene fits the exact diameter of the enzyme\'s binding pocket. If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible blockers.',
+        ],
+
+        textType: [
+            'centered',
+            'centered',
+            'left',
+            'left',
+            'left',
+            'left'
         ],
 
         speach: null,
@@ -336,8 +355,6 @@ function TranslateRotateCamera( duration: number, initial_position: number[], fi
     return new AnimationClip( 'TranslateRotateCamera', duration, [ track_Position, track_Rotation  ] );
 };
 
-
-
 function Rotate( duration: number, axis = 'x', initial_angle: number, final_angle: number ) {
     const times = [ 0, duration ], values = [ initial_angle, final_angle ];
     const trackName = '.rotation[' + axis + ']';
@@ -390,7 +407,6 @@ function VisibilityAnimation( duration: number ) {
 
 }
 
-
 function calulateAllTimesAndAllValues( _duration: number, _initial: number, _final: number ) {
     const delta = .008
     const allTimes = [], allValues = [];
@@ -410,7 +426,23 @@ function calulateAllTimesAndAllValues( _duration: number, _initial: number, _fin
 export default data; 
 
 
+/*
+animation_data: [
+    //   position            rotation 
+    [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ] ],
+    [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ],
+    [ [ 0.75, 0.00, 1.00 ], [ 0.66, 0.00, 0.00 ] ],
+    [ [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ] ],
+    [ [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ] ],
+    [ [ 0.00, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ] ],
+],
+*/
 
+// const initialPosition = oldPage.camera.animation_data[ i ][ 0 ];
+// const nextPosition = oldPage.camera.animation_data[ i + 1 ][ 0 ];
+
+// const initialRotation = oldPage.camera.animation_data[ i ][ 1 ];
+// const nextRotation = oldPage.camera.animation_data[ i + 1 ][ 1 ];
 
 /*
 function Levitate( ref ) {

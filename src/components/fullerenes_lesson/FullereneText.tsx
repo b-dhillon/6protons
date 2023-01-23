@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import data from '../../data';
 import '../../global-styles.css'
 
 // Grabs the correct text for the lesson based on the counter state.
-export default function LessonText(){
-    const counter = useSelector((state: any) => state.counter);
-    const [overflown, setOverflow] = useState( false );
+export default function LessonText( props: any ) {
+    const counter = useSelector( ( state: any ) => state.counter );
+    const [ overflown, setOverflow ] = useState( false );
 
     // Checks if the text needs to be scrolled after each counter change
     // and updates overflown state.
     useEffect(()=> {
         const element = document.querySelector('.text--wrapper2--p')
-        if(element)
-        {
+        if( element ) {
             const isOverflown = ( element: { clientHeight: number, scrollHeight: number} ) => {
                 return element.scrollHeight > element.clientHeight;
             }
@@ -22,9 +22,10 @@ export default function LessonText(){
         }
     }, [counter]);
 
+
     if (counter === 0) return (<></>);
     
-    if(counter === 1) {
+    if( counter === 1 ) {
         return (
             // Refactor all wrapper classes into one.
             <>
@@ -36,7 +37,7 @@ export default function LessonText(){
         )
     };
 
-    if(counter === 2) {
+    if( counter === 2 ) {
         return (
             
             <div className='text--wrapper2'>
@@ -44,13 +45,13 @@ export default function LessonText(){
                 <br/>
                 <br/>
                 This molecule would go on to be named Buckminsterfullerene. Often shortened to fullerene, and nicknamed <span>Buckyball</span>.</p>
-                {overflown ? <ScrollIcon/> : ''}
+                {overflown ? < ScrollIcon /> : ''}
             </div>
             
         )
     }
 
-    if(counter === 3) {
+    if( counter === 3 ) {
         return (
             <div className='text--wrapper2'>
                 <p className='text--wrapper2--p'>Each molecule of Fullerene is composed of pure carbon. The carbon atoms arrange themselves as hexagons and pentagons <span>(highlighted in red)</span>, like the seams of a soccer ball. 
@@ -63,7 +64,7 @@ export default function LessonText(){
         )
     }
 
-    if(counter === 4) {
+    if( counter === 4 ) {
         return (
             <>
                 <div className='text--wrapper2'>
@@ -75,7 +76,7 @@ export default function LessonText(){
                     <br/>
                     <br/>
                     Scientists have even turned their attention to buckyballs in their quest for a <span>cure for AIDS.</span></p>
-                    { overflown ? <ScrollIcon/> : '' }
+                    { overflown ? < ScrollIcon /> : '' }
                 </div>
 
             </>
@@ -83,7 +84,7 @@ export default function LessonText(){
         )
     }
 
-    if(counter === 5) {
+    if( counter === 5 ) {
         return (
             <div className='text--wrapper2'>
                 <p className='text--wrapper2--p'>
@@ -108,7 +109,7 @@ export default function LessonText(){
                 <h4>Lesson completed! Please navigate back to lesson selection <i className="fa-solid fa-arrow-left-long" style={{color: 'white'}}></i> or home <i className="fas fa-house homeIcon" style={{color: 'white'}}></i></h4>
             </div>
         )
-    }   
+    } 
 }
 
 

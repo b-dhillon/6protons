@@ -4,20 +4,37 @@ import { useSelector, useDispatch } from 'react-redux';
 import '../overlay-styles.css';
 
 // Old UI for lessons, 
-// contains back button, home button, and lesson navigation
+// contains back button, home button, and lesson navigation increment and decrement buttons, as well as the overlay text for lesson.
 
-function LessonOverlay(props) {
-    const lesson = data.find( (lesson) => lesson.title === props.lesson );
-    const counter = useSelector(state => state.counter);
-    const dispatch = useDispatch();
-    const LessonText = lesson.text;
+/*
+Old Architecture set up: 
+    title and maxSectionCount are pulled from a data object, however the text itself is not. 
+    the text instead is pulled from a seperate function that returns the appropriate text based 
+    on the counter. Done with a bunch of if statements. 
+*/ 
+
+
+/*
+New Architcture set up: 
+    Pull section_counter, page_title, section_count, and Text all from a single data object. 
+    You can even keep the < LessonText > function the same and instead just call it with the text from the data object 
+
+*/
+
+
+
+function LessonOverlay( props ) {
+    // const lesson = data.find( (lesson) => lesson.title === props.lesson );
+    // const counter = useSelector(state => state.counter);
+    // const dispatch = useDispatch();
+    // const LessonText = lesson.text;
     
 
     return (
         
         <div className='global-overlay-container'>
 
-            {/* Back-Button, Lesson Title, Home-Button */}
+            {/* HEADER --> Back-Button, Lesson Title, Home-Button */}
             <div className='header-container'>
 
                 <li className="home-back-container" onClick={() => {
@@ -53,7 +70,7 @@ function LessonOverlay(props) {
 
             </div>
 
-            {/* Lesson Back Btn, Lesson Text Type 1 (centered), Lesson Forward Btn  */}
+            {/* MAIN TYPE 1 --> Lesson Back Btn, Lesson Text Type 1 (centered), Lesson Forward Btn  */}
             {
                 counter === 1 || counter === lesson.maxSectionCount 
                 ?
@@ -66,7 +83,7 @@ function LessonOverlay(props) {
                             </button>
                         </div>
 
-                        <LessonText />
+                        < LessonText />
 
                         {/* <div className='panel left'>  </div> */}
                         {/* <div className='panel right'></div> */}
@@ -84,7 +101,7 @@ function LessonOverlay(props) {
             }  
                 
 
-            {/* Lesson Back Btn, Lesson Text Type 2 (left-aligned), Lesson Forward Btn  */}
+            {/* MAIN TYPE 2 --> Lesson Back Btn, Lesson Text Type 2 (left-aligned), Lesson Forward Btn  */}
 
             {/* To get text-overlay to center */}
             {
@@ -99,7 +116,7 @@ function LessonOverlay(props) {
                             </button>
                         </div>
 
-                        <div className='panel left'> <LessonText /> </div>
+                        <div className='panel left'> < LessonText /> </div>
                         <div className='panel right'></div>
 
                         <div className='lessonNav-container'>
