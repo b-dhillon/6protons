@@ -440,6 +440,7 @@ animation_data: [
     [ [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ] ],
     [ [ 0.00, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ] ],
 ],
+
 */
 
 // const initialPosition = oldPage.camera.animation_data[ i ][ 0 ];

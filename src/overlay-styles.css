@@ -1,18 +1,14 @@
 /* Lesson Overlay Styles --> Move all to seperate CSS File */
 
 .global-overlay-container {
-    position: absolute;
-    top: 0; 
-    width: 100%; 
-
-    
-    height: 10%;
-
-
-    display: flex;
-    z-index: 3;
-    flex-direction: column;
-    animation: fadeIn 2s 1 ease-in;
+  position: absolute;
+  top: 0; 
+  width: 100%; 
+  height: 100%;
+  display: flex;
+  z-index: 3;
+  flex-direction: column;
+  animation: fadeIn 2.5s 1 ease-in;
 }
   
   /* Header */
@@ -64,16 +60,19 @@
   .homeBtn--icon {  
     /* width: 3rem;
     padding: 30px; */
+
+    background: transparent;
+    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.75rem;  
     text-decoration: none;  
-  
     transition: .5s linear;
     position: relative;
     z-index: 1;
     margin: auto;
+    cursor: pointer;  
   }
   
   /* .homeBtn--icon:hover {
@@ -81,7 +80,7 @@
   } */
   
   .homeIcon:hover {  
-    transform: scale(1.2)
+    transform: scale(1.25)
   }
   
   .fullerene-redirect {

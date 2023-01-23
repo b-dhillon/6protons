@@ -37,7 +37,7 @@ export default function App() {
             // Loading and extracting all meshes for each page. 
             // Creating all AnimationClips for the camera of each page. 
             // Creating all AnimationClips for the models of each page. <-- Still need to do this.
-        async function Initialize() {
+        async function Init() {
             const allMeshesOfApp: any = await ExtractAllMeshesOfApp(); 
 
             setPages( oldPages  => {
@@ -125,7 +125,7 @@ export default function App() {
             // return pages;
         };
 
-        Initialize();
+        Init();
         // AddAllMeshesOfAppToData().then( setLoading(false) ) here when the async function returns
         // return AddAllMeshesOfAppToData();
 
@@ -143,7 +143,7 @@ export default function App() {
 
 
     if( loading ) return <h2 style={ { position: 'absolute', top: '500px', left: '800px' } }>Loading...</h2>;
-    if( !loading && current_page === 'test_page' ) return <TestPage data={ pages.find( ( page ) => page.id === current_page  ) }/>
+    if( !loading && current_page === 'test_page' ) return <TestPage data={ pages.find( ( page ) => page.id === current_page  ) } setPage={ setCurrentPage } />
     else return <h2>Something is broken.</h2>
 };
 

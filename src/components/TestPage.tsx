@@ -1,14 +1,23 @@
 // @ts-nocheck
+
+// React: 
 import { useState } from 'react';
 import { OrbitControls, PerspectiveCamera, useHelper } from '@react-three/drei';
 import { Suspense, useRef, useEffect } from 'react';
 import { Canvas, useThree, useFrame  } from '@react-three/fiber';
+
+// Redux:
 import { useSelector, useDispatch } from 'react-redux';
-import { increment } from './redux/actions';
+import { reset, start, increment, decrement } from './redux/actions';
+
+// Components:
 import { CameraHelper, LoopPingPong } from 'three';
 import Universe from './Universe';
 import * as THREE from 'three'
 import UpdateCamera from './UpdateCamera.jsx';
+import data from '../data';
+
+import '../overlay-styles.css'
 
 /* 
 To-do: 
@@ -30,13 +39,16 @@ To-do:
 export default function Page( props ): JSX.Element {
 
     const [ page, setPage ] = useState( props.data );
+    const counter = useSelector( ( state: any ) => state.counter );
 
     useEffect( () => console.log( 'page _data', page ), [] )
 
     return (
         < Suspense >
-            < UI data={ page } setData={ setPage } />
-            < Scene data={ page } />
+            {/* < UI data={ page } setData={ setPage } /> */}
+
+            < _UI data={ page } setData={ setPage } counter={ counter }/>
+            < Scene data={ page } counter={ counter }/>
         </ Suspense >
     );
 };
@@ -44,7 +56,9 @@ export default function Page( props ): JSX.Element {
 // Mounts components to scene graph and renders 3D scene.
 function Scene( props ): JSX.Element {
 
-    const counter = useSelector( ( state: any ) => state.counter );
+    // const counter = useSelector( ( state: any ) => state.counter );
+    const counter = props.counter;
+
 
     const [ fadeDone, setFadeDone ] = useState( false );
     function handleFadeDoneAfter( seconds: number ) {
@@ -72,28 +86,7 @@ function Scene( props ): JSX.Element {
     );
 };
 
-function Text( props ): JSX.Element {
-    const data = props.data
 
-    if ( data.textType[ data.section ] === 'centered' ) {
-        return (
-            <>
-                <div className='text--wrapper'>
-                    <p> { data.text[ data.section ] } </p>
-                 </div>
-            </>
-        )
-    }
-    if ( data.textType[ data.section ] === 'left' ) {
-        return (
-            <>
-                <div className='text--wrapper2'>
-                    <p> { data.text[ data.section ] } </p>
-                </div>
-            </>
-        )
-    }
-}
 
 // Renders UI + creates event handlers to handle user input.
 function UI( props ): JSX.Element {
@@ -109,22 +102,240 @@ function UI( props ): JSX.Element {
 
     const dispatch = useDispatch();
     return (
-        <button 
-            style={{
-                position: 'absolute', 
-                zIndex: '5', 
-                width: '100px', 
-                height: '33px'
-            }} 
-            onClick={ () => {
-                dispatch( increment() );
-                nextSection();
-            }}
-        >
-        Next
-        </button> 
+        <>
+            <button 
+                style={{
+                    position: 'absolute', 
+                    zIndex: '5', 
+                    width: '100px', 
+                    height: '33px'
+                }} 
+                onClick={ () => {
+                    dispatch( increment() );
+                    nextSection();
+                }}
+            >
+            Next
+            </button> 
+        </>
     )
 };
+
+
+
+
+
+
+function _UI( props ) {
+
+    return (
+        <div className='global-overlay-container'>
+            < Header data={ props.data } setPage={ props.setPage } counter={ props.counter } />
+            < Main data={ props.data } counter={ props.counter } />
+            < Footer data={ props.data } counter={ props.counter } />
+        </ div >
+    )
+} 
+
+
+
+function Header( props ) {
+
+    const dispatch = useDispatch();
+
+
+    return (
+        <div className='header-container'>
+
+            < li 
+                className="home-back-container" 
+                onClick={ () => {
+                        dispatch( reset() );
+                        props.setPage(`home`); 
+                    }
+                }
+            >
+                <button className="homeBtn--icon">
+                    <i className="fa-solid fa-arrow-left-long backBtn" style={ { color: 'white' } }></i>
+                </button> 
+
+            </ li >
+
+
+            <div className='title-container'>
+                { 
+                    props.data.section === 0 
+                    ?
+                    <div>
+                        <h1 className='title' style={{}} >{ props.data.title }</ h1 >
+                    </div>
+                    :
+                    ""
+                }
+            </div> 
+
+            < li className="home-back-container" 
+                onClick={ () => {
+                        dispatch( start() );
+                        dispatch( reset() );
+                        props.setPage(`home`); 
+                    }
+                }
+            >
+                < button href="#" className="homeBtn--icon">
+                    < i className="fas fa-house homeIcon" style={ { color: 'white '} } ></i> 
+                </ button >
+            </ li >
+
+
+        </div>
+    )
+}
+
+
+function Main( props ) {
+
+    function LessonNavigation( type: string ): JSX.Element {
+
+        return (
+            < div className='lessonNav-container' >
+                < button 
+                    className={`lesson--${type}Btn`}
+                    onClick={ () => type === 'increment' ?  dispatch( increment() ) : dispatch( decrement() ) }
+                >
+                    {
+                        type === 'increment' 
+                        ?
+                        < i className="fa-solid fa-angle-right lessonNav--icons" style={ { color: 'white' } }></ i >
+                        :
+                        < i className="fa-solid fa-angle-left lessonNav--icons" style={ { color: 'white' } }></ i >
+                    }
+
+                </ button >
+            </ div >
+        )
+    }
+
+
+    function Text( props ): JSX.Element {
+
+        if ( props.data.textType[ props.counter ] === 'centered' ) {
+            return (
+                <>
+                    <div className='text--wrapper'>
+                        <p> { props.data.text[ props.counter ] } </p>
+                    </div>
+                </>
+            )
+        }
+
+        if ( props.data.textType[ props.counter ] === 'left' ) {
+            return (
+                <>
+                    < div className='panel left' >
+                        < div className='text--wrapper2' >
+                            < p > { props.data.text[ props.counter ] } </ p >
+                        </ div >
+                    </ div >
+
+                    < div className='panel right' >
+                    </ div >
+                    
+                </>
+            )
+        }
+    }
+
+    return (
+        <>
+            {
+                props.counter > 0 
+                ?
+                < div className='main-container' >
+
+                    < LessonNavigation type={ 'decrement' } />
+
+                    < Text data={ props.data } counter={ props.counter }/>
+
+                    < LessonNavigation type={ 'increment' } />
+
+                </ div > 
+                :
+                ""
+            } 
+        </>
+    )
+}
+
+function Footer( props ) {
+    const dispatch = useDispatch();
+
+    return (
+        <>
+            {
+                props.counter === 0 
+                ?
+                <div className='footer-container' >
+                    <button className="startLessonBtn" onClick={ () => dispatch( increment() ) }>
+                        Start Lesson
+                    </button>  
+                </div>
+                : 
+                ""
+            } 
+        </>
+    )
+}
+
+
+{/* <>
+{
+    props.counter === 1 || props.counter === props.data.max_section
+    ?
+    < div className='main-container' >
+
+            < div className='lessonNav-container' >
+                < button 
+                    className='lesson--decrementBtn'
+                    onClick={ () => dispatch( decrement() ) }
+                >
+                    < i className="fa-solid fa-angle-left lessonNav--icons" style={ {color: 'white'} }></ i >
+
+                </ button >
+            </ div >
+
+            < Text />
+
+            < div className='lessonNav-container'>
+                < button className='lesson--incrementBtn'
+                    onClick={ () => dispatch( increment() ) } 
+                >
+                    < i className="fa-solid fa-angle-right lessonNav--icons" style={ {color: 'white'} }></ i >
+                </ button >
+            </ div >
+
+    </ div > 
+    :
+    ""
+} 
+</> */}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function Audio() {
     return (
