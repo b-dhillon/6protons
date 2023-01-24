@@ -69,6 +69,18 @@ const data = [
             ],
             animation_clips: null,
 
+            CreateAnimationDataFromPositionsRotations: function() {
+                const animation_data = [];
+                for( let i = 0; i < this.positions.length - 1; i++ ) {
+                    const initial_position: number[] = this.positions[ i ];
+                    const final_position: number[] = this.positions[ i + 1 ];
+                    const initial_rotation: number[] = this.rotations[ i ];
+                    const final_rotation: number[] = this.rotations[ i + 1 ];
+                    animation_data.push( [ initial_position, final_position, initial_rotation, final_rotation ] );
+                };
+                return animation_data;
+            },
+
             TranslateRotate_x: function ( duration: number, initial_position: number[], final_position: number[], axis: string, initial_angle: number[], final_angle: number[] ) {
                 // console.log( 'positions', this.positions );
     
