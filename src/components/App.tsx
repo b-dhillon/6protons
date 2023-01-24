@@ -48,6 +48,10 @@ export default function App() {
                         // add animation clips to camera
                         camera: {
                             ...oldPage.camera, 
+                            _animation_data: oldPage.camera.CreateAnimationDataFromPositionsRotations(),
+                            _animation_clips: oldPage.camera.CreateAnimationDataFromPositionsRotations().map( ( datum:[][], i: number ) => {
+                                return [ TranslateRotate_x( 3, datum[ 0 ] , datum[ 1 ], 'x', datum[ 2 ], datum[ 3 ] ) ];
+                            }),
                             animation_clips: oldPage.camera.animation_data.map( ( datum:[][], i: number ) => {
                                 return [ TranslateRotate_x( 3, datum[ 0 ] , datum[ 1 ], 'x', datum[ 2 ], datum[ 3 ] ) ];
                             })

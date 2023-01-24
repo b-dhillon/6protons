@@ -21,14 +21,14 @@ import '../overlay-styles.css'
 
 /* 
 To-do: 
-
-    - Add text for section1+
-
+    - Add text for section1+ + Test texts.
     - Finsih linking model positions to camera positions with z-1
-    - Write an algorithm to generate camera.animation_data from camera.positions[] and camera.rotations[]
-
-    - Add speach.
     
+     
+    - Add speach.
+
+
+
     - Any way to make updating mixers more efficient?
     - Get rid of all hard coded data, both in data.ts and here in TestPage.tsx.
     - Clean up and get a high level understanding of everything that you've re-factored.
@@ -42,7 +42,9 @@ export default function Page( props ): JSX.Element {
     const [ page, setPage ] = useState( props.data );
     const counter = useSelector( ( state: any ) => state.counter );
 
-    useEffect( () => console.log( 'page _data', page ), [] )
+    useEffect( () => {
+        console.log( 'page _data', page );
+    }, [] )
 
     return (
         < Suspense >
