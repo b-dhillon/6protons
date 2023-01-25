@@ -119,18 +119,18 @@
     border: 2px solid white;
   }
   
-  .lesson--incrementBtn {
+  .lesson--nextBtn {
     box-shadow: 0 0 10px 4px white;
     transform: scale(1.2);
     animation: grow-and-glow 4s infinite;
     cursor: pointer;
   }
   
-  .lesson--decrementBtn {
+  .lesson--backBtn {
     cursor: pointer;
   }
   
-  .lesson--decrementBtn:hover {
+  .lesson--backtBtn:hover {
     transform: scale(1.1);
   }
   

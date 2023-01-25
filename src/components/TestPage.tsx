@@ -22,6 +22,12 @@ import '../overlay-styles.css'
 /* 
 To-do: 
     - Add text for section1+ + Test texts.
+        - Next button has back button's image.
+        - Camera movements are completely broken. (wrong counter likely)
+    
+
+
+
     - Finsih linking model positions to camera positions with z-1
     
      
@@ -198,22 +204,24 @@ function Header( props ) {
 
 function Main( props ) {
 
-    function LessonNavigation( type: string ): JSX.Element {
+    function LessonNavigationButton( props ): JSX.Element {
+        console.log( props.type );
+
+        if (props.type === 'back' ) console.log( 'called for back' );
+        if (props.type === 'next' ) console.log( 'called for next' );
+
+        // it is being called twice, and called for each kind. 
 
         return (
             < div className='lessonNav-container' >
                 < button 
-                    className={`lesson--${type}Btn`}
-                    onClick={ () => type === 'increment' ?  dispatch( increment() ) : dispatch( decrement() ) }
+                    className={`lesson--${props.type}Btn`}
+                    onClick={ () => type === 'next' ?  dispatch( increment() ) : dispatch( decrement() ) }
                 >
-                    {
-                        type === 'increment' 
-                        ?
-                        < i className="fa-solid fa-angle-right lessonNav--icons" style={ { color: 'white' } }></ i >
-                        :
-                        < i className="fa-solid fa-angle-left lessonNav--icons" style={ { color: 'white' } }></ i >
-                    }
 
+                    
+                    < i className={`fa-solid fa-angle-${ props.type === "next" ? "right" : "left" } lessonNav--icons`} style={ { color: 'white' } }></ i >
+                
                 </ button >
             </ div >
         )
@@ -256,11 +264,11 @@ function Main( props ) {
                 ?
                 < div className='main-container' >
 
-                    < LessonNavigation type={ 'decrement' } />
+                    < LessonNavigationButton type={ 'back' } />
 
                     < Text data={ props.data } counter={ props.counter }/>
 
-                    < LessonNavigation type={ 'increment' } />
+                    < LessonNavigationButton type={ 'next' } />
 
                 </ div > 
                 :
@@ -596,6 +604,11 @@ function DevelopmentCamera(): JSX.Element {
 // const set = useThree( (state) => state.set ); 
 
 
+// props.type === 'next'
+// ?
+// < i className="fa-solid fa-angle-right lessonNav--icons" style={ { color: 'white' } }></ i >
+// :
+// < i className="fa-solid fa-angle-left lessonNav--icons" style={ { color: 'white' } }></ i >
 
 /*
 delta = .008, 8ms.
