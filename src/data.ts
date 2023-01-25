@@ -1,4 +1,5 @@
 import { AnimationClip, NumberKeyframeTrack, VectorKeyframeTrack, InterpolateSmooth, AdditiveAnimationBlendMode, InterpolateLinear, BooleanKeyframeTrack } from 'three';
+import { useSelector, useDispatch } from 'react-redux';
 
 
 // Convert the data of Vector3 to flatten array
@@ -45,6 +46,7 @@ const data = [
         section: 0,
         max_section: 6,
         thumbnail: "url('./lesson_thumbnails/fullereneTile.png')",
+        dispatch: useDispatch,
 
         universe: {
             id: 'fullerene universe',
@@ -67,6 +69,7 @@ const data = [
                 [ [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ] ], // 3
                 [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ],  [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 4
             ],
+
             animation_clips: null,
 
             CreateAnimationDataFromPositionsRotations: function() {
@@ -110,7 +113,7 @@ const data = [
                 
                 const trackName_Rotation = '.rotation[' + axis + ']';
                 const track_Rotation = new NumberKeyframeTrack( trackName_Rotation, times_Rotation, values_Rotation );
-            
+        
                 return new AnimationClip( 'TranslateRotateCamera', duration, [ track_Position, track_Rotation  ] );
             },
         },

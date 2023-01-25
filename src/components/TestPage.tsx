@@ -79,7 +79,7 @@ function Scene( props ): JSX.Element {
 
             { !fadeDone ? <div className="blackFade"></div> : "" }
 
-            < Audio />
+            {/* < Audio /> */}
             < Canvas >
 
                 < Universe data={ props.data } />
@@ -138,10 +138,12 @@ function UI( props ): JSX.Element {
 function _UI( props ) {
 
     return (
-        <div className='global-overlay-container'>
+        < div className='global-overlay-container' >
+
             < Header data={ props.data } setPage={ props.setPage } counter={ props.counter } />
             < Main data={ props.data } counter={ props.counter } />
             < Footer data={ props.data } counter={ props.counter } />
+
         </ div >
     )
 } 
@@ -150,6 +152,7 @@ function _UI( props ) {
 
 function Header( props ) {
 
+    // can we move dispatch to the data object as a method?
     const dispatch = useDispatch();
 
 
@@ -204,11 +207,18 @@ function Header( props ) {
 
 function Main( props ) {
 
+    console.log( props.data );
+
+    // Decide between these two dispatch methods
+    const dispatch = props.data.dispatch();
+    // const dispatch = useDispatch();
+
+
     function LessonNavigationButton( props ): JSX.Element {
         console.log( props.type );
 
-        if (props.type === 'back' ) console.log( 'called for back' );
-        if (props.type === 'next' ) console.log( 'called for next' );
+        if ( props.type === 'back' ) console.log( 'called for back' );
+        if ( props.type === 'next' ) console.log( 'called for next' );
 
         // it is being called twice, and called for each kind. 
 
@@ -216,7 +226,7 @@ function Main( props ) {
             < div className='lessonNav-container' >
                 < button 
                     className={`lesson--${props.type}Btn`}
-                    onClick={ () => type === 'next' ?  dispatch( increment() ) : dispatch( decrement() ) }
+                    onClick={ () => props.type === 'next' ?  dispatch( increment() ) : dispatch( decrement() ) }
                 >
 
                     
@@ -360,7 +370,7 @@ function Audio() {
 // Is wired to data.section_counter NOT redux counter!
 function Camera( props: { counter: number, data: any } ): JSX.Element {
 
-    const section = props.data.section;
+    // const section = props.data.section;
     const camera = props.data.camera;
     const ref: string = useRef();
 
@@ -386,12 +396,12 @@ function Camera( props: { counter: number, data: any } ): JSX.Element {
     }, [] );
                                                          
     function AnimationController() {
-        if( AnimationActions.length ) AnimationActions[ section ].play().warp( 1.3, 0.01, 4.5 );
-    }; useEffect( AnimationController, [ AnimationActions, section ] );
+        if( AnimationActions.length ) AnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 );
+    }; useEffect( AnimationController, [ AnimationActions, props.counter ] );
 
 
     useFrame( ( _, delta ) => {
-        if( AnimationActions.length ) AnimationActions[ section ]._mixer.update( delta );
+        if( AnimationActions.length ) AnimationActions[ props.counter ]._mixer.update( delta );
     });
 
     useHelper( ref, CameraHelper );
