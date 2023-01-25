@@ -8,6 +8,7 @@ const star_positions = BigBang2( 25000, 5 );
 
 function Universe( props: any ): JSX.Element {
     console.log( 'universe data', props.data.universe );
+
     const ref: any = useRef();
 
     useFrame((_, delta) => {
@@ -17,11 +18,11 @@ function Universe( props: any ): JSX.Element {
 
     return (
         <group  rotation={[0, 0, Math.PI / 4]} >
-            <group  >
-                <Points ref={ref}  positions={ star_positions } stride={3} frustumCulled={false} {...props}>
-                    <PointMaterial transparent color="#fff" size={ 0.0035 } sizeAttenuation={true} depthWrite={false} />
-                </Points>
-            </group>
+            < group  >
+                < Points ref={ref}  positions={ star_positions } stride={3} frustumCulled={false} {...props} >
+                    < PointMaterial transparent color="#fff" size={ 0.0035 } sizeAttenuation={true} depthWrite={false} />
+                </ Points >
+            </ group >
 
         </group>
     );

@@ -46,6 +46,8 @@ const data = [
         section: 0,
         max_section: 6,
         thumbnail: "url('./lesson_thumbnails/fullereneTile.png')",
+
+        
         dispatch: useDispatch,
 
         universe: {
@@ -233,8 +235,21 @@ const data = [
             'left'
         ],
 
-        speach: null,
-        music: null
+        music: [
+            "/music/fullerene2.mp3"
+        ],
+
+        voices: [
+            "/music/fullerene2.mp3", // 0
+            "/music/fullerene2.mp3", // 1
+            // "/music/fullerene2.mp3", // 2
+            // "/music/fullerene2.mp3", // 3
+            // "/music/fullerene2.mp3", // 4
+        ],
+
+        loaded_voices: null,
+
+        // music: null
     },
     // {
     //     id: 'nanotube',
