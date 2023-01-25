@@ -62,17 +62,50 @@ export default function App() {
                             return {
                                 ...model, 
                                 meshes: allMeshesOfApp[i][j],
-                                _positions: CameraPositionToModelPosition( oldPage.camera.positions[ j+1 ] )
+                                _positions: CameraPositionToModelPosition( oldPage.camera.positions[ j+1 ], oldPage.camera.rotations[ j+1 ], 'x' )
+
                             };
                         })
                     };
                 }); 
             });
 
+            function CameraPositionToModelPosition( cameraPosition: number[], cameraRotation: number[], rotationAxis: string ) {
 
-            function CameraPositionToModelPosition( camera_position: number[] ) {
-                return [ camera_position[0], camera_position[1], (camera_position[2] - 1) ];
+                let rotationAngle = cameraRotation[ 0 ];
+
+                // If you rotate the camera on X axis you need to position the model on the Y axis.
+                if( rotationAxis === 'x' ) {
+                    const x = cameraPosition[ 0 ] 
+                    const y = ( cameraPosition[ 1 ] + rotationAngle )
+                    const z = cameraPosition[ 2 ] - 1
+                    return [ x, y, z ];
+                }
+
+                // If you rotate the camera on Y axis you need to position the model on the X axis.
+                if( rotationAxis === 'y' ) {
+                    const x = ( cameraPosition[ 0 ] + rotationAngle )
+                    const y = cameraPosition[ 1 ] 
+                    const z = cameraPosition[ 2 ]
+                    return [ x, y, z ];
+                }
+
+                // If you rotate the camera on Z axis you don't need to do anything to the model.
+                if( rotationAxis === 'z' ) {
+                    const x = cameraPosition[ 0 ];
+                    const y = cameraPosition[ 1 ];
+                    const z = ( cameraPosition[ 2 ] - 1 );
+                    return [ x, y, z ];
+                }
+                else {
+                    const x = cameraPosition[ 0 ];
+                    const y = cameraPosition[ 1 ];
+                    const z = ( cameraPosition[ 2 ] - 1 );
+                    return [ x, y, z ];
+                }
+
             }
+            
     
             function LoadModel( path: any ) {
                 return new Promise( (resolve, reject) => {

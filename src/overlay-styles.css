@@ -8,7 +8,9 @@
   display: flex;
   z-index: 3;
   flex-direction: column;
-  animation: fadeIn 2.5s 1 ease-in;
+  /* @keyframes duration | easing-function | delay | name */
+  /* animation: 4s ease-in 2s fadeIn; */
+  animation: fadeIn 4.5s 1 ease-in;
 }
   
   /* Header */

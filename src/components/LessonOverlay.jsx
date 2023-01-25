@@ -59,8 +59,8 @@ function LessonOverlay( props ) {
 
                 <li className="home-back-container" 
                     onClick={() => {
-                        dispatch(start());
-                        dispatch(reset());
+                        dispatch( start() );
+                        dispatch( reset() );
                         props.setPage(`home`); 
                     }}
                     >

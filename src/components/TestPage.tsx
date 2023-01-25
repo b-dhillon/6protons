@@ -21,19 +21,13 @@ import '../overlay-styles.css'
 
 /* 
 To-do: 
-    - Add text for section1+ + Test texts.
-        - Next button has back button's image.
-        - Camera movements are completely broken. (wrong counter likely)
-    
 
-
-
-    - Finsih linking model positions to camera positions with z-1
+    - Finish linking model positions to camera positions with z-1
+        - Need algorithm for how to get the position with rotations incorporated. 
+        - Need to update the positions to _positions. 
     
      
     - Add speach.
-
-
 
     - Any way to make updating mixers more efficient?
     - Get rid of all hard coded data, both in data.ts and here in TestPage.tsx.
@@ -50,14 +44,17 @@ export default function Page( props ): JSX.Element {
 
     useEffect( () => {
         console.log( 'page _data', page );
+        const oldPositions = page.models.map( ( model: any ) => model.positions );
+        const newPositions = page.models.map( ( model: any ) => model.__positions );
+        console.log( 'old', oldPositions, 'new', newPositions );
     }, [] )
 
     return (
         < Suspense >
-            {/* < UI data={ page } setData={ setPage } /> */}
 
-            < _UI data={ page } setData={ setPage } counter={ counter }/>
+            < UI data={ page } setData={ setPage } counter={ counter }/>
             < Scene data={ page } counter={ counter }/>
+
         </ Suspense >
     );
 };
@@ -97,45 +94,8 @@ function Scene( props ): JSX.Element {
 
 
 
-// Renders UI + creates event handlers to handle user input.
-function UI( props ): JSX.Element {
 
-    function nextSection() {
-        props.setData( (oldData) => {
-            return {
-                ...oldData, 
-                section: oldData.section + 1
-            };
-        });
-    };
-
-    const dispatch = useDispatch();
-    return (
-        <>
-            <button 
-                style={{
-                    position: 'absolute', 
-                    zIndex: '5', 
-                    width: '100px', 
-                    height: '33px'
-                }} 
-                onClick={ () => {
-                    dispatch( increment() );
-                    nextSection();
-                }}
-            >
-            Next
-            </button> 
-        </>
-    )
-};
-
-
-
-
-
-
-function _UI( props ) {
+function UI( props ) {
 
     return (
         < div className='global-overlay-container' >
@@ -147,7 +107,6 @@ function _UI( props ) {
         </ div >
     )
 } 
-
 
 
 function Header( props ) {
@@ -207,20 +166,12 @@ function Header( props ) {
 
 function Main( props ) {
 
-    console.log( props.data );
-
     // Decide between these two dispatch methods
-    const dispatch = props.data.dispatch();
-    // const dispatch = useDispatch();
+    // const dispatch = props.data.dispatch(); // this dispatch 
+    const dispatch = useDispatch();
 
 
     function LessonNavigationButton( props ): JSX.Element {
-        console.log( props.type );
-
-        if ( props.type === 'back' ) console.log( 'called for back' );
-        if ( props.type === 'next' ) console.log( 'called for next' );
-
-        // it is being called twice, and called for each kind. 
 
         return (
             < div className='lessonNav-container' >
@@ -276,7 +227,7 @@ function Main( props ) {
 
                     < LessonNavigationButton type={ 'back' } />
 
-                    < Text data={ props.data } counter={ props.counter }/>
+                    {/* < Text data={ props.data } counter={ props.counter }/> */}
 
                     < LessonNavigationButton type={ 'next' } />
 
@@ -307,6 +258,43 @@ function Footer( props ) {
         </>
     )
 }
+
+
+/*
+// Renders UI + creates event handlers to handle user input.
+function UI( props ): JSX.Element {
+
+    const dispatch = useDispatch();
+
+    function nextSection() {
+        props.setData( (oldData) => {
+            return {
+                ...oldData, 
+                section: oldData.section + 1
+            };
+        });
+    };
+
+    return (
+        <>
+            <button 
+                style={{
+                    position: 'absolute', 
+                    zIndex: '5', 
+                    width: '100px', 
+                    height: '33px'
+                }} 
+                onClick={ () => {
+                    dispatch( increment() );
+                    nextSection();
+                }}
+            >
+            Next
+            </button> 
+        </>
+    )
+};
+*/
 
 
 {/* <>
@@ -360,9 +348,9 @@ function Footer( props ) {
 
 function Audio() {
     return (
-      <audio  autoPlay >
-        <source src="/music/fullerene2.mp3" type="audio/mp3" />
-      </audio>
+      < audio autoPlay >
+        < source src="/music/fullerene2.mp3" type="audio/mp3" />
+      </ audio >
     );
 };
 
@@ -456,10 +444,10 @@ function Models( props: any ): JSX.Element  {
 
     const sceneModels = props.data.models.map( ( model: any , i: number ) => {
         return (
-            <CreateModel 
-                key={ model.id } 
+            < CreateModel 
+                key={ model.id }
                 modelNumber={ model.modelNumber }
-                position={ model.positions[0] }
+                position={ model._positions }
                 name={ model.name }
                 model={ model }
                 setAnimationActions={ setAnimationActions }
@@ -511,6 +499,8 @@ function ModelAnimationController( animationActions: any, counter: number ): voi
 // Grabs meshes and animations from data --> returns a group of all the meshes of the model. [ meshes ] mounted to the scene graph when Models();
 function CreateModel( props: any ): JSX.Element {
 
+    console.log( 'passed positions', props.position );
+
     const ref = useRef(), animationData = props.model.animations;
     const nestedRef = useRef(); 
 
@@ -555,10 +545,11 @@ function CreateModel( props: any ): JSX.Element {
     // Creates AnimationAction from _data, attaches it to this model, and pushes it to Model()'s state
     useEffect( () => props.setAnimationActions( ( animationAction: any ) => [ ...animationAction, [ CreateAnimationAction( ref.current, animationData[0], false, true, 5 ), CreateAnimationAction( ref.current, animationData[1], true, false, 1 ), CreateAnimationAction( nestedRef.current, animationData[2], true, true, 1 )  ] ] ), []);
 
-    // useEffect( () => console.log( 'ref', ref.current ), [ props.counter ] );
+    useEffect( () => console.log( props.key , ref.current.position ), [ props.counter ] );
 
     return (
-        <group  scale={ props.model.scale } modelNumber={ props.modelNumber } visible={ props.model.visible } name={ modelName } ref={ref} position={ [ props.position.x, props.position.y, props.position.z ] } >
+        // <group position={ [ props.position.x, props.position.y, props.position.z  ] } scale={ props.model.scale } modelNumber={ props.modelNumber } visible={ props.model.visible } name={ modelName } ref={ref} >
+        <group position={ props.position } scale={ props.model.scale } modelNumber={ props.modelNumber } visible={ props.model.visible } name={ modelName } ref={ref} >
             { fiber_model }
         </group>
     );
