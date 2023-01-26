@@ -213,7 +213,7 @@ function Main( props ) {
             return (
                 <>
                     <div className='text--wrapper'>
-                        <p> { props.data.text[ props.counter ] } </p>
+                        {/* <p> { props.data.text[ props.counter ] } </p> */}
                     </div>
                 </>
             )
@@ -224,7 +224,7 @@ function Main( props ) {
                 <>
                     < div className='panel left' >
                         < div className='text--wrapper2' >
-                            < p > { props.data.text[ props.counter ] } </ p >
+                            {/* < p > { props.data.text[ props.counter ] } </ p > */}
                         </ div >
                     </ div >
 
@@ -245,7 +245,7 @@ function Main( props ) {
 
                     < LessonNavigationButton type={ 'back' } />
 
-                    {/* < Text data={ props.data } counter={ props.counter }/> */}
+                    < Text data={ props.data } counter={ props.counter }/>
 
                     < LessonNavigationButton type={ 'next' } />
 

@@ -114,15 +114,17 @@
   
   .lessonNav-container > button 
   {
-    width: 3rem;
-    height: 3rem;
+    width: 2.7rem;
+    height: 2.7rem;
     border-radius: 50%;
     background: transparent;
     border: 2px solid white;
   }
   
   .lesson--nextBtn {
-    box-shadow: 0 0 10px 4px white;
+    /* box-shadow: 0 0 10px 4px white; */
+    box-shadow: 0 0 10px 2px white;
+
     transform: scale(1.2);
     animation: grow-and-glow 4s infinite;
     cursor: pointer;

@@ -150,8 +150,8 @@ transform: translateZ(20px);
     transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 10px 4px white;
-    transform: scale(1.25);
+    box-shadow: 0 0 6px 3px white;
+    transform: scale(1.2);
   }
 
   100% {
