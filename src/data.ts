@@ -86,38 +86,6 @@ const data = [
                 return animation_data;
             },
 
-            TranslateRotate_x: function ( duration: number, initial_position: number[], final_position: number[], axis: string, initial_angle: number[], final_angle: number[] ) {
-                // console.log( 'positions', this.positions );
-    
-                const times_Position = [ 0, duration ];
-                const values_Position = [ ...initial_position, ...final_position ];
-                const trackName_Position = '.position';
-                const track_Position = new VectorKeyframeTrack( trackName_Position, times_Position, values_Position, InterpolateLinear );
-            
-                const times_Rotation = [ 0, duration ];
-
-                let values_Rotation: number[];
-                values_Rotation = [ initial_angle[ 0 ], final_angle[ 0 ] ];
-
-                // Control flow for rotation axis assignment
-                /*
-                if( axis === 'x' ) {
-                    console.log('break before values asignment');
-                    values_Rotation = [ initial_angle[ 0 ], final_angle[ 0 ] ];
-                    console.log('break after values asignment, X');
-                };
-                if( axis === 'y' ) {
-                    values_Rotation = [ initial_angle[ 1 ], final_angle[ 1 ] ];
-                    console.log('break after values asignment, Y');
-                };
-                if( axis === 'z' ) values_Rotation = [ initial_angle[ 2 ], final_angle[ 2 ] ];
-                */
-                
-                const trackName_Rotation = '.rotation[' + axis + ']';
-                const track_Rotation = new NumberKeyframeTrack( trackName_Rotation, times_Rotation, values_Rotation );
-        
-                return new AnimationClip( 'TranslateRotateCamera', duration, [ track_Position, track_Rotation  ] );
-            },
         },
 
         models: [
@@ -242,9 +210,9 @@ const data = [
         voices: [
             "/music/fullerene2.mp3", // 0
             "/music/fullerene2.mp3", // 1
-            // "/music/fullerene2.mp3", // 2
-            // "/music/fullerene2.mp3", // 3
-            // "/music/fullerene2.mp3", // 4
+            "/music/fullerene2.mp3", // 2
+            "/music/fullerene2.mp3", // 3
+            "/music/fullerene2.mp3", // 4
         ],
 
         loaded_voices: null,
@@ -311,6 +279,41 @@ const data = [
     //     ],
     // }
 ];
+
+// Old TranslateRotate_x
+/*
+TranslateRotate_x: function ( duration: number, initial_position: number[], final_position: number[], axis: string, initial_angle: number[], final_angle: number[] ) {
+    // console.log( 'positions', this.positions );
+
+    const times_Position = [ 0, duration ];
+    const values_Position = [ ...initial_position, ...final_position ];
+    const trackName_Position = '.position';
+    const track_Position = new VectorKeyframeTrack( trackName_Position, times_Position, values_Position, InterpolateLinear );
+
+    const times_Rotation = [ 0, duration ];
+
+    let values_Rotation: number[];
+    values_Rotation = [ initial_angle[ 0 ], final_angle[ 0 ] ];
+
+    // Control flow for rotation axis assignment
+    
+    if( axis === 'x' ) {
+        console.log('break before values asignment');
+        values_Rotation = [ initial_angle[ 0 ], final_angle[ 0 ] ];
+        console.log('break after values asignment, X');
+    };
+    if( axis === 'y' ) {
+        values_Rotation = [ initial_angle[ 1 ], final_angle[ 1 ] ];
+        console.log('break after values asignment, Y');
+    };
+    if( axis === 'z' ) values_Rotation = [ initial_angle[ 2 ], final_angle[ 2 ] ];
+    
+    
+    const trackName_Rotation = '.rotation[' + axis + ']';
+    const track_Rotation = new NumberKeyframeTrack( trackName_Rotation, times_Rotation, values_Rotation );
+    return new AnimationClip( 'TranslateRotateCamera', duration, [ track_Position, track_Rotation  ] );
+}
+/*
 
 // Old animation ds
 /*

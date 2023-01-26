@@ -21,6 +21,13 @@ import '../overlay-styles.css'
 
 /* 
 To-do: 
+
+    - Refactor
+        - Move TranslateRotate_x method. 
+        - Import and hook up the new re-factored animations. 
+        - Clean up the comments in the data structure in data.ts
+        - Add types?
+        - Move all the functions in here to their own components as well.
  
     - Add speach.
         - You'll have to add a delay though to wait out the camera transition.
@@ -29,11 +36,11 @@ To-do:
             however, this can easily be done with tuning the volumes. --> Likely achieved with .offset()
             
             
-            
-
-
     - Juice up camera transitions?
         - Get models positioned properly to right middle half of screen
+
+
+
 
     - Any way to make updating mixers more efficient?
     - Get rid of all hard coded data, both in data.ts and here in TestPage.tsx.
@@ -42,7 +49,7 @@ To-do:
 */
 
 function Voice( props ){
-    console.log( props.data.loaded_voices );
+    // console.log( props.data.loaded_voices );
     const counter = props.counter; 
     const voices = props.data.loaded_voices
 
@@ -51,7 +58,7 @@ function Voice( props ){
         voice.stop();
     });
 
-    if( counter > 0 ) voices[ counter ].play( 4 );
+    if( counter > 0 && counter < props.data.max_section ) voices[ counter ].play( 4 );
     // props.data.voices[ counter ].offset(4).play();
 }
 
@@ -85,17 +92,13 @@ function Scene( props ): JSX.Element {
     const counter = props.counter;
 
 
-    const [ fadeDone, setFadeDone ] = useState( false );
-    function handleFadeDoneAfter( seconds: number ) {
-      setTimeout( () => setFadeDone( true ), seconds )
-    }; handleFadeDoneAfter( 5500 );
+
 
     return (
         < Suspense >
 
-            { !fadeDone ? <div className="blackFade"></div> : "" }
-
-            {/* < Audio /> */}
+            < FadeIn />
+            {/* < BackgroundMusic /> */}
             < Canvas >
 
                 < Universe data={ props.data } />
@@ -112,7 +115,21 @@ function Scene( props ): JSX.Element {
     );
 };
 
+function FadeIn() {
 
+    const [ fadeDone, setFadeDone ] = useState( false );
+
+    function handleFadeDoneAfter( seconds: number ) {
+      setTimeout( () => setFadeDone( true ), seconds )
+    }; 
+    handleFadeDoneAfter( 5500 );
+
+    if ( !fadeDone ) return <div className="blackFade"></div>;
+    else return "";
+    // return (
+    //     { !fadeDone ? <div className="blackFade"></div> : "" }
+    // )
+}
 
 
 function UI( props ) {
@@ -278,7 +295,7 @@ function Footer( props ) {
 }
 
 
-function Audio() {
+function BackroundMusic() {
     return (
       < audio autoPlay >th
         {/* < source src="/music/fullerene2.mp3" type="audio/mp3" /> */}
@@ -308,12 +325,12 @@ function Camera( props: { counter: number, data: any } ): JSX.Element {
             return animationAction;
         };
 
-        const allAnimationActions = allAnimationClips.map( ( animationClip: [] ) => CreateAnimationAction_Cam( animationClip[0] ) );
+        const allAnimationActions = allAnimationClips.map( ( animationClip: [] ) => CreateAnimationAction_Cam( animationClip[ 0 ] ) );
         setAnimationActions( allAnimationActions );
     }; 
 
     useEffect( () => {
-        CreateAnimationActions( ref.current, camera.animation_clips )
+        CreateAnimationActions( ref.current, camera._animation_clips )
     }, [] );
                                                          
     function AnimationController() {

@@ -5,6 +5,7 @@ import TestPage from './TestPage';
 import _pages from '../data';
 import { AnimationClip, NumberKeyframeTrack, VectorKeyframeTrack, InterpolateSmooth, AdditiveAnimationBlendMode, InterpolateLinear, BooleanKeyframeTrack } from 'three';
 import * as THREE from 'three'
+import TranslateRotate from '../_components/animations/TranslateRotate'
 
 
 
@@ -51,15 +52,33 @@ export default function App() {
                         ...oldPage, 
 
                         // add animation clips to camera
+                        // camera: {
+                        //     ...oldPage.camera, 
+                        //     _animation_data: oldPage.camera.CreateAnimationDataFromPositionsRotations(),
+                        //     _animation_clips: oldPage.camera.CreateAnimationDataFromPositionsRotations().map( ( datum:[][], i: number ) => {
+                        //         return [ TranslateRotate_x( 3, datum[ 0 ] , datum[ 1 ], 'x', datum[ 2 ], datum[ 3 ] ) ];
+                        //     }),
+                        //     animation_clips: oldPage.camera.animation_data.map( ( datum:[][], i: number ) => {
+                        //         return [ TranslateRotate_x( 3, datum[ 0 ] , datum[ 1 ], 'x', datum[ 2 ], datum[ 3 ] ) ];
+                        //     })
+                        // },
+
                         camera: {
                             ...oldPage.camera, 
                             _animation_data: oldPage.camera.CreateAnimationDataFromPositionsRotations(),
-                            _animation_clips: oldPage.camera.CreateAnimationDataFromPositionsRotations().map( ( datum:[][], i: number ) => {
-                                return [ TranslateRotate_x( 3, datum[ 0 ] , datum[ 1 ], 'x', datum[ 2 ], datum[ 3 ] ) ];
+                            _animation_clips: oldPage.camera.CreateAnimationDataFromPositionsRotations().map( ( AnimationData:[][], i: number ) => {
+                                return [ TranslateRotate(
+                                        { 
+                                            duration: 3, 
+                                            initial_position: AnimationData[ 0 ], 
+                                            final_position: AnimationData[ 1 ], 
+                                            initial_angle: AnimationData[ 2 ], 
+                                            final_angle: AnimationData[ 3 ],
+                                            axis: 'x', 
+                                        }
+                                    )
+                                ];
                             }),
-                            animation_clips: oldPage.camera.animation_data.map( ( datum:[][], i: number ) => {
-                                return [ TranslateRotate_x( 3, datum[ 0 ] , datum[ 1 ], 'x', datum[ 2 ], datum[ 3 ] ) ];
-                            })
                         },
 
                         // add meshes and positions to each model
@@ -237,6 +256,15 @@ export default function App() {
 };
 
 
+
+
+
+
+
+// animation_clips: oldPage.camera.animation_data.map( ( datum:[][], i: number ) => {
+//     return [ TranslateRotate( 3, datum[ 0 ] , datum[ 1 ], 'x', datum[ 2 ], datum[ 3 ] ) ];
+// })
+
 /*
     function CreatePulsationAnimation( duration, pulseScale ) {
 
@@ -343,3 +371,4 @@ function Init() {
 
 }
 */
+
