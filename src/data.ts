@@ -314,7 +314,7 @@ const data = [
 
 // Will need to turn this into a loop to loop over all of camera positions and camera rotations array creating a new animation for each index.
 // Might have to comnine positions and rotations into a single list of lists to make this work with a .map() call.
-data[0].camera.TranslateRotate_x(3, data[0].camera.positions[0], data[0].camera.positions[1], 'y', data[0].camera.rotations[0], data[0].camera.rotations[1] );
+// data[0].camera.TranslateRotate_x(3, data[0].camera.positions[0], data[0].camera.positions[1], 'y', data[0].camera.rotations[0], data[0].camera.rotations[1] );
 
 
 
@@ -378,6 +378,12 @@ function TranslateRotateCamera( duration: number, initial_position: number[], fi
 
     return new AnimationClip( 'TranslateRotateCamera', duration, [ track_Position, track_Rotation  ] );
 };
+
+
+
+
+
+
 
 function Rotate( duration: number, axis = 'x', initial_angle: number, final_angle: number ) {
     const times = [ 0, duration ], values = [ initial_angle, final_angle ];
