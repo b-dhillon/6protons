@@ -15,7 +15,7 @@ export default function App() {
 
     function LoadData() {
 
-        // Move this function to a separate file where all the animation methods will be stored.
+        // Re-factor this function and move to a separate file where all the animation methods will be stored.
         function TranslateRotate_x ( duration: number, initial_position: number[], final_position: number[], axis: string, initial_angle: number[], final_angle: number[] ) {
 
             const times_Position = [ 0, duration ];
@@ -34,11 +34,13 @@ export default function App() {
             return new AnimationClip( 'TranslateRotateCamera', duration, [ track_Position, track_Rotation  ] );
         };
 
-
-        // This Init() fn is responsible for the following for each page:
-            // Loading and extracting all meshes. 
-            // Creating all AnimationClips for the camera. 
-            // Creating all AnimationClips for the models. <-- Still need to do this.
+        /*
+        This Init() fn is responsible for the following for each page:
+            - Loading all glTF's and extracting all meshes from each one.
+            - Creating all AnimationClips for the camera. 
+            - Creating all AnimationClips for the models. <-- Still need to do this.
+            - Loading all voices for each page.
+        */
         async function Init() {
             const allMeshesOfApp: any = await ExtractAllMeshesOfApp();
             const allVoicesOfApp: any = await LoadAllVoicesOfApp(); 
@@ -112,15 +114,15 @@ export default function App() {
             };
 
             async function LoadAllVoicesOfApp() {
-                // const allVoicesOfApp: any = [][] // [ [ voice0, voice1, voice2 ], [ voice0, voice1, voice2 ], [ model0, model1, model2  ] ]
-                                        //                  ^ voices[] of page0           ^voices[] of page1           ^models[] of page2
+                /* const allVoicesOfApp: any = [][] // [ [ voice0, voice1, voice2 ], [ voice0, voice1, voice2 ], etc... ]
+                                                                    ^ voices[] of page0          ^ voices[] of page1                           */
                 const allVoicesOfApp = _pages.map( async (page: any) => {
         
                     let pageVoices = []; // [ voice0, voice1, voice2 ]
         
                     for ( let i = 0; i < page.voices.length; i++ ) {
                         pageVoices[ i ] = LoadVoice( page.voices[ i ] );
-                        console.log(`LoadAllVoicesOfApp() voice${i} loaded`);
+                        // console.log(`LoadAllVoicesOfApp() voice${i} loaded`);
                     };
         
                     return Promise.all( pageVoices );
@@ -129,12 +131,7 @@ export default function App() {
                 return Promise.all( allVoicesOfApp ); 
             }
 
-            function LoadVoice( path: string ) {
-
-                console.log( path );
-
-                
-        
+            function LoadVoice( path: string ) {            
                 return new Promise( ( resolve, reject ) => {
                     const listener = new THREE.AudioListener();
                     const AudioObject = new THREE.Audio( listener );
@@ -143,7 +140,7 @@ export default function App() {
                         path,
                         // onLoad
                         ( buffer: AudioBuffer ) => {
-                            console.log('onLoad callback called');
+                            // console.log('onLoad callback called');
 
                             // set the audio object's buffer to the loaded object
                             AudioObject.setBuffer( buffer );
@@ -151,7 +148,6 @@ export default function App() {
                             AudioObject.setVolume( 0.5 );
                             AudioObject.play();
                             resolve( AudioObject )
-                            console.log(`LoadVoice() onLoad callback for voice loaded`);
                         },
                 
                         // onProgress 
@@ -176,8 +172,8 @@ export default function App() {
                     loader.load(
                         path,
                         (gltf: any) => {
-                            resolve(gltf);
-                            console.log('loaded');
+                            resolve( gltf );
+                            console.log('glTF loaded');
                         },
                         (xhr: any) => {
                             // console.log((xhr.loaded / xhr.total) + 'loaded');

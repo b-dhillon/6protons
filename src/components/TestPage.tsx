@@ -23,32 +23,10 @@ import '../overlay-styles.css'
 To-do: 
  
     - Add speach.
+        - You'll have to add a delay though to wait out the camera transition.
 
-        - Move load functions to App.tsx() 
-        - Finish writing the setPage part
-
-        - Use Three Audio System:
-            - https://threejs.org/docs/#api/en/audio/Audio
-            - Need: const listener = THREE.AudioListener()
-            - Need: const sound = THREE.Audio( listener )
-            - Need: 
-                const loader = THREE.AudioLoader()
-                loader.load( 'url', function ( buffer ) {
-                    sound.setBuffer( buffer );
-                    sound.setLoop( false );
-                    sound.setVolume( 0.5 );
-                    // sound.play();
-                });
-
-            - Loader will likely by Async and should be handled like the meshes in App.tsx
-                - Once the Async function returns, you should have all the Audio files in the data object.
-                    - This will likely come out as an array of Audio objects --> i.e. [ Audio, Audio, Audio, Audio, Audio ]
-
-            - Then, write an AudioController() just like AnimationController(), call Audio.play() based on the counter. 
-              You'll have to add a delay though to wait out the camera transition.
-
-            - You'll also likely need to add some sort of post-processing effect to blend the background music with the speach audio
-              however, this can easily be done with tuning the volumes. --> Likely achieved with .offset()
+        - You'll also likely need to add some sort of post-processing effect to blend the background music with the speach audio
+            however, this can easily be done with tuning the volumes. --> Likely achieved with .offset()
             
             
             
@@ -63,6 +41,19 @@ To-do:
 
 */
 
+function Voice( props ){
+    console.log( props.data.loaded_voices );
+    const counter = props.counter; 
+    const voices = props.data.loaded_voices
+
+    // reset
+    voices.forEach( ( voice: any ) => {
+        voice.stop();
+    });
+
+    if( counter > 0 ) voices[ counter ].play( 4 );
+    // props.data.voices[ counter ].offset(4).play();
+}
 
 
 export default function Page( props ): JSX.Element {
@@ -110,6 +101,7 @@ function Scene( props ): JSX.Element {
                 < Universe data={ props.data } />
                 < Camera data={ props.data } counter={ counter }  />
                 < Models data={ props.data } counter={ counter } />
+                < Voice data={ props.data } counter={ counter } />
 
                 < ambientLight intensity={ .25 } />
                 < spotLight position={ [ -10, 10, 10 ] } intensity={ 0.9 } />
