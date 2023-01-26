@@ -312,14 +312,87 @@ const data = [
     // }
 ];
 
-// Will need to turn this into a loop to loop over all of camera positions and camera rotations array creating a new animation for each index.
-// Might have to comnine positions and rotations into a single list of lists to make this work with a .map() call.
-// data[0].camera.TranslateRotate_x(3, data[0].camera.positions[0], data[0].camera.positions[1], 'y', data[0].camera.rotations[0], data[0].camera.rotations[1] );
+// Old animation ds
+/*
+
+animations: [
+    [ Translate( 3, [ 0, 0, 3 ], [ 0, 0, 0 ] ),  Rotate( 0, 'x', 0, 0) ],
+    [ Translate( 3, [ 0, 0, 0 ], [ 0.75, 0, 1 ] ), Rotate( 3, 'x', 0, 0.66 ) ], 
+    [ Translate( 3, [ 0.75, 0, 1 ], [ 0.75, 0, -2 ] ), Rotate( 3, 'x', 0.66, 0 ) ], // favorite animation, rotates down and translates z
+    [ Translate( 3, [ 0.75, 0, -2 ], [ 0, 0, 0 ] ), Rotate( 3, 'x', 0, -0.66 ) ], 
+    [ Translate( 3, [ 0, 0, 0 ], [ 0, 0, -2 ] ), Rotate( 3, 'x', -0.66, 0 ) ],
+    // [ Translate( 0, [ 0.75, 0, -2 ], [ 0.75, 0, -2 ] ), Rotate( 3, 'y', 0, 1.5 ) ], 
+],
+
+animations: [
+    [ TranslateRotateCamera( 3, [ 0, 0, 3 ], [ 0, 0, 0 ], 'x', 0, 0 ) ],
+    [ TranslateRotateCamera( 3, [ 0, 0, 0 ], [ 0.75, 0, 1 ], 'x', 0, 0.66 ) ],
+    [ TranslateRotateCamera( 3, [ 0.75, 0, 1 ], [ 0.75, 0, -2 ], 'x', 0.66, 0 ) ],
+    [ TranslateRotateCamera( 3, [ 0.75, 0, -2 ], [ 0, 0, 0 ], 'x', 0, -0.66 ) ],
+    [ TranslateRotateCamera( 3, [ 0, 0, 0 ], [ 0, 0, -2 ], 'x', -0.66, 0 ) ],
+],
+
+positions: [
+    { x: 0, y: 0, z: 0 },
+    { x: 0.5, y: 0, z: 1 },
+    { x: 1, y: 0, z: 1.5 },
+    { x: 0, y: 0, z: 0 },
+    { x: 0, y: 0, z: 0 },
+    { x: 0, y: 0, z: 0 },
+],
+
+animation_data: [
+    //   position            rotation 
+    [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ] ],
+    [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ],
+    [ [ 0.75, 0.00, 1.00 ], [ 0.66, 0.00, 0.00 ] ],
+    [ [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ] ],
+    [ [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ] ],
+    [ [ 0.00, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ] ],
+],
+
+*/
+
+// Old SuspendInSolution() with useFrame()
+/*
+function Levitate( ref ) {
+    useFrame( (state, delta ) => {
+    // const t = state.clock.getElapsedTime();
+    const t = state.clock.elapsedTime;
+    ref.current.position.y = (0.75 + Math.sin(t / 1.5 )) / 4 // sin up and down 
+    ref.current.rotation.y += (delta / 12) // continous rotation
+    ref.current.rotation.x = Math.cos( t / 4 ) / 2 // cos wobble 
+    })
+};
+
+*/
+
+// Unused fns: myLerp() & preCalculateAllTimesAndValues()
+/*
+function myLerp( o: number, n: number, s: number ) {
+    const r = (1 - s) * o + s * n;
+    return Math.abs(o - n) < 0.005 ? n : r;
+};
 
 
+function preCalulateAllTimesAndAllValues( _duration: number, _initial: number, _final: number ) {
+    const delta = .008
+    const allTimes = [], allValues = [];
+    const animationTime = _duration;
+    const numberSteps = animationTime / delta;
+    const initial = _initial;; 
+    const final = _final;
+
+    for (let i = 0; i < numberSteps; i++) {
+        allTimes.push( i * delta ); // refresh rate. 
+        allValues.push( myLerp( initial, final, i / numberSteps ) );
+    };
+
+    return [ allTimes, allValues ];
+}
+*/
 
 
-// Just need to figure out how to stop the animation from jumping rotation. It's jumping because the first value is 0;
 function Levitate( positionY: number ) {
     const duration = 90;
 
@@ -379,26 +452,12 @@ function TranslateRotateCamera( duration: number, initial_position: number[], fi
     return new AnimationClip( 'TranslateRotateCamera', duration, [ track_Position, track_Rotation  ] );
 };
 
-
-
-
-
-
-
 function Rotate( duration: number, axis = 'x', initial_angle: number, final_angle: number ) {
     const times = [ 0, duration ], values = [ initial_angle, final_angle ];
     const trackName = '.rotation[' + axis + ']';
     const track = new NumberKeyframeTrack( trackName, times, values );
     return new AnimationClip( trackName, duration, [ track ] );
 };
-
-function TranslateZ( duration: number, initial_position: number, final_position: number ) {
-    const [ times, values ] = calulateAllTimesAndAllValues( duration, initial_position, final_position );
-    const trackName = '.position[z]';
-    const track = new NumberKeyframeTrack( trackName, times, values );
-    return new AnimationClip( trackName, duration, [ track ] );
-};
-
 
 function Translate( duration: number, initial_position: number[], final_position: number[] ) {
     const times = [ 0, duration ], values = [ ...initial_position, ...final_position ];
@@ -421,96 +480,10 @@ function Oscilate( duration: number, initial_position: number[], final_position:
     return new AnimationClip( trackName, duration, [ track ] );
 };
 
-function myLerp( o: number, n: number, s: number ) {
-    const r = (1 - s) * o + s * n;
-    return Math.abs(o - n) < 0.005 ? n : r;
-};
-
-function VisibilityAnimation( duration: number ) {
-    const times = [ 0, duration / 2, duration ], values = [ true, false, true ];
-
-    const trackName = '.visible';
-
-    const track = new BooleanKeyframeTrack( trackName, times, values );
-
-    return new AnimationClip( trackName, duration, [ track ] );
-
-}
-
-function calulateAllTimesAndAllValues( _duration: number, _initial: number, _final: number ) {
-    const delta = .008
-    const allTimes = [], allValues = [];
-    const animationTime = _duration;
-    const numberSteps = animationTime / delta;
-    const initial = _initial;; 
-    const final = _final;
-
-    for (let i = 0; i < numberSteps; i++) {
-        allTimes.push( i * delta ); // refresh rate. 
-        allValues.push( myLerp( initial, final, i / numberSteps ) );
-    };
-
-    return [ allTimes, allValues ];
-}
 
 export default data; 
 
-
-/*
-
-animations: [
-    [ TranslateRotateCamera( 3, [ 0, 0, 3 ], [ 0, 0, 0 ], 'x', 0, 0 ) ],
-    [ TranslateRotateCamera( 3, [ 0, 0, 0 ], [ 0.75, 0, 1 ], 'x', 0, 0.66 ) ],
-    [ TranslateRotateCamera( 3, [ 0.75, 0, 1 ], [ 0.75, 0, -2 ], 'x', 0.66, 0 ) ],
-    [ TranslateRotateCamera( 3, [ 0.75, 0, -2 ], [ 0, 0, 0 ], 'x', 0, -0.66 ) ],
-    [ TranslateRotateCamera( 3, [ 0, 0, 0 ], [ 0, 0, -2 ], 'x', -0.66, 0 ) ],
-],
+// data[0].camera.TranslateRotate_x(3, data[0].camera.positions[0], data[0].camera.positions[1], 'y', data[0].camera.rotations[0], data[0].camera.rotations[1] );
 
 
-animation_data: [
-    //   position            rotation 
-    [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ] ],
-    [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ],
-    [ [ 0.75, 0.00, 1.00 ], [ 0.66, 0.00, 0.00 ] ],
-    [ [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ] ],
-    [ [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ] ],
-    [ [ 0.00, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ] ],
-],
 
-*/
-
-// const initialPosition = oldPage.camera.animation_data[ i ][ 0 ];
-// const nextPosition = oldPage.camera.animation_data[ i + 1 ][ 0 ];
-
-// const initialRotation = oldPage.camera.animation_data[ i ][ 1 ];
-// const nextRotation = oldPage.camera.animation_data[ i + 1 ][ 1 ];
-
-/*
-function Levitate( ref ) {
-    useFrame( (state, delta ) => {
-    // const t = state.clock.getElapsedTime();
-    const t = state.clock.elapsedTime;
-    ref.current.position.y = (0.75 + Math.sin(t / 1.5 )) / 4 // sin up and down 
-    ref.current.rotation.y += (delta / 12) // continous rotation
-    ref.current.rotation.x = Math.cos( t / 4 ) / 2 // cos wobble 
-    })
-};
-
-animations: [
-    [ Translate( 3, [ 0, 0, 3 ], [ 0, 0, 0 ] ),  Rotate( 0, 'x', 0, 0) ],
-    [ Translate( 3, [ 0, 0, 0 ], [ 0.75, 0, 1 ] ), Rotate( 3, 'x', 0, 0.66 ) ], 
-    [ Translate( 3, [ 0.75, 0, 1 ], [ 0.75, 0, -2 ] ), Rotate( 3, 'x', 0.66, 0 ) ], // favorite animation, rotates down and translates z
-    [ Translate( 3, [ 0.75, 0, -2 ], [ 0, 0, 0 ] ), Rotate( 3, 'x', 0, -0.66 ) ], 
-    [ Translate( 3, [ 0, 0, 0 ], [ 0, 0, -2 ] ), Rotate( 3, 'x', -0.66, 0 ) ],
-    // [ Translate( 0, [ 0.75, 0, -2 ], [ 0.75, 0, -2 ] ), Rotate( 3, 'y', 0, 1.5 ) ], 
-],
-
-positions: [
-                { x: 0, y: 0, z: 0 },
-                { x: 0.5, y: 0, z: 1 },
-                { x: 1, y: 0, z: 1.5 },
-                { x: 0, y: 0, z: 0 },
-                { x: 0, y: 0, z: 0 },
-                { x: 0, y: 0, z: 0 },
-            ],
-*/
