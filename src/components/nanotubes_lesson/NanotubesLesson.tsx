@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import Stars from '../Universe';
+import Stars from '../../_components/Universe';
 import NanotubeModels from './NanotubeModels';
 import DataStore from '../redux/store';
 import { Provider } from 'react-redux';

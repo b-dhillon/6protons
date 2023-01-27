@@ -1,8 +1,8 @@
 import { Provider } from 'react-redux';
 import { createRoot } from 'react-dom/client';
 import React from 'react';
-import App from './components/App';
-import __App from './components/__App';
+import App from './App';
+import __App from './__App';
 import store from './components/redux/store'
 import './global-styles.css';
 

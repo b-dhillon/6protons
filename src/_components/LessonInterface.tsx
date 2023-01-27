@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { decrement, increment, reset, start } from "../components/redux/actions";
 
@@ -6,7 +7,7 @@ export default function LessonUI( props: any  ) {
 
     return (
         < div className='global-overlay-container' >
-
+            < FadeIn />
             < Header data={ props.data } setPage={ props.setPage } counter={ props.counter } />
             < Body data={ props.data } counter={ props.counter } />
             < Footer data={ props.data } counter={ props.counter } />
@@ -14,6 +15,21 @@ export default function LessonUI( props: any  ) {
         </ div >
     )
 } 
+
+function FadeIn() {
+
+    const [ fadeDone, setFadeDone ] = useState( false );
+
+    function handleFadeDoneAfter( seconds: number ) {
+      setTimeout( () => setFadeDone( true ), seconds )
+    }; handleFadeDoneAfter( 5500 );
+
+    if ( !fadeDone ) return <div className="blackFade"></div>;
+    else return <></>;
+    
+    // { !fadeDone ? <div className="blackFade"></div> : "" }
+}
+
 
 function Header( props: any ) {
 

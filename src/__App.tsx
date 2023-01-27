@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import Home from './home/Home';
-import FullerenesLesson from './fullerenes_lesson/FullerenesLesson';
-import DiamondsLesson from './diamonds_lesson/DiamondsLesson';
-import NanotubesLesson from './nanotubes_lesson/NanotubesLesson';
-import GrapheneLesson from './graphene_lesson/GrapheneLesson';
-import TestPage from './TestPage';
+import Home from './components/home/Home';
+import FullerenesLesson from './components/fullerenes_lesson/FullerenesLesson';
+import DiamondsLesson from './components/diamonds_lesson/DiamondsLesson';
+import NanotubesLesson from './components/nanotubes_lesson/NanotubesLesson';
+import GrapheneLesson from './components/graphene_lesson/GrapheneLesson';
+import TestPage from './_components/Page';
 
 
 export default function App() {

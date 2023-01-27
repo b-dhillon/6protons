@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
-import TestPage from './TestPage';
-import _pages from '../data';
+import TestPage from './_components/Page';
+import _pages from './data';
 import { AnimationClip, NumberKeyframeTrack, VectorKeyframeTrack, InterpolateSmooth, AdditiveAnimationBlendMode, InterpolateLinear, BooleanKeyframeTrack } from 'three';
 import * as THREE from 'three'
-import TranslateRotate from '../_components/animations/TranslateRotate'
+import TranslateRotate from './_components/animations/TranslateRotate'
 
 
 

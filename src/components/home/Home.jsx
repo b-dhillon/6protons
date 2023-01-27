@@ -3,7 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { useSelector,  } from 'react-redux';
 import { useGLTF, Html, OrbitControls } from '@react-three/drei';
 import UpdateCamera from '../UpdateCamera';
-import Stars from '../Universe';
+import Stars from '../../_components/Universe';
 import Models from './Models';
 import '../../home-styles.css';
 import StartBtn from './StartBtn';

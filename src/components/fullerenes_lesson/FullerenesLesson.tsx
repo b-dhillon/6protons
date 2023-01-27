@@ -1,7 +1,7 @@
 import { Suspense, useState } from 'react';
 import { Canvas,  } from '@react-three/fiber';
 import { Provider } from 'react-redux';
-import Stars from '../Universe';
+import Stars from '../../_components/Universe';
 import DataStore from '../redux/store';
 import LessonOverlay from '../LessonOverlay';
 import FullereneModelsCombined from './FullereneModels';

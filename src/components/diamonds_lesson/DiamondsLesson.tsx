@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import UpdateCamera from '../UpdateCamera';
-import Universe from '../Universe';
+import Universe from '../../_components/Universe';
 import DataStore from '../redux/store';
 import DiamondModels from './DiamondModels';
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
