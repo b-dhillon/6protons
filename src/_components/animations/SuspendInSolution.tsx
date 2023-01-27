@@ -1,7 +1,6 @@
 import { AnimationClip, InterpolateSmooth, NumberKeyframeTrack } from "three";
 
-function SuspendInSolution( positionY: number ) {
-    const duration = 90;
+function SuspendInSolution( duration: number ) {
 
     const trackNamePositionX = '.position[x]';
     let timesPositionX: number[] = [];

@@ -1,6 +1,10 @@
 import { AnimationClip, NumberKeyframeTrack, VectorKeyframeTrack, InterpolateSmooth, AdditiveAnimationBlendMode, InterpolateLinear, BooleanKeyframeTrack } from 'three';
 import { useSelector, useDispatch } from 'react-redux';
 
+import ScaleXYZ from './_components/animations/ScaleXYZ';
+import Rotate from './_components/animations/Rotate';
+import SuspendInSolution from './_components/animations/SuspendInSolution';
+
 
 // Convert the data of Vector3 to flatten array
 function flattenVector3( data: any[] ) {
@@ -10,34 +14,6 @@ function flattenVector3( data: any[] ) {
     }
     return result;
 }
-
-const positionsData = [
-    { x: 0, y: 0, z: 0 },
-    { x: 0.5, y: 0, z: 1 },
-    { x: 1, y: 0, z: 1.5 },
-    { x: 0, y: 0, z: 0 },
-    { x: 0, y: 0, z: 0 },
-    { x: 0, y: 0, z: 0 },
-];
-
-flattenVector3( positionsData ); 
-// Output: [ [ 0, 0, 0 ], [ 0.5, 0, 1 ], [ 1, 0, 1.5 ], [ 0, 0, 0 ], [ 0, 0, 0 ], [ 0, 0, 0 ] ]
-
-
-const rotations = [
-    { _x: 0, _y: 0, _z: 0 },
-    { _x: 0.5, _y: 0, _z: 0 },
-    { _x: 1, _y: 0, _z: 0 },
-    { _x: 0, _y: 0, _z: 0 },
-    { _x: 0, _y: 0, _z: 0 },
-    { _x: 0, _y: 0, _z: 0 },
-]
-
-flattenVector3( rotations ); 
-// Output: [ [ 0, 0, 0 ], [ 0.5, 0, 0 ], [ 1, 0, 0 ], [ 0, 0, 0 ], [ 0, 0, 0 ], [ 0, 0, 0 ] ]
-
-
-
 
 const data = [
     {
@@ -104,8 +80,9 @@ const data = [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animations: [ 
-                    Levitate( 0 ), 
-                    Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] )
+                    SuspendInSolution( 90 ), 
+                    ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
+                    // Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] )
                 ],
             },
             {
@@ -122,8 +99,10 @@ const data = [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animations: [
-                    Rotate( 5000, 'y', 0, 360 ),
-                    Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] )
+                    Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
+                    // Rotate( 5000, 'y', 0, 360 ),
+                    ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
+                    // Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] )
                 ]
             },
             {
@@ -140,8 +119,10 @@ const data = [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animations: [
-                    Rotate( 5000, 'y', 0, 360 ),
-                    Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] )
+                    Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
+                    // Rotate( 5000, 'y', 0, 360 ),
+                    ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
+                    // Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] )
                 ]
             },
             {
@@ -158,9 +139,12 @@ const data = [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animations: [
-                    Rotate( 5000, 'y', 0, 360 ),
-                    Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] ),
-                    Rotate( 2500, 'x', 0, 360 ),
+                    Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
+                    // Rotate( 5000, 'y', 0, 360 ),
+                    ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } ),
+                    // Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] ),
+                    Rotate( { duration: 1500, axis: 'x', initial_angle: 0, final_angle: 360 } ),
+                    // Rotate( 2500, 'x', 0, 360 ),
                 ]
             },
             {
@@ -177,9 +161,12 @@ const data = [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animations: [
-                    Rotate( 4000, 'y', 0, 360 ),
-                    Scale( 1, [ 0.1, 0.1, 0.1 ], [ 0, 0, 0 ] ),
-                    Scale( 3, [ 0.01, 0.01, 0.01 ], [ 0.075, 0.075, 0.075 ] ),
+                    Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
+                    ScaleXYZ( { duration: 1, initial_scale: [ 0.10, 0.10, 0.10 ], final_scale: [ 0, 0, 0 ] } ),
+                    ScaleXYZ( { duration: 3, initial_scale: [ 0.01, 0.01, 0.01 ], final_scale: [ 0.075, 0.075, 0.075 ] } )
+                    // Rotate( 4000, 'y', 0, 360 ),
+                    // Scale( 1, [ 0.1, 0.1, 0.1 ], [ 0, 0, 0 ] ),
+                    // Scale( 3, [ 0.01, 0.01, 0.01 ], [ 0.075, 0.075, 0.075 ] ),
                 ]
             }
             
@@ -396,92 +383,92 @@ function preCalulateAllTimesAndAllValues( _duration: number, _initial: number, _
 */
 
 
-function Levitate( positionY: number ) {
-    const duration = 90;
+// function Levitate( positionY: number ) {
+//     const duration = 90;
 
-    const trackNamePositionX = '.position[x]';
-    let timesPositionX: number[] = [];
-    let valuesPositionX: number[] = [];
-    for( let i = 0; i < duration; i++ ) {
-        timesPositionX.push( i );
-        valuesPositionX.push( ( Math.sin(i / 4) ) / 30 );
-                                        //  ^velocity ^amplitude
-    };
-    const trackPositionX = new NumberKeyframeTrack( trackNamePositionX, timesPositionX, valuesPositionX, InterpolateSmooth );
-
-
-    const trackNamePositionY = '.position[y]';
-    let timesPositionY: number[] = [];
-    let valuesPositionY: number[] = [];
-    for( let i = 0; i < duration; i++ ) {
-        timesPositionY.push( i );
-        valuesPositionY.push( ( 0.5 + Math.sin(i / 2 ) ) / 12 );
-        //                                 ^velocity ^amplitude
-    };
-    const trackPositionY = new NumberKeyframeTrack( trackNamePositionY, timesPositionY, valuesPositionY, InterpolateSmooth );
+//     const trackNamePositionX = '.position[x]';
+//     let timesPositionX: number[] = [];
+//     let valuesPositionX: number[] = [];
+//     for( let i = 0; i < duration; i++ ) {
+//         timesPositionX.push( i );
+//         valuesPositionX.push( ( Math.sin(i / 4) ) / 30 );
+//                                         //  ^velocity ^amplitude
+//     };
+//     const trackPositionX = new NumberKeyframeTrack( trackNamePositionX, timesPositionX, valuesPositionX, InterpolateSmooth );
 
 
-    const trackNameRotationY = '.rotation[y]';
-    const timesRotationY = [ 0, duration ];
-    const valuesRotationY = [ 0, (Math.PI * 2) ];
-    const trackRotationY = new NumberKeyframeTrack( trackNameRotationY, timesRotationY, valuesRotationY );
+//     const trackNamePositionY = '.position[y]';
+//     let timesPositionY: number[] = [];
+//     let valuesPositionY: number[] = [];
+//     for( let i = 0; i < duration; i++ ) {
+//         timesPositionY.push( i );
+//         valuesPositionY.push( ( 0.5 + Math.sin(i / 2 ) ) / 12 );
+//         //                                 ^velocity ^amplitude
+//     };
+//     const trackPositionY = new NumberKeyframeTrack( trackNamePositionY, timesPositionY, valuesPositionY, InterpolateSmooth );
 
 
-    const trackNameRotationX= '.rotation[x]';
-    let timesRotationX: number[] = [];
-    let valuesRotationX: number[] = [];
-    for( let i = 0; i < duration; i++ ) {
-        timesRotationX.push( i );
-        valuesRotationX.push( ( Math.sin( i / 7 ) ) );
-        //                                 ^velocity   ^amplitude
-    };
-    const trackRotationX = new NumberKeyframeTrack( trackNameRotationX, timesRotationX, valuesRotationX );
+//     const trackNameRotationY = '.rotation[y]';
+//     const timesRotationY = [ 0, duration ];
+//     const valuesRotationY = [ 0, (Math.PI * 2) ];
+//     const trackRotationY = new NumberKeyframeTrack( trackNameRotationY, timesRotationY, valuesRotationY );
 
-    return new AnimationClip( 'Levitate', duration, [ trackPositionY, trackRotationY, trackRotationX, trackPositionX ] );
-}
 
-function TranslateRotateCamera( duration: number, initial_position: number[], final_position: number[], axis = 'x', initial_angle: number, final_angle: number ) {
+//     const trackNameRotationX= '.rotation[x]';
+//     let timesRotationX: number[] = [];
+//     let valuesRotationX: number[] = [];
+//     for( let i = 0; i < duration; i++ ) {
+//         timesRotationX.push( i );
+//         valuesRotationX.push( ( Math.sin( i / 7 ) ) );
+//         //                                 ^velocity   ^amplitude
+//     };
+//     const trackRotationX = new NumberKeyframeTrack( trackNameRotationX, timesRotationX, valuesRotationX );
 
-    const times_Position = [ 0, duration ];
-    const values_Position = [ ...initial_position, ...final_position ];
-    const trackName_Position = '.position';
-    const track_Position = new VectorKeyframeTrack( trackName_Position, times_Position, values_Position, InterpolateLinear );
+//     return new AnimationClip( 'Levitate', duration, [ trackPositionY, trackRotationY, trackRotationX, trackPositionX ] );
+// }
 
-    const times_Rotation = [ 0, duration ];
-    const values_Rotation = [ initial_angle, final_angle ];
-    const trackName_Rotation = '.rotation[' + axis + ']';
-    const track_Rotation = new NumberKeyframeTrack( trackName_Rotation, times_Rotation, values_Rotation );
+// function TranslateRotateCamera( duration: number, initial_position: number[], final_position: number[], axis = 'x', initial_angle: number, final_angle: number ) {
 
-    return new AnimationClip( 'TranslateRotateCamera', duration, [ track_Position, track_Rotation  ] );
-};
+//     const times_Position = [ 0, duration ];
+//     const values_Position = [ ...initial_position, ...final_position ];
+//     const trackName_Position = '.position';
+//     const track_Position = new VectorKeyframeTrack( trackName_Position, times_Position, values_Position, InterpolateLinear );
 
-function Rotate( duration: number, axis = 'x', initial_angle: number, final_angle: number ) {
-    const times = [ 0, duration ], values = [ initial_angle, final_angle ];
-    const trackName = '.rotation[' + axis + ']';
-    const track = new NumberKeyframeTrack( trackName, times, values );
-    return new AnimationClip( trackName, duration, [ track ] );
-};
+//     const times_Rotation = [ 0, duration ];
+//     const values_Rotation = [ initial_angle, final_angle ];
+//     const trackName_Rotation = '.rotation[' + axis + ']';
+//     const track_Rotation = new NumberKeyframeTrack( trackName_Rotation, times_Rotation, values_Rotation );
 
-function Translate( duration: number, initial_position: number[], final_position: number[] ) {
-    const times = [ 0, duration ], values = [ ...initial_position, ...final_position ];
-    const trackName = '.position';
-    const track = new VectorKeyframeTrack( trackName, times, values, InterpolateLinear );
-    return new AnimationClip( trackName, duration, [ track ] );
-};
+//     return new AnimationClip( 'TranslateRotateCamera', duration, [ track_Position, track_Rotation  ] );
+// };
 
-function Scale( duration: number, initial_scale: number[], final_scale: number[] ) {
-    const times = [ 0, duration ], values = [ ...initial_scale, ...final_scale ];
-    const trackName = '.scale';
-    const track = new VectorKeyframeTrack( trackName, times, values, InterpolateLinear );
-    return new AnimationClip( trackName, duration, [ track ] );
-};
+// function Rotate( duration: number, axis = 'x', initial_angle: number, final_angle: number ) {
+//     const times = [ 0, duration ], values = [ initial_angle, final_angle ];
+//     const trackName = '.rotation[' + axis + ']';
+//     const track = new NumberKeyframeTrack( trackName, times, values );
+//     return new AnimationClip( trackName, duration, [ track ] );
+// };
 
-function Oscilate( duration: number, initial_position: number[], final_position: number[] ) {
-    const times = [ 0, duration / 2, duration ], values = [ ...initial_position, ...final_position, ...initial_position ];
-    const trackName = '.position';
-    const track = new VectorKeyframeTrack( trackName, times, values, InterpolateLinear );
-    return new AnimationClip( trackName, duration, [ track ] );
-};
+// function Translate( duration: number, initial_position: number[], final_position: number[] ) {
+//     const times = [ 0, duration ], values = [ ...initial_position, ...final_position ];
+//     const trackName = '.position';
+//     const track = new VectorKeyframeTrack( trackName, times, values, InterpolateLinear );
+//     return new AnimationClip( trackName, duration, [ track ] );
+// };
+
+// function Scale( duration: number, initial_scale: number[], final_scale: number[] ) {
+//     const times = [ 0, duration ], values = [ ...initial_scale, ...final_scale ];
+//     const trackName = '.scale';
+//     const track = new VectorKeyframeTrack( trackName, times, values, InterpolateLinear );
+//     return new AnimationClip( trackName, duration, [ track ] );
+// };
+
+// function Oscilate( duration: number, initial_position: number[], final_position: number[] ) {
+//     const times = [ 0, duration / 2, duration ], values = [ ...initial_position, ...final_position, ...initial_position ];
+//     const trackName = '.position';
+//     const track = new VectorKeyframeTrack( trackName, times, values, InterpolateLinear );
+//     return new AnimationClip( trackName, duration, [ track ] );
+// };
 
 
 export default data; 
@@ -489,4 +476,25 @@ export default data;
 // data[0].camera.TranslateRotate_x(3, data[0].camera.positions[0], data[0].camera.positions[1], 'y', data[0].camera.rotations[0], data[0].camera.rotations[1] );
 
 
+// old ds
+/*
+const positionsData = [
+    { x: 0, y: 0, z: 0 },
+    { x: 0.5, y: 0, z: 1 },
+    { x: 1, y: 0, z: 1.5 },
+    { x: 0, y: 0, z: 0 },
+    { x: 0, y: 0, z: 0 },
+    { x: 0, y: 0, z: 0 },
+];
 
+const rotations = [
+    { _x: 0, _y: 0, _z: 0 },
+    { _x: 0.5, _y: 0, _z: 0 },
+    { _x: 1, _y: 0, _z: 0 },
+    { _x: 0, _y: 0, _z: 0 },
+    { _x: 0, _y: 0, _z: 0 },
+    { _x: 0, _y: 0, _z: 0 },
+]
+
+
+*/

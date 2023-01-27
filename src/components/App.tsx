@@ -15,29 +15,9 @@ export default function App() {
     const [ current_page, setCurrentPage ] = useState( 'test_page' );
 
     function LoadData() {
-
-        // Re-factor this function and move to a separate file where all the animation methods will be stored.
-        function TranslateRotate_x ( duration: number, initial_position: number[], final_position: number[], axis: string, initial_angle: number[], final_angle: number[] ) {
-
-            const times_Position = [ 0, duration ];
-            const values_Position = [ ...initial_position, ...final_position ];
-            const trackName_Position = '.position';
-            const track_Position = new VectorKeyframeTrack( trackName_Position, times_Position, values_Position, InterpolateLinear );
-        
-            const times_Rotation = [ 0, duration ];
-
-            let values_Rotation: number[];
-            values_Rotation = [ initial_angle[ 0 ], final_angle[ 0 ] ];
-            
-            const trackName_Rotation = '.rotation[' + axis + ']';
-            const track_Rotation = new NumberKeyframeTrack( trackName_Rotation, times_Rotation, values_Rotation );
-        
-            return new AnimationClip( 'TranslateRotateCamera', duration, [ track_Position, track_Rotation  ] );
-        };
-
         /*
         This Init() fn is responsible for the following for each page:
-            - Loading all glTF's and extracting all meshes from each one.
+            - Loading all glTF's and extracting all meshes from each glTF.
             - Creating all AnimationClips for the camera. 
             - Creating all AnimationClips for the models. <-- Still need to do this.
             - Loading all voices for each page.
@@ -65,7 +45,7 @@ export default function App() {
 
                         camera: {
                             ...oldPage.camera, 
-                            _animation_data: oldPage.camera.CreateAnimationDataFromPositionsRotations(),
+                            _animation_data: oldPage.camera.CreateAnimationDataFromPositionsRotations(), // needed for initial position assignment
                             _animation_clips: oldPage.camera.CreateAnimationDataFromPositionsRotations().map( ( AnimationData:[][], i: number ) => {
                                 return [ TranslateRotate(
                                         { 
@@ -233,12 +213,9 @@ export default function App() {
             
                 return allMeshesOfApp; 
             };
-
-            // return pages;
         };
 
         Init();
-        // return AddAllMeshesOfAppToData();
     };
 
     useEffect( () => LoadData(), [] );
@@ -257,8 +234,25 @@ export default function App() {
 
 
 
+/*
+function TranslateRotate_x ( duration: number, initial_position: number[], final_position: number[], axis: string, initial_angle: number[], final_angle: number[] ) {
 
+    const times_Position = [ 0, duration ];
+    const values_Position = [ ...initial_position, ...final_position ];
+    const trackName_Position = '.position';
+    const track_Position = new VectorKeyframeTrack( trackName_Position, times_Position, values_Position, InterpolateLinear );
 
+    const times_Rotation = [ 0, duration ];
+
+    let values_Rotation: number[];
+    values_Rotation = [ initial_angle[ 0 ], final_angle[ 0 ] ];
+    
+    const trackName_Rotation = '.rotation[' + axis + ']';
+    const track_Rotation = new NumberKeyframeTrack( trackName_Rotation, times_Rotation, values_Rotation );
+
+    return new AnimationClip( 'TranslateRotateCamera', duration, [ track_Position, track_Rotation  ] );
+};
+*/
 
 
 // animation_clips: oldPage.camera.animation_data.map( ( datum:[][], i: number ) => {

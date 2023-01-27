@@ -10,25 +10,30 @@ import { Canvas, useThree, useFrame  } from '@react-three/fiber';
 import { useSelector, useDispatch } from 'react-redux';
 import { reset, start, increment, decrement } from './redux/actions';
 
-// Components:
+// Three
 import { CameraHelper, LoopPingPong } from 'three';
+
+// Components:
+import UI from '../_components/LessonUI'
 import Universe from './Universe';
 import * as THREE from 'three'
 import UpdateCamera from './UpdateCamera.jsx';
 import data from '../data';
+
 
 import '../overlay-styles.css'
 
 /* 
 To-do: 
 
-    - Refactor
-        - Move TranslateRotate_x method. 
-        - Import and hook up the new re-factored animations. 
+    - Refactor 
         - Clean up the comments in the data structure in data.ts
         - Add types?
         - Move all the functions in here to their own components as well.
  
+
+
+
     - Add speach.
         - You'll have to add a delay though to wait out the camera transition.
 
@@ -132,167 +137,7 @@ function FadeIn() {
 }
 
 
-function UI( props ) {
 
-    return (
-        < div className='global-overlay-container' >
-
-            < Header data={ props.data } setPage={ props.setPage } counter={ props.counter } />
-            < Main data={ props.data } counter={ props.counter } />
-            < Footer data={ props.data } counter={ props.counter } />
-
-        </ div >
-    )
-} 
-
-function Header( props ) {
-
-    // can we move dispatch to the data object as a method?
-    const dispatch = useDispatch();
-
-
-    return (
-        <div className='header-container'>
-
-            < li 
-                className="home-back-container" 
-                onClick={ () => {
-                        dispatch( reset() );
-                        props.setPage(`home`); 
-                    }
-                }
-            >
-                <button className="homeBtn--icon">
-                    <i className="fa-solid fa-arrow-left-long backBtn" style={ { color: 'white' } }></i>
-                </button> 
-
-            </ li >
-
-
-            <div className='title-container'>
-                { 
-                    props.data.section === 0 
-                    ?
-                    <div>
-                        <h1 className='title' style={{}} >{ props.data.title }</ h1 >
-                    </div>
-                    :
-                    ""
-                }
-            </div> 
-
-            < li className="home-back-container" 
-                onClick={ () => {
-                        dispatch( start() );
-                        dispatch( reset() );
-                        props.setPage(`home`); 
-                    }
-                }
-            >
-                < button href="#" className="homeBtn--icon">
-                    < i className="fas fa-house homeIcon" style={ { color: 'white '} } ></i> 
-                </ button >
-            </ li >
-
-
-        </div>
-    )
-}
-
-function Main( props ) {
-
-    // Decide between these two dispatch methods
-    // const dispatch = props.data.dispatch(); // this dispatch 
-    const dispatch = useDispatch();
-
-
-    function LessonNavigationButton( props ): JSX.Element {
-
-        return (
-            < div className='lessonNav-container' >
-                < button 
-                    className={`lesson--${props.type}Btn`}
-                    onClick={ () => props.type === 'next' ?  dispatch( increment() ) : dispatch( decrement() ) }
-                >
-
-                    
-                    < i className={`fa-solid fa-angle-${ props.type === "next" ? "right" : "left" } lessonNav--icons`} style={ { color: 'white' } }></ i >
-                
-                </ button >
-            </ div >
-        )
-    }
-
-
-    function Text( props ): JSX.Element {
-
-        if ( props.data.textType[ props.counter ] === 'centered' ) {
-            return (
-                <>
-                    <div className='text--wrapper'>
-                        {/* <p> { props.data.text[ props.counter ] } </p> */}
-                    </div>
-                </>
-            )
-        }
-
-        if ( props.data.textType[ props.counter ] === 'left' ) {
-            return (
-                <>
-                    < div className='panel left' >
-                        < div className='text--wrapper2' >
-                            {/* < p > { props.data.text[ props.counter ] } </ p > */}
-                        </ div >
-                    </ div >
-
-                    < div className='panel right' >
-                    </ div >
-                    
-                </>
-            )
-        }
-    }
-
-    return (
-        <>
-            {
-                props.counter > 0 
-                ?
-                < div className='main-container' >
-
-                    < LessonNavigationButton type={ 'back' } />
-
-                    < Text data={ props.data } counter={ props.counter }/>
-
-                    < LessonNavigationButton type={ 'next' } />
-
-                </ div > 
-                :
-                ""
-            } 
-        </>
-    )
-}
-
-function Footer( props ) {
-    const dispatch = useDispatch();
-
-    return (
-        <>
-            {
-                props.counter === 0 
-                ?
-                <div className='footer-container' >
-                    <button className="startLessonBtn" onClick={ () => dispatch( increment() ) }>
-                        Start Lesson
-                    </button>  
-                </div>
-                : 
-                ""
-            } 
-        </>
-    )
-}
 
 
 function BackroundMusic() {
@@ -350,7 +195,7 @@ function Camera( props: { counter: number, data: any } ): JSX.Element {
 
     return (
         <>
-            < PerspectiveCamera ref={ref} position={ camera.animation_data[ 0 ][ 0 ] } fov={ 45 } near={ 0.2 } far={ 8 } />
+            < PerspectiveCamera ref={ref} position={ camera._animation_data[ 0 ][ 0 ] } fov={ 45 } near={ 0.2 } far={ 8 } />
             {/* < UpdateCamera _ref={ref} counter={ props.counter } camera_data={ props.camera_data } /> */}
         </>
     );
@@ -451,7 +296,7 @@ function CreateModel( props: any ): JSX.Element {
 
     const ref = useRef();
     const nestedRef = useRef(); 
-    const animationData = props.model.animations;
+    const animationClips = props.model.animations;
     let modelName = props.name;
 
     const fiber_model = props.model.meshes.map( ( mesh: any ) => {
@@ -488,7 +333,15 @@ function CreateModel( props: any ): JSX.Element {
     });
 
     // Creates AnimationAction from _data, attaches it to the current model in the loop, and adds it to Model()'s state
-    useEffect( () => props.setAnimationActions( ( animationAction: any ) => [ ...animationAction, [ CreateAnimationAction( ref.current, animationData[0], false, true, 5 ), CreateAnimationAction( ref.current, animationData[1], true, false, 1 ), CreateAnimationAction( nestedRef.current, animationData[2], true, true, 1 )  ] ] ), []);
+    useEffect( () => props.setAnimationActions( ( animationAction: any ) => [ 
+                ...animationAction, 
+                [ 
+                    CreateAnimationAction( ref.current, animationClips[ 0 ], { clamped: false , loop: true , repetitions: 5 } ), 
+                    CreateAnimationAction( ref.current, animationClips[ 1 ], { clamped: true, loop: false, repetitions: 1 } ), 
+                    CreateAnimationAction( nestedRef.current, animationClips[ 2 ], { clamped: true, loop: true, repetitions: 1 } )                      
+                ] 
+            ] 
+        ), []);
 
     return (
         // <group position={ [ props.position.x, props.position.y, props.position.z  ] } scale={ props.model.scale } modelNumber={ props.modelNumber } visible={ props.model.visible } name={ modelName } ref={ref} >
@@ -499,18 +352,45 @@ function CreateModel( props: any ): JSX.Element {
 };
 
 
-// This might be able to be moved to the data object as a method. You wont have access to the ref there, but perhaps you can just push it to the meshes animations[].
-function CreateAnimationAction( fiber_model, animationData: THREE.AnimationClip, clamped: boolean, loop: boolean, repetitions: number ): THREE.AnimationAction {
-    if ( !fiber_model || !animationData ) return null;
+
+
+
+
+
+// Moved to components or set as a method on the data object?
+function CreateAnimationAction( fiber_model, animationClip: THREE.AnimationClip, config: object ): THREE.AnimationAction {
+
+    if ( !fiber_model || !animationClip ) return null;
 
     const mixer = new THREE.AnimationMixer( fiber_model );
-    const animationAction = mixer.clipAction( animationData );
-    animationAction.clampWhenFinished = clamped;
-    if( !loop ) animationAction.repetitions = repetitions;
-    if ( loop ) animationAction.setLoop( THREE.LoopRepeat );
+    const animationAction = mixer.clipAction( animationClip );
+    animationAction.clampWhenFinished = config.clamped;
+    if( !config.loop ) animationAction.repetitions = config.repetitions;
+    if ( config.loop ) animationAction.setLoop( THREE.LoopRepeat );
     // if ( loop ) animationAction.setLoop( THREE.LoopPingPong, Infinity );
     return animationAction;
+
 }; 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
