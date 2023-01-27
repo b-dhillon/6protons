@@ -27,7 +27,6 @@ import '../overlay-styles.css'
 To-do: 
 
     - Refactor 
-        - Clean up the comments in the data structure in data.ts
         - Add types?
         - Move all the functions in here to their own components as well.
  
