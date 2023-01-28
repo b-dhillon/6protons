@@ -40,6 +40,11 @@ function Scene( props: any ): JSX.Element {
 export default Scene;
 
 
+
+
+
+
+
 // const counter = useSelector( ( state: any ) => state.counter );
 {/* < FadeIn /> */}
 {/* < BackgroundMusic /> */}

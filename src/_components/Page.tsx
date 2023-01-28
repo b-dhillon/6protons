@@ -33,9 +33,10 @@ export default function Page( props: any ): JSX.Element {
 To-do: 
 
     - Refactor 
-        - Finish moving all functions to their own components.
         - Add types.
         - Write tests.
+        - Clean up and get a high level understanding of everything that you've re-factored.
+
  
 
 
@@ -56,7 +57,6 @@ To-do:
 
     - Any way to make updating mixers more efficient?
     - Get rid of all hard coded data, both in data.ts and here in TestPage.tsx.
-    - Clean up and get a high level understanding of everything that you've re-factored.
 
 */
 

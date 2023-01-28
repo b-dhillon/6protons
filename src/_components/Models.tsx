@@ -1,20 +1,33 @@
-// @ts-nocheck
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from 'three'
+import { LoopPingPong } from "three";
 
 
-// Where is _mixer? 
-//
+
 // _mixer is a property of THREE.AnimationAction
+// animationAcyion[ counter ][ 0 ] is apparently type 'never' --> why?
 
-// Loops data.models[] --> returns array of fiber models to mount to scene graph. Controls animations: counter changes --> animation at the current counter index is played.
+/*
+Loops props.data.models[] --> and calls CreateObject3DFrom_Model() for each model in props.data.models[]
+returns array of {} with $$typeof: Symbol(react.element), one {} for each {} in props.data.models[]
+these {} have a Fiber Node {} inside them that holds the data for the model ( the group of meshes )
+these {} are mounted to the scene graph when Models() is called by Scene()
+
+Controls animations: counter changes --> animation at the current counter index is played.
+*/
 export default function Models( props: any ): JSX.Element  {  
 
-    const [ animationActions, setAnimationActions ] = useState( [] );
+
+    const test: any[] = [];
+    const [ animationActions, setAnimationActions ] = useState( test );
+
+
     // [ [ mainAnimation, scaleAnimation, nestedAnimation ], [ ], etc... ]
 
     useEffect( () => ModelAnimationController( animationActions, props.counter ), [ animationActions, props.counter ] );
+
+    useEffect( () => console.log( 'fiber models', modelGroups ), [] );
 
 
     useFrame( ( _, delta ) => {
@@ -38,41 +51,58 @@ export default function Models( props: any ): JSX.Element  {
         };
     });
 
-    const sceneModels = props.data.models.map( ( model: any , i: number ) => {
+    const modelGroups = props.data.models.map( ( _model: any , i: number ) => {
         return (
-            < CreateModel 
-                key={ model.id }
-                modelNumber={ model.modelNumber }
-                position={ model._positions }
-                name={ model.name }
-                model={ model }
+            < CreateFiberGroupFrom_Model
+                _model={ _model }
+                key={ _model.id }
                 setAnimationActions={ setAnimationActions }
                 counter={ props.counter }
+                // modelNumber={ model.modelNumber }
+                // modelData={ model }
+                // position={ model._positions }
+                // name={ model.name }
             />
         );
-    });
+    }); // 
+    console.log( 'modelGroups', modelGroups ); // [ $$typeof: Symbol(react.element), $$typeof:Symbol(react.element) ]
 
     return (
         <>
-            { sceneModels }
+            { modelGroups }
         </>
     );
 };
 
-// Grabs meshes and animations from data --> returns a group of all the meshes of the model. [ meshes ] mounted to the scene graph when Models();
-function CreateModel( props: any ): JSX.Element {
+/*
+Grabs meshes and animationClips from props.data.models[ i ].meshes & props.data.models[ i ].animations --> 
+returns a <group> of all the <mesh>es of the model. 
 
-    const ref = useRef();
-    const nestedRef = useRef(); 
-    const animationClips = props.model.animations;
-    let modelName = props.name;
+essentially converts a _model{} in data.ts into a < group >
 
-    const fiber_model = props.model.meshes.map( ( mesh: any ) => {
-        
-        let instances = []; // Are these really instances? Or is Three making a seperate draw call for each sphere?
 
-        if ( mesh.children.length ) {
-            instances = mesh.children.map( ( child: any ) => {
+<group> is an object of type Group with a prototype of Object3D.
+
+[ <group> ] mounted to the scene graph when the parent fxn (Models) is called;
+
+After returning, useEffect creates an array of AnimationActions from the AnimationClips in props.data.models[ i ].animations
+and attaches them to the model (group).
+*/
+function CreateFiberGroupFrom_Model( props: any ): JSX.Element {
+
+    // create a type for the <group> object that the ref is attached to
+    const ref = useRef( new THREE.Group() );
+    const nestedRef = useRef({}); 
+
+    const animationClips = props._model.animations;
+
+    const mesh = props._model.loadedMeshes.map( ( loadedMesh: any ) => {
+
+        const hasInstancedMeshes = loadedMesh.children.length;
+        let instancedNestedMeshes = []; // Are these really instances? Or is Three making a seperate draw call for each sphere?
+
+        if ( hasInstancedMeshes ) {
+            instancedNestedMeshes = loadedMesh.children.map( ( child: any ) => {
                 return <mesh 
                     geometry={ child.geometry } 
                     material={ child.material }  
@@ -80,26 +110,28 @@ function CreateModel( props: any ): JSX.Element {
                     name={ child.name }
                     position={ child.position }
                     scale={ child.scale }
-                    // ___ref={ (child.name === "dopeModel" ? nestedRef : ref) }
                 />
             });
         }
 
         return (
             <mesh 
-                geometry={ mesh.geometry } 
-                material={ mesh.material }  
-                ref={ ( mesh.name === "nestedModel" ? nestedRef : ref ) }
-                key={ mesh.uuid } 
-                name={ mesh.name }
-                position={ mesh.position }
-                scale={ mesh.scale }
+                geometry={ loadedMesh.geometry } 
+                material={ loadedMesh.material }  
+
+                // @ts-ignore
+                ref={ ( loadedMesh.name === "nestedModel" ? nestedRef : ref ) }
+                key={ loadedMesh.uuid } 
+                name={ loadedMesh.name }
+                position={ loadedMesh.position }
+                scale={ loadedMesh.scale }
             >
-                { instances }
+                { instancedNestedMeshes }
             </mesh>
         )
     });
 
+    // Old Animation Set Up:
     // Creates AnimationAction from _data, attaches it to the current model in the loop, and adds it to Model()'s state
     useEffect( () => props.setAnimationActions( ( animationAction: any ) => [ 
                 ...animationAction, 
@@ -109,12 +141,39 @@ function CreateModel( props: any ): JSX.Element {
                     CreateAnimationAction( nestedRef.current, animationClips[ 2 ], { clamped: true, loop: true, repetitions: 1 } )                      
                 ] 
             ] 
-        ), []);
+        ), 
+    []);
+    
+
+    // New Animation Set Up: 
+    // Sets the current model's animations property to an array of AnimationActions instead of storing the AnimationActions in the state of Models()
+    /*
+    useEffect( () => {
+        //@ts-ignore
+        ref.current.animations = [ 
+            CreateAnimationAction( ref.current, animationClips[ 0 ], { clamped: false , loop: true , repetitions: 5 } ), 
+            CreateAnimationAction( ref.current, animationClips[ 1 ], { clamped: true, loop: false, repetitions: 1 } ), 
+            CreateAnimationAction( nestedRef.current, animationClips[ 2 ], { clamped: true, loop: true, repetitions: 1 } )                      
+        ]
+        console.log( '<group>', ref.current );
+    }, [] );
+    */
+    
 
     return (
-        // <group position={ [ props.position.x, props.position.y, props.position.z  ] } scale={ props.model.scale } modelNumber={ props.modelNumber } visible={ props.model.visible } name={ modelName } ref={ref} >
-        <group position={ props.position } scale={ props.model.scale } modelNumber={ props.modelNumber } visible={ props.model.visible } name={ modelName } ref={ref} >
-            { fiber_model }
+        <group 
+            animations={ [
+                // CreateAnimationAction( ref.current, animationClips[ 0 ], { clamped: false , loop: true , repetitions: 5 } ), 
+                // CreateAnimationAction( ref.current, animationClips[ 1 ], { clamped: true, loop: false, repetitions: 1 } ), 
+                // CreateAnimationAction( nestedRef.current, animationClips[ 2 ], { clamped: true, loop: true, repetitions: 1 } )  
+            ] }
+            position={ props._model._positions } 
+            scale={ props._model.scale } 
+            visible={ props._model.visible }
+            name={ props._model.modelNumber } 
+            ref={ref} 
+        >
+            { mesh } 
         </group>
     );
 };
@@ -125,29 +184,29 @@ function ModelAnimationController( animationActions: any, counter: number ): voi
         animationActions.forEach( ( animationAction: any ) => {
             
             // stops every model's main animation
-            animationAction[0].stop();
+            animationAction[ 0 ].stop();
 
             // stops every model's nested animation
-            animationAction[2]?.stop();
+            animationAction[ 2 ]?.stop();
         });
 
         // scale up animation:
         animationActions[ counter ][1].startAt( 4 ).setEffectiveTimeScale( -1 ).play();
 
         // main animation
-        if (counter === 0 ) animationActions[ counter ][0].play();
-        else animationActions[ counter ][0].startAt( 5 ).play();
+        if (counter === 0 ) animationActions[ counter ][ 0 ].play();
+        else animationActions[ counter ][ 0 ].startAt( 5 ).play();
     };
 
     if( animationActions.length && counter > 0) {
         // scale down animation:
-        animationActions[ (counter - 1) ][1].reset().setEffectiveTimeScale( 1.5 ).play();
+        animationActions[ (counter - 1) ][ 1 ].reset().setEffectiveTimeScale( 1.5 ).play();
     };
 
-    if( animationActions.length && animationActions[ counter ][2] ) {
+    if( animationActions.length && animationActions[ counter ][ 2 ] ) {
         // nested animation
-        animationActions[ counter ][2].setLoop( LoopPingPong, Infinity )
-        animationActions[ counter ][2].play();
+        animationActions[ counter ][ 2 ].setLoop( LoopPingPong, Infinity )
+        animationActions[ counter ][ 2 ].play();
     };
 };
 

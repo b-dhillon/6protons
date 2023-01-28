@@ -65,7 +65,7 @@ export default function App() {
                         models: oldPage.models.map( ( model: any, j: number ) => {
                             return {
                                 ...model, 
-                                meshes: allMeshesOfApp[i][j],
+                                loadedMeshes: allMeshesOfApp[i][j],
                                 _positions: CameraPositionToModelPosition( oldPage.camera.positions[ j+1 ], oldPage.camera.rotations[ j+1 ], 'x' )
 
                             };
@@ -234,26 +234,6 @@ export default function App() {
 
 
 
-/*
-function TranslateRotate_x ( duration: number, initial_position: number[], final_position: number[], axis: string, initial_angle: number[], final_angle: number[] ) {
-
-    const times_Position = [ 0, duration ];
-    const values_Position = [ ...initial_position, ...final_position ];
-    const trackName_Position = '.position';
-    const track_Position = new VectorKeyframeTrack( trackName_Position, times_Position, values_Position, InterpolateLinear );
-
-    const times_Rotation = [ 0, duration ];
-
-    let values_Rotation: number[];
-    values_Rotation = [ initial_angle[ 0 ], final_angle[ 0 ] ];
-    
-    const trackName_Rotation = '.rotation[' + axis + ']';
-    const track_Rotation = new NumberKeyframeTrack( trackName_Rotation, times_Rotation, values_Rotation );
-
-    return new AnimationClip( 'TranslateRotateCamera', duration, [ track_Position, track_Rotation  ] );
-};
-*/
-
 
 // animation_clips: oldPage.camera.animation_data.map( ( datum:[][], i: number ) => {
 //     return [ TranslateRotate( 3, datum[ 0 ] , datum[ 1 ], 'x', datum[ 2 ], datum[ 3 ] ) ];
@@ -357,12 +337,5 @@ return oldPages.map( ( oldPage ) => {
         })
     }
 })
-*/
-
-/*
-function Init() {
-    // Will set App global state data by loading all models, extracting all meshes, and creating all animations.
-
-}
 */
 
