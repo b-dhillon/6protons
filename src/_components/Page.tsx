@@ -33,14 +33,15 @@ export default function Page( props: any ): JSX.Element {
 To-do: 
 
     - Refactor 
-        - Move all the functions in here to their own components as well.
-        - Add types?
+        - Finish moving all functions to their own components.
+        - Add types.
+        - Write tests.
  
 
 
 
 
-    - Add speach.
+    - Add Voices.
         - You'll have to add a delay though to wait out the camera transition.
 
         - You'll also likely need to add some sort of post-processing effect to blend the background music with the speach audio

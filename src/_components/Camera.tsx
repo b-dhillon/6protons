@@ -1,3 +1,4 @@
+// @ts-nocheck
 
 
 
@@ -6,7 +7,8 @@
 import { OrbitControls, PerspectiveCamera, useHelper } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
-import THREE from "three";
+import { CameraHelper } from "three";
+import * as THREE from 'three'
 
 // Is wired to data.section_counter NOT redux counter!
 export default function Camera( props: { counter: number, data: any } ): JSX.Element {

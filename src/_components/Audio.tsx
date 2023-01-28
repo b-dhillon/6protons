@@ -1,12 +1,14 @@
 
-export default function Audio( props: any ): JSX.Element {
+/*
+function Audio( props: any ): JSX.Element {
     return (
         <>
-            < BackroundMusic />
+            < BackroundMusic data={ props.data } />
             < Voice data={ props.data } counter={ props.counter }/>
         </>
     )
 }
+*/
 
 function Voice( props: any ): void {
     // console.log( props.data.loaded_voices );
@@ -22,11 +24,11 @@ function Voice( props: any ): void {
     // props.data.voices[ counter ].offset(4).play();
 }
 
-function BackroundMusic() {
+export default function Music( props: any ): JSX.Element {
     return (
       < audio autoPlay >
         {/* < source src="/music/fullerene2.mp3" type="audio/mp3" /> */}
-        < source src={ props.data.musicTracks[ 0 ] } type="audio/mp3" />
+        < source src={ props.data.music[ 0 ] } type="audio/mp3" />
       </ audio >
     );
 };

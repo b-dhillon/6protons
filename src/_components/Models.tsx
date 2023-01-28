@@ -1,6 +1,12 @@
+// @ts-nocheck
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
+import * as THREE from 'three'
 
+
+// Where is _mixer? 
+//
+// _mixer is a property of THREE.AnimationAction
 
 // Loops data.models[] --> returns array of fiber models to mount to scene graph. Controls animations: counter changes --> animation at the current counter index is played.
 export default function Models( props: any ): JSX.Element  {  
@@ -24,7 +30,7 @@ export default function Models( props: any ): JSX.Element  {
             if ( props.counter > 0 ) {
 
                 // Scale In animation
-                animationActions[ props.counter ][1]._mixer.update( delta );
+                animationActions[ props.counter ][ 1 ]._mixer.update( delta );
 
                 // Scale Out animation
                 animationActions[ ( props.counter - 1 ) ][1]._mixer.update( delta );
@@ -147,7 +153,7 @@ function ModelAnimationController( animationActions: any, counter: number ): voi
 
 
 // Moved to components or set as a method on the data object?
-function CreateAnimationAction( fiber_model, animationClip: THREE.AnimationClip, config: object ): THREE.AnimationAction {
+function CreateAnimationAction( fiber_model: any, animationClip: THREE.AnimationClip, config: any ): THREE.AnimationAction | null {
 
     if ( !fiber_model || !animationClip ) return null;
 
@@ -155,7 +161,7 @@ function CreateAnimationAction( fiber_model, animationClip: THREE.AnimationClip,
     const animationAction = mixer.clipAction( animationClip );
     animationAction.clampWhenFinished = config.clamped;
     if( !config.loop ) animationAction.repetitions = config.repetitions;
-    if ( config.loop ) animationAction.setLoop( THREE.LoopRepeat );
+    if ( config.loop ) animationAction.setLoop( THREE.LoopRepeat, Infinity );
     // if ( loop ) animationAction.setLoop( THREE.LoopPingPong, Infinity );
     return animationAction;
 
