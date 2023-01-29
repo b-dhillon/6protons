@@ -4,14 +4,10 @@ import * as THREE from 'three'
 import { LoopPingPong } from "three";
 
 
-
-// _mixer is a property of THREE.AnimationAction
-// animationAcyion[ counter ][ 0 ] is apparently type 'never' --> why?
-
 /*
-Loops props.data.models[] --> and calls CreateObject3DFrom_Model() for each model in props.data.models[]
+Loops props.data.models[] --> and calls CreateFiberGroupFrom_Model() for each model in props.data.models[]
 returns array of {} with $$typeof: Symbol(react.element), one {} for each {} in props.data.models[]
-these {} have a Fiber Node {} inside them that holds the data for the model ( the group of meshes )
+these {} have a FiberNode{} inside them that holds the data for the model ( the group of meshes )
 these {} are mounted to the scene graph when Models() is called by Scene()
 
 Controls animations: counter changes --> animation at the current counter index is played.
@@ -19,17 +15,12 @@ Controls animations: counter changes --> animation at the current counter index 
 export default function Models( props: any ): JSX.Element  {  
 
 
-    const test: any[] = [];
-    const [ animationActions, setAnimationActions ] = useState( test );
+    const placeholderArr: any[] = [];
+    const [ animationActions, setAnimationActions ] = useState( placeholderArr ); // [ [ mainAnimation, scaleAnimation, nestedAnimation ], [ ], etc... ]
 
+    useEffect( () => AnimationController( animationActions, props.counter ), [ animationActions, props.counter ] );
 
-    // [ [ mainAnimation, scaleAnimation, nestedAnimation ], [ ], etc... ]
-
-    useEffect( () => ModelAnimationController( animationActions, props.counter ), [ animationActions, props.counter ] );
-
-    useEffect( () => console.log( 'fiber models', modelGroups ), [] );
-
-
+    // Updates animation mixers.
     useFrame( ( _, delta ) => {
         if( animationActions.length ) {
 
@@ -58,14 +49,9 @@ export default function Models( props: any ): JSX.Element  {
                 key={ _model.id }
                 setAnimationActions={ setAnimationActions }
                 counter={ props.counter }
-                // modelNumber={ model.modelNumber }
-                // modelData={ model }
-                // position={ model._positions }
-                // name={ model.name }
             />
         );
-    }); // 
-    console.log( 'modelGroups', modelGroups ); // [ $$typeof: Symbol(react.element), $$typeof:Symbol(react.element) ]
+    }); // console.log( 'modelGroups', modelGroups ); // [ $$typeof: Symbol(react.element), $$typeof:Symbol(react.element) ]
 
     return (
         <>
@@ -92,7 +78,7 @@ function CreateFiberGroupFrom_Model( props: any ): JSX.Element {
 
     // create a type for the <group> object that the ref is attached to
     const ref = useRef( new THREE.Group() );
-    const nestedRef = useRef({}); 
+    const nestedRef = useRef( new THREE.Mesh() ); 
 
     const animationClips = props._model.animations;
 
@@ -119,8 +105,8 @@ function CreateFiberGroupFrom_Model( props: any ): JSX.Element {
                 geometry={ loadedMesh.geometry } 
                 material={ loadedMesh.material }  
 
-                // @ts-ignore
-                ref={ ( loadedMesh.name === "nestedModel" ? nestedRef : ref ) }
+
+                ref={ ( loadedMesh.name === "nestedModel" ? nestedRef : undefined ) }
                 key={ loadedMesh.uuid } 
                 name={ loadedMesh.name }
                 position={ loadedMesh.position }
@@ -131,8 +117,6 @@ function CreateFiberGroupFrom_Model( props: any ): JSX.Element {
         )
     });
 
-    // Old Animation Set Up:
-    // Creates AnimationAction from _data, attaches it to the current model in the loop, and adds it to Model()'s state
     useEffect( () => props.setAnimationActions( ( animationAction: any ) => [ 
                 ...animationAction, 
                 [ 
@@ -145,28 +129,8 @@ function CreateFiberGroupFrom_Model( props: any ): JSX.Element {
     []);
     
 
-    // New Animation Set Up: 
-    // Sets the current model's animations property to an array of AnimationActions instead of storing the AnimationActions in the state of Models()
-    /*
-    useEffect( () => {
-        //@ts-ignore
-        ref.current.animations = [ 
-            CreateAnimationAction( ref.current, animationClips[ 0 ], { clamped: false , loop: true , repetitions: 5 } ), 
-            CreateAnimationAction( ref.current, animationClips[ 1 ], { clamped: true, loop: false, repetitions: 1 } ), 
-            CreateAnimationAction( nestedRef.current, animationClips[ 2 ], { clamped: true, loop: true, repetitions: 1 } )                      
-        ]
-        console.log( '<group>', ref.current );
-    }, [] );
-    */
-    
-
     return (
         <group 
-            animations={ [
-                // CreateAnimationAction( ref.current, animationClips[ 0 ], { clamped: false , loop: true , repetitions: 5 } ), 
-                // CreateAnimationAction( ref.current, animationClips[ 1 ], { clamped: true, loop: false, repetitions: 1 } ), 
-                // CreateAnimationAction( nestedRef.current, animationClips[ 2 ], { clamped: true, loop: true, repetitions: 1 } )  
-            ] }
             position={ props._model._positions } 
             scale={ props._model.scale } 
             visible={ props._model.visible }
@@ -178,7 +142,22 @@ function CreateFiberGroupFrom_Model( props: any ): JSX.Element {
     );
 };
 
-function ModelAnimationController( animationActions: any, counter: number ): void {
+// Move to components or set as a method on the data object?
+function CreateAnimationAction( fiber_model: any, animationClip: THREE.AnimationClip, config: any ): THREE.AnimationAction | null {
+
+    if ( !fiber_model || !animationClip ) return null;
+
+    const mixer = new THREE.AnimationMixer( fiber_model );
+    const animationAction = mixer.clipAction( animationClip );
+    animationAction.clampWhenFinished = config.clamped;
+    if( !config.loop ) animationAction.repetitions = config.repetitions;
+    if ( config.loop ) animationAction.setLoop( THREE.LoopRepeat, Infinity );
+    // if ( loop ) animationAction.setLoop( THREE.LoopPingPong, Infinity );
+    return animationAction;
+
+}; 
+
+function AnimationController( animationActions: any, counter: number ): void {
 
     if( animationActions.length ) {
         animationActions.forEach( ( animationAction: any ) => {
@@ -211,17 +190,44 @@ function ModelAnimationController( animationActions: any, counter: number ): voi
 };
 
 
-// Moved to components or set as a method on the data object?
-function CreateAnimationAction( fiber_model: any, animationClip: THREE.AnimationClip, config: any ): THREE.AnimationAction | null {
 
-    if ( !fiber_model || !animationClip ) return null;
 
-    const mixer = new THREE.AnimationMixer( fiber_model );
-    const animationAction = mixer.clipAction( animationClip );
-    animationAction.clampWhenFinished = config.clamped;
-    if( !config.loop ) animationAction.repetitions = config.repetitions;
-    if ( config.loop ) animationAction.setLoop( THREE.LoopRepeat, Infinity );
-    // if ( loop ) animationAction.setLoop( THREE.LoopPingPong, Infinity );
-    return animationAction;
+// New Animation Set Up: Sets the animations property on <group> to an array of AnimationActions instead of storing the AnimationActions in the state of Models()
+/*
+useEffect( () => {
+    //@ts-ignore
+    ref.current.animations = [ 
+        CreateAnimationAction( ref.current, animationClips[ 0 ], { clamped: false , loop: true , repetitions: 5 } ), 
+        CreateAnimationAction( ref.current, animationClips[ 1 ], { clamped: true, loop: false, repetitions: 1 } ), 
+        CreateAnimationAction( nestedRef.current, animationClips[ 2 ], { clamped: true, loop: true, repetitions: 1 } )                      
+    ]
+    console.log( '<group>', ref.current );
+}, [] );
 
-}; 
+OR 
+
+return (
+    <group 
+        animations={ [
+            // CreateAnimationAction( ref.current, animationClips[ 0 ], { clamped: false , loop: true , repetitions: 5 } ), 
+            // CreateAnimationAction( ref.current, animationClips[ 1 ], { clamped: true, loop: false, repetitions: 1 } ), 
+            // CreateAnimationAction( nestedRef.current, animationClips[ 2 ], { clamped: true, loop: true, repetitions: 1 } )  
+        ] }
+        position={ props._model._positions } 
+        scale={ props._model.scale } 
+        visible={ props._model.visible }
+        name={ props._model.modelNumber } 
+        ref={ref} 
+    >
+        { mesh } 
+    </group>
+);
+*/
+
+// Old CreateModel props
+/*
+modelNumber={ model.modelNumber }
+modelData={ model }
+position={ model._positions }
+name={ model.name }
+*/

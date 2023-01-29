@@ -10,14 +10,9 @@ import Scene from './Scene'
 import '../overlay-styles.css'
 
 export default function Page( props: any ): JSX.Element {
-
     const [ page, setPage ] = useState( props.data );
     const counter = useSelector( ( state: any ) => state.counter );
-
-    useEffect( () => {
-        console.log( 'page _data', page );
-    }, [] );
-
+    useEffect( () => console.log( 'page _data', page ), [] );
     return (
         < Suspense >
 
@@ -33,9 +28,9 @@ export default function Page( props: any ): JSX.Element {
 To-do: 
 
     - Refactor 
-        - Add types.
-        - Write tests.
+        - Write unit tests.
         - Clean up and get a high level understanding of everything that you've re-factored.
+        - Add types for 'any' types.
 
  
 
