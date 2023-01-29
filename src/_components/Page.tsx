@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import UI from './LessonInterface'
 import Scene from './Scene'
 // Styles:
-import '../overlay-styles.css'
+import '../styles/overlay-styles.css'
 
 export default function Page( props: any ): JSX.Element {
     const [ page, setPage ] = useState( props.data );
@@ -29,6 +29,7 @@ To-do:
 
     - Refactor 
         - Write unit tests.
+            - Configure Jest to work with TypeScript and Modules.
         - Clean up and get a high level understanding of everything that you've re-factored.
         - Add types for 'any' types.
 
