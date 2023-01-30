@@ -14,7 +14,6 @@ Controls animations: counter changes --> animation at the current counter index 
 */
 export default function Models( props: any ): JSX.Element  {  
 
-
     const placeholderArr: any[] = [];
     const [ animationActions, setAnimationActions ] = useState( placeholderArr ); // [ [ mainAnimation, scaleAnimation, nestedAnimation ], [ ], etc... ]
 
@@ -42,7 +41,7 @@ export default function Models( props: any ): JSX.Element  {
         };
     });
 
-    const modelGroups = props.data.models.map( ( _model: any , i: number ) => {
+    const modelGroups = props.page.models.map( ( _model: any , i: number ) => {
         return (
             < CreateFiberGroupFrom_Model
                 _model={ _model }
@@ -80,7 +79,7 @@ function CreateFiberGroupFrom_Model( props: any ): JSX.Element {
     const ref = useRef( new THREE.Group() );
     const nestedRef = useRef( new THREE.Mesh() ); 
 
-    const animationClips = props._model.animations;
+    const animationClips = props._model.animation_clips;
 
     const mesh = props._model.loadedMeshes.map( ( loadedMesh: any ) => {
 
@@ -188,8 +187,6 @@ function AnimationController( animationActions: any, counter: number ): void {
         animationActions[ counter ][ 2 ].play();
     };
 };
-
-
 
 
 // New Animation Set Up: Sets the animations property on <group> to an array of AnimationActions instead of storing the AnimationActions in the state of Models()

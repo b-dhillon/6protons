@@ -1,23 +1,29 @@
 // React: 
 import { useState } from 'react';
 import { Suspense, useEffect } from 'react';
+
 // Redux:
 import { useSelector } from 'react-redux';
+
 // Components:
 import UI from './LessonInterface'
 import Scene from './Scene'
+
 // Styles:
 import '../styles/overlay-styles.css'
 
-export default function Page( props: any ): JSX.Element {
-    const [ page, setPage ] = useState( props.data );
+// Types:
+
+
+export default function Page( props: { page: any, setPage: Function } ): JSX.Element {
+    const [ page, setPage ] = useState( props.page );
     const counter = useSelector( ( state: any ) => state.counter );
     useEffect( () => console.log( 'page _data', page ), [] );
     return (
         < Suspense >
 
-            < UI data={ page } setData={ setPage } counter={ counter }/>
-            < Scene data={ page } counter={ counter }/>
+            < UI page={ page } setData={ setPage } counter={ counter }/>
+            < Scene page={ page } counter={ counter }/>
 
         </ Suspense >
     );
@@ -27,15 +33,8 @@ export default function Page( props: any ): JSX.Element {
 /* 
 To-do: 
 
-    - Refactor 
-        - Write unit tests.
-            - Configure Jest to work with TypeScript and Modules.
-        - Clean up and get a high level understanding of everything that you've re-factored.
-        - Add types for 'any' types.
-
- 
-
-
+    - Clean up and get a high level understanding of everything that you've re-factored.
+    - Build types for 'any' types.
 
 
     - Add Voices.
@@ -51,6 +50,7 @@ To-do:
 
 
 
+    - Configure Jest to work with TypeScript and .tsx files and then begin writing tests for data.ts, init, and the rest of the app.
     - Any way to make updating mixers more efficient?
     - Get rid of all hard coded data, both in data.ts and here in TestPage.tsx.
 

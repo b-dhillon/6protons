@@ -7,15 +7,13 @@ import { TypedArray } from 'maath/dist/declarations/src/ctypes';
 const star_positions = BigBang2( 25000, 5 );
 
 function Universe( props: any ): JSX.Element {
-    console.log( 'universe data', props.data.universe );
+    console.log( 'universe data', props.page.universe );
 
     const ref: any = useRef();
 
-    useFrame((_, delta) => {
-        ref.current.rotation.x -= delta / 20
-        // ref.current.rotation.y -= delta / 20
-    });
-
+    useFrame((_, delta) => ref.current.rotation.x -= delta / 20);
+    // ref.current.rotation.y -= delta / 20
+    
     return (
         <group  rotation={[0, 0, Math.PI / 4]} >
             < group  >

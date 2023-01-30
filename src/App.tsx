@@ -1,243 +1,237 @@
 import { useState, useEffect } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
-import TestPage from './_components/Page';
-import _pages from './data';
-import { AnimationClip, NumberKeyframeTrack, VectorKeyframeTrack, InterpolateSmooth, AdditiveAnimationBlendMode, InterpolateLinear, BooleanKeyframeTrack } from 'three';
 import * as THREE from 'three'
-import TranslateRotate from './_components/animations/TranslateRotate'
-
-
+import Page from './_components/Page';
+import data from './data';
+import TranslateRotate from './_components/animations/TranslateRotate';
+import { PageData } from './types/types';
 
 export default function App() {
-
-    const [ pages , setPages ] = useState( _pages );
+    const [ pages , setPages ] = useState( data.pages );
     const [ current_page, setCurrentPage ] = useState( 'test_page' );
-
-    function LoadData() {
-        /*
-        This Init() fn is responsible for the following for each page:
-            - Loading all glTF's and extracting all meshes from each glTF.
-            - Creating all AnimationClips for the camera. 
-            - Creating all AnimationClips for the models. <-- Still need to do this.
-            - Loading all voices for each page.
-        */
-        async function Init() {
-            const allMeshesOfApp: any = await ExtractAllMeshesOfApp();
-            const allVoicesOfApp: any = await LoadAllVoicesOfApp(); 
-
-            setPages( oldPages  => {
-                return oldPages.map( ( oldPage: any, i: number ) => {
-                    return {
-                        ...oldPage, 
-
-                        // add animation clips to camera
-                        // camera: {
-                        //     ...oldPage.camera, 
-                        //     _animation_data: oldPage.camera.CreateAnimationDataFromPositionsRotations(),
-                        //     _animation_clips: oldPage.camera.CreateAnimationDataFromPositionsRotations().map( ( datum:[][], i: number ) => {
-                        //         return [ TranslateRotate_x( 3, datum[ 0 ] , datum[ 1 ], 'x', datum[ 2 ], datum[ 3 ] ) ];
-                        //     }),
-                        //     animation_clips: oldPage.camera.animation_data.map( ( datum:[][], i: number ) => {
-                        //         return [ TranslateRotate_x( 3, datum[ 0 ] , datum[ 1 ], 'x', datum[ 2 ], datum[ 3 ] ) ];
-                        //     })
-                        // },
-
-                        camera: {
-                            ...oldPage.camera, 
-                            _animation_data: oldPage.camera.CreateAnimationDataFromPositionsRotations(), // needed for initial position assignment
-                            _animation_clips: oldPage.camera.CreateAnimationDataFromPositionsRotations().map( ( AnimationData:[][], i: number ) => {
-                                return [ TranslateRotate(
-                                        { 
-                                            duration: 3, 
-                                            initial_position: AnimationData[ 0 ], 
-                                            final_position: AnimationData[ 1 ], 
-                                            initial_angle: AnimationData[ 2 ], 
-                                            final_angle: AnimationData[ 3 ],
-                                            axis: 'x', 
-                                        }
-                                    )
-                                ];
-                            }),
-                        },
-
-                        // add meshes and positions to each model
-                        models: oldPage.models.map( ( model: any, j: number ) => {
-                            return {
-                                ...model, 
-                                loadedMeshes: allMeshesOfApp[i][j],
-                                _positions: CameraPositionToModelPosition( oldPage.camera.positions[ j+1 ], oldPage.camera.rotations[ j+1 ], 'x' )
-
-                            };
-                        }),
-
-                        loaded_voices: allVoicesOfApp[ i ]
-                    };
-                });
-            });
-
-            function CameraPositionToModelPosition( cameraPosition: number[], cameraRotation: number[], rotationAxis: string ) {
-
-                let rotationAngle = cameraRotation[ 0 ];
-
-                // If you rotate the camera on X axis you need to position the model on the Y axis.
-                if( rotationAxis === 'x' ) {
-                    const x = cameraPosition[ 0 ];
-                    const y = ( cameraPosition[ 1 ] + rotationAngle );
-                    const z = cameraPosition[ 2 ] - 1;
-                    return [ x, y, z ];
-                }
-
-                // If you rotate the camera on Y axis you need to position the model on the X axis.
-                if( rotationAxis === 'y' ) {
-                    const x = ( cameraPosition[ 0 ] + rotationAngle );
-                    const y = cameraPosition[ 1 ];
-                    const z = cameraPosition[ 2 ];
-                    return [ x, y, z ];
-                }
-
-                // If you rotate the camera on Z axis you don't need to do anything to the model.
-                if( rotationAxis === 'z' ) {
-                    const x = cameraPosition[ 0 ];
-                    const y = cameraPosition[ 1 ];
-                    const z = ( cameraPosition[ 2 ] - 1 );
-                    return [ x, y, z ];
-                }
-                
-                else {
-                    const x = cameraPosition[ 0 ];
-                    const y = cameraPosition[ 1 ];
-                    const z = ( cameraPosition[ 2 ] - 1 );
-                    return [ x, y, z ];
-                }
-            };
-
-            async function LoadAllVoicesOfApp() {
-                /* const allVoicesOfApp: any = [][] // [ [ voice0, voice1, voice2 ], [ voice0, voice1, voice2 ], etc... ]
-                                                                    ^ voices[] of page0          ^ voices[] of page1                           */
-                const allVoicesOfApp = _pages.map( async (page: any) => {
-        
-                    let pageVoices = []; // [ voice0, voice1, voice2 ]
-        
-                    for ( let i = 0; i < page.voices.length; i++ ) {
-                        pageVoices[ i ] = LoadVoice( page.voices[ i ] );
-                        // console.log(`LoadAllVoicesOfApp() voice${i} loaded`);
-                    };
-        
-                    return Promise.all( pageVoices );
-                });
-        
-                return Promise.all( allVoicesOfApp ); 
-            }
-
-            function LoadVoice( path: string ) {            
-                return new Promise( ( resolve, reject ) => {
-                    const listener = new THREE.AudioListener();
-                    const AudioObject = new THREE.Audio( listener );
-                    const loader = new THREE.AudioLoader();
-                    loader.load( 
-                        path,
-                        // onLoad
-                        ( buffer: AudioBuffer ) => {
-                            // console.log('onLoad callback called');
-
-                            // set the audio object's buffer to the loaded object
-                            AudioObject.setBuffer( buffer );
-                            AudioObject.setLoop( false );
-                            AudioObject.setVolume( 0.5 );
-                            AudioObject.play();
-                            resolve( AudioObject )
-                        },
-                
-                        // onProgress 
-                        ( xhr ) => {
-                            // console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-                        },
-                
-                        // onError
-                        ( err ) => {
-                            console.log( 'An error happened', err );
-                        }
-                    );
-                })
-            }
-            
-            function LoadModel( path: any ) {
-                return new Promise( (resolve, reject) => {
-                    const loader = new GLTFLoader();
-                    const dracoLoader = new DRACOLoader();
-                    dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/v1/decoders/' );
-                    loader.setDRACOLoader( dracoLoader );
-                    loader.load(
-                        path,
-                        (gltf: any) => {
-                            resolve( gltf );
-                            console.log('glTF loaded');
-                        },
-                        (xhr: any) => {
-                            // console.log((xhr.loaded / xhr.total) + 'loaded');
-                        },
-                        (error: any) => {
-                            console.error(error);
-                            reject(error);
-                        }
-                    );
-                });
-            };
-            
-            async function LoadAllModelsOfApp() {
-                // const allModelsOfApp: any = [] // [ [ model0, model1, model2 ], [ model0, model1, model2 ], [ model0, model1, model2  ] ]
-                                                //               ^ models[] of page0           ^models[] of page1           ^models[] of page2
-            
-                const all_pages_models = _pages.map(async (page: any) => {
-                    const page_models: any = []; // [ model0, model1, model2 ]
-                    for ( let i = 0; i < page.models.length; i++ ) {
-                        page_models[i] = LoadModel(page.models[i].path);
-                        // console.log(`model loaded`);
-                    };
-                    return Promise.all(page_models);
-                });
-    
-                return Promise.all(all_pages_models); 
-            }
-            
-            async function ExtractAllMeshesOfApp() {
-                const allModelsOfApp = await LoadAllModelsOfApp();
-                // console.log(allModelsOfApp); // [ [gltf0, gltf1], [gltf0], [gltf0], [gltf0] ]
-            
-                const allMeshesOfApp = allModelsOfApp.map( (arrayOfGltfs: any) => {
-                    return arrayOfGltfs.map( ( gltf: any ) => {
-                        return gltf.scene.children.filter( ( child: any ) => child.isMesh || child.isGroup && child.__removed === undefined )
-                    });
-                }) // [ [ [Mesh], [Mesh], [Mesh] ], [ [Mesh], [Mesh], [Mesh] ], [ [Mesh], [Mesh], [Mesh] ] ]
-            
-                return allMeshesOfApp; 
-            };
-        };
-
-        Init();
-    };
-
+    const [ loading, setLoading ] = useState( true ); // Make less hacky
+    setTimeout( () => { setLoading( false ) }, 2000 );
+    function LoadData() { Init( setPages ); }; 
     useEffect( () => LoadData(), [] );
-
-    // Make this less hacky:  
-    const [ loading, setLoading ] = useState( true );
-
-    setTimeout( () => {
-        setLoading( false )
-    }, 2000 );
-
-    if( loading ) return <h2 style={ { position: 'absolute', top: '500px', left: '800px' } }>Loading...</h2>;
-    if( !loading && current_page === 'test_page' ) return < TestPage data={ pages.find( ( page ) => page.id === current_page  ) } setPage={ setCurrentPage } />;
+    if( loading ) return < h2 style={ { position: 'absolute', top: '500px', left: '800px' } }>Loading...</h2>;
+    if( !loading ) return < Page page={ pages.find( ( page ) => page.id === current_page  ) } setPage={ setCurrentPage } />;
     else return <h2>Something is broken.</h2>;
 };
 
 
 
+/*
+This Init() fn is responsible for the following for each page:
+    - Loading all glTF's and extracting all meshes from each glTF.
+    - Creating all AnimationClips for the camera. 
+    - Creating all AnimationClips for the models. <-- Still need to do this.
+    - Loading all voices for each page.
+*/
+async function Init( setPages : Function ) {
+    const allMeshesOfApp: any = await ExtractAllMeshesOfApp();
+    const allVoicesOfApp: any = await LoadAllVoicesOfApp(); 
 
+    setPages( ( oldPages: PageData[] )  => {
+        return oldPages.map( ( oldPage: any, i: number ) => {
+            const cameraAnimationData = oldPage.camera.CreateAnimationDataFromPositionsRotations();
+            return {
+                ...oldPage, 
+                camera: {
+                    ...oldPage.camera, 
+                    _animation_data: cameraAnimationData, // needed for initial position assignment
+                    _animation_clips: cameraAnimationData.map( ( AnimationData:[][], i: number ) => {
+                        return [ TranslateRotate( { duration: 3, initial_position: AnimationData[ 0 ], final_position: AnimationData[ 1 ], initial_angle: AnimationData[ 2 ], final_angle: AnimationData[ 3 ],axis: 'x', }) ];
+                    }),
+                },
+
+                // add meshes and positions to each model
+                models: oldPage.models.map( ( model: any, j: number ) => {
+                    return {
+                        ...model, 
+                        loadedMeshes: allMeshesOfApp[i][j],
+                        _positions: CameraPositionToModelPosition( oldPage.camera.positions[ j+1 ], oldPage.camera.rotations[ j+1 ], 'x' )
+
+                    };
+                }),
+
+                loaded_voices: allVoicesOfApp[ i ]
+            };
+        });
+    });
+
+    function CameraPositionToModelPosition( cameraPosition: number[], cameraRotation: number[], rotationAxis: string ) {
+
+        let rotationAngle = cameraRotation[ 0 ];
+
+        // If you rotate the camera on X axis you need to position the model on the Y axis.
+        if( rotationAxis === 'x' ) {
+            const x = cameraPosition[ 0 ];
+            const y = ( cameraPosition[ 1 ] + rotationAngle );
+            const z = cameraPosition[ 2 ] - 1;
+            return [ x, y, z ];
+        }
+
+        // If you rotate the camera on Y axis you need to position the model on the X axis.
+        if( rotationAxis === 'y' ) {
+            const x = ( cameraPosition[ 0 ] + rotationAngle );
+            const y = cameraPosition[ 1 ];
+            const z = cameraPosition[ 2 ];
+            return [ x, y, z ];
+        }
+
+        // If you rotate the camera on Z axis you don't need to do anything to the model.
+        if( rotationAxis === 'z' ) {
+            const x = cameraPosition[ 0 ];
+            const y = cameraPosition[ 1 ];
+            const z = ( cameraPosition[ 2 ] - 1 );
+            return [ x, y, z ];
+        }
+        
+        else {
+            const x = cameraPosition[ 0 ];
+            const y = cameraPosition[ 1 ];
+            const z = ( cameraPosition[ 2 ] - 1 );
+            return [ x, y, z ];
+        }
+    };
+
+    async function LoadAllVoicesOfApp() {
+        /* const allVoicesOfApp: any = [][] // [ [ voice0, voice1, voice2 ], [ voice0, voice1, voice2 ], etc... ]
+                                                            ^ voices[] of page0          ^ voices[] of page1                           */
+        const allVoicesOfApp = data.pages.map( async ( page: any ) => {
+
+            let pageVoices = []; // [ voice0, voice1, voice2 ]
+
+            for ( let i = 0; i < page.voices.length; i++ ) {
+                pageVoices[ i ] = LoadVoice( page.voices[ i ] );
+                // console.log(`LoadAllVoicesOfApp() voice${i} loaded`);
+            };
+
+            return Promise.all( pageVoices );
+        });
+
+        return Promise.all( allVoicesOfApp ); 
+    }
+
+    function LoadVoice( path: string ) {            
+        return new Promise( ( resolve, reject ) => {
+            const listener = new THREE.AudioListener();
+            const AudioObject = new THREE.Audio( listener );
+            const loader = new THREE.AudioLoader();
+            loader.load( 
+                path,
+                // onLoad
+                ( buffer: AudioBuffer ) => {
+                    // console.log('onLoad callback called');
+
+                    // set the audio object's buffer to the loaded object
+                    AudioObject.setBuffer( buffer );
+                    AudioObject.setLoop( false );
+                    AudioObject.setVolume( 0.5 );
+                    AudioObject.play();
+                    resolve( AudioObject )
+                },
+        
+                // onProgress 
+                ( xhr ) => {
+                    // console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+                },
+        
+                // onError
+                ( err ) => {
+                    console.log( 'An error happened', err );
+                }
+            );
+        })
+    }
+    
+    function LoadModel( path: any ) {
+        return new Promise( (resolve, reject) => {
+            const loader = new GLTFLoader();
+            const dracoLoader = new DRACOLoader();
+            dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/v1/decoders/' );
+            loader.setDRACOLoader( dracoLoader );
+            loader.load(
+                path,
+                (gltf: any) => {
+                    resolve( gltf );
+                    console.log('glTF loaded');
+                },
+                (xhr: any) => {
+                    // console.log((xhr.loaded / xhr.total) + 'loaded');
+                },
+                (error: any) => {
+                    console.error(error);
+                    reject(error);
+                }
+            );
+        });
+    };
+    
+    async function LoadAllModelsOfApp() {
+        // const allModelsOfApp: any = [] // [ [ model0, model1, model2 ], [ model0, model1, model2 ], [ model0, model1, model2  ] ]
+                                        //               ^ models[] of page0           ^models[] of page1           ^models[] of page2
+    
+        const all_pages_models = data.pages.map(async (page: any) => {
+            const page_models: any = []; // [ model0, model1, model2 ]
+            for ( let i = 0; i < page.models.length; i++ ) {
+                page_models[i] = LoadModel(page.models[i].path);
+                // console.log(`model loaded`);
+            };
+            return Promise.all(page_models);
+        });
+
+        return Promise.all(all_pages_models); 
+    }
+    
+    async function ExtractAllMeshesOfApp() {
+        const allModelsOfApp = await LoadAllModelsOfApp();
+        // console.log(allModelsOfApp); // [ [gltf0, gltf1], [gltf0], [gltf0], [gltf0] ]
+    
+        const allMeshesOfApp = allModelsOfApp.map( (arrayOfGltfs: any) => {
+            return arrayOfGltfs.map( ( gltf: any ) => {
+                return gltf.scene.children.filter( ( child: any ) => child.isMesh || child.isGroup && child.__removed === undefined )
+            });
+        }) // [ [ [Mesh], [Mesh], [Mesh] ], [ [Mesh], [Mesh], [Mesh] ], [ [Mesh], [Mesh], [Mesh] ] ]
+    
+        return allMeshesOfApp; 
+    };
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// if( !loading && current_page === 'test_page' ) return < Page data={ pages.find( ( page ) => page.id === current_page  ) } setPage={ setCurrentPage } />;
+
+
+
+
+/*
+// useEffect( () => { Init( setPages ) }, [] );
 // animation_clips: oldPage.camera.animation_data.map( ( datum:[][], i: number ) => {
 //     return [ TranslateRotate( 3, datum[ 0 ] , datum[ 1 ], 'x', datum[ 2 ], datum[ 3 ] ) ];
 // })
+*/
 
 /*
     function CreatePulsationAnimation( duration, pulseScale ) {
@@ -261,6 +255,20 @@ export default function App() {
         return new AnimationClip( null, duration, [ track ] );
 
     }
+*/
+
+// Old adding animation clips to camera
+/*
+camera: {
+    ...oldPage.camera, 
+    _animation_data: oldPage.camera.CreateAnimationDataFromPositionsRotations(),
+    _animation_clips: oldPage.camera.CreateAnimationDataFromPositionsRotations().map( ( datum:[][], i: number ) => {
+        return [ TranslateRotate_x( 3, datum[ 0 ] , datum[ 1 ], 'x', datum[ 2 ], datum[ 3 ] ) ];
+    }),
+    animation_clips: oldPage.camera.animation_data.map( ( datum:[][], i: number ) => {
+        return [ TranslateRotate_x( 3, datum[ 0 ] , datum[ 1 ], 'x', datum[ 2 ], datum[ 3 ] ) ];
+    })
+},
 */
 
 /*
@@ -338,4 +346,3 @@ return oldPages.map( ( oldPage ) => {
     }
 })
 */
-

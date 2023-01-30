@@ -6,190 +6,372 @@ import ScaleXYZ from './_components/animations/ScaleXYZ';
 import Rotate from './_components/animations/Rotate';
 import SuspendInSolution from './_components/animations/SuspendInSolution';
 
-const data = [
-    {
-        id: 'test_page',
-        page_title: 'Fullerenes',
-        section: 0,
-        max_section: 6,
-        thumbnail: "url('./lesson_thumbnails/fullereneTile.png')",
-
-        universe: {
-            id: 'fullerene universe',
-            radius: 5,
-            size: 25000,
-            models: [],
-        },
-
-        camera: {
-            //                     0                   1                      2                     3                    4                     5                  
-            positions: [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ] ],
-            rotations: [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ],
-            
-            // this is built programmatically by Init() in App() 
-            animation_data: [
-                //  initial position      final poisition        initial rotation       final rotation
-                [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 0 
-                [ [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ] ], // 1
-                [ [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ],  [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 2
-                [ [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ] ], // 3
-                [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ],  [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 4
+const data = {
+    pages: [
+        {
+            id: 'test_page',
+            page_title: 'Fullerenes',
+            section: 0,
+            max_section: 6,
+            thumbnail: "url('./lesson_thumbnails/fullereneTile.png')",
+    
+            universe: {
+                id: 'fullerene universe',
+                radius: 5,
+                size: 25000,
+                models: [],
+            },
+    
+            camera: {
+                //                     0                   1                      2                     3                    4                     5                  
+                positions: [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ] ],
+                rotations: [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ],
+                
+                // this is built programmatically by Init() in App() 
+                animation_data: [
+                    //  initial position      final poisition        initial rotation       final rotation
+                    [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 0 
+                    [ [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ] ], // 1
+                    [ [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ],  [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 2
+                    [ [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ] ], // 3
+                    [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ],  [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 4
+                ],
+    
+                animation_clips: null,
+    
+                CreateAnimationDataFromPositionsRotations: function() {
+                    const animation_data = [];
+                    for( let i = 0; i < this.positions.length - 1; i++ ) {
+                        const initial_position: number[] = this.positions[ i ];
+                        const final_position: number[] = this.positions[ i + 1 ];
+                        const initial_rotation: number[] = this.rotations[ i ];
+                        const final_rotation: number[] = this.rotations[ i + 1 ];
+                        animation_data.push( [ initial_position, final_position, initial_rotation, final_rotation ] );
+                    };
+                    return animation_data;
+                },
+    
+            },
+    
+            models: [
+                {
+                    id: '0',
+                    name: 'model0',
+                    path: '/Fullerenes/models/instance0.glb',
+                    // loadedMeshes: null,
+                    // meshes: null,
+                    visible: true,
+                    scale: 0.18,
+                    // _positions: null,
+                    positions: [
+                        { x: 0, y: 0, z: -1 },
+                    ],
+                    rotations: [
+                        { _x: 0, _y: 0, _z: 0 }
+                    ],
+                    animation_clips: [ 
+                        SuspendInSolution( 90 ), 
+                        ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
+                    ],
+                },
+                {
+                    id: '1',
+                    name: 'model1',
+                    path: '/Fullerenes/models/instance2.glb',
+                    loadedMeshes: null,
+                    meshes: null,
+                    visible: true,
+                    scale: 0,
+                    positions: [
+                        { x: 0.75, y: 0.71, z: 0 }
+                    ],
+                    rotations: [
+                        { _x: 0, _y: 0, _z: 0 }
+                    ],
+                    animation_clips: [
+                        Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
+                        ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
+                    ]
+                },
+                {
+                    id: '2',
+                    name: 'model2',
+                    path: '/Fullerenes/models/instance2.glb',
+                    loadedMeshes: null,
+                    meshes: null,
+                    visible: true,
+                    scale: 0,
+                    positions: [
+                        { x: 0.75, y: 0, z: -3 }
+                    ],
+                    rotations: [
+                        { _x: 0, _y: 0, _z: 0 }
+                    ],
+                    animation_clips: [
+                        Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
+                        ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
+                    ]
+                },
+                {
+                    id: '3',
+                    name: 'model3',
+                    path: '/Fullerenes/models/___instance3.glb',
+                    loadedMeshes: null,
+                    meshes: null,
+                    visible: true,
+                    scale: 0,
+                    positions: [
+                        { x: 0, y: -0.675, z: -1 },
+                    ],
+                    rotations: [
+                        { _x: 0, _y: 0, _z: 0 }
+                    ],
+                    animation_clips: [
+                        Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
+                        ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } ),
+                        Rotate( { duration: 1500, axis: 'x', initial_angle: 0, final_angle: 360 } ),
+                    ]
+                },
+                {
+                    id: '4',
+                    name: 'model4',
+                    path: '/Fullerenes/models/___instance4.glb',
+                    loadedMeshes: null,
+                    meshes: null,
+                    visible: true,
+                    scale: 0,
+                    positions: [
+                        { x: 0, y: -0.1, z: -3 },
+                    ],
+                    rotations: [
+                        { _x: 0, _y: 0, _z: 0 }
+                    ],
+                    animation_clips: [
+                        Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
+                        ScaleXYZ( { duration: 1, initial_scale: [ 0.10, 0.10, 0.10 ], final_scale: [ 0, 0, 0 ] } ),
+                        ScaleXYZ( { duration: 3, initial_scale: [ 0.01, 0.01, 0.01 ], final_scale: [ 0.075, 0.075, 0.075 ] } )
+                    ]
+                }
+                
             ],
+    
+            text: [
+                '',
+                'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas...',
+                'The result? Novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered. This molecule would go on to be named Buckminsterfullerene. Often shortened to fullerene, and nicknamed Buckyball.',
+                'Each molecule of Fullerene is composed of pure carbon. The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball. Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.',
+                'For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known. These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems. Scientists have even turned their attention to buckyballs in their quest for a cure for AIDS.',
+                'How can buckyballs help cure aids? An enzyme (HIV-1-Protease) that is required for HIV to reproduce, exhibits a nonpolar pocket in its three-dimensional structure. On the model to the right, notice how the nonpolar Fullerene fits the exact diameter of the enzyme\'s binding pocket. If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible blockers.',
+            ],
+    
+            textType: [
+                'centered',
+                'centered',
+                'left',
+                'left',
+                'left',
+                'left'
+            ],
+    
+            music: [
+                "/music/fullerene2.mp3"
+            ],
+    
+            voices: [
+                "/music/fullerene2.mp3", // 0
+                "/music/fullerene2.mp3", // 1
+                "/music/fullerene2.mp3", // 2
+                "/music/fullerene2.mp3", // 3
+                "/music/fullerene2.mp3", // 4
+            ],
+    
+            loaded_voices: null,
+    
+            dispatch: useDispatch,
+        }    
+    ]
+}
+    // {
+    //     id: 'test_page',
+    //     page_title: 'Fullerenes',
+    //     section: 0,
+    //     max_section: 6,
+    //     thumbnail: "url('./lesson_thumbnails/fullereneTile.png')",
 
-            animation_clips: null,
+    //     universe: {
+    //         id: 'fullerene universe',
+    //         radius: 5,
+    //         size: 25000,
+    //         models: [],
+    //     },
 
-            CreateAnimationDataFromPositionsRotations: function() {
-                const animation_data = [];
-                for( let i = 0; i < this.positions.length - 1; i++ ) {
-                    const initial_position: number[] = this.positions[ i ];
-                    const final_position: number[] = this.positions[ i + 1 ];
-                    const initial_rotation: number[] = this.rotations[ i ];
-                    const final_rotation: number[] = this.rotations[ i + 1 ];
-                    animation_data.push( [ initial_position, final_position, initial_rotation, final_rotation ] );
-                };
-                return animation_data;
-            },
-
-        },
-
-        models: [
-            {
-                id: '0',
-                name: 'model0',
-                path: '/Fullerenes/models/instance0.glb',
-                loadedMeshes: null,
-                meshes: null,
-                visible: true,
-                scale: 0.18,
-                _positions: null,
-                positions: [
-                    { x: 0, y: 0, z: -1 },
-                ],
-                rotations: [
-                    { _x: 0, _y: 0, _z: 0 }
-                ],
-                animations: [ 
-                    SuspendInSolution( 90 ), 
-                    ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
-                ],
-            },
-            {
-                id: '1',
-                name: 'model1',
-                path: '/Fullerenes/models/instance2.glb',
-                loadedMeshes: null,
-                meshes: null,
-                visible: true,
-                scale: 0,
-                positions: [
-                    { x: 0.75, y: 0.71, z: 0 }
-                ],
-                rotations: [
-                    { _x: 0, _y: 0, _z: 0 }
-                ],
-                animations: [
-                    Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
-                    ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
-                ]
-            },
-            {
-                id: '2',
-                name: 'model2',
-                path: '/Fullerenes/models/instance2.glb',
-                loadedMeshes: null,
-                meshes: null,
-                visible: true,
-                scale: 0,
-                positions: [
-                    { x: 0.75, y: 0, z: -3 }
-                ],
-                rotations: [
-                    { _x: 0, _y: 0, _z: 0 }
-                ],
-                animations: [
-                    Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
-                    ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
-                ]
-            },
-            {
-                id: '3',
-                name: 'model3',
-                path: '/Fullerenes/models/___instance3.glb',
-                loadedMeshes: null,
-                meshes: null,
-                visible: true,
-                scale: 0,
-                positions: [
-                    { x: 0, y: -0.675, z: -1 },
-                ],
-                rotations: [
-                    { _x: 0, _y: 0, _z: 0 }
-                ],
-                animations: [
-                    Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
-                    ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } ),
-                    Rotate( { duration: 1500, axis: 'x', initial_angle: 0, final_angle: 360 } ),
-                ]
-            },
-            {
-                id: '4',
-                name: 'model4',
-                path: '/Fullerenes/models/___instance4.glb',
-                loadedMeshes: null,
-                meshes: null,
-                visible: true,
-                scale: 0,
-                positions: [
-                    { x: 0, y: -0.1, z: -3 },
-                ],
-                rotations: [
-                    { _x: 0, _y: 0, _z: 0 }
-                ],
-                animations: [
-                    Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
-                    ScaleXYZ( { duration: 1, initial_scale: [ 0.10, 0.10, 0.10 ], final_scale: [ 0, 0, 0 ] } ),
-                    ScaleXYZ( { duration: 3, initial_scale: [ 0.01, 0.01, 0.01 ], final_scale: [ 0.075, 0.075, 0.075 ] } )
-                ]
-            }
+    //     camera: {
+    //         //                     0                   1                      2                     3                    4                     5                  
+    //         positions: [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ] ],
+    //         rotations: [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ],
             
-        ],
+    //         // this is built programmatically by Init() in App() 
+    //         animation_data: [
+    //             //  initial position      final poisition        initial rotation       final rotation
+    //             [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 0 
+    //             [ [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ] ], // 1
+    //             [ [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ],  [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 2
+    //             [ [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ] ], // 3
+    //             [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ],  [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 4
+    //         ],
 
-        text: [
-            '',
-            'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas...',
-            'The result? Novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered. This molecule would go on to be named Buckminsterfullerene. Often shortened to fullerene, and nicknamed Buckyball.',
-            'Each molecule of Fullerene is composed of pure carbon. The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball. Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.',
-            'For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known. These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems. Scientists have even turned their attention to buckyballs in their quest for a cure for AIDS.',
-            'How can buckyballs help cure aids? An enzyme (HIV-1-Protease) that is required for HIV to reproduce, exhibits a nonpolar pocket in its three-dimensional structure. On the model to the right, notice how the nonpolar Fullerene fits the exact diameter of the enzyme\'s binding pocket. If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible blockers.',
-        ],
+    //         animation_clips: null,
 
-        textType: [
-            'centered',
-            'centered',
-            'left',
-            'left',
-            'left',
-            'left'
-        ],
+    //         CreateAnimationDataFromPositionsRotations: function() {
+    //             const animation_data = [];
+    //             for( let i = 0; i < this.positions.length - 1; i++ ) {
+    //                 const initial_position: number[] = this.positions[ i ];
+    //                 const final_position: number[] = this.positions[ i + 1 ];
+    //                 const initial_rotation: number[] = this.rotations[ i ];
+    //                 const final_rotation: number[] = this.rotations[ i + 1 ];
+    //                 animation_data.push( [ initial_position, final_position, initial_rotation, final_rotation ] );
+    //             };
+    //             return animation_data;
+    //         },
 
-        music: [
-            "/music/fullerene2.mp3"
-        ],
+    //     },
 
-        voices: [
-            "/music/fullerene2.mp3", // 0
-            "/music/fullerene2.mp3", // 1
-            "/music/fullerene2.mp3", // 2
-            "/music/fullerene2.mp3", // 3
-            "/music/fullerene2.mp3", // 4
-        ],
+    //     models: [
+    //         {
+    //             id: '0',
+    //             name: 'model0',
+    //             path: '/Fullerenes/models/instance0.glb',
+    //             // loadedMeshes: null,
+    //             // meshes: null,
+    //             visible: true,
+    //             scale: 0.18,
+    //             // _positions: null,
+    //             positions: [
+    //                 { x: 0, y: 0, z: -1 },
+    //             ],
+    //             rotations: [
+    //                 { _x: 0, _y: 0, _z: 0 }
+    //             ],
+    //             animation_clips: [ 
+    //                 SuspendInSolution( 90 ), 
+    //                 ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
+    //             ],
+    //         },
+    //         {
+    //             id: '1',
+    //             name: 'model1',
+    //             path: '/Fullerenes/models/instance2.glb',
+    //             loadedMeshes: null,
+    //             meshes: null,
+    //             visible: true,
+    //             scale: 0,
+    //             positions: [
+    //                 { x: 0.75, y: 0.71, z: 0 }
+    //             ],
+    //             rotations: [
+    //                 { _x: 0, _y: 0, _z: 0 }
+    //             ],
+    //             animation_clips: [
+    //                 Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
+    //                 ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
+    //             ]
+    //         },
+    //         {
+    //             id: '2',
+    //             name: 'model2',
+    //             path: '/Fullerenes/models/instance2.glb',
+    //             loadedMeshes: null,
+    //             meshes: null,
+    //             visible: true,
+    //             scale: 0,
+    //             positions: [
+    //                 { x: 0.75, y: 0, z: -3 }
+    //             ],
+    //             rotations: [
+    //                 { _x: 0, _y: 0, _z: 0 }
+    //             ],
+    //             animation_clips: [
+    //                 Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
+    //                 ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
+    //             ]
+    //         },
+    //         {
+    //             id: '3',
+    //             name: 'model3',
+    //             path: '/Fullerenes/models/___instance3.glb',
+    //             loadedMeshes: null,
+    //             meshes: null,
+    //             visible: true,
+    //             scale: 0,
+    //             positions: [
+    //                 { x: 0, y: -0.675, z: -1 },
+    //             ],
+    //             rotations: [
+    //                 { _x: 0, _y: 0, _z: 0 }
+    //             ],
+    //             animation_clips: [
+    //                 Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
+    //                 ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } ),
+    //                 Rotate( { duration: 1500, axis: 'x', initial_angle: 0, final_angle: 360 } ),
+    //             ]
+    //         },
+    //         {
+    //             id: '4',
+    //             name: 'model4',
+    //             path: '/Fullerenes/models/___instance4.glb',
+    //             loadedMeshes: null,
+    //             meshes: null,
+    //             visible: true,
+    //             scale: 0,
+    //             positions: [
+    //                 { x: 0, y: -0.1, z: -3 },
+    //             ],
+    //             rotations: [
+    //                 { _x: 0, _y: 0, _z: 0 }
+    //             ],
+    //             animation_clips: [
+    //                 Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
+    //                 ScaleXYZ( { duration: 1, initial_scale: [ 0.10, 0.10, 0.10 ], final_scale: [ 0, 0, 0 ] } ),
+    //                 ScaleXYZ( { duration: 3, initial_scale: [ 0.01, 0.01, 0.01 ], final_scale: [ 0.075, 0.075, 0.075 ] } )
+    //             ]
+    //         }
+            
+    //     ],
 
-        loaded_voices: null,
+    //     text: [
+    //         '',
+    //         'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas...',
+    //         'The result? Novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered. This molecule would go on to be named Buckminsterfullerene. Often shortened to fullerene, and nicknamed Buckyball.',
+    //         'Each molecule of Fullerene is composed of pure carbon. The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball. Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.',
+    //         'For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known. These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems. Scientists have even turned their attention to buckyballs in their quest for a cure for AIDS.',
+    //         'How can buckyballs help cure aids? An enzyme (HIV-1-Protease) that is required for HIV to reproduce, exhibits a nonpolar pocket in its three-dimensional structure. On the model to the right, notice how the nonpolar Fullerene fits the exact diameter of the enzyme\'s binding pocket. If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible blockers.',
+    //     ],
 
-        // music: null
+    //     textType: [
+    //         'centered',
+    //         'centered',
+    //         'left',
+    //         'left',
+    //         'left',
+    //         'left'
+    //     ],
 
-        dispatch: useDispatch,
-    },
+    //     music: [
+    //         "/music/fullerene2.mp3"
+    //     ],
+
+    //     voices: [
+    //         "/music/fullerene2.mp3", // 0
+    //         "/music/fullerene2.mp3", // 1
+    //         "/music/fullerene2.mp3", // 2
+    //         "/music/fullerene2.mp3", // 3
+    //         "/music/fullerene2.mp3", // 4
+    //     ],
+
+    //     loaded_voices: null,
+
+    //     dispatch: useDispatch,
+    // },
 
 ];
 

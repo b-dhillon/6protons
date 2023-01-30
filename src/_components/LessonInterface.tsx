@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { decrement, increment, reset, start } from "../components/redux/actions";
 
 
-export default function LessonUI( props: any  ) {
+export default function LessonInterface( props: any  ) {
 
     return (
         < div className='global-overlay-container' >
@@ -11,7 +11,6 @@ export default function LessonUI( props: any  ) {
             < Header data={ props.data } setPage={ props.setPage } counter={ props.counter } />
             < Body data={ props.data } counter={ props.counter } />
             < Footer data={ props.data } counter={ props.counter } />
-
         </ div >
     )
 } 

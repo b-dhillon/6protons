@@ -10,11 +10,11 @@ import { useEffect, useRef, useState } from "react";
 import { CameraHelper } from "three";
 import * as THREE from 'three'
 
-// Is wired to data.section_counter NOT redux counter!
-export default function Camera( props: { counter: number, data: any } ): JSX.Element {
+// Is wired to page.section_counter NOT redux counter!
+export default function Camera( props: { counter: number, page: any } ): JSX.Element {
 
     // const section = props.data.section;
-    const camera = props.data.camera;
+    const camera = props.page.camera;
     const ref = useRef();
 
     const [ AnimationActions, setAnimationActions ] = useState( [] );

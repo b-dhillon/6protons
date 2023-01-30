@@ -18,13 +18,13 @@ function Scene( props: any ): JSX.Element {
     return (
         < Suspense >
 
-            < Music data={ props.data } counter={ counter } />
+            < Music page={ props.page } counter={ counter } />
             
             < Canvas >
 
-                < Universe data={ props.data } />
-                < Camera data={ props.data } counter={ counter }  />
-                < Models data={ props.data } counter={ counter } />
+                < Universe page={ props.page } />
+                < Camera page={ props.page } counter={ counter }  />
+                < Models page={ props.page } counter={ counter } />
 
 
                 < ambientLight intensity={ .25 } />
