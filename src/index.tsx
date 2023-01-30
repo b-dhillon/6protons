@@ -4,7 +4,7 @@ import React from 'react';
 import App from './App';
 import __App from './__App';
 import store from './components/redux/store'
-import './global-styles.css';
+import './styles/global-styles.css';
 
 const container = document.getElementById('root');
 const root = createRoot(container!); // createRoot(container!) if you use TypeScript

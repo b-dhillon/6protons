@@ -1,24 +1,33 @@
-import { AnimationClip } from "three"
+import { AnimationClip, Audio, Mesh } from "three"
 
-export interface PageData {
+export interface AppData {
+    pages: Page[]
+}
+
+
+export interface Page {
     id: string,
     page_title: string,
     section: number,
     max_section: number,
     thumbnail: string,
-    universe: any,
-    camera: LessonCamera,
-    models: Model[],
     text: string[],
     textType: string[],
     music: string[],
     voices: string[],
-    audio: any,
+    loaded_voices: null[]
+
+
+
+
+    universe: any,
+    camera: LessonCamera,
+    models: Model[],    
     dispatch: Function,
-    loaded_voices: null
+    // audio: any,
 };
 
-export interface LoadedPageData extends PageData {
+export interface LoadedPage extends Page {
     // id: string,
     // page_title: string,
     // section: number,
@@ -33,16 +42,16 @@ export interface LoadedPageData extends PageData {
     // audio: any,
     // dispatch: Function,
     
-    model: LoadedModel[],
     camera: LoadedLessonCamera,
-    _loaded_voices: any[]
+    models: LoadedModel[],
+    _loaded_voices: Audio[]
 };
 
 export interface LessonCamera {
     positions: number[][],
     rotations: number[][],
     animation_data: number[][][],
-    animation_clips: null | any[][],
+    animation_clips: null[]
     CreateAnimationDataFromPositionsRotations: Function
 };
 
@@ -69,6 +78,6 @@ export interface Model {
 };
 
 export interface LoadedModel extends Model {
-    loadedMeshes: any[][],
+    loadedMeshes: Mesh[][],
     _positions: number[][],
 };

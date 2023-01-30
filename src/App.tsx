@@ -2,22 +2,41 @@ import { useState, useEffect } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import * as THREE from 'three'
-import Page from './_components/Page';
+import Page_ from './_components/Page';
 import data from './data';
 import TranslateRotate from './_components/animations/TranslateRotate';
-import { PageData } from './types/types';
+import { LoadedPage, Page } from './types/types';
+import PageConstructor from './_components/Page';
 
 export default function App() {
-    const [ pages , setPages ] = useState( data.pages );
+    const [ pages, setPages ] = useState<Page[] | LoadedPage[]>( data.pages );
+
     const [ current_page, setCurrentPage ] = useState( 'test_page' );
     const [ loading, setLoading ] = useState( true ); // Make less hacky
     setTimeout( () => { setLoading( false ) }, 2000 );
     function LoadData() { Init( setPages ); }; 
-    useEffect( () => LoadData(), [] );
+    
+
+
+
+    // Fix this up so that it's not so hacky. Make page only be of type LoadedPage and have it's asignment await LoadData()
+    // You can also initialize state of pages to nothing. And then only set it to data.pages --> data.loadedPages with Init().
+    useEffect( () => {
+        LoadData()
+
+    }, [] );
+
+    const [ page ]: Page[] | LoadedPage[] = pages.filter( ( page ) => page.id === current_page );
+
+
+
+
+    if( !loading ) return < PageConstructor page={ page } setCurrentPage={ setCurrentPage } />;
     if( loading ) return < h2 style={ { position: 'absolute', top: '500px', left: '800px' } }>Loading...</h2>;
-    if( !loading ) return < Page page={ pages.find( ( page ) => page.id === current_page  ) } setCurrentPage={ setCurrentPage } />;
     else return <h2>Something is broken.</h2>;
 };
+
+// pages.find( ( page ) => page.id === current_page  )
 
 
 /*
@@ -31,8 +50,8 @@ async function Init( setPages : Function ) {
     const allMeshesOfApp: any = await ExtractAllMeshesOfApp();
     const allVoicesOfApp: any = await LoadAllVoicesOfApp(); 
 
-    setPages( ( oldPages: PageData[] )  => {
-        return oldPages.map( ( oldPage: any, i: number ) => {
+    setPages( ( oldPagesArr: Page[] )  => {
+        return oldPagesArr.map( ( oldPage: any, i: number ): LoadedPage[] => {
             const cameraAnimationData = oldPage.camera.CreateAnimationDataFromPositionsRotations();
             return {
                 ...oldPage, 

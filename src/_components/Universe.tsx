@@ -4,25 +4,25 @@ import { Points, PointMaterial } from '@react-three/drei';
 import { inSphere } from "maath/random";
 import { TypedArray } from 'maath/dist/declarations/src/ctypes';
 
+// This is top level because we want to run the positions calculation at the very beginning. Maybe we can move it to Init?
 const star_positions = BigBang2( 25000, 5 );
 
 function Universe( props: any ): JSX.Element {
     console.log( 'universe data', props.page.universe );
+    // const star_positions = BigBang2( props.page.universe.size , props.page.universe.radius );
 
     const ref: any = useRef();
-
-    useFrame((_, delta) => ref.current.rotation.x -= delta / 20);
+    useFrame( (_, delta) => ref.current.rotation.x -= delta / 20 );
     // ref.current.rotation.y -= delta / 20
     
     return (
-        <group  rotation={[0, 0, Math.PI / 4]} >
+        < group  rotation={ [ 0, 0, Math.PI / 4 ] } >
             < group  >
-                < Points ref={ref}  positions={ star_positions } stride={3} frustumCulled={false} {...props} >
-                    < PointMaterial transparent color="#fff" size={ 0.0035 } sizeAttenuation={true} depthWrite={false} />
+                < Points ref={ ref }  positions={ star_positions } stride={ 3 } frustumCulled={ false } { ...props } >
+                    < PointMaterial transparent color="#fff" size={ 0.0035 } sizeAttenuation={ true } depthWrite={ false } />
                 </ Points >
             </ group >
-
-        </group>
+        </ group>
     );
 };
 // size={.0045}
@@ -30,7 +30,6 @@ function Universe( props: any ): JSX.Element {
 // inCube
 function BigBang( stars: number, radius: number ): Float32Array {
     const p =  new Float32Array( stars );
-
     for ( let i = 0; i < stars; i++ ) {
       const theta = Math.random() * 2 * Math.PI;
       const phi = Math.acos(2 * Math.random() - 1);
@@ -42,14 +41,12 @@ function BigBang( stars: number, radius: number ): Float32Array {
       p[ i + 1 ] = y;
       p[ i + 2 ] = z;
     };
-
     return p;
 };
 
 // inSphere
 function BigBang2(stars: number, radius: number ): TypedArray {
-    const x = inSphere( new Float32Array( stars ), { radius: radius } );
-    return x;
+    return inSphere( new Float32Array( stars ), { radius: radius } );
 }
 
 function TestPerformnance( fn: Function ): any {
@@ -61,7 +58,6 @@ function TestPerformnance( fn: Function ): any {
 };
 
 // TestPerformnance( BigBang );
-
 export default memo( Universe );
 
 
