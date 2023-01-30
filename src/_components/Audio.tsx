@@ -13,7 +13,7 @@ function Audio( props: any ): JSX.Element {
 function Voice( props: any ): void {
     // console.log( props.data.loaded_voices );
     const counter = props.counter; 
-    const voices = props.page.loaded_voices
+    const voices = props.page._loaded_voices
 
     // reset
     voices.forEach( ( voice: any ) => {

@@ -14,15 +14,14 @@ import '../styles/overlay-styles.css'
 
 // Types:
 
-
-export default function Page( props: { page: any, setPage: Function } ): JSX.Element {
+export default function Page( props: { page: any, setCurrentPage: Function } ): JSX.Element {
     const [ page, setPage ] = useState( props.page );
     const counter = useSelector( ( state: any ) => state.counter );
     useEffect( () => console.log( 'page _data', page ), [] );
     return (
         < Suspense >
 
-            < UI page={ page } setData={ setPage } counter={ counter }/>
+            < UI page={ page } setCurrentPage={ props.setCurrentPage } counter={ counter }/>
             < Scene page={ page } counter={ counter }/>
 
         </ Suspense >
@@ -31,28 +30,39 @@ export default function Page( props: { page: any, setPage: Function } ): JSX.Ele
 
 // To-do:
 /* 
-To-do: 
-
-    - Clean up and get a high level understanding of everything that you've re-factored.
-    - Build types for 'any' types.
-
-
-    - Add Voices.
-        - You'll have to add a delay though to wait out the camera transition.
-
-        - You'll also likely need to add some sort of post-processing effect to blend the background music with the speach audio
-            however, this can easily be done with tuning the volumes. --> Likely achieved with .offset()
-            
-            
-    - Juice up camera transitions?
-        - Get models positioned properly to right middle half of screen
+- Clean up and get a high level understanding of everything that you've re-factored.
+- Finish adding and hooking up types.
 
 
 
 
-    - Configure Jest to work with TypeScript and .tsx files and then begin writing tests for data.ts, init, and the rest of the app.
-    - Any way to make updating mixers more efficient?
-    - Get rid of all hard coded data, both in data.ts and here in TestPage.tsx.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- Add Voices.
+    - You'll have to add a delay though to wait out the camera transition.
+    - You'll also likely need to add some sort of post-processing effect to blend the background music with the speach audio
+        however, this can easily be done with tuning the volumes. --> Likely achieved with .offset()
+        
+- Juice up camera transitions?
+    - Get models positioned properly to right middle half of screen
+- Configure Jest to work with TypeScript and .tsx files and then begin writing tests for data.ts, init, and the rest of the app.
+- Any way to make updating mixers more efficient?
+- Get rid of all hard coded data, both in data.ts and here in TestPage.tsx.
 
 */
 

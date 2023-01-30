@@ -5,6 +5,15 @@ import { useDispatch } from 'react-redux';
 import ScaleXYZ from './_components/animations/ScaleXYZ';
 import Rotate from './_components/animations/Rotate';
 import SuspendInSolution from './_components/animations/SuspendInSolution';
+import { AnimationClip } from 'three';
+
+// To do 
+/*
+- You have camera AnimationClips being constructed in Init, but Model AnimationClips are created here. You should unify this. 
+- Finish creating all the interfaces for all your data structures. 
+    - Model DS needs work...Vector3 and Euler3 are no longer needed.
+*/
+
 
 const data = {
     pages: [
@@ -26,8 +35,7 @@ const data = {
                 //                     0                   1                      2                     3                    4                     5                  
                 positions: [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ] ],
                 rotations: [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ],
-                
-                // this is built programmatically by Init() in App() 
+                // build programatically by Init() with this.CreateAnimationDataFromPositionsRotations()
                 animation_data: [
                     //  initial position      final poisition        initial rotation       final rotation
                     [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 0 
@@ -36,9 +44,8 @@ const data = {
                     [ [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ] ], // 3
                     [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ],  [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 4
                 ],
-    
-                animation_clips: null,
-    
+                //                  0     1     2     3      4 
+                animation_clips: [ null, null, null, null, null ],
                 CreateAnimationDataFromPositionsRotations: function() {
                     const animation_data = [];
                     for( let i = 0; i < this.positions.length - 1; i++ ) {
@@ -50,7 +57,6 @@ const data = {
                     };
                     return animation_data;
                 },
-    
             },
     
             models: [
@@ -58,99 +64,79 @@ const data = {
                     id: '0',
                     name: 'model0',
                     path: '/Fullerenes/models/instance0.glb',
-                    // loadedMeshes: null,
-                    // meshes: null,
                     visible: true,
                     scale: 0.18,
-                    // _positions: null,
-                    positions: [
-                        { x: 0, y: 0, z: -1 },
-                    ],
-                    rotations: [
-                        { _x: 0, _y: 0, _z: 0 }
-                    ],
+                    positions: [ [ 0.00, 0.00, -1.00 ] ], // this is calculated in Init() based off of camera position at the current section
+                    rotations: [ [ 0.00, 0.00,  0.00 ] ],
                     animation_clips: [ 
                         SuspendInSolution( 90 ), 
-                        ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
+                        ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } ) 
                     ],
+                    // loadedMeshes: null,
+                    // meshes: null,
+                    // _positions: null,
                 },
                 {
                     id: '1',
                     name: 'model1',
                     path: '/Fullerenes/models/instance2.glb',
-                    loadedMeshes: null,
-                    meshes: null,
                     visible: true,
                     scale: 0,
-                    positions: [
-                        { x: 0.75, y: 0.71, z: 0 }
-                    ],
-                    rotations: [
-                        { _x: 0, _y: 0, _z: 0 }
-                    ],
-                    animation_clips: [
-                        Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
+                    positions: [ [ 0.75, 0.71, 0.00 ] ], // this is calculated in Init() based off of camera position at the current section
+                    rotations: [ [ 0.00, 0.00, 0.00 ] ],
+                    animation_clips: [ 
+                        Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ), 
                         ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
                     ]
+                    // loadedMeshes: null,
+                    // meshes: null,
                 },
                 {
                     id: '2',
                     name: 'model2',
                     path: '/Fullerenes/models/instance2.glb',
-                    loadedMeshes: null,
-                    meshes: null,
                     visible: true,
                     scale: 0,
-                    positions: [
-                        { x: 0.75, y: 0, z: -3 }
-                    ],
-                    rotations: [
-                        { _x: 0, _y: 0, _z: 0 }
-                    ],
+                    positions: [ [ 0.75, 0.00, -3.00 ] ], // this is calculated in Init() based off of camera position at the current section
+                    rotations: [ [ 0.00, 0.00,  0.00 ] ],
                     animation_clips: [
                         Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
                         ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
                     ]
+                    // loadedMeshes: null,
+                    // meshes: null,
                 },
                 {
                     id: '3',
                     name: 'model3',
                     path: '/Fullerenes/models/___instance3.glb',
-                    loadedMeshes: null,
-                    meshes: null,
                     visible: true,
                     scale: 0,
-                    positions: [
-                        { x: 0, y: -0.675, z: -1 },
-                    ],
-                    rotations: [
-                        { _x: 0, _y: 0, _z: 0 }
-                    ],
+                    positions: [ [ 0.00, -0.675, -1.00 ] ], // this is calculated in Init() based off of camera position at the current section
+                    rotations: [ [ 0.00,  0.000 , 0.00 ] ],
                     animation_clips: [
                         Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
                         ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } ),
                         Rotate( { duration: 1500, axis: 'x', initial_angle: 0, final_angle: 360 } ),
                     ]
+                    // loadedMeshes: null,
+                    // meshes: null,
                 },
                 {
                     id: '4',
                     name: 'model4',
                     path: '/Fullerenes/models/___instance4.glb',
-                    loadedMeshes: null,
-                    meshes: null,
                     visible: true,
                     scale: 0,
-                    positions: [
-                        { x: 0, y: -0.1, z: -3 },
-                    ],
-                    rotations: [
-                        { _x: 0, _y: 0, _z: 0 }
-                    ],
+                    positions: [ [ 0.00, -0.10, -3.00 ] ], // this is calculated in Init() based off of camera position at the current section
+                    rotations: [ [ 0.00,  0.00,  0.00 ] ],
                     animation_clips: [
                         Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
                         ScaleXYZ( { duration: 1, initial_scale: [ 0.10, 0.10, 0.10 ], final_scale: [ 0, 0, 0 ] } ),
                         ScaleXYZ( { duration: 3, initial_scale: [ 0.01, 0.01, 0.01 ], final_scale: [ 0.075, 0.075, 0.075 ] } )
                     ]
+                    // loadedMeshes: null,
+                    // meshes: null,
                 }
                 
             ],
@@ -184,13 +170,13 @@ const data = {
                 "/music/fullerene2.mp3", // 3
                 "/music/fullerene2.mp3", // 4
             ],
-    
-            loaded_voices: null,
+            //                0     1     2     3     4
+            loaded_voices: [ null, null, null, null, null ],
     
             dispatch: useDispatch,
         }    
     ]
-}
+};
     // {
     //     id: 'test_page',
     //     page_title: 'Fullerenes',
@@ -373,7 +359,7 @@ const data = {
     //     dispatch: useDispatch,
     // },
 
-];
+// ];
 
 export default data; 
 

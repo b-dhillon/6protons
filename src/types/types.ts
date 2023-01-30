@@ -1,3 +1,4 @@
+import { AnimationClip } from "three"
 
 export interface PageData {
     id: string,
@@ -13,8 +14,9 @@ export interface PageData {
     music: string[],
     voices: string[],
     audio: any,
-    dispatch: Function
-}
+    dispatch: Function,
+    loaded_voices: null
+};
 
 export interface LoadedPageData extends PageData {
     // id: string,
@@ -23,7 +25,6 @@ export interface LoadedPageData extends PageData {
     // max_section: number,
     // thumbnail: string,
     // universe: any,
-
     // models: Model[],
     // text: string[],
     // textType: string[],
@@ -34,10 +35,8 @@ export interface LoadedPageData extends PageData {
     
     model: LoadedModel[],
     camera: LoadedLessonCamera,
-    loaded_voices: any[] | null
-}
-
-
+    _loaded_voices: any[]
+};
 
 export interface LessonCamera {
     positions: number[][],
@@ -45,8 +44,7 @@ export interface LessonCamera {
     animation_data: number[][][],
     animation_clips: null | any[][],
     CreateAnimationDataFromPositionsRotations: Function
-}
-
+};
 
 export interface LoadedLessonCamera extends LessonCamera {
     // positions: number[][],
@@ -55,10 +53,9 @@ export interface LoadedLessonCamera extends LessonCamera {
     // animation_clips: null | any[][],
     // CreateAnimationDataFromPositionsRotations: Function,
 
-    _animation_clips: null | any[][],
-    _animation_data: null | any[][]
-}
-
+    _animation_data: number[][][]
+    _animation_clips: AnimationClip[][],
+};
 
 export interface Model {
     id: string,
@@ -66,12 +63,12 @@ export interface Model {
     path: string,
     visible: boolean,
     scale: number,
-    positions: THREE.Vector3[],
-    rotations: THREE.Euler[],
+    positions: number[][],
+    rotations: number[][],
     animation_clips: THREE.AnimationClip[],
-}
+};
 
 export interface LoadedModel extends Model {
     loadedMeshes: any[][],
     _positions: number[][],
-}
+};

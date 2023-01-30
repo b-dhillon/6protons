@@ -15,10 +15,9 @@ export default function App() {
     function LoadData() { Init( setPages ); }; 
     useEffect( () => LoadData(), [] );
     if( loading ) return < h2 style={ { position: 'absolute', top: '500px', left: '800px' } }>Loading...</h2>;
-    if( !loading ) return < Page page={ pages.find( ( page ) => page.id === current_page  ) } setPage={ setCurrentPage } />;
+    if( !loading ) return < Page page={ pages.find( ( page ) => page.id === current_page  ) } setCurrentPage={ setCurrentPage } />;
     else return <h2>Something is broken.</h2>;
 };
-
 
 
 /*
@@ -55,7 +54,7 @@ async function Init( setPages : Function ) {
                     };
                 }),
 
-                loaded_voices: allVoicesOfApp[ i ]
+                _loaded_voices: allVoicesOfApp[ i ]
             };
         });
     });

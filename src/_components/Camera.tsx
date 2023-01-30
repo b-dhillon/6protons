@@ -32,24 +32,14 @@ export default function Camera( props: { counter: number, page: any } ): JSX.Ele
 
         const allAnimationActions = allAnimationClips.map( ( animationClip: [] ) => CreateAnimationAction_Cam( animationClip[ 0 ] ) );
         setAnimationActions( allAnimationActions );
-    }; 
-
-    useEffect( () => {
-        CreateAnimationActions( ref.current, camera._animation_clips )
-    }, [] );
+    }; useEffect( () => { CreateAnimationActions( ref.current, camera._animation_clips ) }, [] );
                                                          
-    function AnimationController() {
-        if( AnimationActions.length ) AnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 );
-    }; useEffect( AnimationController, [ AnimationActions, props.counter ] );
-
-
-    useFrame( ( _, delta ) => {
-        if( AnimationActions.length ) AnimationActions[ props.counter ]._mixer.update( delta );
-    });
-
-    useHelper( ref, CameraHelper );
-
+    function AnimationController() { if( AnimationActions.length ) AnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 ); }; 
+    useEffect( AnimationController, [ AnimationActions, props.counter ] );
+    
+    useFrame( ( _, delta ) => { if( AnimationActions.length ) AnimationActions[ props.counter ]._mixer.update( delta ); } );
     const set = useThree((state) => state.set);
+    useHelper( ref, CameraHelper );
     useEffect( () => set( { camera: ref.current } ) );
 
 

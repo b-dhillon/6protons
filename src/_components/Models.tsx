@@ -50,7 +50,7 @@ export default function Models( props: any ): JSX.Element  {
                 counter={ props.counter }
             />
         );
-    }); // console.log( 'modelGroups', modelGroups ); // [ $$typeof: Symbol(react.element), $$typeof:Symbol(react.element) ]
+    }); // [ $$typeof: Symbol(react.element), $$typeof:Symbol(react.element) ]
 
     return (
         <>
