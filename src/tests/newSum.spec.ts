@@ -16,7 +16,6 @@ Load:
         - Init 
         - CreateAnimationDataFromPositionsRotations
         - CameraPositionToModelPosition
-
     - LoadedData 
     - cameraPositions
     - modelPositions
@@ -32,7 +31,9 @@ describe( 'Vec3ToArr', () => {
 });
 
 describe( 'Init', () => {
-    const loadedData = {};
+    const loadedData = {
+        
+    };
     test('Should load data and update data object', () => {
         expect( Init( data ) ).toEqual( loadedData );
     });
@@ -56,10 +57,13 @@ describe( 'CreateAnimationDataFromPositionsRotations', () => {
 });
 
 describe( 'CameraPositionToModelPosition', () => {
-    const cameraPosition = [ 0.00, 0.00, 0.00 ];
-    const modelPosition = [ 0.00, 0.00, 0.00 ];
+    const positions = [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ] ];
+    const rotations = [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ];
+    const modelPositions = [ [ 0.00, 0.00, -1.00 ], [ 0.75, 0.71, 0.00 ], [ 0.75, 0.00, -3.00 ], [ 0.00, -0.675, -1.00 ], [ 0.00, -0.10, -3.00 ] ];
     test( 'Grabs the camera positions, and based on rotation, calculates model positions', () => {
-        expect( CameraPositionToModelPosition( cameraPosition ) ).toEqual( modelPosition );
+        for( let i = 0; i < positions.length; i++ ) {
+            expect( CameraPositionToModelPosition( positions[ i + 1 ], rotations[ i + 1 ] ) ).toEqual( modelPositions[ i ] );
+        }
     });
 });
 

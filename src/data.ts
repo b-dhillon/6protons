@@ -44,7 +44,7 @@ const data: AppData = {
                     [ [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ] ], // 3
                     [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ],  [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 4
                 ],
-                //                  0     1     2     3      4 
+                //                  0     1     2     3     4 
                 animation_clips: [ null, null, null, null, null ],
                 CreateAnimationDataFromPositionsRotations: function() {
                     const animation_data = [];
