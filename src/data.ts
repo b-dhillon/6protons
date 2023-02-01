@@ -83,7 +83,7 @@ const data: AppData = {
                     rotations: [ [ 0.00, 0.00, 0.00 ] ],
                     animation_clips: [ 
                         Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ), 
-                        ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
+                        ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0.00, 0.00, 0.00 ] } )
                     ]
                 },
                 {
@@ -96,7 +96,7 @@ const data: AppData = {
                     rotations: [ [ 0.00, 0.00,  0.00 ] ],
                     animation_clips: [
                         Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
-                        ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
+                        ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0.00, 0.00, 0.00 ] } )
                     ]
                 },
                 {
@@ -109,7 +109,7 @@ const data: AppData = {
                     rotations: [ [ 0.00,  0.000 , 0.00 ] ],
                     animation_clips: [
                         Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
-                        ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } ),
+                        ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0.00, 0.00, 0.00 ] } ),
                         Rotate( { duration: 1500, axis: 'x', initial_angle: 0, final_angle: 360 } ),
                     ]
                 },
@@ -123,7 +123,7 @@ const data: AppData = {
                     rotations: [ [ 0.00,  0.00,  0.00 ] ],
                     animation_clips: [
                         Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
-                        ScaleXYZ( { duration: 1, initial_scale: [ 0.10, 0.10, 0.10 ], final_scale: [ 0, 0, 0 ] } ),
+                        ScaleXYZ( { duration: 1, initial_scale: [ 0.10, 0.10, 0.10 ], final_scale: [ 0.00, 0.00, 0.00 ] } ),
                         ScaleXYZ( { duration: 3, initial_scale: [ 0.01, 0.01, 0.01 ], final_scale: [ 0.075, 0.075, 0.075 ] } )
                     ]
                 }

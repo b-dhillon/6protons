@@ -5,7 +5,7 @@ import * as THREE from 'three'
 import Page_ from './_components/Page';
 import data from './data';
 import TranslateRotate from './_components/animations/TranslateRotate';
-import { LoadedPage, Page } from './types/types';
+import { AppData, LoadedPage, Page } from './types/types';
 import PageConstructor from './_components/Page';
 
 export default function App() {
@@ -14,7 +14,7 @@ export default function App() {
     const [ current_page, setCurrentPage ] = useState( 'test_page' );
     const [ loading, setLoading ] = useState( true ); // Make less hacky
     setTimeout( () => { setLoading( false ) }, 2000 );
-    function LoadData() { Init( setPages ); }; 
+    function LoadData() { Init( setPages, data ); }; 
     
 
 
@@ -22,8 +22,7 @@ export default function App() {
     // Fix this up so that it's not so hacky. Make page only be of type LoadedPage and have it's asignment await LoadData()
     // You can also initialize state of pages to nothing. And then only set it to data.pages --> data.loadedPages with Init().
     useEffect( () => {
-        LoadData()
-
+        LoadData();
     }, [] );
 
     const [ page ]: Page[] | LoadedPage[] = pages.filter( ( page ) => page.id === current_page );
@@ -46,7 +45,7 @@ This Init() fn is responsible for the following for each page:
     - Creating all AnimationClips for the models. <-- Still need to do this.
     - Loading all voices for each page.
 */
-async function Init( setPages : Function ) {
+export async function Init( setPages : Function, data: AppData ) {
     const allMeshesOfApp: any = await ExtractAllMeshesOfApp();
     const allVoicesOfApp: any = await LoadAllVoicesOfApp(); 
 
@@ -67,7 +66,7 @@ async function Init( setPages : Function ) {
                 models: oldPage.models.map( ( model: any, j: number ) => {
                     return {
                         ...model, 
-                        loadedMeshes: allMeshesOfApp[i][j],
+                        loadedMeshes: allMeshesOfApp[ i ][ j ],
                         _positions: CameraPositionToModelPosition( oldPage.camera.positions[ j+1 ], oldPage.camera.rotations[ j+1 ], 'x' )
 
                     };
@@ -104,7 +103,7 @@ async function Init( setPages : Function ) {
             const y = cameraPosition[ 1 ];
             const z = ( cameraPosition[ 2 ] - 1 );
             return [ x, y, z ];
-        }
+        } 
         
         else {
             const x = cameraPosition[ 0 ];
@@ -116,7 +115,7 @@ async function Init( setPages : Function ) {
 
     async function LoadAllVoicesOfApp() {
         /* const allVoicesOfApp: any = [][] // [ [ voice0, voice1, voice2 ], [ voice0, voice1, voice2 ], etc... ]
-                                                            ^ voices[] of page0          ^ voices[] of page1                           */
+                                                            ^ voices[] of page0          ^ voices[] of page1      */
         const allVoicesOfApp = data.pages.map( async ( page: any ) => {
 
             let pageVoices = []; // [ voice0, voice1, voice2 ]
@@ -130,7 +129,7 @@ async function Init( setPages : Function ) {
         });
 
         return Promise.all( allVoicesOfApp ); 
-    }
+    };
 
     function LoadVoice( path: string ) {            
         return new Promise( ( resolve, reject ) => {
@@ -139,11 +138,10 @@ async function Init( setPages : Function ) {
             const loader = new THREE.AudioLoader();
             loader.load( 
                 path,
+
                 // onLoad
                 ( buffer: AudioBuffer ) => {
-                    // console.log('onLoad callback called');
-
-                    // set the audio object's buffer to the loaded object
+                    // Set the audio object's buffer to the loaded object
                     AudioObject.setBuffer( buffer );
                     AudioObject.setLoop( false );
                     AudioObject.setVolume( 0.5 );
@@ -162,7 +160,7 @@ async function Init( setPages : Function ) {
                 }
             );
         })
-    }
+    };
     
     function LoadModel( path: any ) {
         return new Promise( (resolve, reject) => {
@@ -189,7 +187,7 @@ async function Init( setPages : Function ) {
     
     async function LoadAllModelsOfApp() {
         // const allModelsOfApp: any = [] // [ [ model0, model1, model2 ], [ model0, model1, model2 ], [ model0, model1, model2  ] ]
-                                        //               ^ models[] of page0           ^models[] of page1           ^models[] of page2
+        //                                             ^ models[] of page0           ^models[] of page1           ^models[] of page2
     
         const all_pages_models = data.pages.map(async (page: any) => {
             const page_models: any = []; // [ model0, model1, model2 ]
@@ -201,7 +199,7 @@ async function Init( setPages : Function ) {
         });
 
         return Promise.all(all_pages_models); 
-    }
+    };
     
     async function ExtractAllMeshesOfApp() {
         const allModelsOfApp = await LoadAllModelsOfApp();

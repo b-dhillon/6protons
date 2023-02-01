@@ -37,7 +37,14 @@ export default function PageConstructor( props: { page: Page, setCurrentPage: Fu
 
 
 
-
+  "jest": {
+    "verbose": true,
+    "extensionsToTreatAsEsm": [
+      ".ts",
+      ".tsx"
+    ],
+    "transform": {}
+  },
 
 
 

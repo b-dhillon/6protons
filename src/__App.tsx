@@ -15,7 +15,6 @@ export default function App() {
   const [loading, setLoading] = useState( true );
   // const [ appData, setAppData ] = useState( data );
 
-
   function handleLoading() {
     setLoading( false );
   };
@@ -24,7 +23,6 @@ export default function App() {
     setPage( `${id}` );
   };
   
-
   if( page === 'home' ) return <Home setPage={handlePage} loading={loading} setLoading={handleLoading} />;
   if( page === 'fullerene' ) return <FullerenesLesson setPage={handlePage} /> ;
   if( page === 'diamond' ) return <DiamondsLesson setPage={handlePage} />;
