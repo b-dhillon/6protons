@@ -1,14 +1,11 @@
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
-import * as THREE from 'three'
 import TranslateRotate from '../animations/TranslateRotate';
-import { AppData, LoadedPage, Page } from '../../types/types';
-import * as Helpers from './Helpers';
+import { AppData, LoadedPage } from '../../types/types';
+import { CameraPositionToModelPosition, ExtractAllMeshesOfApp, LoadAllVoicesOfApp } from './InitHelpers';
 
 
 export async function Init( data: AppData ) {
-    const allMeshesOfApp: any = await Helpers.ExtractAllMeshesOfApp();
-    const allVoicesOfApp: any = await Helpers.LoadAllVoicesOfApp(); 
+    const allMeshesOfApp: any = await ExtractAllMeshesOfApp( data );
+    const allVoicesOfApp: any = await LoadAllVoicesOfApp( data ); 
 
     const loadedPages = data.pages.map( ( oldPage: any, i: number ): LoadedPage[] => {
         const cameraAnimationData = oldPage.camera.CreateAnimationDataFromPositionsRotations();
@@ -27,7 +24,7 @@ export async function Init( data: AppData ) {
                 return {
                     ...model, 
                     loadedMeshes: allMeshesOfApp[ i ][ j ],
-                    _positions: Helpers.CameraPositionToModelPosition( oldPage.camera.positions[ j+1 ], oldPage.camera.rotations[ j+1 ], 'x' )
+                    _positions: CameraPositionToModelPosition( oldPage.camera.positions[ j+1 ], oldPage.camera.rotations[ j+1 ], 'x' )
 
                 };
             }),

@@ -1,4 +1,8 @@
-
+import THREE from "three";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { AppData } from "../../types/types";
+// import data from "../../data";
 
 
 export function CameraPositionToModelPosition( cameraPosition: number[], cameraRotation: number[], rotationAxis: string ) {
@@ -91,7 +95,7 @@ export function LoadModel( path: any ) {
     });
 };
 
-export async function LoadAllVoicesOfApp() {
+export async function LoadAllVoicesOfApp( data: AppData ) {
     /* const allVoicesOfApp: any = [][] // [ [ voice0, voice1, voice2 ], [ voice0, voice1, voice2 ], etc... ]
                                                         ^ voices[] of page0          ^ voices[] of page1      */
     const allVoicesOfApp = data.pages.map( async ( page: any ) => {
@@ -109,7 +113,7 @@ export async function LoadAllVoicesOfApp() {
     return Promise.all( allVoicesOfApp ); 
 };
 
-export async function LoadAllModelsOfApp() {
+export async function LoadAllModelsOfApp( data: AppData ) {
     // const allModelsOfApp: any = [] // [ [ model0, model1, model2 ], [ model0, model1, model2 ], [ model0, model1, model2  ] ]
     //                                             ^ models[] of page0           ^models[] of page1           ^models[] of page2
 
@@ -125,8 +129,8 @@ export async function LoadAllModelsOfApp() {
     return Promise.all(all_pages_models); 
 };
 
-export async function ExtractAllMeshesOfApp() {
-    const allModelsOfApp = await LoadAllModelsOfApp();
+export async function ExtractAllMeshesOfApp( data: AppData ) {
+    const allModelsOfApp = await LoadAllModelsOfApp( data );
     // console.log(allModelsOfApp); // [ [gltf0, gltf1], [gltf0], [gltf0], [gltf0] ]
 
     const allMeshesOfApp = allModelsOfApp.map( (arrayOfGltfs: any) => {
