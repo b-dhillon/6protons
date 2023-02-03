@@ -19,7 +19,7 @@ function SuspendInSolution( duration: number ) {
     for( let i = 0; i < duration; i++ ) {
         timesPositionY.push( i );
         valuesPositionY.push( ( 0.5 + Math.sin(i / 2 ) ) / 12 );
-        //                                 ^velocity ^amplitude
+        //                                         ^velocity ^amplitude
     };
     const trackPositionY = new NumberKeyframeTrack( trackNamePositionY, timesPositionY, valuesPositionY, InterpolateSmooth );
 
