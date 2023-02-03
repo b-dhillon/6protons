@@ -17,22 +17,13 @@ export default function App() {
     function LoadData() { Init( setPages, data ); }; 
     
 
-
-
     // Fix this up so that it's not so hacky. Make page only be of type LoadedPage and have it's asignment await LoadData()
     // You can also initialize state of pages to nothing. And then only set it to data.pages --> data.loadedPages with Init().
-    useEffect( () => {
-        LoadData();
-    }, [] );
-
+    useEffect( () => { LoadData(); }, [] );
     const [ page ]: Page[] | LoadedPage[] = pages.filter( ( page ) => page.id === current_page );
-
-
-
-
     if( !loading ) return < PageConstructor page={ page } setCurrentPage={ setCurrentPage } />;
-    if( loading ) return < h2 style={ { position: 'absolute', top: '500px', left: '800px' } }>Loading...</h2>;
-    else return <h2>Something is broken.</h2>;
+    if( loading ) return < h2 style={ { position: 'absolute', top: '500px', left: '800px' } }>Loading...</ h2 >;
+    else return < h2 >Something is broken.</ h2 >;
 };
 
 // pages.find( ( page ) => page.id === current_page  )
