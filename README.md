@@ -76,7 +76,7 @@
 ## Data Architecture:
 
 ## Rendering Pattern: 
-SPA with server side rendering. 
+SPA with server side rendering & hydration. 
 
 ## Stack:
 - TypeScript
