@@ -89,7 +89,7 @@ MPA w-/ SSR
 
 
 
-## User Interface:
+## User Interface (stills) :
 <img src="./img-ui/ui-1.png" style="width:750px;"/>
 <img src="./img-ui/ui-2.png" style="width:750px;"/>
 <img src="./img-ui/ui-3.png" style="width:750px;"/>
