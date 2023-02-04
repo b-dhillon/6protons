@@ -107,7 +107,7 @@ https://user-images.githubusercontent.com/88413313/190005139-403e5162-d019-4523-
 
 
 
-## Development Environment Set-up:
+## Dev Environment Set-up:
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 Instructions:
