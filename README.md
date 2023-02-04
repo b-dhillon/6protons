@@ -73,7 +73,7 @@
         └── .gitignore
 ```
 
-## Architecture:
+## Data Architecture:
 
 ## Rendering Pattern: 
 MPA w-/ SSR
