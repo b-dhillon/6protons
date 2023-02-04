@@ -73,22 +73,22 @@
         └── .gitignore
 ```
 
-### Rendering Pattern: 
+## Rendering Pattern: 
 MPA w-/ SSR
 
 
 
 
-### Architecture:
+## Architecture:
 
 
-### User Interface:
+## User Interface:
 <img src="./img-ui/ui-1.png" style="width:750px;"/>
 <img src="./img-ui/ui-2.png" style="width:750px;"/>
 <img src="./img-ui/ui-3.png" style="width:750px;"/>
 <img src="./img-ui/ui-4.jpg" style="width:750px;"/>
 
-### Demo:
+## Demo:
 
 ##### UI is responsive and scalable:
 https://user-images.githubusercontent.com/88413313/190004640-e058fe2b-e85b-453f-bf7c-51be5e2a056b.mp4
