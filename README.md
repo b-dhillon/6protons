@@ -73,6 +73,9 @@
         └── .gitignore
 ```
 
+### Rendering Pattern: 
+MPA w-/ SSR
+
 
 
 
