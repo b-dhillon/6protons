@@ -1,7 +1,7 @@
 # 6 Protons
 
 ### Project Description:
-- Six Protons is a web application -- specifically it is an eLearning minimum viable product (mvp). It is designed to teach math & science by visualizing abstract concepts via interactive 3D models embedded inside a 3D space. The app in its current form focuses on carbon crystals (carbon is the only atom with 6 protons) however, this framework can be applied to teach any STEM subject. The app is currently under development and undergoing re-writing. 
+- Six Protons is a VR minimum viable product. It is designed to teach math & science by visualizing abstract concepts via interactive 3D models embedded inside a virtual universe. The project in its current form focuses on organic chemistry (carbon is the only atom with 6 protons) however, this software is built to be able to create an 3D lesson to teach any STEM subject. This application is under development and currently being re-written. 
 
 
 ## Application Structure:
