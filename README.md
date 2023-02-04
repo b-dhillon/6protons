@@ -73,13 +73,20 @@
         └── .gitignore
 ```
 
+## Architecture:
+
 ## Rendering Pattern: 
 MPA w-/ SSR
 
+## Stack:
+- TypeScript
+- React
+- WebGL 
 
 
 
-## Architecture:
+
+
 
 
 ## User Interface:
@@ -97,11 +104,7 @@ https://user-images.githubusercontent.com/88413313/190004640-e058fe2b-e85b-453f-
 https://user-images.githubusercontent.com/88413313/190005139-403e5162-d019-4523-8d03-f6aa2287a619.mp4
 
 
-### Built With:
-- TypeScript
-- React
-- WebGL 
-- Blender 
+
 
 
 ## Development Environment Set-up:
