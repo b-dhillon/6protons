@@ -80,15 +80,15 @@ MPA w-/ SSR
 
 
 ### Architecture:
-Six Protons is written using a functional paradigm and is built as a single page web application. This design allows for the app to be run on any browser making it inherently cross platform. The app runs well on desktops, laptops, and tablets -- casting a wide net for users of all types.
 
-### Screenshots
+
+### User Interface:
 <img src="./img-ui/ui-1.png" style="width:750px;"/>
 <img src="./img-ui/ui-2.png" style="width:750px;"/>
 <img src="./img-ui/ui-3.png" style="width:750px;"/>
 <img src="./img-ui/ui-4.jpg" style="width:750px;"/>
 
-### UI Design && Demo:
+### Demo:
 
 ##### UI is responsive and scalable:
 https://user-images.githubusercontent.com/88413313/190004640-e058fe2b-e85b-453f-bf7c-51be5e2a056b.mp4
