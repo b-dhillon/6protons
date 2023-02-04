@@ -76,12 +76,14 @@
 ## Data Architecture:
 
 ## Rendering Pattern: 
-MPA w-/ SSR
+SPA with server side rendering. 
 
 ## Stack:
 - TypeScript
 - React
+- Next
 - WebGL 
+
 
 
 
