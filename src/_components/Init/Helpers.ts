@@ -1,18 +1,9 @@
-
-
 // const THREE =  require( "three" );
 // const GLTFLoader = require ( "three/examples/jsm/loaders/DRACOLoader" );
 // const DRACOLoader = require ( "three/examples/jsm/loaders/GLTFLoader" );
 import * as THREE from "three";
-
-
-// import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
-// import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-
-
-
-
-
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { AppData, Page } from "../../types/types";
 import TranslateRotate from "../animations/TranslateRotate";
 
@@ -84,76 +75,76 @@ export function LoadVoice( path: string ) {
     })
 };
 
-// export function LoadModel( path: any ) {
-//     return new Promise( (resolve, reject) => {
-//         const loader = new GLTFLoader();
-//         const dracoLoader = new DRACOLoader();
-//         dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/v1/decoders/' );
-//         loader.setDRACOLoader( dracoLoader );
-//         loader.load(
-//             path,
-//             (gltf: any) => {
-//                 resolve( gltf );
-//                 console.log('glTF loaded');
-//             },
-//             (xhr: any) => {
-//                 // console.log((xhr.loaded / xhr.total) + 'loaded');
-//             },
-//             (error: any) => {
-//                 console.error(error);
-//                 reject(error);
-//             }
-//         );
-//     });
-// };
+export function LoadModel( path: any ) {
+    return new Promise( (resolve, reject) => {
+        const loader = new GLTFLoader();
+        const dracoLoader = new DRACOLoader();
+        dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/v1/decoders/' );
+        loader.setDRACOLoader( dracoLoader );
+        loader.load(
+            path,
+            (gltf: any) => {
+                resolve( gltf );
+                console.log('glTF loaded');
+            },
+            (xhr: any) => {
+                // console.log((xhr.loaded / xhr.total) + 'loaded');
+            },
+            (error: any) => {
+                console.error(error);
+                reject(error);
+            }
+        );
+    });
+};
 
-// export async function LoadAllVoicesOfApp( data: AppData ) {
-//     /* const allVoicesOfApp: any = [][] // [ [ voice0, voice1, voice2 ], [ voice0, voice1, voice2 ], etc... ]
-//                                                         ^ voices[] of page0          ^ voices[] of page1      */
-//     const allVoicesOfApp = data.pages.map( async ( page: any ) => {
+export async function LoadAllVoicesOfApp( data: AppData ) {
+    /* const allVoicesOfApp: any = [][] // [ [ voice0, voice1, voice2 ], [ voice0, voice1, voice2 ], etc... ]
+                                                        ^ voices[] of page0          ^ voices[] of page1      */
+    const allVoicesOfApp = data.pages.map( async ( page: any ) => {
 
-//         let pageVoices = []; // [ voice0, voice1, voice2 ]
+        let pageVoices = []; // [ voice0, voice1, voice2 ]
 
-//         for ( let i = 0; i < page.voices.length; i++ ) {
-//             pageVoices[ i ] = LoadVoice( page.voices[ i ] );
-//             // console.log(`LoadAllVoicesOfApp() voice${i} loaded`);
-//         };
+        for ( let i = 0; i < page.voices.length; i++ ) {
+            pageVoices[ i ] = LoadVoice( page.voices[ i ] );
+            // console.log(`LoadAllVoicesOfApp() voice${i} loaded`);
+        };
 
-//         return Promise.all( pageVoices );
-//     });
+        return Promise.all( pageVoices );
+    });
 
-//     return Promise.all( allVoicesOfApp );  // [ [ voice0, voice1, voice2 ], [ voice0, voice1, voice2 ] ]
-//     //                                                     ^ voices[] of page0          ^ voices[] of page1
-// };
+    return Promise.all( allVoicesOfApp );  // [ [ voice0, voice1, voice2 ], [ voice0, voice1, voice2 ] ]
+    //                                                     ^ voices[] of page0          ^ voices[] of page1
+};
 
-// export async function LoadAllModelsOfApp( data: AppData ) {
-//     // const allModelsOfApp: any = [] // [ [ model0, model1, model2 ], [ model0, model1, model2 ], [ model0, model1, model2  ] ]
-//     //                                             ^ models[] of page0           ^models[] of page1           ^models[] of page2
+export async function LoadAllModelsOfApp( data: AppData ) {
+    // const allModelsOfApp: any = [] // [ [ model0, model1, model2 ], [ model0, model1, model2 ], [ model0, model1, model2  ] ]
+    //                                             ^ models[] of page0           ^models[] of page1           ^models[] of page2
 
-//     const all_pages_models = data.pages.map(async (page: any) => {
-//         const page_models: any = []; // [ model0, model1, model2 ]
-//         for ( let i = 0; i < page.models.length; i++ ) {
-//             page_models[i] = LoadModel(page.models[i].path);
-//             // console.log(`model loaded`);
-//         };
-//         return Promise.all(page_models);
-//     });
+    const all_pages_models = data.pages.map(async (page: any) => {
+        const page_models: any = []; // [ model0, model1, model2 ]
+        for ( let i = 0; i < page.models.length; i++ ) {
+            page_models[i] = LoadModel(page.models[i].path);
+            // console.log(`model loaded`);
+        };
+        return Promise.all(page_models);
+    });
 
-//     return Promise.all(all_pages_models); 
-// };
+    return Promise.all(all_pages_models); 
+};
 
-// export async function ExtractAllMeshesOfApp( data: AppData ) {
-//     const allModelsOfApp = await LoadAllModelsOfApp( data );
-//     // console.log(allModelsOfApp); // [ [gltf0, gltf1], [gltf0], [gltf0], [gltf0] ]
+export async function ExtractAllMeshesOfApp( data: AppData ) {
+    const allModelsOfApp = await LoadAllModelsOfApp( data );
+    // console.log(allModelsOfApp); // [ [gltf0, gltf1], [gltf0], [gltf0], [gltf0] ]
 
-//     const allMeshesOfApp = allModelsOfApp.map( (arrayOfGltfs: any) => {
-//         return arrayOfGltfs.map( ( gltf: any ) => {
-//             return gltf.scene.children.filter( ( child: any ) => child.isMesh || child.isGroup && child.__removed === undefined )
-//         });
-//     }) // [ [ [Mesh], [Mesh], [Mesh] ], [ [Mesh], [Mesh], [Mesh] ], [ [Mesh], [Mesh], [Mesh] ] ]
+    const allMeshesOfApp = allModelsOfApp.map( (arrayOfGltfs: any) => {
+        return arrayOfGltfs.map( ( gltf: any ) => {
+            return gltf.scene.children.filter( ( child: any ) => child.isMesh || child.isGroup && child.__removed === undefined )
+        });
+    }) // [ [ [Mesh], [Mesh], [Mesh] ], [ [Mesh], [Mesh], [Mesh] ], [ [Mesh], [Mesh], [Mesh] ] ]
 
-//     return allMeshesOfApp; 
-// };
+    return allMeshesOfApp; 
+};
 
 export function CreateCameraAnimationDataFromPositionsRotations( positions: number[][], rotations: number[][] ) {
     const animation_data = [];

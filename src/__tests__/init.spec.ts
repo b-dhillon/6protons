@@ -3,8 +3,8 @@ import {
     CameraPositionToModelPosition, 
     CreateCameraAnimationDataFromPositionsRotations,
     ConstructCameraAnimationClips, 
-    // LoadAllVoicesOfApp, 
-    // ExtractAllMeshesOfApp
+    LoadAllVoicesOfApp, 
+    ExtractAllMeshesOfApp
 } from '../_components/Init/Helpers';
 
 import Vec3ToArr from '../_components/Vec3ToArr';
@@ -30,10 +30,6 @@ Model Load:
 - _loaded_voices -- WRITTEN -- ExtractAllVoicesOfApp()
 */
 
-/*
-Whats left to test?                        
-    - cameraPositions
-*/
 
 
 describe( 'Vec3ToArr', () => {
@@ -84,39 +80,39 @@ describe( 'CreateCameraAnimationDataFromPositionsRotations() + ConstructCameraAn
     });
 });
 
-// describe( "LoadAllVoicesOfApp()", async() => {
+describe( "LoadAllVoicesOfApp()", async() => {
 
-//     const AllVoicesOfApp = await LoadAllVoicesOfApp( data );
+    const AllVoicesOfApp = await LoadAllVoicesOfApp( data );
 
-//     it( "Should contain as many elements as pages", () => {
-//         expect( AllVoicesOfApp.length ).toBe( data.pages.length );
-//     });
+    it( "Should contain as many elements as pages", () => {
+        expect( AllVoicesOfApp.length ).toBe( data.pages.length );
+    });
 
-//     it( "Should be an array of arrays with only Audio objects inside", () => {
-//         for( const pageVoices of AllVoicesOfApp ) {
-//             for ( const voice of pageVoices ) expect( voice ).toBeInstanceOf( Audio );
-//         };
-//     });
+    it( "Should be an array of arrays with only Audio objects inside", () => {
+        for( const pageVoices of AllVoicesOfApp ) {
+            for ( const voice of pageVoices ) expect( voice ).toBeInstanceOf( Audio );
+        };
+    });
 
-// });
+});
 
-// describe( "ExtractAllMeshesOfApp()", async() => {
-//     const AllMeshesOfApp = await ExtractAllMeshesOfApp( data );
+describe( "ExtractAllMeshesOfApp()", async() => {
+    const AllMeshesOfApp = await ExtractAllMeshesOfApp( data );
 
-//     it( "Should return an array of all Meshes of the app", () => {
-//         expect( AllMeshesOfApp.length ).toBe( data.pages.length );
-//     });
+    it( "Should return an array of all Meshes of the app", () => {
+        expect( AllMeshesOfApp.length ).toBe( data.pages.length );
+    });
 
-//     it( "Should be an array of arrays of only Mesh arrays inside", () => {
-//         for( const pageMeshes of AllMeshesOfApp ) {
-//             for( const modelMeshes of pageMeshes ) {
-//                 for( const mesh of modelMeshes ) { 
-//                     expect( mesh ).toBeInstanceOf( Mesh )
-//                 };
-//             };
-//         };
-//     });
-// });
+    it( "Should be an array of arrays of only Mesh arrays inside", () => {
+        for( const pageMeshes of AllMeshesOfApp ) {
+            for( const modelMeshes of pageMeshes ) {
+                for( const mesh of modelMeshes ) { 
+                    expect( mesh ).toBeInstanceOf( Mesh )
+                };
+            };
+        };
+    });
+});
 
 /*
 describe( 'Init', () => {
@@ -128,7 +124,7 @@ describe( 'Init', () => {
         [ [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ] ], // 3
         [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ],  [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 4
     ];
-    const hardCodedLoadedData = [
+    const hardCodedLoadedTestData = [
         {
             id: 'test_page',
             page_title: 'Fullerenes',

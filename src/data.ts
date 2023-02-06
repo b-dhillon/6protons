@@ -26,9 +26,8 @@ const data: AppData = {
     
             universe: {
                 id: 'fullerene universe',
-                size: 25000,
+                star_count: 25000,
                 radius: 5,
-                models: [],
             },
     
             camera: {

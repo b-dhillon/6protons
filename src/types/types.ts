@@ -4,7 +4,6 @@ export interface AppData {
     pages: Page[]
 }
 
-
 export interface Page {
     id: string,
     page_title: string,
@@ -16,11 +15,7 @@ export interface Page {
     music: string[],
     voices: string[],
     loaded_voices: null[]
-
-
-
-
-    universe: any,
+    universe: Universe,
     camera: LessonCamera,
     models: Model[],    
     dispatch: Function,
@@ -28,20 +23,6 @@ export interface Page {
 };
 
 export interface LoadedPage extends Page {
-    // id: string,
-    // page_title: string,
-    // section: number,
-    // max_section: number,
-    // thumbnail: string,
-    // universe: any,
-    // models: Model[],
-    // text: string[],
-    // textType: string[],
-    // music: string[],
-    // voices: string[],
-    // audio: any,
-    // dispatch: Function,
-    
     camera: LoadedLessonCamera,
     models: LoadedModel[],
     _loaded_voices: Audio[]
@@ -56,12 +37,6 @@ export interface LessonCamera {
 };
 
 export interface LoadedLessonCamera extends LessonCamera {
-    // positions: number[][],
-    // rotations: number[][],
-    // animation_data: number[][][],
-    // animation_clips: null | any[][],
-    // CreateAnimationDataFromPositionsRotations: Function,
-
     _animation_data: number[][][]
     _animation_clips: AnimationClip[][],
 };
@@ -81,3 +56,9 @@ export interface LoadedModel extends Model {
     loadedMeshes: Mesh[][],
     _positions: number[][],
 };
+
+export interface Universe {
+    id: string,
+    star_count: number, 
+    radius: number
+}

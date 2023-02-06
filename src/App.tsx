@@ -10,23 +10,22 @@ import PageConstructor from './_components/Page';
 
 export default function App() {
     const [ pages, setPages ] = useState<Page[] | LoadedPage[]>( data.pages );
-
     const [ current_page, setCurrentPage ] = useState( 'test_page' );
     const [ loading, setLoading ] = useState( true ); // Make less hacky
     setTimeout( () => { setLoading( false ) }, 2000 );
     function LoadData() { Init( setPages, data ); }; 
     
 
-    // Fix this up so that it's not so hacky. Make page only be of type LoadedPage and have it's asignment await LoadData()
-    // You can also initialize state of pages to nothing. And then only set it to data.pages --> data.loadedPages with Init().
+    /*
+    Fix this up so that it's not so hacky. Make page only be of type LoadedPage and have it's asignment await LoadData()
+    You can also initialize state of pages to nothing. And then only set it to data.pages --> data.loadedPages with Init().
+    */
     useEffect( () => { LoadData(); }, [] );
     const [ page ]: Page[] | LoadedPage[] = pages.filter( ( page ) => page.id === current_page );
     if( !loading ) return < PageConstructor page={ page } setCurrentPage={ setCurrentPage } />;
     if( loading ) return < h2 style={ { position: 'absolute', top: '500px', left: '800px' } }>Loading...</ h2 >;
     else return < h2 >Something is broken.</ h2 >;
 };
-
-// pages.find( ( page ) => page.id === current_page  )
 
 
 /*
@@ -228,7 +227,6 @@ export async function Init( setPages : Function, data: AppData ) {
 
 
 
-// if( !loading && current_page === 'test_page' ) return < Page data={ pages.find( ( page ) => page.id === current_page  ) } setPage={ setCurrentPage } />;
 
 
 
@@ -240,29 +238,7 @@ export async function Init( setPages : Function, data: AppData ) {
 // })
 */
 
-/*
-    function CreatePulsationAnimation( duration, pulseScale ) {
 
-        const times = [], values = [], tmp = new Vector3();
-
-        for ( let i = 0; i < duration * 10; i ++ ) {
-
-            times.push( i / 10 );
-
-            const scaleFactor = Math.random() * pulseScale;
-            tmp.set( scaleFactor, scaleFactor, scaleFactor ).
-                toArray( values, values.length );
-
-        }
-
-        const trackName = '.scale';
-
-        const track = new VectorKeyframeTrack( trackName, times, values );
-
-        return new AnimationClip( null, duration, [ track ] );
-
-    }
-*/
 
 // Old adding animation clips to camera
 /*
