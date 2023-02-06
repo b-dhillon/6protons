@@ -51,8 +51,8 @@ export interface LessonCamera {
     positions: number[][],
     rotations: number[][],
     animation_data: number[][][],
-    animation_clips: null[]
-    CreateAnimationDataFromPositionsRotations: Function
+    animation_clips: null[],
+    CreateAnimationDataFromPositionsRotations: Function,
 };
 
 export interface LoadedLessonCamera extends LessonCamera {

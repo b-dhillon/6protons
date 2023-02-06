@@ -15,7 +15,7 @@ import '../styles/overlay-styles.css'
 // Types:
 import { Page, LoadedPage } from '../types/types';
 
-export default function PageConstructor( props: { page: LoadedPage, setCurrentPage: Function } ): JSX.Element {
+export default function PageConstructor( props: { page: LoadedPage | Page, setCurrentPage: Function } ): JSX.Element {
     const [ page, setPage ] = useState( props.page );
     const counter = useSelector( ( state: any ) => state.counter );
     useEffect( () => console.log( 'page _data', page ), [] );

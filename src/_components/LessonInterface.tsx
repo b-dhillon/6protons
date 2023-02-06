@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { decrement, increment, reset, start } from "../components/redux/actions";
 
-export default function LessonInterface( props: any  ) {
+export default function LessonUI( props: any  ) {
     return (
         < div className='global-overlay-container' >
             < FadeIn />

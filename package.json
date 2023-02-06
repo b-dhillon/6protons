@@ -2,6 +2,7 @@
   "name": "6p-test",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@gltf-transform/core": "^2.4.7",
     "@gltf-transform/extensions": "^2.4.7",
@@ -10,6 +11,7 @@
     "@react-three/fiber": "8.8.10",
     "@react-three/postprocessing": "^2.3.2",
     "@types/three": "^0.146.0",
+    "babel-jest": "^29.4.1",
     "draco3dgltf": "1.4.1",
     "gltfjsx": "^5.0.2",
     "lamina": "1.0.6",
@@ -29,7 +31,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "test": "jest"
+    "test": "node --experimental-vm-modules ./node_modules/.bin/jest"
   },
   "eslintConfig": {
     "extends": [

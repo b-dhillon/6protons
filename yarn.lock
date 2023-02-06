@@ -3253,7 +3253,7 @@
   dependencies:
     "babylon" "^6.18.0"
 
-"babel-jest@^26.6.0", "babel-jest@^26.6.3", "babel-jest@^29.0.0":
+"babel-jest@^26.6.0":
   "integrity" "sha512-pl4Q+GAVOHwvjrck6jKjvmGhnO3jHX/xuB9d27f+EJZ/6k+6nMuPjorrYp7s++bKKdANwzElBWnLWaObvTnaZA=="
   "resolved" "https://registry.npmjs.org/babel-jest/-/babel-jest-26.6.3.tgz"
   "version" "26.6.3"
@@ -3267,7 +3267,21 @@
     "graceful-fs" "^4.2.4"
     "slash" "^3.0.0"
 
-"babel-jest@^29.4.1":
+"babel-jest@^26.6.3":
+  "integrity" "sha512-pl4Q+GAVOHwvjrck6jKjvmGhnO3jHX/xuB9d27f+EJZ/6k+6nMuPjorrYp7s++bKKdANwzElBWnLWaObvTnaZA=="
+  "resolved" "https://registry.npmjs.org/babel-jest/-/babel-jest-26.6.3.tgz"
+  "version" "26.6.3"
+  dependencies:
+    "@jest/transform" "^26.6.2"
+    "@jest/types" "^26.6.2"
+    "@types/babel__core" "^7.1.7"
+    "babel-plugin-istanbul" "^6.0.0"
+    "babel-preset-jest" "^26.6.2"
+    "chalk" "^4.0.0"
+    "graceful-fs" "^4.2.4"
+    "slash" "^3.0.0"
+
+"babel-jest@^29.0.0", "babel-jest@^29.4.1":
   "integrity" "sha512-xBZa/pLSsF/1sNpkgsiT3CmY7zV1kAsZ9OxxtrFqYucnOuRftXAfcJqcDVyOPeN4lttWTwhLdu0T9f8uvoPEUg=="
   "resolved" "https://registry.npmjs.org/babel-jest/-/babel-jest-29.4.1.tgz"
   "version" "29.4.1"

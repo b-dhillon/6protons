@@ -1,30 +1,40 @@
-import { Vector3 } from 'three';
+import { AnimationClip, Mesh, Vector3 } from 'three';
+import { 
+    CameraPositionToModelPosition, 
+    CreateCameraAnimationDataFromPositionsRotations,
+    ConstructCameraAnimationClips, 
+    // LoadAllVoicesOfApp, 
+    // ExtractAllMeshesOfApp
+} from '../_components/Init/Helpers';
+
 import Vec3ToArr from '../_components/Vec3ToArr';
-import { Init } from '../_components/Init';
 import data from '../data';
-import CreateAnimationDataFromPositionsRotations from '../_components/CreateAnimationDataFromPositionsRotations';
-import CameraPositionToModelPosition from '../_components/CameraPositionToModelPosition';
-import setPages from '../App';
-import SuspendInSolution from '../_components/animations/SuspendInSolution';
-import ScaleXYZ from '../_components/animations/ScaleXYZ';
-import Rotate from '../_components/animations/Rotate';
-import { useDispatch } from 'react-redux';
-import TranslateRotate from '../_components/animations/TranslateRotate';
+// import { Init } from '../_components/Init';
+// import SuspendInSolution from '../_components/animations/SuspendInSolution';
+// import ScaleXYZ from '../_components/animations/ScaleXYZ';
+// import Rotate from '../_components/animations/Rotate';
+// import { useDispatch } from 'react-redux';
+// import TranslateRotate from '../_components/animations/TranslateRotate';
 
 
-// .toEqual used for objects and arrays -- does a deep check.
-// .toBe used for primitive types
+// .toEqual used for objects and arrays -- does a deep check, .toBe used for primitive types
+// onLoad 
+/*
+Camera Load:
+- _animation_data -- WRITTEN -- CreateAnimationDataFromPositionsRotations()
+- _animation_clips -- WRITTEN -- ConstructCameraAnimationClips()
+Model Load:
+- _positions -- WRITTEN -- CameraPositionToModelPosition()
+
+- loadedMeshes -- WRITTEN -- ExtractAllMeshesOfApp()
+- _loaded_voices -- WRITTEN -- ExtractAllVoicesOfApp()
+*/
 
 /*
-Load: 
-    - Functions to test 
-        - Init 
-        - CreateAnimationDataFromPositionsRotations
-        - CameraPositionToModelPosition
-    - LoadedData 
+Whats left to test?                        
     - cameraPositions
-    - modelPositions
 */
+
 
 describe( 'Vec3ToArr', () => {
     test('Should convert Vec3 to array', () => {
@@ -36,21 +46,101 @@ describe( 'Vec3ToArr', () => {
 });
 
 
-// Hard code for Init() test: 
+
+
+describe( 'CameraPositionToModelPosition', () => {
+    const positions = [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ] ];
+    const rotations = [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ];
+    const modelPositions = [ [ 0.00, 0.00, -1.00 ], [ 0.75, 0.71, 0.00 ], [ 0.75, 0.00, -3.00 ], [ 0.00, -0.675, -1.00 ], [ 0.00, -0.10, -3.00 ] ];
+    
+    test( 'Grabs the camera positions, and based on rotation, calculates model positions', () => {
+        for( let i = 0; i < positions.length; i++ ) {
+            expect( CameraPositionToModelPosition( positions[ i + 1 ], rotations[ i + 1 ], "x" ) ).toEqual( modelPositions[ i ] );
+        }
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+describe( 'CreateCameraAnimationDataFromPositionsRotations() + ConstructCameraAnimationClips()', () => {
+    const positions = [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ] ];
+    const rotations = [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ];
+    const animationData = [
+        //  initial position      final poisition        initial rotation       final rotation
+        [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 0 
+        [ [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ] ], // 1
+        [ [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ],  [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 2
+        [ [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ] ], // 3
+        [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ],  [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 4
+    ], animationClips = ConstructCameraAnimationClips( animationData );
+
+    it( "Should convert positions and rotations to animationData DS", () => {
+        expect( CreateCameraAnimationDataFromPositionsRotations( positions, rotations ) ).toEqual( animationData );
+    });
+
+    it( "Should construct ALL camera animation clips", () => {
+        expect( animationClips.length ).toBe( positions.length - 1 );
+    });
+
+    it( "Should be an array of only AnimationClip objects", () => {
+        for( const item of animationClips ) {
+            expect( item ).toBeInstanceOf( AnimationClip )
+        };
+    });
+});
+
+// describe( "LoadAllVoicesOfApp()", async() => {
+
+//     const AllVoicesOfApp = await LoadAllVoicesOfApp( data );
+
+//     it( "Should contain as many elements as pages", () => {
+//         expect( AllVoicesOfApp.length ).toBe( data.pages.length );
+//     });
+
+//     it( "Should be an array of arrays with only Audio objects inside", () => {
+//         for( const pageVoices of AllVoicesOfApp ) {
+//             for ( const voice of pageVoices ) expect( voice ).toBeInstanceOf( Audio );
+//         };
+//     });
+
+// });
+
+// describe( "ExtractAllMeshesOfApp()", async() => {
+//     const AllMeshesOfApp = await ExtractAllMeshesOfApp( data );
+
+//     it( "Should return an array of all Meshes of the app", () => {
+//         expect( AllMeshesOfApp.length ).toBe( data.pages.length );
+//     });
+
+//     it( "Should be an array of arrays of only Mesh arrays inside", () => {
+//         for( const pageMeshes of AllMeshesOfApp ) {
+//             for( const modelMeshes of pageMeshes ) {
+//                 for( const mesh of modelMeshes ) { 
+//                     expect( mesh ).toBeInstanceOf( Mesh )
+//                 };
+//             };
+//         };
+//     });
+// });
+
 /*
-models[].loadedMeshes: []
-_loaded_voices: []
-
-How do I test loadModels and loadVoices? They are async and they return objects with unique UUID's...
-Will splitting the tests to per function change anything?
-    - Yes, it will allow for you test everything in Init() except for loadModels and loadVoices
-    - Start with creating a new folder called Init, inside: 
-        - Index
-        - All the Init nested functions as seperate files? or one file with export statements. One file is cleaner?
-        - Init.spec.ts?
-
-*/
-
 describe( 'Init', () => {
     const AnimationData = [
         //  initial position      final poisition        initial rotation       final rotation
@@ -252,34 +342,10 @@ describe( 'Init', () => {
         expect( testData ).toEqual( hardCodedLoadedData );
     });
 });
+*/
 
 
-describe( 'CreateAnimationDataFromPositionsRotations', () => {
-    const positions = [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ] ];
-    const rotations = [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ];
-    const animationData = [
-        //  initial position      final poisition        initial rotation       final rotation
-        [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 0 
-        [ [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ] ], // 1
-        [ [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ],  [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 2
-        [ [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ] ], // 3
-        [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ],  [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 4
-    ];
-    test( 'Should convert positions and rotations to animationData DS', () => {
-        expect( CreateAnimationDataFromPositionsRotations( positions, rotations ) ).toEqual( animationData );
-    });
-});
 
-describe( 'CameraPositionToModelPosition', () => {
-    const positions = [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ] ];
-    const rotations = [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ];
-    const modelPositions = [ [ 0.00, 0.00, -1.00 ], [ 0.75, 0.71, 0.00 ], [ 0.75, 0.00, -3.00 ], [ 0.00, -0.675, -1.00 ], [ 0.00, -0.10, -3.00 ] ];
-    test( 'Grabs the camera positions, and based on rotation, calculates model positions', () => {
-        for( let i = 0; i < positions.length; i++ ) {
-            expect( CameraPositionToModelPosition( positions[ i + 1 ], rotations[ i + 1 ] ) ).toEqual( modelPositions[ i ] );
-        }
-    });
-});
 
 
 
