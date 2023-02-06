@@ -79,7 +79,7 @@ const data: AppData = {
                     path: '/Fullerenes/models/instance2.glb',
                     visible: true,
                     scale: 0,
-                    positions: [ [ 0.75, 0.71, 0.00 ] ], // this is calculated in Init() based off of camera position at the current section
+                    positions: [ [ 0.75, 0.66, 0.00 ] ], // this is calculated in Init() based off of camera position at the current section
                     rotations: [ [ 0.00, 0.00, 0.00 ] ],
                     animation_clips: [ 
                         Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ), 
@@ -105,7 +105,7 @@ const data: AppData = {
                     path: '/Fullerenes/models/___instance3.glb',
                     visible: true,
                     scale: 0,
-                    positions: [ [ 0.00, -0.675, -1.00 ] ], // this is calculated in Init() based off of camera position at the current section
+                    positions: [ [ 0.00, -0.66, -1.00 ] ], // this is calculated in Init() based off of camera position at the current section
                     rotations: [ [ 0.00,  0.000 , 0.00 ] ],
                     animation_clips: [
                         Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),

@@ -45,39 +45,17 @@ describe( 'Vec3ToArr', () => {
     });
 });
 
-
-
-
 describe( 'CameraPositionToModelPosition', () => {
     const positions = [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ] ];
     const rotations = [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ];
-    const modelPositions = [ [ 0.00, 0.00, -1.00 ], [ 0.75, 0.71, 0.00 ], [ 0.75, 0.00, -3.00 ], [ 0.00, -0.675, -1.00 ], [ 0.00, -0.10, -3.00 ] ];
+    const modelPositions = [ [ 0.00, 0.00, -1.00 ], [ 0.75, 0.66, 0.00 ], [ 0.75, 0.00, -3.00 ], [ 0.00, -0.66, -1.00 ], [ 0.00, 0.00, -3.00 ] ];
     
     test( 'Grabs the camera positions, and based on rotation, calculates model positions', () => {
-        for( let i = 0; i < positions.length; i++ ) {
+        for( let i = 0; i < positions.length - 1; i++ ) {
             expect( CameraPositionToModelPosition( positions[ i + 1 ], rotations[ i + 1 ], "x" ) ).toEqual( modelPositions[ i ] );
         }
     });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 describe( 'CreateCameraAnimationDataFromPositionsRotations() + ConstructCameraAnimationClips()', () => {
     const positions = [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ] ];
@@ -101,7 +79,7 @@ describe( 'CreateCameraAnimationDataFromPositionsRotations() + ConstructCameraAn
 
     it( "Should be an array of only AnimationClip objects", () => {
         for( const item of animationClips ) {
-            expect( item ).toBeInstanceOf( AnimationClip )
+            for (const a of item ) expect( a ).toBeInstanceOf( AnimationClip )
         };
     });
 });
