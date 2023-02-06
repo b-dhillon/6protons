@@ -1,19 +1,10 @@
-// React: 
 import { useState } from 'react';
 import { Suspense, useEffect } from 'react';
-
-// Redux:
 import { useSelector } from 'react-redux';
-
-// Components:
-import UI from './LessonInterface'
-import Scene from './Scene'
-
-// Styles:
-import '../styles/overlay-styles.css'
-
-// Types:
 import { Page, LoadedPage } from '../types/types';
+import UI from './LessonInterface';
+import Scene from './Scene';
+import '../styles/overlay-styles.css';
 
 export default function PageConstructor( props: { page: LoadedPage | Page, setCurrentPage: Function } ): JSX.Element {
     const [ page, setPage ] = useState( props.page );
@@ -31,46 +22,22 @@ export default function PageConstructor( props: { page: LoadedPage | Page, setCu
 
 // To-do:
 /* 
-- Clean up and get a high level understanding of everything that you've re-factored.
-- Finish adding and hooking up types.
 
-
-
-
-  "jest": {
-    "verbose": true,
-    "extensionsToTreatAsEsm": [
-      ".ts",
-      ".tsx"
-    ],
-    "transform": {}
-  },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- Juice Up camera transitions
+    - Get them to be slower and more cinematic.
+    - Get models positioned properly to right middle half of screen.
 
 - Add Voices.
     - You'll have to add a delay though to wait out the camera transition.
     - You'll also likely need to add some sort of post-processing effect to blend the background music with the speach audio
         however, this can easily be done with tuning the volumes. --> Likely achieved with .offset()
+
+- Add + Juice Up text. 
+    - Have a fade out letter by letter animation as the camera is cinematically moving to the next position. 
         
-- Juice up camera transitions?
-    - Get models positioned properly to right middle half of screen
-- Configure Jest to work with TypeScript and .tsx files and then begin writing tests for data.ts, init, and the rest of the app.
+    
 - Any way to make updating mixers more efficient?
-- Get rid of all hard coded data, both in data.ts and here in TestPage.tsx.
+- Double check you have gotten rid of all hard coded data, both in data.ts and here in TestPage.tsx.
 
 */
 

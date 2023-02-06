@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import * as THREE from 'three'
-import Page_ from './_components/Page';
+import Page_ from './_components/PageConstructor';
 import data from './data';
 import TranslateRotate from './_components/animations/TranslateRotate';
 import { AppData, LoadedPage, Page } from './types/types';
-import PageConstructor from './_components/Page';
+import PageConstructor from './_components/PageConstructor';
 
 export default function App() {
     const [ pages, setPages ] = useState<Page[] | LoadedPage[]>( data.pages );

@@ -4,7 +4,7 @@ import FullerenesLesson from './components/fullerenes_lesson/FullerenesLesson';
 import DiamondsLesson from './components/diamonds_lesson/DiamondsLesson';
 import NanotubesLesson from './components/nanotubes_lesson/NanotubesLesson';
 import GrapheneLesson from './components/graphene_lesson/GrapheneLesson';
-import TestPage from './_components/Page';
+import TestPage from './_components/PageConstructor';
 
 
 export default function App() {
