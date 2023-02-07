@@ -19,7 +19,7 @@ export default function Camera( props: { counter: number, page: any } ): JSX.Ele
 
     const [ AnimationActions, setAnimationActions ] = useState( [] );
 
-    // Loops camera.animation_clips[] --> creates AnimationAction for each rotation and translation animation:
+    // Loops camera._animation_clips[] --> creates AnimationAction for each rotation and translation animation:
     function CreateAnimationActions( fiberCameraRef: any, allAnimationClips: [][] ) {
 
         function CreateAnimationAction_Cam( clip: THREE.AnimationClip ): THREE.AnimationAction {
@@ -34,19 +34,27 @@ export default function Camera( props: { counter: number, page: any } ): JSX.Ele
         setAnimationActions( allAnimationActions );
     }; useEffect( () => { CreateAnimationActions( ref.current, camera._animation_clips ) }, [] );
                                                          
-    function AnimationController() { if( AnimationActions.length ) AnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.5 ); }; 
+    function AnimationController() { 
+        // if( AnimationActions.length ) AnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.6 ); 
+        if( AnimationActions.length ) AnimationActions[ props.counter ].play().warp( 1, 0.01, 6 ); 
+
+        // if( AnimationActions.length && props.counter > 0 ) AnimationActions[ props.counter ].play().warp( 0.75, 0.01, 10 ); 
+    }; 
+
     useEffect( AnimationController, [ AnimationActions, props.counter ] );
     
     useFrame( ( _, delta ) => { if( AnimationActions.length ) AnimationActions[ props.counter ]._mixer.update( delta ); } );
+
     const set = useThree((state) => state.set);
+
     useHelper( ref, CameraHelper );
-    useEffect( () => set( { camera: ref.current } ) );
+
+    // useEffect( () => set( { camera: ref.current } ) );
 
 
     return (
         <>
-            < PerspectiveCamera ref={ref} position={ camera._animation_data[ 0 ][ 0 ] } fov={ 45 } near={ 0.2 } far={ 8 } />
-            {/* < UpdateCamera _ref={ref} counter={ props.counter } camera_data={ props.camera_data } /> */}
+            < PerspectiveCamera ref={ref} position={ camera._animation_data[ 0 ][ 0 ] } fov={ 45 } near={ 0.15 } far={ 8 } />
         </>
     );
 };
@@ -57,3 +65,8 @@ function SetCamera( _camera ): void {
     const set = useThree((state) => state.set);
     set( { camera: _camera } );
 }
+
+
+
+
+{/* < UpdateCamera _ref={ref} counter={ props.counter } camera_data={ props.camera_data } /> */}

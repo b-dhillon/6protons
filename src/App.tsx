@@ -7,6 +7,7 @@ import data from './data';
 import TranslateRotate from './_components/animations/TranslateRotate';
 import { AppData, LoadedPage, Page } from './types/types';
 import PageConstructor from './_components/PageConstructor';
+import { FindRotationAxis } from './_components/FindRotationAxis';
 
 export default function App() {
     const [ pages, setPages ] = useState<Page[] | LoadedPage[]>( data.pages );
@@ -26,6 +27,7 @@ export default function App() {
     if( loading ) return < h2 style={ { position: 'absolute', top: '500px', left: '800px' } }>Loading...</ h2 >;
     else return < h2 >Something is broken.</ h2 >;
 };
+
 
 
 /*
@@ -48,7 +50,13 @@ export async function Init( setPages : Function, data: AppData ) {
                     ...oldPage.camera, 
                     _animation_data: cameraAnimationData, // needed for initial position assignment
                     _animation_clips: cameraAnimationData.map( ( AnimationData:[][], i: number ) => {
-                        return [ TranslateRotate( { duration: 3, initial_position: AnimationData[ 0 ], final_position: AnimationData[ 1 ], initial_angle: AnimationData[ 2 ], final_angle: AnimationData[ 3 ],axis: 'x', }) ];
+
+                        // subtract two vectors
+                        
+
+
+
+                        return [ TranslateRotate( { duration: 3, initial_position: AnimationData[ 0 ], final_position: AnimationData[ 1 ], initial_angle: AnimationData[ 2 ], final_angle: AnimationData[ 3 ], axis: FindRotationAxis( AnimationData ), }) ];
                     }),
                 },
 

@@ -24,6 +24,7 @@ export default function PageConstructor( props: { page: LoadedPage | Page, setCu
 /* 
 
 - Juice Up camera transitions
+    - Get them to be smoother, model resets?
     - Get them to be slower and more cinematic.
     - Get models positioned properly to right middle half of screen.
 
@@ -34,8 +35,9 @@ export default function PageConstructor( props: { page: LoadedPage | Page, setCu
 
 - Add + Juice Up text. 
     - Have a fade out letter by letter animation as the camera is cinematically moving to the next position. 
+        - fadeOut with shuffle @ https://textillate.js.org/
         
-    
+
 - Any way to make updating mixers more efficient?
 - Double check you have gotten rid of all hard coded data, both in data.ts and here in TestPage.tsx.
 

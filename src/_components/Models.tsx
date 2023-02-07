@@ -162,14 +162,15 @@ function AnimationController( animationActions: any, counter: number ): void {
         animationActions.forEach( ( animationAction: any ) => {
             
             // stops every model's main animation
-            animationAction[ 0 ].stop();
+            // animationAction[ 0 ].stop();
 
             // stops every model's nested animation
-            animationAction[ 2 ]?.stop();
+            // animationAction[ 2 ]?.stop();
         });
 
         // scale up animation:
-        animationActions[ counter ][1].startAt( 4 ).setEffectiveTimeScale( -1 ).play();
+        animationActions[ counter ][ 1 ].startAt( 4 ).setEffectiveTimeScale( -1 ).play();
+        // animationActions[ counter ][1].startAt( 8 ).setEffectiveTimeScale( -1 ).play();
 
         // main animation
         if (counter === 0 ) animationActions[ counter ][ 0 ].play();
@@ -178,7 +179,9 @@ function AnimationController( animationActions: any, counter: number ): void {
 
     if( animationActions.length && counter > 0) {
         // scale down animation:
-        animationActions[ (counter - 1) ][ 1 ].reset().setEffectiveTimeScale( 1.5 ).play();
+        animationActions[ (counter - 1) ][ 1 ].reset().setEffectiveTimeScale( 0.8 ).play();
+        // animationActions[ (counter - 1) ][ 1 ].setEffectiveTimeScale( 1 ).play();
+
     };
 
     if( animationActions.length && animationActions[ counter ][ 2 ] ) {
