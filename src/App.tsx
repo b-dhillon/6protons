@@ -94,15 +94,15 @@ export async function Init( setPages : Function, data: AppData ) {
             return [ x, y, z ];
         }
 
-        // If you rotate the camera on Y axis you need to position the model on the X axis.
+        // If you rotate the camera on Y axis you need to offset position the model on the X axis AND Z axis.
         if( rotationAxis === 'y' ) {
             const rotationAngle = cameraRotation[ 1 ];
 
-            // const x = ( cameraPosition[ 0 ] + rotationAngle );
-            const x = ( cameraPosition[ 0 ] - rotationAngle );
+            const offset = rotationAngle * -1
 
+            const x = ( cameraPosition[ 0 ] + offset );
             const y = cameraPosition[ 1 ];
-            const z = ( cameraPosition[ 2 ] - rotationAngle );
+            const z = ( cameraPosition[ 2 ] + offset );
             return [ x, y, z ];
         }
 
