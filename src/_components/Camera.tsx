@@ -61,9 +61,8 @@ export default function Camera( props: { counter: number, page: any } ): JSX.Ele
 
 
 
-function SetCamera( _camera ): void {
-    const set = useThree((state) => state.set);
-    set( { camera: _camera } );
+function SetCamera( cam ): void {
+    set( { camera: cam } );
 }
 
 

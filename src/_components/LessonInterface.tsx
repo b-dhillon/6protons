@@ -3,7 +3,16 @@ import { useDispatch } from "react-redux";
 import { decrement, increment, reset, start } from "../components/redux/actions";
 
 export default function LessonUI( props: any  ) {
-    return (
+    const devMode = true; 
+    const dispatch = useDispatch();
+
+    if(devMode) {
+        return (
+            <button onClick={ () => dispatch( increment() ) } style={ { position: 'absolute', zIndex: 10, top: 0 } }>next</button>
+        )
+    }
+
+    else return (
         < div className='global-overlay-container' >
             < FadeIn />
             < Header page={ props.page } counter={ props.counter } setCurrentPage={ props.setCurrentPage } />

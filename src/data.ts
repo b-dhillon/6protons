@@ -31,10 +31,10 @@ const data: AppData = {
             },
     
             camera: {
-              //                     0                   1                      2                     3                    4                     5                  
+              //                      0                     1                      2                     3                    4                     5                  
              // positions: [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ] ],
                 positions: [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00,-2.00 ] ],
-                rotations: [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [0.00, -0.66, 0.00 ], [ 0.00, 0.00, 0.00 ] ],
+                rotations: [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.75, 0.00 ], [ 0.00, 0.00, 0.00 ] ],
                 // build programatically by Init() with this.CreateAnimationDataFromPositionsRotations()
                 animation_data: [
                     //  initial position      final poisition        initial rotation       final rotation
@@ -150,7 +150,7 @@ const data: AppData = {
             ],
     
             music: [
-                "/music/fullerene2.mp3"
+                "/music/fullerene3.mp3"
             ],
     
             voices: [

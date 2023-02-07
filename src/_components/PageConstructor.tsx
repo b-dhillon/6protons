@@ -13,8 +13,8 @@ export default function PageConstructor( props: { page: LoadedPage | Page, setCu
     return (
         < Suspense >
 
-            < UI page={ page } setCurrentPage={ props.setCurrentPage } counter={ counter }/>
             < Scene page={ page } counter={ counter }/>
+            < UI page={ page } setCurrentPage={ props.setCurrentPage } counter={ counter }/>
 
         </ Suspense >
     );
@@ -24,18 +24,34 @@ export default function PageConstructor( props: { page: LoadedPage | Page, setCu
 /* 
 
 - Juice Up camera transitions
-    - Get them to be smoother, model resets?
-    - Get them to be slower and more cinematic.
-    - Get models positioned properly to right middle half of screen.
+
+    Get rid of hard coded 'x' in ModelPositionsFromCameraPositionRotation.tsx
+
+
+
+    - Get camera animations to be: 1. smoother, check for any resetting animations.
+    -                              2. slower and more cinematic?
+
+
+
+- Add + Juice Up text + Reposition models to right half of screen?. 
+    - Have a fade out letter by letter animation as the camera is cinematically moving to the next position. 
+        - fadeOut with shuffle @ https://textillate.js.org/
+
+- Fix anything with music
+
+~~~ Demo run with music, models, text, and new 3d cam movement. ~~~
+
+
+
+
 
 - Add Voices.
     - You'll have to add a delay though to wait out the camera transition.
     - You'll also likely need to add some sort of post-processing effect to blend the background music with the speach audio
         however, this can easily be done with tuning the volumes. --> Likely achieved with .offset()
 
-- Add + Juice Up text. 
-    - Have a fade out letter by letter animation as the camera is cinematically moving to the next position. 
-        - fadeOut with shuffle @ https://textillate.js.org/
+
         
 
 - Any way to make updating mixers more efficient?

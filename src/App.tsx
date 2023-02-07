@@ -12,11 +12,11 @@ import { FindRotationAxis } from './_components/FindRotationAxis';
 export default function App() {
     const [ pages, setPages ] = useState<Page[] | LoadedPage[]>( data.pages );
     const [ current_page, setCurrentPage ] = useState( 'test_page' );
-    const [ loading, setLoading ] = useState( true ); // Make less hacky
-    setTimeout( () => { setLoading( false ) }, 2000 );
-    function LoadData() { Init( setPages, data ); }; 
-    
+    const [ loading, setLoading ] = useState( true );  // Make less hacky
+    setTimeout( () => { setLoading( false ) }, 2000 ); // Make less hacky
 
+    function LoadData() { Init( setPages, data ) }; 
+    
     /*
     Fix this up so that it's not so hacky. Make page only be of type LoadedPage and have it's asignment await LoadData()
     You can also initialize state of pages to nothing. And then only set it to data.pages --> data.loadedPages with Init().
@@ -50,13 +50,15 @@ export async function Init( setPages : Function, data: AppData ) {
                     ...oldPage.camera, 
                     _animation_data: cameraAnimationData, // needed for initial position assignment
                     _animation_clips: cameraAnimationData.map( ( AnimationData:[][], i: number ) => {
-
-                        // subtract two vectors
-                        
-
-
-
-                        return [ TranslateRotate( { duration: 3, initial_position: AnimationData[ 0 ], final_position: AnimationData[ 1 ], initial_angle: AnimationData[ 2 ], final_angle: AnimationData[ 3 ], axis: FindRotationAxis( AnimationData ), }) ];
+                        return [ TranslateRotate({ 
+                            duration: 3, 
+                            initial_position: AnimationData[ 0 ], 
+                            final_position: AnimationData[ 1 ], 
+                            initial_angle: AnimationData[ 2 ], 
+                            final_angle: AnimationData[ 3 ], 
+                            // axis: 'x', 
+                            axis: FindRotationAxis( AnimationData ), 
+                        }) ];
                     }),
                 },
 
@@ -65,8 +67,12 @@ export async function Init( setPages : Function, data: AppData ) {
                     return {
                         ...model, 
                         loadedMeshes: allMeshesOfApp[ i ][ j ],
-                        _positions: CameraPositionToModelPosition( oldPage.camera.positions[ j+1 ], oldPage.camera.rotations[ j+1 ], 'x' )
 
+
+
+
+                        // Need to get access to AnimationData here which is just the [][] NOT the whole [][][]. Although you can use that too, but youll need to loop through it.
+                        _positions: CameraPositionToModelPosition( oldPage.camera.positions[ j+1 ], oldPage.camera.rotations[ j+1 ], FindRotationAxis( cameraAnimationData[ j ] ) )
                     };
                 }),
 
@@ -77,10 +83,11 @@ export async function Init( setPages : Function, data: AppData ) {
 
     function CameraPositionToModelPosition( cameraPosition: number[], cameraRotation: number[], rotationAxis: string ) {
 
-        let rotationAngle = cameraRotation[ 0 ];
 
         // If you rotate the camera on X axis you need to position the model on the Y axis.
         if( rotationAxis === 'x' ) {
+            const rotationAngle = cameraRotation[ 0 ];
+
             const x = cameraPosition[ 0 ];
             const y = ( cameraPosition[ 1 ] + rotationAngle );
             const z = cameraPosition[ 2 ] - 1;
@@ -89,14 +96,20 @@ export async function Init( setPages : Function, data: AppData ) {
 
         // If you rotate the camera on Y axis you need to position the model on the X axis.
         if( rotationAxis === 'y' ) {
-            const x = ( cameraPosition[ 0 ] + rotationAngle );
+            const rotationAngle = cameraRotation[ 1 ];
+
+            // const x = ( cameraPosition[ 0 ] + rotationAngle );
+            const x = ( cameraPosition[ 0 ] - rotationAngle );
+
             const y = cameraPosition[ 1 ];
-            const z = cameraPosition[ 2 ];
+            const z = ( cameraPosition[ 2 ] - rotationAngle );
             return [ x, y, z ];
         }
 
         // If you rotate the camera on Z axis you don't need to do anything to the model.
         if( rotationAxis === 'z' ) {
+            const rotationAngle = cameraRotation[ 2 ];
+
             const x = cameraPosition[ 0 ];
             const y = cameraPosition[ 1 ];
             const z = ( cameraPosition[ 2 ] - 1 );

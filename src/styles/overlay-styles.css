@@ -124,10 +124,10 @@
   .lesson--nextBtn {
     /* box-shadow: 0 0 10px 4px white; */
     box-shadow: 0 0 10px 2px white;
-
     transform: scale(1.2);
     animation: grow-and-glow 4s infinite;
     cursor: pointer;
+    top: 0; 
   }
   
   .lesson--backBtn {

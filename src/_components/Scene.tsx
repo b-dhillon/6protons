@@ -8,6 +8,7 @@ import Models from './Models';
 import Music from './Audio';
 import DevelopmentCamera from './DevelopmentCamera';
 import Camera from './Camera';
+import { Voice } from './Audio';
 
 
 // Mounts components to scene graph and renders 3D scene.
@@ -21,6 +22,8 @@ function Scene( props: any ): JSX.Element {
             < Music page={ props.page } counter={ counter } />
             
             < Canvas >
+
+                {/* < Voice page={ props.page } counter={ counter }/> */}
 
                 < Universe page={ props.page } />
                 < Camera page={ props.page } counter={ counter }  />

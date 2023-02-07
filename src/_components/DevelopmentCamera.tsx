@@ -22,10 +22,12 @@ function DevelopmentCamera(): JSX.Element {
     // Need to disable controls when camera is moving
     return (
         <>
-            < PerspectiveCamera ref={ref} position={ [ 20, 0, 0 ] } rotation={ [0, ( Math.PI/2 ) , 0] } fov={45} aspect={1} />
+            < PerspectiveCamera ref={ref} position={ [ 0, 0, 20 ] } rotation={ [0, 0, 0] } fov={45} aspect={1} />
             < CameraControls />
         </>
     );
 };
 
 export default DevelopmentCamera;
+
+// rotation={ [0, ( Math.PI/2 ) , 0] }

@@ -10,18 +10,23 @@ function Audio( props: any ): JSX.Element {
 }
 */
 
-function Voice( props: any ): void {
+export function Voice( props: any ): JSX.Element {
     // console.log( props.data.loaded_voices );
-    const counter = props.counter; 
     const voices = props.page._loaded_voices
+
+    console.log( voices );
 
     // reset
     voices.forEach( ( voice: any ) => {
         voice.stop();
     });
 
-    if( counter > 0 && counter < props.page.max_section ) voices[ counter ].play( 4 );
+    // if( counter > 0 && counter < props.page.max_section ) voices[ counter ].play( 4 );
     // props.data.voices[ counter ].offset(4).play();
+
+
+    voices[ props.counter ].play();
+    return <></>
 }
 
 export default function Music( props: any ): JSX.Element {
