@@ -13,8 +13,8 @@ export default function PageConstructor( props: { page: LoadedPage | Page, setCu
     return (
         < Suspense >
 
-            < Scene page={ page } counter={ counter }/>
-            < UI page={ page } setCurrentPage={ props.setCurrentPage } counter={ counter }/>
+            < Scene page={ page } counter={ counter } />
+            < UI page={ page } setCurrentPage={ props.setCurrentPage } counter={ counter } />
 
         </ Suspense >
     );

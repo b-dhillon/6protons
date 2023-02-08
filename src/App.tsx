@@ -69,8 +69,6 @@ export async function Init( setPages : Function, data: AppData ) {
                         loadedMeshes: allMeshesOfApp[ i ][ j ],
 
 
-
-
                         // Need to get access to AnimationData here which is just the [][] NOT the whole [][][]. Although you can use that too, but youll need to loop through it.
                         _positions: CameraPositionToModelPosition( oldPage.camera.positions[ j+1 ], oldPage.camera.rotations[ j+1 ], FindRotationAxis( cameraAnimationData[ j ] ) )
                     };
@@ -100,10 +98,18 @@ export async function Init( setPages : Function, data: AppData ) {
 
             const offset = rotationAngle * -1
 
-            const x = ( cameraPosition[ 0 ] + offset );
-            const y = cameraPosition[ 1 ];
-            const z = ( cameraPosition[ 2 ] + offset );
-            return [ x, y, z ];
+            if (rotationAngle > 0) {
+                const x = ( cameraPosition[ 0 ] + offset );
+                const y = cameraPosition[ 1 ];
+                const z = ( cameraPosition[ 2 ] + offset );
+                return [ x, y, z ];
+            }
+            else {
+                const x = cameraPosition[ 0 ];
+                const y = cameraPosition[ 1 ];
+                const z = ( cameraPosition[ 2 ] - 1 );
+                return [ x, y, z ];
+            }
         }
 
         // If you rotate the camera on Z axis you don't need to do anything to the model.
