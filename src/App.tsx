@@ -51,7 +51,7 @@ export async function Init( setPages : Function, data: AppData ) {
                     _animation_data: cameraAnimationData, // needed for initial position assignment
                     _animation_clips: cameraAnimationData.map( ( AnimationData:[][], i: number ) => {
                         return [ TranslateRotate({ 
-                            duration: 3, 
+                            duration: 4, 
                             initial_position: AnimationData[ 0 ], 
                             final_position: AnimationData[ 1 ], 
                             initial_angle: AnimationData[ 2 ], 

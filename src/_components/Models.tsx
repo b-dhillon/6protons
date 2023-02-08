@@ -169,14 +169,15 @@ function AnimationController( animationActions: any, counter: number ): void {
         });
 
         // scale up animation:
+
         // animationActions[ counter ][ 1 ].startAt( 4 ).setEffectiveTimeScale( -1 ).play();
-        animationActions[ counter ][ 1 ].startAt( 6 ).setEffectiveTimeScale( -1 ).play();
-        // animationActions[ counter ][1].startAt( 8 ).setEffectiveTimeScale( -1 ).play();
+        animationActions[ counter ][ 1 ].startAt( 8 ).setEffectiveTimeScale( -1 ).play();
 
         // main animation
         if (counter === 0 ) animationActions[ counter ][ 0 ].play();
+
         // else animationActions[ counter ][ 0 ].startAt( 5 ).play();
-        else animationActions[ counter ][ 0 ].startAt( 7 ).play();
+        else animationActions[ counter ][ 0 ].startAt( 9 ).play();
     };
 
     if( animationActions.length && counter > 0) {

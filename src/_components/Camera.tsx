@@ -36,7 +36,7 @@ export default function Camera( props: { counter: number, page: any } ): JSX.Ele
                                                          
     function AnimationController() { 
         // if( AnimationActions.length ) AnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.6 ); 
-        if( AnimationActions.length ) AnimationActions[ props.counter ].play().warp( 1, 0.01, 6 ); 
+        if( AnimationActions.length ) AnimationActions[ props.counter ].play().warp( 1, 0.01, 8 ); 
 
         // if( AnimationActions.length && props.counter > 0 ) AnimationActions[ props.counter ].play().warp( 0.75, 0.01, 10 ); 
     }; 
