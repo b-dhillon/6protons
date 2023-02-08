@@ -47,9 +47,9 @@ export default function Camera( props: { counter: number, page: any } ): JSX.Ele
 
     const set = useThree((state) => state.set);
 
-    useHelper( ref, CameraHelper );
+    // useHelper( ref, CameraHelper );
 
-    // useEffect( () => set( { camera: ref.current } ) );
+    useEffect( () => set( { camera: ref.current } ) );
 
 
     return (

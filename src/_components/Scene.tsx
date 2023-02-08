@@ -32,7 +32,7 @@ function Scene( props: any ): JSX.Element {
 
                 < ambientLight intensity={ .25 } />
                 < spotLight position={ [ -10, 10, 10 ] } intensity={ 0.9 } />
-                < DevelopmentCamera  />
+                {/* < DevelopmentCamera  /> */}
 
             </ Canvas >
 
