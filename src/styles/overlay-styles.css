@@ -160,7 +160,7 @@
     flex-wrap: wrap;
     z-index: 2;
 
-    animation: 6s delayInWithFade;
+    animation: 8s delayInWithFade;
     animation-fill-mode: forwards;
     opacity: 0
   }

@@ -36,7 +36,7 @@ export default function Camera( props: { counter: number, page: any } ): JSX.Ele
                                                          
     function AnimationController() { 
         // if( AnimationActions.length ) AnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.6 ); 
-        if( AnimationActions.length ) AnimationActions[ props.counter ].play().warp( 1, 0.01, 8 ); 
+        if( AnimationActions.length ) AnimationActions[ props.counter ].play().warp( 1, 0.01, 7.8 ); 
 
         // if( AnimationActions.length && props.counter > 0 ) AnimationActions[ props.counter ].play().warp( 0.75, 0.01, 10 ); 
     }; 
@@ -55,7 +55,7 @@ export default function Camera( props: { counter: number, page: any } ): JSX.Ele
     return (
         <>
             {/* < PerspectiveCamera ref={ref} position={ props.page.camera._animation_data[ 0 ][ 0 ] } fov={ 45 } near={ 0.15 } far={ 8 } /> */}
-            < PerspectiveCamera ref={ref} position={ [ [ 0.00, 0.00, 3.00 ] ] } fov={ 45 } near={ 0.15 } far={ 8 } />
+            < PerspectiveCamera ref={ref} position={ [ props.page.camera.positions[ 0 ] ] } fov={ 45 } near={ 0.15 } far={ 8 } />
         </>
     );
 };

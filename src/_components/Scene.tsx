@@ -23,7 +23,7 @@ function Scene( props: any ): JSX.Element {
             
             < Canvas >
 
-                {/* < Voice page={ props.page } counter={ counter }/> */}
+                < Voice page={ props.page } counter={ counter }/>
 
                 < Universe page={ props.page } />
                 < Camera page={ props.page } counter={ counter }  />

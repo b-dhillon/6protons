@@ -164,8 +164,8 @@ export async function Init( setPages : Function, data: AppData ) {
                     // Set the audio object's buffer to the loaded object
                     AudioObject.setBuffer( buffer );
                     AudioObject.setLoop( false );
-                    AudioObject.setVolume( 0.5 );
-                    AudioObject.play();
+                    AudioObject.setVolume( 1 );
+                    // AudioObject.play();
                     resolve( AudioObject )
                 },
         

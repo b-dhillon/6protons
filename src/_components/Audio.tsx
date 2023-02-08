@@ -15,15 +15,24 @@ export function Voice( props: any ): JSX.Element {
     const voices: Audio[] = props.page._loaded_voices
 
     // reset
-    voices.forEach( ( voice: any ) => {
-        voice.stop();
-    });
+    // voices.forEach( ( voice: any ) => {
+    //     voice.stop();
+    // });
 
     // if( counter > 0 && counter < props.page.max_section ) voices[ counter ].play( 4 );
     // props.data.voices[ counter ].offset(4).play();
 
 
-    voices[ props.counter ].play();
+    voices[ 0 ].play();
+    if ( props.counter > 0 ) {
+        voices[ 0 ].pause();
+        voices[ 0 ].setVolume( 0.2 );
+        voices[ 0 ].play();
+        console.log('voice volume lowered');
+        console.log( voices[ 0 ].getVolume() );
+    }
+    console.log( voices[ 0 ].getVolume() );
+
     return <></>
 }
 
