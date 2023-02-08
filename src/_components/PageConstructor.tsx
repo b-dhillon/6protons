@@ -6,7 +6,7 @@ import UI from './LessonInterface';
 import Scene from './Scene';
 import '../styles/overlay-styles.css';
 
-export default function PageConstructor( props: { page: LoadedPage | Page, setCurrentPage: Function } ): JSX.Element {
+export default function PageConstructor( props: { page: Page | LoadedPage, setCurrentPage: Function } ): JSX.Element {
     const [ page, setPage ] = useState( props.page );
     const counter = useSelector( ( state: any ) => state.counter );
     useEffect( () => console.log( 'page _data', page ), [] );
@@ -14,7 +14,7 @@ export default function PageConstructor( props: { page: LoadedPage | Page, setCu
         < Suspense >
 
             < Scene page={ page } counter={ counter } />
-            < UI page={ page } setCurrentPage={ props.setCurrentPage } counter={ counter } />
+            < UI devMode={ false } page={ page } setCurrentPage={ props.setCurrentPage } counter={ counter } />
 
         </ Suspense >
     );
@@ -23,18 +23,20 @@ export default function PageConstructor( props: { page: LoadedPage | Page, setCu
 // To-do:
 /* 
 
+- Add Voice
+    - Add a delay to wait out the camera transition
+
 - Juice Up camera transitions
-
-    Get rid of hard coded 'x' in ModelPositionsFromCameraPositionRotation.tsx
-
 
 
     - Get camera animations to be: 1. smoother, check for any resetting animations.
-    -                              2. slower and more cinematic?
+    -                              2. slower and more cinematic -- make the distances between positions and rotations smaller?
 
 
+    
 
-- Add + Juice Up text + Reposition models to right half of screen?. 
+
+- Add subtitles
     - Have a fade out letter by letter animation as the camera is cinematically moving to the next position. 
         - fadeOut with shuffle @ https://textillate.js.org/
 

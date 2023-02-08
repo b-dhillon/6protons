@@ -42,14 +42,27 @@ export default function Models( props: any ): JSX.Element  {
     });
 
     const modelGroups = props.page.models.map( ( _model: any , i: number ) => {
-        return (
-            < CreateFiberGroupFrom_Model
-                _model={ _model }
-                key={ _model.id }
-                setAnimationActions={ setAnimationActions }
-                counter={ props.counter }
-            />
-        );
+        if( _model.path ) {
+            return (
+                < CreateFiberGroupFrom_Model
+                    _model={ _model }
+                    key={ _model.id }
+                    setAnimationActions={ setAnimationActions }
+                    counter={ props.counter }
+                />
+            );
+        } else {
+            return <></>;
+        }
+
+        // return (
+        //     < CreateFiberGroupFrom_Model
+        //         _model={ _model }
+        //         key={ _model.id }
+        //         setAnimationActions={ setAnimationActions }
+        //         counter={ props.counter }
+        //     />
+        // );
     }); // [ $$typeof: Symbol(react.element), $$typeof:Symbol(react.element) ]
 
     return (
@@ -160,7 +173,6 @@ function AnimationController( animationActions: any, counter: number ): void {
 
     if( animationActions.length ) {
         animationActions.forEach( ( animationAction: any ) => {
-            
             // stops every model's main animation
             // animationAction[ 0 ].stop();
 
@@ -169,7 +181,6 @@ function AnimationController( animationActions: any, counter: number ): void {
         });
 
         // scale up animation:
-
         // animationActions[ counter ][ 1 ].startAt( 4 ).setEffectiveTimeScale( -1 ).play();
         animationActions[ counter ][ 1 ].startAt( 8 ).setEffectiveTimeScale( -1 ).play();
 

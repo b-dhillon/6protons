@@ -77,8 +77,9 @@ const data: AppData = {
                 {
                     id: '1',
                     name: 'model1',
-                    path: '/Fullerenes/models/instance2.glb',
-                    visible: true,
+                    // path: '',
+                    path: '/Fullerenes/models/instance1.glb',
+                    visible: false,
                     scale: 0,
                     positions: [ [ 0.75, 0.66, 0.00 ] ], // this is calculated in Init() based off of camera position at the current section
                     rotations: [ [ 0.00, 0.00, 0.00 ] ],
@@ -154,11 +155,11 @@ const data: AppData = {
             ],
     
             voices: [
-                "/music/fullerene2.mp3", // 0
-                "/music/fullerene2.mp3", // 1
-                "/music/fullerene2.mp3", // 2
-                "/music/fullerene2.mp3", // 3
-                "/music/fullerene2.mp3", // 4
+                "/music/fullerene3.mp3", // 0
+                "/music/fullerene3.mp3", // 1
+                "/music/fullerene3.mp3", // 2
+                "/music/fullerene3.mp3", // 3
+                "/music/fullerene3.mp3", // 4
             ],
             //                0     1     2     3     4
             loaded_voices: [ null, null, null, null, null ],

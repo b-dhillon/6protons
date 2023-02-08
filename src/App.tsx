@@ -13,7 +13,7 @@ export default function App() {
     const [ pages, setPages ] = useState<Page[] | LoadedPage[]>( data.pages );
     const [ current_page, setCurrentPage ] = useState( 'test_page' );
     const [ loading, setLoading ] = useState( true );  // Make less hacky
-    setTimeout( () => { setLoading( false ) }, 2000 ); // Make less hacky
+    setTimeout( () => { setLoading( false ) }, 4000 ); // Make less hacky
 
     function LoadData() { Init( setPages, data ) }; 
     
@@ -21,9 +21,12 @@ export default function App() {
     Fix this up so that it's not so hacky. Make page only be of type LoadedPage and have it's asignment await LoadData()
     You can also initialize state of pages to nothing. And then only set it to data.pages --> data.loadedPages with Init().
     */
-    useEffect( () => { LoadData(); }, [] );
-    const [ page ]: Page[] | LoadedPage[] = pages.filter( ( page ) => page.id === current_page );
-    if( !loading ) return < PageConstructor page={ page } setCurrentPage={ setCurrentPage } />;
+    useEffect( () => { LoadData() }, [] );
+    // const [ page ]: Page[] | LoadedPage[] = pages.filter( ( page ) => page.id === current_page );
+    if( !loading ) {
+        const [ page ]: Page[] | LoadedPage[] = pages.filter( ( page ) => page.id === current_page );
+        return < PageConstructor page={ page } setCurrentPage={ setCurrentPage } />
+    };
     if( loading ) return < h2 style={ { position: 'absolute', top: '500px', left: '800px' } }>Loading...</ h2 >;
     else return < h2 >Something is broken.</ h2 >;
 };
@@ -185,20 +188,24 @@ export async function Init( setPages : Function, data: AppData ) {
             const dracoLoader = new DRACOLoader();
             dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/v1/decoders/' );
             loader.setDRACOLoader( dracoLoader );
-            loader.load(
-                path,
-                (gltf: any) => {
-                    resolve( gltf );
-                    console.log('glTF loaded');
-                },
-                (xhr: any) => {
-                    // console.log((xhr.loaded / xhr.total) + 'loaded');
-                },
-                (error: any) => {
-                    console.error(error);
-                    reject(error);
-                }
-            );
+
+            if (path) {
+                loader.load(
+                    path,
+                    (gltf: any) => {
+                        resolve( gltf );
+                        console.log('glTF loaded');
+                    },
+                    (xhr: any) => {
+                        // console.log((xhr.loaded / xhr.total) + 'loaded');
+                    },
+                    (error: any) => {
+                        console.error(error);
+                        reject(error);
+                    }
+                );
+            } else resolve('')
+
         });
     };
     
@@ -224,7 +231,9 @@ export async function Init( setPages : Function, data: AppData ) {
     
         const allMeshesOfApp = allModelsOfApp.map( (arrayOfGltfs: any) => {
             return arrayOfGltfs.map( ( gltf: any ) => {
-                return gltf.scene.children.filter( ( child: any ) => child.isMesh || child.isGroup && child.__removed === undefined )
+                if(gltf) {
+                    return gltf.scene.children.filter( ( child: any ) => child.isMesh || child.isGroup && child.__removed === undefined )
+                } else return ''
             });
         }) // [ [ [Mesh], [Mesh], [Mesh] ], [ [Mesh], [Mesh], [Mesh] ], [ [Mesh], [Mesh], [Mesh] ] ]
     

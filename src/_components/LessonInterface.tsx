@@ -3,10 +3,9 @@ import { useDispatch } from "react-redux";
 import { decrement, increment, reset, start } from "../components/redux/actions";
 
 export default function LessonUI( props: any  ) {
-    const devMode = true; 
     const dispatch = useDispatch();
 
-    if(devMode) {
+    if( props.devMode ) {
         return (
             <button onClick={ () => dispatch( increment() ) } style={ { position: 'absolute', zIndex: 10, top: 0 } }>next</button>
         )
@@ -105,10 +104,11 @@ function Body( props: any ) {
             return (
                 <>
                     <div className='text--wrapper'>
-                        {/* <p> { props.page.text[ props.counter ] } </p> */}
+                        <p> { props.page.text[ props.counter ] } </p>
                     </div>
                 </>
             )
+   
         }
         if ( props.page.textType[ props.counter ] === 'left' ) {
             return (
@@ -132,7 +132,7 @@ function Body( props: any ) {
             {
                 props.counter > 0 
                 ?
-                < div className='main-container' >
+                < div className='body-container' >
                     < LessonNavigationButton type={ 'back' } />
                     < Text page={ props.page } counter={ props.counter }/>
                     < LessonNavigationButton type={ 'next' } />

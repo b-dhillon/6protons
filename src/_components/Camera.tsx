@@ -54,7 +54,8 @@ export default function Camera( props: { counter: number, page: any } ): JSX.Ele
 
     return (
         <>
-            < PerspectiveCamera ref={ref} position={ camera._animation_data[ 0 ][ 0 ] } fov={ 45 } near={ 0.15 } far={ 8 } />
+            {/* < PerspectiveCamera ref={ref} position={ props.page.camera._animation_data[ 0 ][ 0 ] } fov={ 45 } near={ 0.15 } far={ 8 } /> */}
+            < PerspectiveCamera ref={ref} position={ [ [ 0.00, 0.00, 3.00 ] ] } fov={ 45 } near={ 0.15 } far={ 8 } />
         </>
     );
 };

@@ -97,7 +97,7 @@
   }
   /* Main */
   
-  .main-container {
+  .body-container {
     display: flex; 
     height: 80vh; 
     z-index: 2;
@@ -159,7 +159,33 @@
     flex-direction: column;
     flex-wrap: wrap;
     z-index: 2;
+
+    animation: 6s delayInWithFade;
+    animation-fill-mode: forwards;
+    opacity: 0
   }
+
+  @keyframes delayIn {
+    99% {
+      visibility: hidden;
+    }
+    100% {
+      visibility: visible;
+    }
+  }
+
+  @keyframes delayInWithFade {
+    80% {
+      opacity: 0
+      /* visibility: hidden; */
+    }
+    100% {
+      /* visibility: visible; */
+      opacity: 1;
+    }
+  }
+
+
   
   .text--wrapper > p {
     width: 70%;

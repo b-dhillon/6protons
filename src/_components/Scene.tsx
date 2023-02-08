@@ -19,7 +19,7 @@ function Scene( props: any ): JSX.Element {
     return (
         < Suspense >
 
-            < Music page={ props.page } counter={ counter } />
+            {/* < Music page={ props.page } counter={ counter } /> */}
             
             < Canvas >
 

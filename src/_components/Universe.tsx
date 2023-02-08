@@ -8,7 +8,6 @@ import { TypedArray } from 'maath/dist/declarations/src/ctypes';
 const star_positions = BigBang2( 25000, 5 );
 
 function Universe( props: any ): JSX.Element {
-    console.log( 'universe data', props.page.universe );
     // const star_positions = BigBang2( props.page.universe.size , props.page.universe.radius );
 
     const ref: any = useRef();

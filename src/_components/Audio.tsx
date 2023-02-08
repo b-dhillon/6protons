@@ -1,3 +1,4 @@
+import { Audio } from 'three';
 
 /*
 function Audio( props: any ): JSX.Element {
@@ -11,10 +12,7 @@ function Audio( props: any ): JSX.Element {
 */
 
 export function Voice( props: any ): JSX.Element {
-    // console.log( props.data.loaded_voices );
-    const voices = props.page._loaded_voices
-
-    console.log( voices );
+    const voices: Audio[] = props.page._loaded_voices
 
     // reset
     voices.forEach( ( voice: any ) => {
@@ -32,7 +30,6 @@ export function Voice( props: any ): JSX.Element {
 export default function Music( props: any ): JSX.Element {
     return (
       < audio autoPlay >
-        {/* < source src="/music/fullerene2.mp3" type="audio/mp3" /> */}
         < source src={ props.page.music[ 0 ] } type="audio/mp3" />
       </ audio >
     );
