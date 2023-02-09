@@ -9,26 +9,33 @@ import { AppData, LoadedPage, Page } from './types/types';
 import PageConstructor from './_components/PageConstructor';
 import { FindRotationAxis } from './_components/FindRotationAxis';
 
-export default function App() {
-    const [ pages, setPages ] = useState<Page[] | LoadedPage[]>( data.pages );
-    const [ current_page, setCurrentPage ] = useState( 'test_page' );
-    const [ loading, setLoading ] = useState( true );  // Make less hacky
-    setTimeout( () => { setLoading( false ) }, 4000 ); // Make less hacky
 
-    function LoadData() { Init( setPages, data ) }; 
+
+export default function App() {
+
+    const [ loadedPages, setLoadedPages ] = useState<LoadedPage[]>( [] );
+    const [ dataLoaded, setDataLoaded ] = useState(false);
+    const [ currentPage, setCurrentPage ] = useState( 'test_page' );
+
+    useEffect( () => { 
+        LoadData();
+    }, [] );
+
+    async function LoadData() {
+        const loadedData = await Init( data );
+        setLoadedPages(loadedData);
+        setDataLoaded(true);
+    }
+
+    if ( dataLoaded ) {
+        const [loadedPage] = loadedPages.filter(
+          (loadedPage: LoadedPage) => loadedPage.id === currentPage
+        );
+
+        return < PageConstructor loadedPage={loadedPage} setCurrentPage={setCurrentPage} />;
+    }
     
-    /*
-    Fix this up so that it's not so hacky. Make page only be of type LoadedPage and have it's asignment await LoadData()
-    You can also initialize state of pages to nothing. And then only set it to data.pages --> data.loadedPages with Init().
-    */
-    useEffect( () => { LoadData() }, [] );
-    // const [ page ]: Page[] | LoadedPage[] = pages.filter( ( page ) => page.id === current_page );
-    if( !loading ) {
-        const [ page ]: Page[] | LoadedPage[] = pages.filter( ( page ) => page.id === current_page );
-        return < PageConstructor page={ page } setCurrentPage={ setCurrentPage } />
-    };
-    if( loading ) return < h2 style={ { position: 'absolute', top: '500px', left: '800px' } }>Loading...</ h2 >;
-    else return < h2 >Something is broken.</ h2 >;
+    return <h2>Loading...</h2>;
 };
 
 
@@ -40,47 +47,7 @@ This Init() fn is responsible for the following for each page:
     - Creating all AnimationClips for the models. <-- Still need to do this.
     - Loading all voices for each page.
 */
-export async function Init( setPages : Function, data: AppData ) {
-    const allMeshesOfApp: any = await ExtractAllMeshesOfApp();
-    const allVoicesOfApp: any = await LoadAllVoicesOfApp(); 
-
-    setPages( ( oldPagesArr: Page[] )  => {
-        return oldPagesArr.map( ( oldPage: any, i: number ): LoadedPage[] => {
-            const cameraAnimationData = oldPage.camera.CreateAnimationDataFromPositionsRotations();
-            return {
-                ...oldPage, 
-                camera: {
-                    ...oldPage.camera, 
-                    _animation_data: cameraAnimationData, // needed for initial position assignment
-                    _animation_clips: cameraAnimationData.map( ( AnimationData:[][], i: number ) => {
-                        return [ TranslateRotate({ 
-                            duration: 4, 
-                            initial_position: AnimationData[ 0 ], 
-                            final_position: AnimationData[ 1 ], 
-                            initial_angle: AnimationData[ 2 ], 
-                            final_angle: AnimationData[ 3 ], 
-                            // axis: 'x', 
-                            axis: FindRotationAxis( AnimationData ), 
-                        }) ];
-                    }),
-                },
-
-                // add meshes and positions to each model
-                models: oldPage.models.map( ( model: any, j: number ) => {
-                    return {
-                        ...model, 
-                        loadedMeshes: allMeshesOfApp[ i ][ j ],
-
-
-                        // Need to get access to AnimationData here which is just the [][] NOT the whole [][][]. Although you can use that too, but youll need to loop through it.
-                        _positions: CameraPositionToModelPosition( oldPage.camera.positions[ j+1 ], oldPage.camera.rotations[ j+1 ], FindRotationAxis( cameraAnimationData[ j ] ) )
-                    };
-                }),
-
-                _loaded_voices: allVoicesOfApp[ i ]
-            };
-        });
-    });
+async function Init( data: AppData ) {
 
     function CameraPositionToModelPosition( cameraPosition: number[], cameraRotation: number[], rotationAxis: string ) {
 
@@ -183,33 +150,36 @@ export async function Init( setPages : Function, data: AppData ) {
     };
     
     function LoadModel( path: any ) {
+        console.log('LoadModel() called');
         return new Promise( (resolve, reject) => {
             const loader = new GLTFLoader();
             const dracoLoader = new DRACOLoader();
             dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/v1/decoders/' );
+            // dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/v1/decoders/draco_decoder.js' );
+            // dracoLoader.setDecoderPath( './draco' );
             loader.setDRACOLoader( dracoLoader );
+            // loader.preload();
 
-            if (path) {
-                loader.load(
-                    path,
-                    (gltf: any) => {
-                        resolve( gltf );
-                        console.log('glTF loaded');
-                    },
-                    (xhr: any) => {
-                        // console.log((xhr.loaded / xhr.total) + 'loaded');
-                    },
-                    (error: any) => {
-                        console.error(error);
-                        reject(error);
-                    }
-                );
-            } else resolve('')
-
+            loader.load(
+                path,
+                (gltf: any) => {
+                    resolve( gltf );
+                    console.log('glTF loaded');
+                },
+                (xhr: any) => {
+                    // console.log('loading glTF');
+                    // console.log((xhr.loaded / xhr.total) + 'loaded');
+                },
+                (error: any) => {
+                    console.error(error);
+                    reject(error);
+                }
+            );
         });
     };
     
     async function LoadAllModelsOfApp() {
+        // console.log('LoadAllModelsOfApp() called');
         // const allModelsOfApp: any = [] // [ [ model0, model1, model2 ], [ model0, model1, model2 ], [ model0, model1, model2  ] ]
         //                                             ^ models[] of page0           ^models[] of page1           ^models[] of page2
     
@@ -226,19 +196,64 @@ export async function Init( setPages : Function, data: AppData ) {
     };
     
     async function ExtractAllMeshesOfApp() {
+        // console.log('ExtractAllMeshesOfApp() called');
         const allModelsOfApp = await LoadAllModelsOfApp();
+        // console.log('ExtractAllMeshesOfApp() done awaiting');
+
         // console.log(allModelsOfApp); // [ [gltf0, gltf1], [gltf0], [gltf0], [gltf0] ]
     
         const allMeshesOfApp = allModelsOfApp.map( (arrayOfGltfs: any) => {
             return arrayOfGltfs.map( ( gltf: any ) => {
-                if(gltf) {
+                // if(gltf) {
                     return gltf.scene.children.filter( ( child: any ) => child.isMesh || child.isGroup && child.__removed === undefined )
-                } else return ''
+                // } else return ''
             });
         }) // [ [ [Mesh], [Mesh], [Mesh] ], [ [Mesh], [Mesh], [Mesh] ], [ [Mesh], [Mesh], [Mesh] ] ]
     
         return allMeshesOfApp; 
     };
+
+    const allMeshesOfApp: any = await ExtractAllMeshesOfApp();
+    const allVoicesOfApp: any = await LoadAllVoicesOfApp(); 
+
+    const loadedData =  data.pages.map( ( page: Page, i: number ): LoadedPage => {
+        const cameraAnimationData = page.camera.CreateAnimationDataFromPositionsRotations();
+        return {
+            ...page, 
+
+            camera: {
+                ...page.camera, 
+                _animation_data: cameraAnimationData, // needed for initial position assignment
+                _animation_clips: cameraAnimationData.map( ( AnimationData:[][], i: number ) => {
+                    return [ TranslateRotate({ 
+                        duration: 4, 
+                        initial_position: AnimationData[ 0 ], 
+                        final_position: AnimationData[ 1 ], 
+                        initial_angle: AnimationData[ 2 ], 
+                        final_angle: AnimationData[ 3 ], 
+                        // axis: 'x', 
+                        axis: FindRotationAxis( AnimationData ), 
+                    }) ];
+                }),
+            },
+
+            // add meshes and positions to each model
+            models: page.models.map( ( model: any, j: number ) => {
+                return {
+                    ...model, 
+                    loadedMeshes: allMeshesOfApp[ i ][ j ],
+
+
+                    // Need to get access to AnimationData here which is just the [][] NOT the whole [][][]. Although you can use that too, but youll need to loop through it.
+                    _positions: CameraPositionToModelPosition( page.camera.positions[ j+1 ], page.camera.rotations[ j+1 ], FindRotationAxis( cameraAnimationData[ j ] ) )
+                };
+            }),
+
+            _loaded_voices: allVoicesOfApp[ i ]
+        };
+    });
+
+    return loadedData;
 };
 
 
@@ -255,14 +270,34 @@ export async function Init( setPages : Function, data: AppData ) {
 
 
 
+    // const [ pages, setPages ] = useState<Page[]>( data.pages );
+
+
+
+    // const [ loading, setLoading ] = useState( true );  // Make less hacky
+    // setTimeout( () => { setLoading( false ) }, 3000 ); // Make less hacky
+
+    // function LoadData() { Init( setLoadedPages, data ) }; 
+
+
+
+    // const [ page ]: Page[] | LoadedPage[] = pages.filter( ( page ) => page.id === current_page );
+
+    // if(!loading && loadedPages.length > 0 ) {
+    //     // const [ page ]: Page[] | LoadedPage[] = pages.filter( ( page ) => page.id === current_page );
+
+    //     console.log('before filtering', loadedPages);
+    //     const [ loadedPage ]: LoadedPage[] = loadedPages.filter( ( loadedPage: LoadedPage ) => loadedPage.id === currentPage );
+    //     console.log('loaded page in App', loadedPage );
+
+    //     return < PageConstructor loadedPage={ loadedPage } setCurrentPage={ setCurrentPage } />
+    // }
 
 
 
 
-
-
-
-
+    // if( loading ) return < h2 style={ { position: 'absolute', top: '500px', left: '800px' } }>Loading...</ h2 >;
+    // else return < h2 >Something is broken.</ h2 >;
 
 
 

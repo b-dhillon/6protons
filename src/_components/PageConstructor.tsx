@@ -6,15 +6,21 @@ import UI from './LessonInterface';
 import Scene from './Scene';
 import '../styles/overlay-styles.css';
 
-export default function PageConstructor( props: { page: Page | LoadedPage, setCurrentPage: Function } ): JSX.Element {
-    const [ page, setPage ] = useState( props.page );
+export default function PageConstructor( props: { loadedPage: LoadedPage, setCurrentPage: Function } ): JSX.Element {
+    const [ loadedPage, setPage ] = useState( props.loadedPage );
+
     const counter = useSelector( ( state: any ) => state.counter );
-    useEffect( () => console.log( 'page _data', page ), [] );
+
+
+    // useEffect( () => console.log( 'loaded page data', loadedPage ), [] );
+
+    console.log( 'loaded page data', loadedPage )
+
     return (
         < Suspense >
 
-            < Scene page={ page } counter={ counter } />
-            < UI devMode={ false } page={ page } setCurrentPage={ props.setCurrentPage } counter={ counter } />
+            < Scene page={ loadedPage } counter={ counter } />
+            < UI devMode={ false } page={ loadedPage } setCurrentPage={ props.setCurrentPage } counter={ counter } />
 
         </ Suspense >
     );
@@ -24,7 +30,39 @@ export default function PageConstructor( props: { page: Page | LoadedPage, setCu
 /* 
 
 - Add Voice
-    - Add a delay to wait out the camera transition
+    - Decide on what voice to use. 
+    - Create and download all voice assets. 
+    - Add voices to data.ts
+    - Find way to blend voices with background music
+    - Add a delay to wait out the camera transition.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 - Juice Up camera transitions
 

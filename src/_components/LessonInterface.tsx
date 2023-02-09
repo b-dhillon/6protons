@@ -32,6 +32,8 @@ function FadeIn() {
 
 function Header( props: any ) {
 
+    console.log(props.page);
+
     // can we move dispatch to the data object as a method?
     const dispatch = useDispatch();
     function GoHome() {
@@ -57,7 +59,7 @@ function Header( props: any ) {
 
             <div className='title-container'>
                 { 
-                    props.page.section === 0 
+                    props.counter === 0 
                     ?
                     <div>
                         <h1 className='title' style={{}} >{ props.page.title }</ h1 >

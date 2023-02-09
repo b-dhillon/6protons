@@ -26,12 +26,10 @@ export function Voice( props: any ): JSX.Element {
     voices[ 0 ].play();
     if ( props.counter > 0 ) {
         voices[ 0 ].pause();
-        voices[ 0 ].setVolume( 0.2 );
+        voices[ 0 ].setVolume( 0.15 );
         voices[ 0 ].play();
-        console.log('voice volume lowered');
         console.log( voices[ 0 ].getVolume() );
     }
-    console.log( voices[ 0 ].getVolume() );
 
     return <></>
 }
