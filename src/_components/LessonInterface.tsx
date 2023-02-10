@@ -13,7 +13,7 @@ export default function LessonUI( props: any  ) {
 
     else return (
         < div className='global-overlay-container' >
-            < FadeIn />
+            {/* < FadeIn /> */}
             < Header page={ props.page } counter={ props.counter } setCurrentPage={ props.setCurrentPage } />
             < Body page={ props.page } counter={ props.counter } />
             < Footer page={ props.page } counter={ props.counter } />
@@ -21,13 +21,13 @@ export default function LessonUI( props: any  ) {
     )
 } 
 
-function FadeIn() {
-    const [ fadeDone, setFadeDone ] = useState( false );
-    function handleFadeDoneAfter( seconds: number ) { setTimeout( () => setFadeDone( true ), seconds ) }; 
-    handleFadeDoneAfter( 5500 );
-    if ( !fadeDone ) return <div className="blackFade"></div>;
-    else return <></>;
-}
+// function FadeIn() {
+//     const [ fadeDone, setFadeDone ] = useState( false );
+//     function handleFadeDoneAfter( seconds: number ) { setTimeout( () => setFadeDone( true ), seconds ) }; 
+//     handleFadeDoneAfter( 5500 );
+//     if ( !fadeDone ) return <div className="blackFade"></div>;
+//     else return <></>;
+// }
 
 
 function Header( props: any ) {

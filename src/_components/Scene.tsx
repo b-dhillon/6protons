@@ -1,5 +1,5 @@
 // React: 
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 
 // Components: 
@@ -20,6 +20,8 @@ function Scene( props: any ): JSX.Element {
         < Suspense >
 
             {/* < Music page={ props.page } counter={ counter } /> */}
+
+            < FadeIn />
             
             < Canvas >
 
@@ -39,6 +41,14 @@ function Scene( props: any ): JSX.Element {
         </ Suspense >
     );
 };
+
+function FadeIn() {
+    const [ fadeDone, setFadeDone ] = useState( false );
+    function handleFadeDoneAfter( seconds: number ) { setTimeout( () => setFadeDone( true ), seconds ) }; 
+    handleFadeDoneAfter( 5500 );
+    if ( !fadeDone ) return <div className="blackFade"></div>;
+    else return <></>;
+}
 
 export default Scene;
 

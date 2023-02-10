@@ -29,18 +29,36 @@ export default function PageConstructor( props: { loadedPage: LoadedPage, setCur
 // To-do:
 /* 
 
-- Add Voice
-    - Test voices.
-    
-    
 
+Performance: 
+    - Offset model shrinking and camera moving. 
+    - Change stars animation to be an animation clip. Performance gains?    
+    
+Voices: 
+    - Decide on joe or fiona. 
+    - Plan out how this first lesson will play out. Will there be interactivity?
 
 
 - Check if black fade is working properly...you might need to move it back to Scene.tsx
 
 
+Script and camera movement: 
+
+    Firing lasers at graphite rods in a supersonic helium beam, produced novel cage-like molecules composed of 60 carbon atoms joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered! 
+    ~ slight pause ~
+    This molecule would go on to be named Buckminsterfullerene.
 
 
+    ~~ Camera rotates to models back side quickly ~~
+
+    Each molecule of Buckminsterfullerene is composed of pure carbon. The carbon atoms arrange themselves as hexagons and pentagons like the seams of a soccer ball. In the model you see here, the repeating hexagon-pentagon geometry can be seen highlighted in red.
+
+
+
+    ~~ Camera moves again around the same model ~~
+
+
+    These molecular structures are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.
 
 
 

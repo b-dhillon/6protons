@@ -161,6 +161,8 @@ async function Init( data: AppData ) {
 
             return Promise.all( pageMusic );
         });
+
+        return Promise.all( allMusicOfApp );
     };
 
     function LoadMusic( path: string ) {            
@@ -198,15 +200,46 @@ async function Init( data: AppData ) {
         return new Promise( (resolve, reject) => {
             const loader = new GLTFLoader();
             const dracoLoader = new DRACOLoader();
-            dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/v1/decoders/' );
+            dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
+
             // dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/v1/decoders/draco_decoder.js' );
-            // dracoLoader.setDecoderPath( './draco' );
-            loader.setDRACOLoader( dracoLoader );
+            // dracoLoader.setDecoderPath('./draco/gltf');
+
+            // dracoLoader.setDecoderPath( 'examples/jsm/libs/draco/' );
+            // dracoLoader.setDecoderPath( './node_modules/three/examples/jsm/libs/draco/' );
+            // dracoLoader.setDecoderConfig( { type: 'js' } );
+            // loader.setDRACOLoader( dracoLoader );
             // loader.preload();
+
+
+
+
+            // dracoLoader.setDecoderPath('./draco/gltf/darco_decorder.js');
+
+            // (Optional) Force non-WebAssembly JS decoder (without this line, WebAssembly
+            // is the default if supported).
+            dracoLoader.setDecoderConfig({type: 'js'});
+
+            loader.setDRACOLoader( dracoLoader );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             loader.load(
                 path,
                 (gltf: any) => {
+                    console.log('gltf', gltf);
                     resolve( gltf );
                     console.log('glTF loaded');
                 },
@@ -222,11 +255,8 @@ async function Init( data: AppData ) {
         });
     };
     
-    async function LoadAllModelsOfApp() {
-        // console.log('LoadAllModelsOfApp() called');
-        // const allModelsOfApp: any = [] // [ [ model0, model1, model2 ], [ model0, model1, model2 ], [ model0, model1, model2  ] ]
-        //                                             ^ models[] of page0           ^models[] of page1           ^models[] of page2
-    
+    async function LoadAllGLTFSOfApp() {
+
         const all_pages_models = data.pages.map(async (page: any) => {
             const page_models: any = []; // [ model0, model1, model2 ]
             for ( let i = 0; i < page.models.length; i++ ) {
@@ -240,19 +270,21 @@ async function Init( data: AppData ) {
     };
     
     async function ExtractAllMeshesOfApp() {
-        // console.log('ExtractAllMeshesOfApp() called');
-        const allModelsOfApp = await LoadAllModelsOfApp();
-        // console.log('ExtractAllMeshesOfApp() done awaiting');
-
-        // console.log(allModelsOfApp); // [ [gltf0, gltf1], [gltf0], [gltf0], [gltf0] ]
+        const allGLTFSOfApp = await LoadAllGLTFSOfApp(); // [ [ gltf0, gltf1 ], [ gltf0 ], [ gltf0 ], [ gltf0 ] ]
     
-        const allMeshesOfApp = allModelsOfApp.map( (arrayOfGltfs: any) => {
+        const allMeshesOfApp = allGLTFSOfApp.map( (arrayOfGltfs: any) => {
             return arrayOfGltfs.map( ( gltf: any ) => {
                 // if(gltf) {
-                    return gltf.scene.children.filter( ( child: any ) => child.isMesh || child.isGroup && child.__removed === undefined )
+                    return gltf
+                        .scene
+                        .children
+                        .filter( 
+                            ( child: any ) => child.isMesh || child.isGroup && child.__removed === undefined 
+                        );
                 // } else return ''
             });
-        }) // [ [ [Mesh], [Mesh], [Mesh] ], [ [Mesh], [Mesh], [Mesh] ], [ [Mesh], [Mesh], [Mesh] ] ]
+        }) 
+        // [ [ [ Mesh ], [ Mesh ], [ Mesh ] ] ]
     
         return allMeshesOfApp; 
     };
@@ -298,7 +330,6 @@ async function Init( data: AppData ) {
             _loaded_music: allMusicOfApp[ i ]
         };
     });
-
     return loadedData;
 };
 
@@ -308,7 +339,9 @@ async function Init( data: AppData ) {
 
 
 
-
+        // console.log('LoadAllModelsOfApp() called');
+        // const allModelsOfApp: any = [] // [ [ model0, model1, model2 ], [ model0, model1, model2 ], [ model0, model1, model2  ] ]
+        //                                             ^ models[] of page0           ^models[] of page1           ^models[] of page2
 
 
 

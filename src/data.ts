@@ -19,7 +19,7 @@ const data: AppData = {
     pages: [
         {
             id: 'test_page',
-            page_title: 'Fullerenes',
+            page_title: 'Buckminsterfullerene',
             section: 0,
             max_section: 6,
             thumbnail: "url('./lesson_thumbnails/fullereneTile.png')",
@@ -35,7 +35,7 @@ const data: AppData = {
              // positions: [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ] ],
                 positions: [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.75, 0.00,-2.00 ], [ 1.00, 2.00, 0.00 ] ],
                 rotations: [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.75, 0.00 ], [ 0.00, 0.00, 0.00 ] ],
-                // build programatically by Init() with this.CreateAnimationDataFromPositionsRotations()
+                // build programatically w-/ Init() + this.CreateAnimationDataFromPositionsRotations()
                 animation_data: [
                     //  initial position      final poisition        initial rotation       final rotation
                     [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 0 
@@ -67,7 +67,7 @@ const data: AppData = {
                     path: '/Fullerenes/models/instance0.glb',
                     visible: true,
                     scale: 0.18,
-                    positions: [ [ 0.00, 0.00, -1.00 ] ], // this is calculated in Init() based off of camera position at the current section
+                    positions: [ [ 0.00, 0.00, -1.00 ] ], // calculated in Init() based off of camera position at the current section
                     rotations: [ [ 0.00, 0.00,  0.00 ] ],
                     animation_clips: [ 
                         SuspendInSolution( 90 ), 
@@ -81,7 +81,7 @@ const data: AppData = {
                     path: '/Fullerenes/models/instance1.glb',
                     visible: false,
                     scale: 0,
-                    positions: [ [ 0.75, 0.66, 0.00 ] ], // this is calculated in Init() based off of camera position at the current section
+                    positions: [ [ 0.75, 0.66, 0.00 ] ], // calculated in Init() based off of camera position at the current section
                     rotations: [ [ 0.00, 0.00, 0.00 ] ],
                     animation_clips: [ 
                         Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ), 
@@ -94,7 +94,7 @@ const data: AppData = {
                     path: '/Fullerenes/models/instance2.glb',
                     visible: true,
                     scale: 0,
-                    positions: [ [ 0.75, 0.00, -3.00 ] ], // this is calculated in Init() based off of camera position at the current section
+                    positions: [ [ 0.75, 0.00, -3.00 ] ], // calculated in Init() based off of camera position at the current section
                     rotations: [ [ 0.00, 0.00,  0.00 ] ],
                     animation_clips: [
                         Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
@@ -107,7 +107,7 @@ const data: AppData = {
                     path: '/Fullerenes/models/___instance3.glb',
                     visible: true,
                     scale: 0,
-                    positions: [ [ 0.00, -0.66, -1.00 ] ], // this is calculated in Init() based off of camera position at the current section
+                    positions: [ [ 0.00, -0.66, -1.00 ] ], // calculated in Init() based off of camera position at the current section
                     rotations: [ [ 0.00,  0.000 , 0.00 ] ],
                     animation_clips: [
                         Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
@@ -121,7 +121,7 @@ const data: AppData = {
                     path: '/Fullerenes/models/___instance4.glb',
                     visible: true,
                     scale: 0,
-                    positions: [ [ 0.00, -0.10, -3.00 ] ], // this is calculated in Init() based off of camera position at the current section
+                    positions: [ [ 0.00, -0.10, -3.00 ] ], // calculated in Init() based off of camera position at the current section
                     rotations: [ [ 0.00,  0.00,  0.00 ] ],
                     animation_clips: [
                         Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
@@ -134,8 +134,8 @@ const data: AppData = {
     
             text: [
                 '',
-                'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas...',
-                'The result? Novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered. This molecule would go on to be named Buckminsterfullerene. Often shortened to fullerene, and nicknamed Buckyball.',
+                'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas.',
+                'Firing lazers at graphite rods in a supersonic helium beam, produced novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered. This molecule would go on to be named Buckminsterfullerene. Often shortened to fullerene, and nicknamed Buckyball.',
                 'Each molecule of Fullerene is composed of pure carbon. The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball. Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.',
                 'For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known. These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems. Scientists have even turned their attention to buckyballs in their quest for a cure for AIDS.',
                 'How can buckyballs help cure aids? An enzyme (HIV-1-Protease) that is required for HIV to reproduce, exhibits a nonpolar pocket in its three-dimensional structure. On the model to the right, notice how the nonpolar Fullerene fits the exact diameter of the enzyme\'s binding pocket. If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible blockers.',
@@ -155,9 +155,9 @@ const data: AppData = {
             ],
     
             voices: [
-                "/music/fullerene3.mp3",    // 0
-                "/voices/joe/voice0.mp3",   // 1
-                "/voices/fiona/voice0.mp3", // 2
+                "/voices/fiona/voice0.mp3", // 0
+                "/voices/fiona/voice0.mp3", // 1
+                "/voices/fiona/voice1.mp3", // 2
                 "/music/fullerene3.mp3",    // 3
                 "/music/fullerene3.mp3",    // 4
             ],

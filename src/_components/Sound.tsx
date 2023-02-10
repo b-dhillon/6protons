@@ -22,7 +22,7 @@ export function Sound( props: any ): JSX.Element {
         });
         */
 
-        voices[ props.counter ].play( 8 );
+        voices[ props.counter ].play( 8.2 );
     }
 
     return <></>

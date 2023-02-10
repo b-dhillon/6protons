@@ -172,14 +172,14 @@ function CreateAnimationAction( fiber_model: any, animationClip: THREE.Animation
 function AnimationController( animationActions: any, counter: number ): void {
 
     if( animationActions.length ) {
-        
-        animationActions.forEach( ( animationAction: any ) => {
-            // stops every model's main animation
-            // animationAction[ 0 ].stop();
 
-            // stops every model's nested animation
-            // animationAction[ 2 ]?.stop();
-        });
+        // animationActions.forEach( ( animationAction: any ) => {
+        //     // stops every model's main animation
+        //     // animationAction[ 0 ].stop();
+
+        //     // stops every model's nested animation
+        //     // animationAction[ 2 ]?.stop();
+        // });
 
         // SCALE UP ANIMATION:
         animationActions[ counter ][ 1 ].startAt( 8 ).setEffectiveTimeScale( -1 ).play();
@@ -193,9 +193,10 @@ function AnimationController( animationActions: any, counter: number ): void {
 
     if( animationActions.length && counter > 0) {
 
-        // SCALE DOWN ANIMATION:
-        animationActions[ (counter - 1) ][ 1 ].reset().setEffectiveTimeScale( 0.5 ).play();
-        /* animationActions[ (counter - 1) ][ 1 ].setEffectiveTimeScale( 1 ).play(); */
+        // SCALE DOWN ANIMATION: -- i think these scale ups and down are the same every model so do we really need to make it based on the counter?
+        // animationActions[ (counter - 1) ][ 1 ].reset().play();
+        animationActions[ (counter - 1) ][ 1 ].reset().setEffectiveTimeScale( 1.2 ).play();
+        /* animationActions[ (counter - 1) ][ 1 ].setEffectiveTimeScale( 0.5 ).play(); */
     };
 
     if( animationActions.length && animationActions[ counter ][ 2 ] ) {

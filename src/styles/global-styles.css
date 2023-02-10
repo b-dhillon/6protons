@@ -28,7 +28,7 @@ body,
   margin: 0;
   padding: 0;
   background-color: black;
-  animation: fadeOut 2.2s ease-in-out forwards;
+  animation: fadeOut 3.5s ease-in-out forwards;
   z-index: 10;
 }
 

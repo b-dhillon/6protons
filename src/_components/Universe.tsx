@@ -5,13 +5,14 @@ import { inSphere } from "maath/random";
 import { TypedArray } from 'maath/dist/declarations/src/ctypes';
 
 // This is top level because we want to run the positions calculation at the very beginning. Maybe we can move it to Init?
-const star_positions = BigBang2( 25000, 5 );
+// const star_positions = BigBang2( 25000, 5 );
+const star_positions = BigBang2( 12000, 5 );
 
 function Universe( props: any ): JSX.Element {
     // const star_positions = BigBang2( props.page.universe.size , props.page.universe.radius );
 
     const ref: any = useRef();
-    useFrame( (_, delta) => ref.current.rotation.x -= delta / 20 );
+    useFrame( (_, delta) => ref.current.rotation.x -= delta / 30 );
     // ref.current.rotation.y -= delta / 20
     
     return (
