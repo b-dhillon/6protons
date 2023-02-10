@@ -193,7 +193,7 @@ function AnimationController( animationActions: any, counter: number ): void {
 
     if( animationActions.length && counter > 0) {
         // scale down animation:
-        animationActions[ (counter - 1) ][ 1 ].reset().setEffectiveTimeScale( 0.65 ).play();
+        animationActions[ (counter - 1) ][ 1 ].reset().setEffectiveTimeScale( 0.5 ).play();
         // animationActions[ (counter - 1) ][ 1 ].setEffectiveTimeScale( 1 ).play();
 
     };

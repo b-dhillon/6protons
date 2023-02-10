@@ -30,9 +30,10 @@ export default function PageConstructor( props: { loadedPage: LoadedPage, setCur
 /* 
 
 - Add Voice
-    - Decide on what voice to use. 
-    - Create and download all voice assets. 
+
+    - Create and download voice assets. 
     - Add voices to data.ts
+
     - Find way to blend voices with background music
     - Add a delay to wait out the camera transition.
 
