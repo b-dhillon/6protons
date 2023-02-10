@@ -155,11 +155,11 @@ const data: AppData = {
             ],
     
             voices: [
-                "/music/fullerene3.mp3", // 0
-                "/music/fullerene3.mp3", // 1
-                "/music/fullerene3.mp3", // 2
-                "/music/fullerene3.mp3", // 3
-                "/music/fullerene3.mp3", // 4
+                "/music/fullerene3.mp3",    // 0
+                "/voices/joe/voice0.mp3",   // 1
+                "/voices/fiona/voice0.mp3", // 2
+                "/music/fullerene3.mp3",    // 3
+                "/music/fullerene3.mp3",    // 4
             ],
             //                0     1     2     3     4
             loaded_voices: [ null, null, null, null, null ],

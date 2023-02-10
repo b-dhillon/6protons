@@ -11,8 +11,26 @@ function Audio( props: any ): JSX.Element {
 }
 */
 
-export function Voice( props: any ): JSX.Element {
+export function Audio( props: any ): JSX.Element {
     const voices: Audio[] = props.page._loaded_voices
+    const music: Audio[] = props.page._loaded_music
+
+    // Configuring background music
+    music[ 0 ].play();
+    if ( props.counter > 0 ) {
+        music[ 0 ].pause();
+        music[ 0 ].setVolume( 0.15 );
+        music[ 0 ].play();
+    }
+
+    // Configuring voice
+    if ( props.counter > 0 ) {
+        voices[ props.counter ].play();
+    }
+
+
+
+    return <></>
 
     // reset
     // voices.forEach( ( voice: any ) => {
@@ -21,17 +39,6 @@ export function Voice( props: any ): JSX.Element {
 
     // if( counter > 0 && counter < props.page.max_section ) voices[ counter ].play( 4 );
     // props.data.voices[ counter ].offset(4).play();
-
-
-    voices[ 0 ].play();
-    if ( props.counter > 0 ) {
-        voices[ 0 ].pause();
-        voices[ 0 ].setVolume( 0.15 );
-        voices[ 0 ].play();
-        console.log( voices[ 0 ].getVolume() );
-    }
-
-    return <></>
 }
 
 export default function Music( props: any ): JSX.Element {

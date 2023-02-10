@@ -132,7 +132,6 @@ async function Init( data: AppData ) {
                     AudioObject.setBuffer( buffer );
                     AudioObject.setLoop( false );
                     AudioObject.setVolume( 1 );
-                    // AudioObject.play();
                     resolve( AudioObject )
                 },
         
@@ -143,7 +142,53 @@ async function Init( data: AppData ) {
         
                 // onError
                 ( err ) => {
-                    console.log( 'An error happened', err );
+                    console.log( 'Error loading voices', err );
+                }
+            );
+        })
+    };
+
+    async function LoadAllMusicOfApp() {
+        /* const allMusicOfApp: any = [][] // [ [ music0, music1, music2 ], [ music0, music1, music2 ], etc... ]
+                                                            ^ music[] of page0          ^ music[] of page1      */  
+        const allMusicOfApp = data.pages.map( async ( page: any ) => {
+
+            let pageMusic = []; // [ music0, music1, music2 ]
+
+            for ( let i = 0; i < page.music.length; i++ ) {
+                pageMusic[ i ] = LoadMusic( page.music[ i ] );
+            };
+
+            return Promise.all( pageMusic );
+        });
+    };
+
+
+    function LoadMusic( path: string ) {            
+        return new Promise( ( resolve, reject ) => {
+            const listener = new THREE.AudioListener();
+            const AudioObject = new THREE.Audio( listener );
+            const loader = new THREE.AudioLoader();
+            loader.load( 
+                path,
+
+                // onLoad
+                ( buffer: AudioBuffer ) => {
+                    // Set the audio object's buffer to the loaded object
+                    AudioObject.setBuffer( buffer );
+                    AudioObject.setLoop( false );
+                    AudioObject.setVolume( 1 );
+                    resolve( AudioObject )
+                },
+        
+                // onProgress 
+                ( xhr ) => {
+                    // console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+                },
+        
+                // onError
+                ( err ) => {
+                    console.log( 'Error loading voices', err );
                 }
             );
         })
@@ -215,6 +260,7 @@ async function Init( data: AppData ) {
 
     const allMeshesOfApp: any = await ExtractAllMeshesOfApp();
     const allVoicesOfApp: any = await LoadAllVoicesOfApp(); 
+    const allMusicOfApp: any = await LoadAllMusicOfApp();
 
     const loadedData =  data.pages.map( ( page: Page, i: number ): LoadedPage => {
         const cameraAnimationData = page.camera.CreateAnimationDataFromPositionsRotations();
