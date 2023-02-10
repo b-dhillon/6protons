@@ -19,13 +19,13 @@ export interface Page {
     camera: LessonCamera,
     models: Model[],    
     dispatch: Function,
-    // audio: any,
 };
 
 export interface LoadedPage extends Page {
     camera: LoadedLessonCamera,
     models: LoadedModel[],
-    _loaded_voices: Audio[]
+    _loaded_voices: Audio[],
+    _loaded_music: Audio[],
 };
 
 export interface LessonCamera {

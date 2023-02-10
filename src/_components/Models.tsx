@@ -172,6 +172,7 @@ function CreateAnimationAction( fiber_model: any, animationClip: THREE.Animation
 function AnimationController( animationActions: any, counter: number ): void {
 
     if( animationActions.length ) {
+        
         animationActions.forEach( ( animationAction: any ) => {
             // stops every model's main animation
             // animationAction[ 0 ].stop();
@@ -180,26 +181,26 @@ function AnimationController( animationActions: any, counter: number ): void {
             // animationAction[ 2 ]?.stop();
         });
 
-        // scale up animation:
-        // animationActions[ counter ][ 1 ].startAt( 4 ).setEffectiveTimeScale( -1 ).play();
+        // SCALE UP ANIMATION:
         animationActions[ counter ][ 1 ].startAt( 8 ).setEffectiveTimeScale( -1 ).play();
+        /* animationActions[ counter ][ 1 ].startAt( 4 ).setEffectiveTimeScale( -1 ).play(); */
 
-        // main animation
-        if (counter === 0 ) animationActions[ counter ][ 0 ].play();
-
-        // else animationActions[ counter ][ 0 ].startAt( 5 ).play();
+        // MAIN ANIMATION:
+        if (counter === 0 ) animationActions[ counter ][ 0 ].play()
         else animationActions[ counter ][ 0 ].startAt( 9 ).play();
+        /* else animationActions[ counter ][ 0 ].startAt( 5 ).play(); */
     };
 
     if( animationActions.length && counter > 0) {
-        // scale down animation:
-        animationActions[ (counter - 1) ][ 1 ].reset().setEffectiveTimeScale( 0.5 ).play();
-        // animationActions[ (counter - 1) ][ 1 ].setEffectiveTimeScale( 1 ).play();
 
+        // SCALE DOWN ANIMATION:
+        animationActions[ (counter - 1) ][ 1 ].reset().setEffectiveTimeScale( 0.5 ).play();
+        /* animationActions[ (counter - 1) ][ 1 ].setEffectiveTimeScale( 1 ).play(); */
     };
 
     if( animationActions.length && animationActions[ counter ][ 2 ] ) {
-        // nested animation
+
+        // NESTED ANIMATION:
         animationActions[ counter ][ 2 ].setLoop( LoopPingPong, Infinity )
         animationActions[ counter ][ 2 ].play();
     };

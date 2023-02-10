@@ -1,17 +1,7 @@
 import { Audio } from 'three';
 
-/*
-function Audio( props: any ): JSX.Element {
-    return (
-        <>
-            < BackroundMusic data={ props.data } />
-            < Voice data={ props.data } counter={ props.counter }/>
-        </>
-    )
-}
-*/
+export function Sound( props: any ): JSX.Element {
 
-export function Audio( props: any ): JSX.Element {
     const voices: Audio[] = props.page._loaded_voices
     const music: Audio[] = props.page._loaded_music
 
@@ -25,22 +15,64 @@ export function Audio( props: any ): JSX.Element {
 
     // Configuring voice
     if ( props.counter > 0 ) {
-        voices[ props.counter ].play();
+        // reset
+        /*
+        voices.forEach( ( voice: any ) => {
+            voice.stop();
+        });
+        */
+
+        voices[ props.counter ].play( 8 );
     }
 
-
-
     return <></>
-
-    // reset
-    // voices.forEach( ( voice: any ) => {
-    //     voice.stop();
-    // });
 
     // if( counter > 0 && counter < props.page.max_section ) voices[ counter ].play( 4 );
     // props.data.voices[ counter ].offset(4).play();
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Attempt at combining all audio into one component
+/*
+function Audio( props: any ): JSX.Element {
+    return (
+        <>
+            < BackroundMusic data={ props.data } />
+            < Voice data={ props.data } counter={ props.counter }/>
+        </>
+    )
+}
+*/
+
+// Old audio code -- using HTML audio elements
+/*
 export default function Music( props: any ): JSX.Element {
     return (
       < audio autoPlay >
@@ -48,3 +80,4 @@ export default function Music( props: any ): JSX.Element {
       </ audio >
     );
 };
+*/

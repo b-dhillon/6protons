@@ -30,16 +30,13 @@ export default function PageConstructor( props: { loadedPage: LoadedPage, setCur
 /* 
 
 - Add Voice
-
-    - Create and download voice assets. 
-    - Add voices to data.ts
-
-    - Find way to blend voices with background music
-    - Add a delay to wait out the camera transition.
+    - Test voices.
+    
+    
 
 
 
-
+- Check if black fade is working properly...you might need to move it back to Scene.tsx
 
 
 

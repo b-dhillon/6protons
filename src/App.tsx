@@ -163,7 +163,6 @@ async function Init( data: AppData ) {
         });
     };
 
-
     function LoadMusic( path: string ) {            
         return new Promise( ( resolve, reject ) => {
             const listener = new THREE.AudioListener();
@@ -295,7 +294,8 @@ async function Init( data: AppData ) {
                 };
             }),
 
-            _loaded_voices: allVoicesOfApp[ i ]
+            _loaded_voices: allVoicesOfApp[ i ],
+            _loaded_music: allMusicOfApp[ i ]
         };
     });
 

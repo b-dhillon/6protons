@@ -5,10 +5,10 @@ import { Canvas } from '@react-three/fiber';
 // Components: 
 import Universe from './Universe';
 import Models from './Models';
-import Music from './Audio';
 import DevelopmentCamera from './DevelopmentCamera';
 import Camera from './Camera';
-import { Audio } from './Audio';
+import { Sound } from './Sound';
+// import Music from './Sound';
 
 
 // Mounts components to scene graph and renders 3D scene.
@@ -23,7 +23,7 @@ function Scene( props: any ): JSX.Element {
             
             < Canvas >
 
-                < Audio page={ props.page } counter={ counter }/>
+                < Sound page={ props.page } counter={ counter }/>
 
                 < Universe page={ props.page } />
                 < Camera page={ props.page } counter={ counter }  />
