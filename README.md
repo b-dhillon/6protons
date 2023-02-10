@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="./readme_img/mainImg.jpg" style="width:600px;"/>
+    <img src="./readme_img/mainImg.jpg" style="width:700px;"/>
 </p>
 
 # 6 Protons
