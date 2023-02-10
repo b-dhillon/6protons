@@ -3,6 +3,7 @@
 ### Project Description:
 - Six Protons is a VR minimum viable product. It is designed to teach organic chemistry via visualizing concepts using interactive 3D models embedded in a virtual universe. The project in its current form focuses on organic chemistry (carbon is the only atom with 6 protons) however, this software is capable of creating a 3D lesson to teach any STEM subject. The application is under development and currently being re-written. 
 
+<img src="./readme_img/vitb12.png" style="width:750px;"/>
 
 ## Application Structure:
 ### File System:
@@ -92,10 +93,10 @@ SPA with server side rendering & hydration.
 
 
 ## User Interface (stills) :
-<img src="./img-ui/ui-1.png" style="width:750px;"/>
-<img src="./img-ui/ui-2.png" style="width:750px;"/>
-<img src="./img-ui/ui-3.png" style="width:750px;"/>
-<img src="./img-ui/ui-4.jpg" style="width:750px;"/>
+<img src="./readme_img/img-ui/ui-1.png" style="width:750px;"/>
+<img src="./readme_img/img-ui/ui-2.png" style="width:750px;"/>
+<img src="./readme_img/img-ui/ui-3.png" style="width:750px;"/>
+<img src="./readme_img/img-ui/ui-4.jpg" style="width:750px;"/>
 
 ## Demo:
 
