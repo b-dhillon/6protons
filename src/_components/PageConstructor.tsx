@@ -35,30 +35,24 @@ Performance:
     - Change stars animation to be an animation clip. Performance gains?    
     
 Voices: 
-    - Decide on joe or fiona. 
     - Plan out how this first lesson will play out. Will there be interactivity?
+        Script and camera movement: 
+
+            Firing lasers at graphite rods in a supersonic helium beam, produced novel cage-like molecules composed of 60 carbon atoms joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered! 
+            ~ slight pause ~
+            This molecule would go on to be named Buckminsterfullerene.
 
 
-- Check if black fade is working properly...you might need to move it back to Scene.tsx
+            ~~ Camera rotates to models back side quickly ~~
 
-
-Script and camera movement: 
-
-    Firing lasers at graphite rods in a supersonic helium beam, produced novel cage-like molecules composed of 60 carbon atoms joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered! 
-    ~ slight pause ~
-    This molecule would go on to be named Buckminsterfullerene.
-
-
-    ~~ Camera rotates to models back side quickly ~~
-
-    Each molecule of Buckminsterfullerene is composed of pure carbon. The carbon atoms arrange themselves as hexagons and pentagons like the seams of a soccer ball. In the model you see here, the repeating hexagon-pentagon geometry can be seen highlighted in red.
+            Each molecule of Buckminsterfullerene is composed of pure carbon. The carbon atoms arrange themselves as hexagons and pentagons like the seams of a soccer ball. In the model you see here, the repeating hexagon-pentagon geometry can be seen highlighted in red.
 
 
 
-    ~~ Camera moves again around the same model ~~
+            ~~ Camera moves again around the same model ~~
 
 
-    These molecular structures are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.
+            These molecular structures are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.
 
 
 
@@ -87,30 +81,13 @@ Script and camera movement:
     -                              2. slower and more cinematic -- make the distances between positions and rotations smaller?
 
 
-    
-
-
 - Add subtitles
     - Have a fade out letter by letter animation as the camera is cinematically moving to the next position. 
         - fadeOut with shuffle @ https://textillate.js.org/
 
 - Fix anything with music
 
-~~~ Demo run with music, models, text, and new 3d cam movement. ~~~
-
-
-
-
-
-- Add Voices.
-    - You'll have to add a delay though to wait out the camera transition.
-    - You'll also likely need to add some sort of post-processing effect to blend the background music with the speach audio
-        however, this can easily be done with tuning the volumes. --> Likely achieved with .offset()
-
-
-        
-
-- Any way to make updating mixers more efficient?
+~~~ Demo run with music, models, text, and new 3d cam movement. ~~~- Any way to make updating mixers more efficient?
 - Double check you have gotten rid of all hard coded data, both in data.ts and here in TestPage.tsx.
 
 */

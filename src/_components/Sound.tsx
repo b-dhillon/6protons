@@ -11,19 +11,20 @@ export function Sound( props: any ): JSX.Element {
         music[ 0 ].pause();
         music[ 0 ].setVolume( 0.15 );
         music[ 0 ].play();
-    }
-
-    // Configuring voice
-    if ( props.counter > 0 ) {
-        // reset
-        /*
-        voices.forEach( ( voice: any ) => {
-            voice.stop();
-        });
-        */
-
         voices[ props.counter ].play( 8.2 );
+
     }
+
+    // // Configuring voice
+    // if ( props.counter > 0 ) {
+    //     // reset
+    //     /*
+    //     voices.forEach( ( voice: any ) => {
+    //         voice.stop();
+    //     });
+    //     */
+
+    // }
 
     return <></>
 
