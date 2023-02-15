@@ -8,11 +8,10 @@ export function Sound( props: any ): JSX.Element {
     // Configuring background music
     music[ 0 ].play();
     if ( props.counter > 0 ) {
-        music[ 0 ].pause();
+        // music[ 0 ].pause();
         music[ 0 ].setVolume( 0.15 );
-        music[ 0 ].play();
+        // music[ 0 ].play();
         voices[ props.counter ].play( 8.2 );
-
     }
 
     // // Configuring voice

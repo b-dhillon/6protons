@@ -1,19 +1,14 @@
-import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { decrement, increment, reset, start } from "../components/redux/actions";
-
 export default function LessonUI( props: any  ) {
     const dispatch = useDispatch();
 
     if( props.devMode ) {
-        return (
-            <button onClick={ () => dispatch( increment() ) } style={ { position: 'absolute', zIndex: 10, top: 0 } }>next</button>
-        )
+        return <button onClick={ () => dispatch( increment() ) } style={ { position: 'absolute', zIndex: 10, top: 0 } }>next</button>
     }
 
     else return (
         < div className='global-overlay-container' >
-            {/* < FadeIn /> */}
             < Header page={ props.page } counter={ props.counter } setCurrentPage={ props.setCurrentPage } />
             < Body page={ props.page } counter={ props.counter } />
             < Footer page={ props.page } counter={ props.counter } />
@@ -21,20 +16,14 @@ export default function LessonUI( props: any  ) {
     )
 } 
 
-// function FadeIn() {
-//     const [ fadeDone, setFadeDone ] = useState( false );
-//     function handleFadeDoneAfter( seconds: number ) { setTimeout( () => setFadeDone( true ), seconds ) }; 
-//     handleFadeDoneAfter( 5500 );
-//     if ( !fadeDone ) return <div className="blackFade"></div>;
-//     else return <></>;
-// }
-
-
 function Header( props: any ) {
+
+    let section: number = props.counter;
+    let lesson: any = props.page;
 
     console.log(props.page);
 
-    // can we move dispatch to the data object as a method?
+    // can we move dispatch to the data object as a method? but why?
     const dispatch = useDispatch();
     function GoHome() {
         dispatch( start() );
@@ -44,30 +33,30 @@ function Header( props: any ) {
 
     function GoBack() {
         dispatch( reset() );
-        props.setCurrentPage( `home` ); 
+        props.setCurrentPage( `home` );
     };
 
     return (
-        <div className='header-container'>
+        < div className='header-container' >
 
             < li className="home-back-container" onClick={ () => GoBack } >
-                <button className="homeBtn--icon">
+                < button className="homeBtn--icon" >
                     <i className="fa-solid fa-arrow-left-long backBtn" style={ { color: 'white' } }></i>
-                </button> 
+                </ button > 
             </ li >
 
 
-            <div className='title-container'>
+            < div className='title-container' >
                 { 
-                    props.counter === 0 
+                    section === 0 
                     ?
-                    <div>
-                        <h1 className='title' style={{}} >{ props.page.title }</ h1 >
-                    </div> 
+                    < div >
+                        < h1 className='title' style={{}} >{ lesson.title }</ h1 >
+                    </ div > 
                     :
                     ""
                 }
-            </div> 
+            </ div > 
 
             < li className="home-back-container" onClick={ () => GoHome } >
                 < button className="homeBtn--icon">
@@ -75,8 +64,7 @@ function Header( props: any ) {
                 </ button >
             </ li >
 
-
-        </div>
+        </ div >
     )
 }
 

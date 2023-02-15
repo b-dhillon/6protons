@@ -1,16 +1,13 @@
 // @ts-nocheck
 
-
-
 // Creates camera, handles its updates and renders the cameraHelper when called.
 
-import { OrbitControls, PerspectiveCamera, useHelper } from "@react-three/drei";
+import { PerspectiveCamera } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
-import { CameraHelper } from "three";
 import * as THREE from 'three'
+// import { CameraHelper } from "three";
 
-// Is wired to page.section_counter NOT redux counter!
 export default function Camera( props: { counter: number, page: any } ): JSX.Element {
 
     // const section = props.data.section;
@@ -32,6 +29,7 @@ export default function Camera( props: { counter: number, page: any } ): JSX.Ele
 
         const allAnimationActions = allAnimationClips.map( ( animationClip: [] ) => CreateAnimationAction_Cam( animationClip[ 0 ] ) );
         setAnimationActions( allAnimationActions );
+
     }; useEffect( () => { CreateAnimationActions( ref.current, camera._animation_clips ) }, [] );
                                                          
     function AnimationController() { 
@@ -54,12 +52,10 @@ export default function Camera( props: { counter: number, page: any } ): JSX.Ele
 
     return (
         <>
-            {/* < PerspectiveCamera ref={ref} position={ props.page.camera._animation_data[ 0 ][ 0 ] } fov={ 45 } near={ 0.15 } far={ 8 } /> */}
             < PerspectiveCamera ref={ref} position={ [ props.page.camera.positions[ 0 ] ] } fov={ 45 } near={ 0.25 } far={ 7 } />
         </>
     );
 };
-
 
 
 function SetCamera( cam ): void {
@@ -70,3 +66,4 @@ function SetCamera( cam ): void {
 
 
 {/* < UpdateCamera _ref={ref} counter={ props.counter } camera_data={ props.camera_data } /> */}
+{/* < PerspectiveCamera ref={ref} position={ props.page.camera._animation_data[ 0 ][ 0 ] } fov={ 45 } near={ 0.15 } far={ 8 } /> */}
