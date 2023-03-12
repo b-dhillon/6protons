@@ -5,8 +5,10 @@ import { inSphere } from "maath/random";
 import { TypedArray } from 'maath/dist/declarations/src/ctypes';
 
 // This is top level because we want to run the positions calculation at the very beginning. Maybe we can move it to Init?
-// const star_positions = BigBang2( 25000, 5 );
-const star_positions = BigBang2( 12000, 5 );
+const stars = BigBang( 25000, 5 );
+
+
+// const star_positions = BigBang2( 12000, 5 );
 
 function Universe( props: any ): JSX.Element {
     // const star_positions = BigBang2( props.page.universe.size , props.page.universe.radius );
@@ -18,17 +20,21 @@ function Universe( props: any ): JSX.Element {
     return (
         < group  rotation={ [ 0, 0, Math.PI / 4 ] } >
             < group  >
-                < Points ref={ ref }  positions={ star_positions } stride={ 3 } frustumCulled={ false } { ...props } >
+                < Points ref={ ref }  positions={ stars } stride={ 3 } frustumCulled={ false } { ...props } >
                     < PointMaterial transparent color="#fff" size={ 0.0035 } sizeAttenuation={ true } depthWrite={ false } />
                 </ Points >
             </ group >
         </ group>
     );
 };
+
+
+// size={ 0.0035 } <-- current
+
 // size={.0045}
 
 // inCube
-function BigBang( stars: number, radius: number ): Float32Array {
+function BigBangCube( stars: number, radius: number ): Float32Array {
     const p =  new Float32Array( stars );
     for ( let i = 0; i < stars; i++ ) {
       const theta = Math.random() * 2 * Math.PI;
@@ -45,7 +51,7 @@ function BigBang( stars: number, radius: number ): Float32Array {
 };
 
 // inSphere
-function BigBang2(stars: number, radius: number ): TypedArray {
+function BigBang(stars: number, radius: number ): TypedArray {
     return inSphere( new Float32Array( stars ), { radius: radius } );
 }
 

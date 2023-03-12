@@ -10,6 +10,10 @@ import PageConstructor from './_components/PageConstructor';
 import { FindRotationAxis } from './_components/FindRotationAxis';
 
 
+// Add sound effects between camera movements, but like a whoosh of some kind, but obviously fitting the space theme. 
+// Camera movements need to be refined. Going from Soccer Ball to Doped Ball is weird, should be changed. Currently is y-axis 90 degree rotation.
+// Need to refine jank on fullerene opening animation. Tai can likely help here. Its likely a garbage collection bottleneck. I believe frames have 8ms to render to not have any jank @120fps.
+//  
 
 export default function App() {
 
