@@ -2,8 +2,7 @@ import { Provider } from 'react-redux';
 import { createRoot } from 'react-dom/client';
 import React from 'react';
 import App from './App';
-import __App from './__App';
-import store from './components/redux/store'
+import store from './redux/store'
 import './styles/global-styles.css';
 
 const container = document.getElementById('root');

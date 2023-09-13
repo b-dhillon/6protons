@@ -5,9 +5,9 @@ import {
     ConstructCameraAnimationClips, 
     LoadAllVoicesOfApp, 
     ExtractAllMeshesOfApp
-} from '../_components/Init/Helpers';
+} from '../../unused/Init/Helpers';
 
-import Vec3ToArr from '../_components/Vec3ToArr';
+import Vec3ToArr from '../components/Vec3ToArr';
 import data from '../data';
 // import { Init } from '../_components/Init';
 // import SuspendInSolution from '../_components/animations/SuspendInSolution';
@@ -127,9 +127,9 @@ describe( 'Init', () => {
     const hardCodedLoadedTestData = [
         {
             id: 'test_page',
-            page_title: 'Fullerenes',
+            pageTitle: 'Fullerenes',
             section: 0,
-            max_section: 6,
+            maxSection: 6,
             thumbnail: "url('./lesson_thumbnails/fullereneTile.png')",
     
             universe: {
@@ -145,7 +145,7 @@ describe( 'Init', () => {
                 rotations: [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ],
                 
                 // build programatically by Init() with this.CreateAnimationDataFromPositionsRotations(), remove from original data structure and just keep here. 
-                animation_data: [
+                animationData: [
                     //  initial position      final poisition        initial rotation       final rotation
                     [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 0 
                     [ [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ] ], // 1
@@ -154,17 +154,17 @@ describe( 'Init', () => {
                     [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ],  [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 4
                 ],
                 //                  0     1     2     3     4 
-                animation_clips: [ null, null, null, null, null ],
+                animationClips: [ null, null, null, null, null ],
                 CreateAnimationDataFromPositionsRotations: function() {
-                    const animation_data = [];
+                    const animationData = [];
                     for( let i = 0; i < this.positions.length - 1; i++ ) {
                         const initial_position: number[] = this.positions[ i ];
                         const final_position: number[] = this.positions[ i + 1 ];
                         const initial_rotation: number[] = this.rotations[ i ];
                         const final_rotation: number[] = this.rotations[ i + 1 ];
-                        animation_data.push( [ initial_position, final_position, initial_rotation, final_rotation ] );
+                        animationData.push( [ initial_position, final_position, initial_rotation, final_rotation ] );
                     };
-                    return animation_data;
+                    return animationData;
                 },
 
 
@@ -195,7 +195,7 @@ describe( 'Init', () => {
                     scale: 0.18,
                     positions: [ [ 0.00, 0.00, -1.00 ] ], // this is calculated in Init() based off of camera position at the current section
                     rotations: [ [ 0.00, 0.00,  0.00 ] ],
-                    animation_clips: [ 
+                    animationClips: [ 
                         SuspendInSolution( 90 ), 
                         ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } ) 
                     ],
@@ -211,7 +211,7 @@ describe( 'Init', () => {
                     scale: 0,
                     positions: [ [ 0.75, 0.71, 0.00 ] ], // this is calculated in Init() based off of camera position at the current section
                     rotations: [ [ 0.00, 0.00, 0.00 ] ],
-                    animation_clips: [ 
+                    animationClips: [ 
                         Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ), 
                         ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0.00, 0.00, 0.00 ] } )
                     ],
@@ -227,7 +227,7 @@ describe( 'Init', () => {
                     scale: 0,
                     positions: [ [ 0.75, 0.00, -3.00 ] ], // this is calculated in Init() based off of camera position at the current section
                     rotations: [ [ 0.00, 0.00,  0.00 ] ],
-                    animation_clips: [
+                    animationClips: [
                         Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
                         ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0.00, 0.00, 0.00 ] } )
                     ],
@@ -243,7 +243,7 @@ describe( 'Init', () => {
                     scale: 0,
                     positions: [ [ 0.00, -0.675, -1.00 ] ], // this is calculated in Init() based off of camera position at the current section
                     rotations: [ [ 0.00,  0.000 , 0.00 ] ],
-                    animation_clips: [
+                    animationClips: [
                         Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
                         ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0.00, 0.00, 0.00 ] } ),
                         Rotate( { duration: 1500, axis: 'x', initial_angle: 0, final_angle: 360 } ),
@@ -260,7 +260,7 @@ describe( 'Init', () => {
                     scale: 0,
                     positions: [ [ 0.00, -0.10, -3.00 ] ], // this is calculated in Init() based off of camera position at the current section
                     rotations: [ [ 0.00,  0.00,  0.00 ] ],
-                    animation_clips: [
+                    animationClips: [
                         Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
                         ScaleXYZ( { duration: 1, initial_scale: [ 0.10, 0.10, 0.10 ], final_scale: [ 0.00, 0.00, 0.00 ] } ),
                         ScaleXYZ( { duration: 3, initial_scale: [ 0.01, 0.01, 0.01 ], final_scale: [ 0.075, 0.075, 0.075 ] } )
@@ -302,7 +302,7 @@ describe( 'Init', () => {
                 "/music/fullerene2.mp3", // 4
             ],
             //                0     1     2     3     4
-            loaded_voices: [ null, null, null, null, null ],    
+            loadedVoices: [ null, null, null, null, null ],    
             dispatch: useDispatch,
 
 

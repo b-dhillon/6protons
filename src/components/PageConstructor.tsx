@@ -2,33 +2,37 @@ import { useState } from 'react';
 import { Suspense, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Page, LoadedPage } from '../types/types';
-import UI from './LessonInterface';
+import LessonInterface from './LessonInterface';
 import Scene from './Scene';
 import '../styles/overlay-styles.css';
 
-export default function PageConstructor( props: { loadedPage: LoadedPage, setCurrentPage: Function } ): JSX.Element {
-    const [ loadedPage, setPage ] = useState( props.loadedPage );
+export function PageConstructor( props: { loadedPage: LoadedPage, setCurrentPage: Function } ): JSX.Element {
 
-    const counter = useSelector( ( state: any ) => state.counter );
+  const [ loadedPage, setPage ] = useState( props.loadedPage );
+  const counter = useSelector( ( state: any ) => state.counter );
+  // useEffect( () => console.log( 'loaded page data', loadedPage ), [] );
 
-
-    // useEffect( () => console.log( 'loaded page data', loadedPage ), [] );
-
-    console.log( 'loaded page data', loadedPage )
-
-    return (
-        < Suspense >
-
-            < Scene page={ loadedPage } counter={ counter } />
-            < UI devMode={ false } page={ loadedPage } setCurrentPage={ props.setCurrentPage } counter={ counter } />
-
-        </ Suspense >
-    );
+  return (
+    < Suspense >
+      < Scene page={ loadedPage } counter={ counter } />
+      < LessonInterface devMode={ false } page={ loadedPage } setCurrentPage={ props.setCurrentPage } counter={ counter } />
+    </ Suspense >
+  );
 };
+
+
+
+
+
+
+
+
+
+
+
 
 // To-do:
 /* 
-
 
 Performance: 
     - Offset model shrinking and camera moving. 
@@ -131,7 +135,7 @@ function UI( props ): JSX.Element {
 /* 
 <>
 {
-    props.counter === 1 || props.counter === props.data.max_section
+    props.counter === 1 || props.counter === props.data.maxSection
     ?
     < div className='main-container' >
 

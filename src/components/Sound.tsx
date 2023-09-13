@@ -1,17 +1,17 @@
 import { Audio } from 'three';
 
-export function Sound( props: any ): JSX.Element {
+export function Sound( { page, counter }: any ): JSX.Element {
 
-    const voices: Audio[] = props.page._loaded_voices
-    const music: Audio[] = props.page._loaded_music
+    const voices: Audio[] = page.loadedVoices
+    const music: Audio[] = page.loadedMusic
 
     // Configuring background music
     music[ 0 ].play();
-    if ( props.counter > 0 ) {
+    if ( counter > 0 ) {
         // music[ 0 ].pause();
         music[ 0 ].setVolume( 0.15 );
         // music[ 0 ].play();
-        voices[ props.counter ].play( 8.2 );
+        voices[ counter ].play( 8.2 );
     }
 
     // // Configuring voice
@@ -27,7 +27,7 @@ export function Sound( props: any ): JSX.Element {
 
     return <></>
 
-    // if( counter > 0 && counter < props.page.max_section ) voices[ counter ].play( 4 );
+    // if( counter > 0 && counter < props.page.maxSection ) voices[ counter ].play( 4 );
     // props.data.voices[ counter ].offset(4).play();
 }
 

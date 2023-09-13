@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-  ]
+, "unused/Init", "unused/__App.tsx"  ]
 }

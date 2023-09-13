@@ -6,15 +6,15 @@ export interface AppData {
 
 export interface Page {
     id: string,
-    page_title: string,
+    pageTitle: string,
     section: number,
-    max_section: number,
+    maxSection: number,
     thumbnail: string,
     text: string[],
     textType: string[],
     music: string[],
     voices: string[],
-    loaded_voices: null[]
+    loadedVoices: null[] | Audio[] // is this property needed here?
     universe: Universe,
     camera: LessonCamera,
     models: Model[],    
@@ -24,21 +24,21 @@ export interface Page {
 export interface LoadedPage extends Page {
     camera: LoadedLessonCamera,
     models: LoadedModel[],
-    _loaded_voices: Audio[],
-    _loaded_music: Audio[],
+    loadedVoices: Audio[],
+    loadedMusic: Audio[],
 };
 
 export interface LessonCamera {
     positions: number[][],
     rotations: number[][],
-    animation_data: number[][][],
-    animation_clips: null[],
-    CreateAnimationDataFromPositionsRotations: Function,
+    animationData: number[][][],
+    animationClips: null[],
+    createAnimationDataFromPositionsRotations: Function,
 };
 
 export interface LoadedLessonCamera extends LessonCamera {
-    _animation_data: number[][][]
-    _animation_clips: AnimationClip[][],
+    initializedAnimationData: number[][][]
+    initializedAnimationClips: AnimationClip[][],
 };
 
 export interface Model {
@@ -49,12 +49,12 @@ export interface Model {
     scale: number,
     positions: number[][],
     rotations: number[][],
-    animation_clips: THREE.AnimationClip[],
+    animationClips: THREE.AnimationClip[],
 };
 
 export interface LoadedModel extends Model {
     loadedMeshes: Mesh[][],
-    _positions: number[][],
+    initializedPositions: number[][],
 };
 
 export interface Universe {

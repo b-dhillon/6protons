@@ -2,171 +2,180 @@
 import { useDispatch } from 'react-redux';
 
 // AnimationClip Constructors: 
-import ScaleXYZ from './_components/animations/ScaleXYZ';
-import Rotate from './_components/animations/Rotate';
-import SuspendInSolution from './_components/animations/SuspendInSolution';
-import { AnimationClip } from 'three';
+import ScaleXYZ from './components/animations/ScaleXYZ';
+import Rotate from './components/animations/Rotate';
+import SuspendInSolution from './components/animations/SuspendInSolution';
 import { AppData } from './types/types';
 
 // To do 
 /*
-- You have camera AnimationClips being constructed in Init, but Model AnimationClips are created here. You should unify this. 
 - Finish creating all the interfaces for all your data structures. 
     - Model DS needs work...Vector3 and Euler3 are no longer needed.
 */
 
-const data: AppData = {
-    pages: [
+/**
+ * This object is an array of all the unloaded, hard-coded data of the App. Data needed to render each page of the app.
+ * 
+ * Hard Coded:
+ *   Camera positions and rotations
+ *   Which animations each model will have access too. i.e. Model's AnimationClips 
+ *   Model paths and Voice paths
+ */
+
+export const uninitializedData: AppData = {
+  pages: [
+    {
+      id: 'test_page',
+      pageTitle: 'Buckminsterfullerene',
+      section: 0,
+      maxSection: 6,
+      thumbnail: "url('./lesson_thumbnails/fullereneTile.png')",
+
+      universe: {
+        id: 'fullerene universe',
+        star_count: 25000,
+        radius: 5,
+      },
+
+      camera: {
+        //                      0                     1                      2                     3                    4                     5                  
+        // positions: [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ] ],
+        positions: [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.75, 0.00,-2.00 ], [ 1.00, 2.00, 0.00 ] ],
+        rotations: [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.75, 0.00 ], [ 0.00, 0.00, 0.00 ] ],
+        // anaimation_data is built programatically w-/ Init() + this.CreateAnimationDataFromPositionsRotations()
+        animationData: [
+            //  initial position      final poisition        initial rotation       final rotation
+            [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 0 
+            [ [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ] ], // 1
+            [ [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ],  [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 2
+            [ [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.00, 0.75, 0.00 ] ], // 3
+            [ [ 0.00, 0.00, 0.00 ], [ 1.00, 2.00, 0.00 ],  [ 0.00, 0.75, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 4
+            //         0                      1                     2                       3
+        ],
+        //                  0     1     2     3     4 
+        animationClips: [ null, null, null, null, null ],
+
+        createAnimationDataFromPositionsRotations: function() {
+          const animationData = [];
+          for( let i = 0; i < this.positions.length - 1; i++ ) {
+              const initialPosition: number[] = this.positions[ i ];
+              const finalPosition: number[] = this.positions[ i + 1 ];
+              const initialRotation: number[] = this.rotations[ i ];
+              const finalRotation: number[] = this.rotations[ i + 1 ];
+              animationData.push( [ initialPosition, finalPosition, initialRotation, finalRotation ] );
+          };
+          return animationData;
+        },
+      },
+
+      models: [
         {
-            id: 'test_page',
-            page_title: 'Buckminsterfullerene',
-            section: 0,
-            max_section: 6,
-            thumbnail: "url('./lesson_thumbnails/fullereneTile.png')",
-    
-            universe: {
-                id: 'fullerene universe',
-                star_count: 25000,
-                radius: 5,
-            },
-    
-            camera: {
-              //                      0                     1                      2                     3                    4                     5                  
-             // positions: [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ] ],
-                positions: [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.75, 0.00,-2.00 ], [ 1.00, 2.00, 0.00 ] ],
-                rotations: [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.75, 0.00 ], [ 0.00, 0.00, 0.00 ] ],
-                // build programatically w-/ Init() + this.CreateAnimationDataFromPositionsRotations()
-                animation_data: [
-                    //  initial position      final poisition        initial rotation       final rotation
-                    [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 0 
-                    [ [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ] ], // 1
-                    [ [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ],  [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 2
-                    [ [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.00, 0.75, 0.00 ] ], // 3
-                    [ [ 0.00, 0.00, 0.00 ], [ 1.00, 2.00, 0.00 ],  [ 0.00, 0.75, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 4
-                    //         0                      1                     2                       3
-                ],
-                //                  0     1     2     3     4 
-                animation_clips: [ null, null, null, null, null ],
-                CreateAnimationDataFromPositionsRotations: function() {
-                    const animation_data = [];
-                    for( let i = 0; i < this.positions.length - 1; i++ ) {
-                        const initial_position: number[] = this.positions[ i ];
-                        const final_position: number[] = this.positions[ i + 1 ];
-                        const initial_rotation: number[] = this.rotations[ i ];
-                        const final_rotation: number[] = this.rotations[ i + 1 ];
-                        animation_data.push( [ initial_position, final_position, initial_rotation, final_rotation ] );
-                    };
-                    return animation_data;
-                },
-            },
-    
-            models: [
-                {
-                    id: '0',
-                    name: 'model0',
-                    path: '/Fullerenes/models/instance0.glb',
-                    visible: true,
-                    scale: 0.18,
-                    positions: [ [ 0.00, 0.00, -1.00 ] ], // calculated in Init() based off of camera position at the current section
-                    rotations: [ [ 0.00, 0.00,  0.00 ] ],
-                    animation_clips: [ 
-                        SuspendInSolution( 90 ), 
-                        ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } ) 
-                    ],
-                },
-                {
-                    id: '1',
-                    name: 'model1',
-                    // path: '',
-                    path: '/Fullerenes/models/instance1.glb',
-                    visible: false,
-                    scale: 0,
-                    positions: [ [ 0.75, 0.66, 0.00 ] ], // calculated in Init() based off of camera position at the current section
-                    rotations: [ [ 0.00, 0.00, 0.00 ] ],
-                    animation_clips: [ 
-                        Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ), 
-                        ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0.00, 0.00, 0.00 ] } )
-                    ]
-                },
-                {
-                    id: '2',
-                    name: 'model2',
-                    path: '/Fullerenes/models/instance2.glb',
-                    visible: true,
-                    scale: 0,
-                    positions: [ [ 0.75, 0.00, -3.00 ] ], // calculated in Init() based off of camera position at the current section
-                    rotations: [ [ 0.00, 0.00,  0.00 ] ],
-                    animation_clips: [
-                        Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
-                        ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0.00, 0.00, 0.00 ] } )
-                    ]
-                },
-                {
-                    id: '3',
-                    name: 'model3',
-                    path: '/Fullerenes/models/___instance3.glb',
-                    visible: true,
-                    scale: 0,
-                    positions: [ [ 0.00, -0.66, -1.00 ] ], // calculated in Init() based off of camera position at the current section
-                    rotations: [ [ 0.00,  0.000 , 0.00 ] ],
-                    animation_clips: [
-                        Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
-                        ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0.00, 0.00, 0.00 ] } ),
-                        Rotate( { duration: 1500, axis: 'x', initial_angle: 0, final_angle: 360 } ),
-                    ]
-                },
-                {
-                    id: '4',
-                    name: 'model4',
-                    path: '/Fullerenes/models/___instance4.glb',
-                    visible: true,
-                    scale: 0,
-                    positions: [ [ 0.00, -0.10, -3.00 ] ], // calculated in Init() based off of camera position at the current section
-                    rotations: [ [ 0.00,  0.00,  0.00 ] ],
-                    animation_clips: [
-                        Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
-                        ScaleXYZ( { duration: 1, initial_scale: [ 0.10, 0.10, 0.10 ], final_scale: [ 0.00, 0.00, 0.00 ] } ),
-                        ScaleXYZ( { duration: 3, initial_scale: [ 0.01, 0.01, 0.01 ], final_scale: [ 0.075, 0.075, 0.075 ] } )
-                    ]
-                }
-                
-            ],
-    
-            text: [
-                '',
-                'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas.',
-                'Firing lazers at graphite rods in a supersonic helium beam, produced novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered. This molecule would go on to be named Buckminsterfullerene. Often shortened to fullerene, and nicknamed Buckyball.',
-                'Each molecule of Fullerene is composed of pure carbon. The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball. Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.',
-                'For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known. These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems. Scientists have even turned their attention to buckyballs in their quest for a cure for AIDS.',
-                'How can buckyballs help cure aids? An enzyme (HIV-1-Protease) that is required for HIV to reproduce, exhibits a nonpolar pocket in its three-dimensional structure. On the model to the right, notice how the nonpolar Fullerene fits the exact diameter of the enzyme\'s binding pocket. If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible blockers.',
-            ],
-    
-            textType: [
-                'centered',
-                'centered',
-                'left',
-                'left',
-                'left',
-                'left'
-            ],
-    
-            music: [
-                "/music/fullerene3.mp3"
-            ],
-    
-            voices: [
-                "/voices/fiona/voice0.mp3", // 0
-                "/voices/fiona/voice0.mp3", // 1
-                "/voices/fiona/voice1.mp3", // 2
-                "/music/fullerene3.mp3",    // 3
-                "/music/fullerene3.mp3",    // 4
-            ],
-            //                0     1     2     3     4
-            loaded_voices: [ null, null, null, null, null ],
-    
-            dispatch: useDispatch,
-        }    
-    ]
+          id: '0',
+          name: 'model0',
+          path: '/Fullerenes/models/instance0.glb',
+          visible: true,
+          scale: 0.18,
+          positions: [ [ 0.00, 0.00, -1.00 ] ], // calculated in Init() based off of camera position at the current section
+          rotations: [ [ 0.00, 0.00,  0.00 ] ],
+          animationClips: [ 
+            SuspendInSolution( 90 ), 
+            ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } ) 
+          ],
+        },
+        {
+          id: '1',
+          name: 'model1',
+          // path: '',
+          path: '/Fullerenes/models/instance1.glb',
+          visible: false,
+          scale: 0,
+          positions: [ [ 0.75, 0.66, 0.00 ] ], // calculated in Init() based off of camera position at the current section
+          rotations: [ [ 0.00, 0.00, 0.00 ] ],
+          animationClips: [ 
+            Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ), 
+            ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0.00, 0.00, 0.00 ] } )
+          ]
+        },
+        {
+          id: '2',
+          name: 'model2',
+          path: '/Fullerenes/models/instance2.glb',
+          visible: true,
+          scale: 0,
+          positions: [ [ 0.75, 0.00, -3.00 ] ], // calculated in Init() based off of camera position at the current section
+          rotations: [ [ 0.00, 0.00,  0.00 ] ],
+          animationClips: [
+            Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
+            ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0.00, 0.00, 0.00 ] } )
+          ]
+        },
+        {
+          id: '3',
+          name: 'model3',
+          path: '/Fullerenes/models/___instance3.glb',
+          visible: true,
+          scale: 0,
+          positions: [ [ 0.00, -0.66, -1.00 ] ], // calculated in Init() based off of camera position at the current section
+          rotations: [ [ 0.00,  0.000 , 0.00 ] ],
+          animationClips: [
+            Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
+            ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0.00, 0.00, 0.00 ] } ),
+            Rotate( { duration: 1500, axis: 'x', initial_angle: 0, final_angle: 360 } ),
+          ]
+        },
+        {
+          id: '4',
+          name: 'model4',
+          path: '/Fullerenes/models/___instance4.glb',
+          visible: true,
+          scale: 0,
+          positions: [ [ 0.00, -0.10, -3.00 ] ], // calculated in Init() based off of camera position at the current section
+          rotations: [ [ 0.00,  0.00,  0.00 ] ],
+          animationClips: [
+            Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
+            ScaleXYZ( { duration: 1, initial_scale: [ 0.10, 0.10, 0.10 ], final_scale: [ 0.00, 0.00, 0.00 ] } ),
+            ScaleXYZ( { duration: 3, initial_scale: [ 0.01, 0.01, 0.01 ], final_scale: [ 0.075, 0.075, 0.075 ] } )
+          ]
+        }
+          
+      ],
+
+      text: [
+        '',
+        'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas.',
+        'Firing lazers at graphite rods in a supersonic helium beam, produced novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered. This molecule would go on to be named Buckminsterfullerene. Often shortened to fullerene, and nicknamed Buckyball.',
+        'Each molecule of Fullerene is composed of pure carbon. The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball. Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.',
+        'For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known. These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems. Scientists have even turned their attention to buckyballs in their quest for a cure for AIDS.',
+        'How can buckyballs help cure aids? An enzyme (HIV-1-Protease) that is required for HIV to reproduce, exhibits a nonpolar pocket in its three-dimensional structure. On the model to the right, notice how the nonpolar Fullerene fits the exact diameter of the enzyme\'s binding pocket. If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible blockers.',
+      ],
+
+      textType: [
+        'centered',
+        'centered',
+        'left',
+        'left',
+        'left',
+        'left'
+      ],
+
+      music: [
+          "/music/fullerene3.mp3"
+      ],
+
+      voices: [
+          "/voices/fiona/voice0.mp3", // 0
+          "/voices/fiona/voice0.mp3", // 1
+          "/voices/fiona/voice1.mp3", // 2
+          "/voices/fiona/voice1.mp3", // 3
+          "/voices/fiona/voice1.mp3", // 4
+
+      ],
+      //                0     1     2     3     4
+      loadedVoices: [ null, null, null, null, null ],
+
+      dispatch: useDispatch,
+    }
+  ]
 };
 
 
@@ -203,9 +212,9 @@ const data: AppData = {
 /*
     {
         id: 'test_page',
-        page_title: 'Fullerenes',
+        pageTitle: 'Fullerenes',
         section: 0,
-        max_section: 6,
+        maxSection: 6,
         thumbnail: "url('./lesson_thumbnails/fullereneTile.png')",
 
         universe: {
@@ -221,7 +230,7 @@ const data: AppData = {
             rotations: [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ],
             
             // this is built programmatically by Init() in App() 
-            animation_data: [
+            animationData: [
                 //  initial position      final poisition        initial rotation       final rotation
                 [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 0 
                 [ [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ] ], // 1
@@ -230,18 +239,18 @@ const data: AppData = {
                 [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ],  [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 4
             ],
 
-            animation_clips: null,
+            animationClips: null,
 
             CreateAnimationDataFromPositionsRotations: function() {
-                const animation_data = [];
+                const animationData = [];
                 for( let i = 0; i < this.positions.length - 1; i++ ) {
                     const initial_position: number[] = this.positions[ i ];
                     const final_position: number[] = this.positions[ i + 1 ];
                     const initial_rotation: number[] = this.rotations[ i ];
                     const final_rotation: number[] = this.rotations[ i + 1 ];
-                    animation_data.push( [ initial_position, final_position, initial_rotation, final_rotation ] );
+                    animationData.push( [ initial_position, final_position, initial_rotation, final_rotation ] );
                 };
-                return animation_data;
+                return animationData;
             },
 
         },
@@ -262,7 +271,7 @@ const data: AppData = {
                 rotations: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
-                animation_clips: [ 
+                animationClips: [ 
                     SuspendInSolution( 90 ), 
                     ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
                 ],
@@ -281,7 +290,7 @@ const data: AppData = {
                 rotations: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
-                animation_clips: [
+                animationClips: [
                     Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
                     ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
                 ]
@@ -300,7 +309,7 @@ const data: AppData = {
                 rotations: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
-                animation_clips: [
+                animationClips: [
                     Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
                     ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
                 ]
@@ -319,7 +328,7 @@ const data: AppData = {
                 rotations: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
-                animation_clips: [
+                animationClips: [
                     Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
                     ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } ),
                     Rotate( { duration: 1500, axis: 'x', initial_angle: 0, final_angle: 360 } ),
@@ -339,7 +348,7 @@ const data: AppData = {
                 rotations: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
-                animation_clips: [
+                animationClips: [
                     Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
                     ScaleXYZ( { duration: 1, initial_scale: [ 0.10, 0.10, 0.10 ], final_scale: [ 0, 0, 0 ] } ),
                     ScaleXYZ( { duration: 3, initial_scale: [ 0.01, 0.01, 0.01 ], final_scale: [ 0.075, 0.075, 0.075 ] } )
@@ -378,13 +387,12 @@ const data: AppData = {
             "/music/fullerene2.mp3", // 4
         ],
 
-        loaded_voices: null,
+        loadedVoices: null,
 
         dispatch: useDispatch,
     },
 */
 
-export default data; 
 
 
 
@@ -540,7 +548,7 @@ positions: [
     { x: 0, y: 0, z: 0 },
 ],
 
-animation_data: [
+animationData: [
     //   position            rotation 
     [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ] ],
     [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ],
