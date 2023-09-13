@@ -1,28 +1,36 @@
 
 TODO: 
 
-Why are there two init functions? One is a seperate file and the other is inside the App.tsx file.
+Fully understand codebase
+    Need to understand Models, Camera and their Animation systems.
 
-Section 2 model shouldnt have the soccer ball pattern turned on.
+Work out all animations and transitions for camera.
+    Need to add spline rotation around bucky-ball 
 
-Fix background music looping problem.
+Make sure all models are added to the scene for each section. 
 
-Add ability to go backwards
+Create glowing soccer-ball pattern animation.
 
-Camera movements(translate) need to be slowed down?
+Add text needs for all the sections. 
 
-Text needs to be added for all the sections. 
+Add ability to go backwards.
 
 All buckball's material needs to be shifted to black. Glossy black?
-
-Camera transitions need to be smoothed out, potentially slowed down a bit.
-Last camera transition need to be re-thought. 
-
-Change voice 1 ("gas" needs to end less abruptly)...might cost $50 though.
 
 Hook back into home page. 
 
 Make sure all other lessons are working.
+
+Add section 1 to Diamond lesson with the Diamon Lattice from Blender. 
+
+Create message to let users know only Buckminsterfullerene lesson is finished.
+
+----------------------------
+
+
+Change voice 1 ("gas" needs to end less abruptly)...might cost $50 though.
+
+
 
 
 // Add sound effects between camera movements, perhaps a whoosh of some kind, but obviously fitting the space theme.

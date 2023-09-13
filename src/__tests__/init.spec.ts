@@ -8,7 +8,7 @@ import {
 } from '../../unused/Init/Helpers';
 
 import Vec3ToArr from '../components/Vec3ToArr';
-import data from '../data';
+import data from '../uninitializedData';
 // import { Init } from '../_components/Init';
 // import SuspendInSolution from '../_components/animations/SuspendInSolution';
 // import ScaleXYZ from '../_components/animations/ScaleXYZ';

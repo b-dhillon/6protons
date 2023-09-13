@@ -1,7 +1,6 @@
 // React:
 import { Suspense, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-
 // Components:
 import Universe from './Universe';
 import Models from './Models';
@@ -10,8 +9,10 @@ import Camera from './Camera';
 import { Sound } from './Sound';
 // import Music from './Sound';
 
+
 // Mounts components to scene graph and renders 3D scene.
-function Scene(props: any): JSX.Element {
+export function Scene(props: any): JSX.Element {
+
   const counter = props.counter;
 
   return (
@@ -31,6 +32,7 @@ function Scene(props: any): JSX.Element {
         <spotLight position={[-10, 10, 10]} intensity={0.9} />
         {/* < DevelopmentCamera  /> */}
       </Canvas>
+      
     </Suspense>
   );
 }
@@ -45,12 +47,7 @@ function FadeIn() {
   else return <></>;
 }
 
-export default Scene;
 
-// const counter = useSelector( ( state: any ) => state.counter );
-{
-  /* < FadeIn /> */
-}
-{
-  /* < BackgroundMusic /> */
-}
+/* < FadeIn /> */
+/* < BackgroundMusic /> */
+

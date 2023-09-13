@@ -2,11 +2,14 @@ import * as THREE from 'three';
 import { useState, useEffect } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
-import { uninitializedData } from './data';
+import { uninitializedData } from './uninitializedData';
 import { TranslateRotate } from './components/animations/TranslateRotate';
-import { PageConstructor } from './components/PageConstructor';
+import { PageRenderer } from './components/PageRenderer';
 import { FindRotationAxis } from './components/FindRotationAxis';
-import { AppData, LoadedPage, Page } from './types/types';
+import { UninitializedData, InitializedData, UninitializedPage, InitializedPage } from './types/types';
+
+
+
 
 
 /** Fn Description
@@ -25,31 +28,30 @@ import { AppData, LoadedPage, Page } from './types/types';
  * 
  * once data is loaded, calls PageConstructor()
  */
-
 export default function App() {
-  const [initializedData, setInitializedData] = useState<LoadedPage[]>([]);
+  const [initializedData, setInitializedData] = useState<InitializedData | undefined>(undefined);
   const [dataInitialized, setDataInitialized] = useState(false);
   const [currentPage, setCurrentPage] = useState('test_page');
 
   useEffect(() => {
-    loadAndInit();
+    Init();
   }, []);
 
-  async function loadAndInit() {
+  async function Init() {
     const initializedData = await initialize( uninitializedData );
     console.log('initializedData', initializedData);
     setInitializedData(initializedData);
     setDataInitialized(true);
   }
 
-  // Once app is loaded and initialized --> find the current page's data and construct that with PageConstructor
+  // Once app is loaded and initialized --> find the current page's data and render it with PageConstructor
   if (dataInitialized) {
 
-    const [dataToRenderPage] = initializedData.filter( (page: LoadedPage) => page.id === currentPage );
+    const [initializedPageData] = initializedData!.pages.filter( (page: InitializedPage) => page.id === currentPage );
 
     return (
-      <PageConstructor
-        loadedPage={dataToRenderPage}
+      <PageRenderer
+        initializedPageData={initializedPageData}
         setCurrentPage={setCurrentPage}
       />
     );
@@ -59,15 +61,20 @@ export default function App() {
 
 
 
-/*
+
+
+
+
+
+
+/** Fn Description
 Init() is responsible for the following for each page:
   - Initializing model positions based off of camera positions
   - Loading all voices of app.
   - Loading all glTF's and extracting all meshes from each glTF.
   - Creating all AnimationClips for the camera. 
 */
-
-async function initialize(data: AppData) {
+async function initialize(data: UninitializedData): Promise<InitializedData> {
 
   function initializeModelPositionsFromCamera(
     cameraPosition: number[],
@@ -289,7 +296,7 @@ async function initialize(data: AppData) {
   const allVoicesOfApp: any = await LoadAllVoicesOfApp();
   const allMusicOfApp: any = await LoadAllMusicOfApp();
 
-  const initializedData = data.pages.map((page: Page, i: number): LoadedPage => {
+  const initializedPages = data.pages.map((page: UninitializedPage, i: number): InitializedPage => {
     const initializedCameraAnimationData = page.camera.createAnimationDataFromPositionsRotations();
 
     return {
@@ -336,5 +343,7 @@ async function initialize(data: AppData) {
     };
   });
 
-  return initializedData;
+  return {
+    pages: initializedPages
+  }
 };

@@ -1,10 +1,11 @@
 import { AnimationClip, Audio, Mesh } from "three"
 
-export interface AppData {
-    pages: Page[]
+export interface UninitializedData {
+    pages: UninitializedPage[]
 }
 
-export interface Page {
+
+export interface UninitializedPage {
     id: string,
     pageTitle: string,
     section: number,
@@ -17,12 +18,26 @@ export interface Page {
     loadedVoices: null[] | Audio[] // is this property needed here?
     universe: Universe,
     camera: LessonCamera,
-    models: Model[],    
+    models: Model[],
     dispatch: Function,
 };
 
-export interface LoadedPage extends Page {
-    camera: LoadedLessonCamera,
+
+
+
+
+
+
+
+
+
+export interface InitializedData {
+    pages: InitializedPage[]
+} 
+
+
+export interface InitializedPage extends UninitializedPage {
+    camera: InitializedLessonCamera,
     models: LoadedModel[],
     loadedVoices: Audio[],
     loadedMusic: Audio[],
@@ -31,12 +46,11 @@ export interface LoadedPage extends Page {
 export interface LessonCamera {
     positions: number[][],
     rotations: number[][],
-    animationData: number[][][],
-    animationClips: null[],
+
     createAnimationDataFromPositionsRotations: Function,
 };
 
-export interface LoadedLessonCamera extends LessonCamera {
+export interface InitializedLessonCamera extends LessonCamera {
     initializedAnimationData: number[][][]
     initializedAnimationClips: AnimationClip[][],
 };
@@ -62,3 +76,7 @@ export interface Universe {
     star_count: number, 
     radius: number
 }
+
+
+// animationData: number[][][], //not needed
+// animationClips: null[], // not needed

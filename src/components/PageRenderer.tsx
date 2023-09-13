@@ -1,24 +1,47 @@
 import { useState } from 'react';
 import { Suspense, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Page, LoadedPage } from '../types/types';
+// import { Page, LoadedPage } from '../types      //types';
 import LessonInterface from './LessonInterface';
-import Scene from './Scene';
+import { Scene } from './Scene';
 import '../styles/overlay-styles.css';
 
-export function PageConstructor( props: { loadedPage: LoadedPage, setCurrentPage: Function } ): JSX.Element {
+export function PageRenderer({
+  initializedPageData,
+  setCurrentPage
+}: any ): JSX.Element {
 
-  const [ loadedPage, setPage ] = useState( props.loadedPage );
-  const counter = useSelector( ( state: any ) => state.counter );
+  const [_initializedPageData, _] = useState( initializedPageData );
+  const counter = useSelector((state: any) => state.counter);
   // useEffect( () => console.log( 'loaded page data', loadedPage ), [] );
 
   return (
-    < Suspense >
-      < Scene page={ loadedPage } counter={ counter } />
-      < LessonInterface devMode={ false } page={ loadedPage } setCurrentPage={ props.setCurrentPage } counter={ counter } />
-    </ Suspense >
+    <Suspense>
+      <Scene page={_initializedPageData} counter={counter} />
+      <LessonInterface
+        devMode={false}
+        page={_initializedPageData}
+        setCurrentPage={setCurrentPage}
+        counter={counter}
+      />
+    </Suspense>
   );
-};
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -174,7 +197,7 @@ props.type === 'next'
 < i className="fa-solid fa-angle-right lessonNav--icons" style={ { color: 'white' } }></ i >
 :
 < i className="fa-solid fa-angle-left lessonNav--icons" style={ { color: 'white' } }></ i >
-*/ 
+*/
 
 /*
 delta = .008, 8ms.

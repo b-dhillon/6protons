@@ -200,7 +200,7 @@ function AnimationController(animationActions: any, counter: number): void {
   if (animationActions.length && counter > 0) {
     // SCALE DOWN ANIMATION: -- i think these scale ups and down are the same every model so do we really need to make it based on the counter?
     // animationActions[ (counter - 1) ][ 1 ].reset().play();
-    animationActions[ (counter - 1) ][ 1 ].reset().setEffectiveTimeScale( 0.7 ).play(); //1.2 was original
+    animationActions[ (counter - 1) ][ 1 ].reset().setEffectiveTimeScale( 0.9 ).play(); //1.2 was original
     /* animationActions[ (counter - 1) ][ 1 ].setEffectiveTimeScale( 0.5 ).play(); */
   }
 

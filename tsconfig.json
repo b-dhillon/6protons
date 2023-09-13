@@ -21,6 +21,8 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
-, "unused/Init", "unused/__App.tsx"  ]
+    "src",
+    "unused/Init", 
+    "unused/__App.tsx"  
+  ]
 }
