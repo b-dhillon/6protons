@@ -297,29 +297,16 @@ async function initialize(data: UninitializedData): Promise<InitializedData> {
   const allMusicOfApp: any = await LoadAllMusicOfApp();
 
   const initializedPages = data.pages.map((page: UninitializedPage, i: number): InitializedPage => {
-    const initializedCameraAnimationData = page.camera.createAnimationDataFromPositionsRotations();
+
+    const animationDataStruct = page.camera.createAnimationDataStructure();
 
     return {
       ...page,
 
       camera: {
         ...page.camera,
-        initializedAnimationData: initializedCameraAnimationData, // needed for initial position assignment
-        initializedAnimationClips: initializedCameraAnimationData.map(
-          (AnimationData: [][], i: number) => {
-            return [
-              TranslateRotate({
-                duration: 4,
-                initial_position: AnimationData[0],
-                final_position: AnimationData[1],
-                initial_angle: AnimationData[2],
-                final_angle: AnimationData[3],
-                // axis: 'x',
-                axis: FindRotationAxis(AnimationData),
-              }),
-            ];
-          }
-        ),
+        animationDataStructure: page.camera.createAnimationDataStructure(), // needed for initial position assignment --> where is it being consumed? Can't initial position be consumed from the hard-coded positions array?
+        animationClips: page.camera.createAnimationClips(animationDataStruct),
       },
 
       // add meshes and positions to each model
@@ -333,7 +320,7 @@ async function initialize(data: UninitializedData): Promise<InitializedData> {
           initializedPositions: initializeModelPositionsFromCamera(
             page.camera.positions[j + 1],
             page.camera.rotations[j + 1],
-            FindRotationAxis(initializedCameraAnimationData[j])
+            FindRotationAxis(animationDataStruct[j])
           ),
         };
       }),
@@ -347,3 +334,19 @@ async function initialize(data: UninitializedData): Promise<InitializedData> {
     pages: initializedPages
   }
 };
+
+
+
+// initializedAnimationClips: animationDataStructure.map((animationData: [][], i: number) => {
+//   return [
+//     TranslateRotate({
+//       duration: 4,
+//       initial_position: animationData[0],
+//       final_position: animationData[1],
+//       initial_angle: animationData[2],
+//       final_angle: animationData[3],
+//       // axis: 'x',
+//       axis: FindRotationAxis(animationData),
+//     }),
+//   ];
+// }),

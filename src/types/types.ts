@@ -46,13 +46,13 @@ export interface InitializedPage extends UninitializedPage {
 export interface LessonCamera {
     positions: number[][],
     rotations: number[][],
-
-    createAnimationDataFromPositionsRotations: Function,
+    createAnimationDataStructure: Function,
+    createAnimationClips: Function
 };
 
 export interface InitializedLessonCamera extends LessonCamera {
-    initializedAnimationData: number[][][]
-    initializedAnimationClips: AnimationClip[][],
+    animationDataStructure: number[][][]
+    animationClips: AnimationClip[][],
 };
 
 export interface Model {

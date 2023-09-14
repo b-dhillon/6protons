@@ -15,7 +15,7 @@ import { PerspectiveCamera } from '@react-three/drei';
 */ 
 
 
-export default function Camera( { initializedPage, counter }: any ): JSX.Element {
+export function Camera( { initializedPage, counter }: any ): JSX.Element {
   
   const [ AnimationActions, setAnimationActions ] = useState([]);
   const camera = initializedPage.camera;
@@ -24,9 +24,9 @@ export default function Camera( { initializedPage, counter }: any ): JSX.Element
   // Creates AnimationActions for each camera rotation and translation via looping camera.animationClips[]
   useEffect(() => {
 
-    createAnimationActions(ref.current, camera.initializedAnimationClips);
+    createAnimationActions(ref.current, camera.animationClips);
 
-    function createAnimationActions( fiberCameraRef: any, allAnimationClips: [][] ) {
+    function createAnimationActions( fiberCameraRef: any, animationClips: [][] ) {
 
       function createAnimationAction( clip: THREE.AnimationClip ): THREE.AnimationAction {
         const mixer = new THREE.AnimationMixer(fiberCameraRef);
@@ -36,14 +36,14 @@ export default function Camera( { initializedPage, counter }: any ): JSX.Element
         return animationAction;
       };
 
-      const allAnimationActions = allAnimationClips.map((animationClip: []) => createAnimationAction(animationClip[0]) );
+      const animationActions = animationClips.map((animationClip: []) => createAnimationAction(animationClip[0]) ); //why hard-coded index 0??
 
-      setAnimationActions(allAnimationActions);
+      setAnimationActions(animationActions);
     };
 
   }, []);
 
-  // Plays the AnimationAction based on counter
+  // AnimationController --> Plays the AnimationAction based on counter
   useEffect(() => {
 
     AnimationController();

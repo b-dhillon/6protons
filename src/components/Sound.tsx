@@ -1,35 +1,20 @@
 import { Audio } from 'three';
 
-export function Sound( { page, counter }: any ): JSX.Element {
+export function Sound({ initializedPage, counter }: any): JSX.Element {
+  const voices: Audio[] = initializedPage.loadedVoices;
+  const music: Audio[] = initializedPage.loadedMusic;
 
-    const voices: Audio[] = page.loadedVoices
-    const music: Audio[] = page.loadedMusic
+  // Configuring background music
+  music[0].play();
+  // if (counter > 0) {
+  //   // music[ 0 ].pause();
+  //   music[0].setVolume(0.15);
+  //   // music[ 0 ].play();
+  //   voices[counter].play(8.2);
+  // }
 
-    // Configuring background music
-    music[ 0 ].play();
-    if ( counter > 0 ) {
-        // music[ 0 ].pause();
-        music[ 0 ].setVolume( 0.15 );
-        // music[ 0 ].play();
-        voices[ counter ].play( 8.2 );
-    }
-
-    // // Configuring voice
-    // if ( props.counter > 0 ) {
-    //     // reset
-    //     /*
-    //     voices.forEach( ( voice: any ) => {
-    //         voice.stop();
-    //     });
-    //     */
-
-    // }
-
-    return <></>
-
-    // if( counter > 0 && counter < props.page.maxSection ) voices[ counter ].play( 4 );
-    // props.data.voices[ counter ].offset(4).play();
-}
+  return <></>;
+};
 
 
 
@@ -51,13 +36,19 @@ export function Sound( { page, counter }: any ): JSX.Element {
 
 
 
+// if( counter > 0 && counter < props.page.maxSection ) voices[ counter ].play( 4 );
+// props.data.voices[ counter ].offset(4).play();
 
+// // Configuring voice
+// if ( props.counter > 0 ) {
+//     // reset
+//     /*
+//     voices.forEach( ( voice: any ) => {
+//         voice.stop();
+//     });
+//     */
 
-
-
-
-
-
+// }
 
 // Attempt at combining all audio into one component
 /*

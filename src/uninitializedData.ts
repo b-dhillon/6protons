@@ -1,15 +1,14 @@
-// Redux:
 import { useDispatch } from 'react-redux';
 import ScaleXYZ from './components/animations/ScaleXYZ';
 import Rotate from './components/animations/Rotate';
 import SuspendInSolution from './components/animations/SuspendInSolution';
 import { UninitializedData } from './types/types';
+import { TranslateRotate } from './components/animations/TranslateRotate';
+import { FindRotationAxis } from './components/FindRotationAxis';
+import { AnimationClip } from 'three';
 
-// To do
-/*
-- Finish creating all the interfaces for all your data structures. 
-    - Model DS needs work...Vector3 and Euler3 are no longer needed.
-*/
+
+
 
 /**
  * This object is an array of all the unloaded, hard-coded data of the App. Data needed to render each page of the app.
@@ -36,8 +35,6 @@ export const uninitializedData: UninitializedData = {
       },
 
       camera: {
-        //                      0                     1                      2                     3                    4                     5
-        // positions: [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ] ],
         positions: [
           [0.00, 0.00, 3.00], // Start
           [0.00, 0.00, 0.00], // Opening position, section 0 
@@ -48,16 +45,16 @@ export const uninitializedData: UninitializedData = {
           [1.00, 2.00, 0.00], // section 5 ..HIV-1-Protease
         ],
         rotations: [
-          [0.0, 0.0, 0.0],  // Start
-          [0.0, 0.0, 0.0],  // Opening position, section 0 
-          [0.66, 0.0, 0.0], // section 1 ..1985
-          [0.0, 0.0, 0.0],  // section 2 ..most symmetrical form
-          [0.0, 0.0, 0.0],  // section 3 ..soccer ball pattern
-          [0.0, 0.0, 0.0],  // section 4 ..doped
-          [0.0, 0.0, 0.0],  // section 5 ..HIV-1-Protease
+          [0.00, 0.00, 0.00], // Start
+          [0.00, 0.00, 0.00], // Opening position, section 0 
+          [0.66, 0.00, 0.00], // section 1 ..1985
+          [0.00, 0.00, 0.00], // section 2 ..most symmetrical form
+          [0.00, 0.00, 0.00], // section 3 ..soccer ball pattern
+          [0.00, 0.00, 0.00], // section 4 ..doped
+          [0.00, 0.00, 0.00], // section 5 ..HIV-1-Protease
         ],
 
-        createAnimationDataFromPositionsRotations: function () {
+        createAnimationDataStructure: function () {
           const animationData: number[][][] = [];
           for (let i = 0; i < this.positions.length - 1; i++) {
             const initialPosition: number[] = this.positions[i];
@@ -73,6 +70,28 @@ export const uninitializedData: UninitializedData = {
           }
           return animationData;
         },
+
+        createAnimationClips: function(animationDataStructure: any ): AnimationClip[][] {
+          const animationClips = animationDataStructure.map((animationData: [][], i: number) => {
+            return [
+              TranslateRotate({
+                duration: 4,
+                initial_position: animationData[0],
+                final_position: animationData[1],
+                initial_angle: animationData[2],
+                final_angle: animationData[3],
+                // axis: 'x',
+                axis: FindRotationAxis(animationData),
+              }),
+            ];
+          })
+
+          return animationClips;
+        },
+
+        // createAnimationActions: function() {
+
+        // }
       },
 
       models: [
@@ -100,7 +119,7 @@ export const uninitializedData: UninitializedData = {
           path: '/Fullerenes/models/instance1.glb',
           visible: false,
           scale: 0,
-          positions: [[0.75, 0.66, 0.0]], // calculated in Init() based off of camera position at the current section
+          positions: [[0.75, 0.66, 0.0]],
           rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
             Rotate({
@@ -122,7 +141,7 @@ export const uninitializedData: UninitializedData = {
           path: '/Fullerenes/models/instance2.glb',
           visible: true,
           scale: 0,
-          positions: [[0.75, 0.0, -3.0]], // calculated in Init() based off of camera position at the current section
+          positions: [[0.75, 0.0, -3.0]],
           rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
             Rotate({
@@ -144,7 +163,7 @@ export const uninitializedData: UninitializedData = {
           path: '/Fullerenes/models/___instance3.glb',
           visible: true,
           scale: 0,
-          positions: [[0.0, -0.66, -1.0]], // calculated in Init() based off of camera position at the current section
+          positions: [[0.0, -0.66, -1.0]],
           rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
             Rotate({
@@ -172,7 +191,7 @@ export const uninitializedData: UninitializedData = {
           path: '/Fullerenes/models/___instance4.glb',
           visible: true,
           scale: 0,
-          positions: [[0.0, -0.1, -3.0]], // calculated in Init() based off of camera position at the current section
+          positions: [[0.0, -0.1, -3.0]],
           rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
             Rotate({
@@ -189,7 +208,7 @@ export const uninitializedData: UninitializedData = {
             ScaleXYZ({
               duration: 3,
               initial_scale: [0.01, 0.01, 0.01],
-              final_scale: [0.055, 0.055, 0.055],
+              final_scale: [0.025, 0.025, 0.025],
             }),
           ],
         },
@@ -197,11 +216,11 @@ export const uninitializedData: UninitializedData = {
 
       text: [
         '',
-        'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas.',
-        'Firing lazers at graphite rods in a supersonic helium beam, produced novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered. This molecule would go on to be named Buckminsterfullerene. Often shortened to fullerene, and nicknamed Buckyball.',
-        'Each molecule of Fullerene is composed of pure carbon. The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball. Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.',
-        'For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known. These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems. Scientists have even turned their attention to buckyballs in their quest for a cure for AIDS.',
-        "How can buckyballs help cure aids? An enzyme (HIV-1-Protease) that is required for HIV to reproduce, exhibits a nonpolar pocket in its three-dimensional structure. On the model to the right, notice how the nonpolar Fullerene fits the exact diameter of the enzyme's binding pocket. If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible blockers.",
+        'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas...',
+        'Firing lazers at graphite rods in a supersonic helium beam, produced novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered. This molecule would go on to be named Buckminsterfullerene.',
+        'The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball. Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.',
+        'For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known. These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems. Scientists have even turned their attention to Buckminsterfullerene in their quest for a cure for AIDS.',
+        "How can Buckminsterfullerene help cure AIDS? An enzyme (HIV-1-Protease) that is required for HIV to replicate, exhibits a non-polar pocket in its three-dimensional structure. On the protein model in front of you, notice how the non-polar Fullerene fits the exact diameter of the enzyme's binding pocket. If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible HIV-1-Protease inhibitors.",
       ],
 
       textType: ['centered', 'centered', 'left', 'left', 'left', 'left'],
@@ -222,6 +241,31 @@ export const uninitializedData: UninitializedData = {
     },
   ],
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//                      0                     1                      2                     3                    4                     5
+// positions: [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ] ],
+
+
+
+
+
+
 
 //         // anaimation_data is built programatically w-/ Init() + this.CreateAnimationDataFromPositionsRotations()
 // camera.animationData: [
