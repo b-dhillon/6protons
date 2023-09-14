@@ -4,10 +4,11 @@ import * as THREE from 'three';
 import { LoopPingPong } from 'three';
 
 /*
-Loops props.data.models[] --> and calls CreateFiberGroupFrom_Model() for each model in props.data.models[]
-returns array of {} with $$typeof: Symbol(react.element), one {} for each {} in props.data.models[]
-these {} have a FiberNode{} inside them that holds the data for the model ( the group of meshes )
-these {} are mounted to the scene graph when Models() is called by Scene()
+Loops initializedPage.models[] --> calls CreateReactModel() for each model in lesson.
+Returns array of {} with $$typeof: Symbol(react.element), one {} for each {} in initializedPage.models[]
+
+These {}'s have a FiberNode{} inside them that holds the data for the model ( the group of meshes )
+These {} are mounted to the scene graph when Models() is called by Scene()
 
 Controls animations: counter changes --> animation at the current counter index is played.
 */
@@ -20,11 +21,10 @@ export default function Models(props: any): JSX.Element {
     [animationActions, props.counter]
   );
 
-  // Updates animation mixers.
+  // Update animation mixers on each frame.
   useFrame((_, delta) => {
     if (animationActions.length) {
       // Main animation
-      // animationActions[0][0]._mixer.update(delta);
       animationActions[props.counter][0]._mixer.update(delta);
 
       // Nested animation
@@ -33,55 +33,54 @@ export default function Models(props: any): JSX.Element {
       if (props.counter > 0) {
         // Scale In animation
         animationActions[props.counter][1]._mixer.update(delta);
-
         // Scale Out animation
         animationActions[props.counter - 1][1]._mixer.update(delta);
-      }
-    }
+      };
+    };
   });
 
-  const modelGroups = props.page.models.map((_model: any, i: number) => {
+  const ReactModels = props.page.models.map((_model: any, i: number) => {
     if (_model.path) {
       return (
-        <CreateFiberGroupFrom_Model
+        <CreateReactModel
           _model={_model}
           key={_model.id}
           setAnimationActions={setAnimationActions}
           counter={props.counter}
         />
       );
-    } else {
-      return <></>;
     }
-
-    // return (
-    //     < CreateFiberGroupFrom_Model
-    //         _model={ _model }
-    //         key={ _model.id }
-    //         setAnimationActions={ setAnimationActions }
-    //         counter={ props.counter }
-    //     />
-    // );
+    else {
+      return <></>;
+    };
   }); // [ $$typeof: Symbol(react.element), $$typeof:Symbol(react.element) ]
 
-  return <>{modelGroups}</>;
+  return (
+    <>
+      {ReactModels}
+    </>
+  );
 }
 
-/*
-Grabs meshes and animationClips from props.data.models[ i ].meshes & props.data.models[ i ].animations --> 
-returns a <group> of all the <mesh>es of the model. 
-
-essentially converts a _model{} in data.ts into a < group >
 
 
-<group> is an object of type Group with a prototype of Object3D.
 
-[ <group> ] mounted to the scene graph when the parent fxn (Models) is called;
 
-After returning, useEffect creates an array of AnimationActions from the AnimationClips in props.data.models[ i ].animations
-and attaches them to the model (group).
+
+/** Fn Description
+ * 
+ * Grabs meshes and animationClips from initializedPage.models[ i ].meshes & initializedPage.models[ i ].animations --> 
+ *
+ * Returns a <group> of all the <mesh>es of the model. 
+ * Essentially converts a model{} in data.ts into a jsx <group>
+ * <group> is an object of type Group with a prototype of Object3D.
+ * [ <group> ] mounted to the scene graph when the parent fxn (Models) is called;
+
+ * After returning, useEffect creates an array of AnimationActions from the AnimationClips in initializedPage.models[ i ].animations
+ * and attaches them to the model (group).
+ * 
 */
-function CreateFiberGroupFrom_Model(props: any): JSX.Element {
+function CreateReactModel(props: any): JSX.Element {
   // create a type for the <group> object that the ref is attached to
   const ref = useRef(new THREE.Group());
   const nestedRef = useRef(new THREE.Mesh());
@@ -210,6 +209,34 @@ function AnimationController(animationActions: any, counter: number): void {
     animationActions[counter][2].play();
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // New Animation Set Up: Sets the animations property on <group> to an array of AnimationActions instead of storing the AnimationActions in the state of Models()
 /*

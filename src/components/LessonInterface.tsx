@@ -1,15 +1,14 @@
 import { useDispatch } from 'react-redux';
 import { decrement, increment, reset, start } from '../redux/actions';
 
-export default function LessonUI(props: any) {
+export function LessonInterface(props: any) {
   const dispatch = useDispatch();
 
   if (props.devMode) {
     return (
-      <button
-        onClick={() => dispatch(increment())}
-        style={{ position: 'absolute', zIndex: 10, top: 0 }}
-      >
+      <button 
+        onClick={() => dispatch(increment())} 
+        style={{ position: 'absolute', zIndex: 10, top: 0 }}>
         next
       </button>
     );
@@ -18,12 +17,12 @@ export default function LessonUI(props: any) {
     return (
       <div className='global-overlay-container'>
         <Header
-          page={props.page}
+          page={props.initializedPage}
           counter={props.counter}
           setCurrentPage={props.setCurrentPage}
         />
-        <Body page={props.page} counter={props.counter} />
-        <Footer page={props.page} counter={props.counter} />
+        <Body page={props.initializedPage} counter={props.counter} />
+        <Footer page={props.initializedPage} counter={props.counter} />
       </div>
     );
   }

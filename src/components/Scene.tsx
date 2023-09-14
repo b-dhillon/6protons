@@ -11,9 +11,8 @@ import { Sound } from './Sound';
 
 
 // Mounts components to scene graph and renders 3D scene.
-export function Scene(props: any): JSX.Element {
+export function Scene({ counter, initializedPage }: any): JSX.Element {
 
-  const counter = props.counter;
 
   return (
     <Suspense>
@@ -22,11 +21,11 @@ export function Scene(props: any): JSX.Element {
       <FadeIn />
 
       <Canvas>
-        <Sound page={props.page} counter={counter} />
 
-        <Universe page={props.page} />
-        <Camera page={props.page} counter={counter} />
-        <Models page={props.page} counter={counter} />
+        <Universe initializedPage={initializedPage} />
+        <Sound initializedPage={initializedPage} counter={counter} />
+        <Camera initializedPage={initializedPage} counter={counter} />
+        <Models initializedPage={initializedPage} counter={counter} />
 
         <ambientLight intensity={0.25} />
         <spotLight position={[-10, 10, 10]} intensity={0.9} />

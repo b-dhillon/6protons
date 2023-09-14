@@ -1,72 +1,75 @@
 // @ts-nocheck
-// Creates camera, handles its updates and renders cameraHelper when called.
-import { PerspectiveCamera } from '@react-three/drei';
-import { useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-// import { CameraHelper } from "three";
+import { useEffect, useRef, useState } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
+import { PerspectiveCamera } from '@react-three/drei';
 
-export default function Camera(props: {
-  counter: number;
-  page: any;
-}): JSX.Element {
-  // const section = props.data.section;
-  const camera = props.page.camera;
+/** FN Description
+ * 
+ * Creates React Three Camera,
+ * Creates all AnimationActions for camera transitions 
+ * Plays the correct Animation, based on counter.
+ * Updates the animation mixer.
+ * Renders cameraHelper when called.
+ * 
+*/ 
+
+
+export default function Camera( { initializedPage, counter }: any ): JSX.Element {
+  
+  const [ AnimationActions, setAnimationActions ] = useState([]);
+  const camera = initializedPage.camera;
   const ref = useRef();
 
-  const [AnimationActions, setAnimationActions] = useState([]);
+  // Creates AnimationActions for each camera rotation and translation via looping camera.animationClips[]
+  useEffect(() => {
 
-  // Loops camera._animation_clips[] --> creates AnimationAction for each rotation and translation animation:
-  function CreateAnimationActions(
-    fiberCameraRef: any,
-    allAnimationClips: [][]
-  ) {
+    createAnimationActions(ref.current, camera.initializedAnimationClips);
 
-    function CreateAnimationAction_Cam(
-      clip: THREE.AnimationClip
-    ): THREE.AnimationAction {
-      const mixer = new THREE.AnimationMixer(fiberCameraRef);
-      const animationAction = mixer.clipAction(clip);
-      animationAction.loop = THREE.LoopOnce;
-      animationAction.clampWhenFinished = true;
-      return animationAction;
+    function createAnimationActions( fiberCameraRef: any, allAnimationClips: [][] ) {
+
+      function createAnimationAction( clip: THREE.AnimationClip ): THREE.AnimationAction {
+        const mixer = new THREE.AnimationMixer(fiberCameraRef);
+        const animationAction = mixer.clipAction(clip);
+        animationAction.loop = THREE.LoopOnce;
+        animationAction.clampWhenFinished = true;
+        return animationAction;
+      };
+
+      const allAnimationActions = allAnimationClips.map((animationClip: []) => createAnimationAction(animationClip[0]) );
+
+      setAnimationActions(allAnimationActions);
     };
 
-    const allAnimationActions = allAnimationClips.map((animationClip: []) =>
-      CreateAnimationAction_Cam(animationClip[0])
-    );
-    setAnimationActions(allAnimationActions);
-  }
-
-  useEffect(() => {
-    CreateAnimationActions(ref.current, camera.initializedAnimationClips);
   }, []);
 
-  function AnimationController() {
-    // if( AnimationActions.length ) AnimationActions[ props.counter ].play().warp( 1.3, 0.01, 4.6 );
-    if (AnimationActions.length)
-      AnimationActions[props.counter].play().warp(1, 0.01, 7.8);
-    // if( AnimationActions.length && props.counter > 0 ) AnimationActions[ props.counter ].play().warp( 0.75, 0.01, 10 );
-  }
+  // Plays the AnimationAction based on counter
+  useEffect(() => {
 
-  useEffect(AnimationController, [AnimationActions, props.counter]);
+    AnimationController();
 
+    function AnimationController() {
+      if (AnimationActions.length)
+        AnimationActions[counter].play().warp(1, 0.01, 7.8); // .warp( 1.3, 0.01, 4.6 );
+    }
+
+  }, [AnimationActions, counter]);
+
+  // Updates the animation via the mixer
   useFrame((_, delta) => {
     if (AnimationActions.length)
-      AnimationActions[props.counter]._mixer.update(delta);
+      AnimationActions[counter]._mixer.update(delta);
   });
 
+  // Setting the scene's camera. There are two. Perspective and Development.
   const set = useThree((state) => state.set);
-
-  // useHelper( ref, CameraHelper );
-
   useEffect(() => set({ camera: ref.current }));
 
   return (
     <>
       <PerspectiveCamera
         ref={ref}
-        position={[props.page.camera.positions[0]]}
+        position={[camera.positions[0]]}
         fov={45}
         near={0.25}
         far={7}
@@ -75,13 +78,36 @@ export default function Camera(props: {
   );
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// useHelper( ref, THREE.CameraHelper );
+// import { CameraHelper } from "three"; <-- Not needed if THREE is already imported with *
+
+
 function SetCamera(cam): void {
   set({ camera: cam });
 }
 
+
 {
-  /* < UpdateCamera _ref={ref} counter={ props.counter } camera_data={ props.camera_data } /> */
+  /* < UpdateCamera _ref={ref} counter={ counter } camera_data={ camera_data } /> */
 }
 {
-  /* < PerspectiveCamera ref={ref} position={ props.page.camera._animation_data[ 0 ][ 0 ] } fov={ 45 } near={ 0.15 } far={ 8 } /> */
+  /* < PerspectiveCamera ref={ref} position={ page.camera._animation_data[ 0 ][ 0 ] } fov={ 45 } near={ 0.15 } far={ 8 } /> */
 }

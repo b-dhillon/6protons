@@ -2,41 +2,29 @@ import { useState } from 'react';
 import { Suspense, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 // import { Page, LoadedPage } from '../types      //types';
-import LessonInterface from './LessonInterface';
+import { LessonInterface } from './LessonInterface';
 import { Scene } from './Scene';
 import '../styles/overlay-styles.css';
 
 export function PageRenderer({
   initializedPageData,
-  setCurrentPage
-}: any ): JSX.Element {
-
-  const [_initializedPageData, _] = useState( initializedPageData );
+  setCurrentPage,
+}: any): JSX.Element {
+  const [initializedPage, _] = useState(initializedPageData);
   const counter = useSelector((state: any) => state.counter);
-  // useEffect( () => console.log( 'loaded page data', loadedPage ), [] );
-
+  // useEffect( () => console.log( 'initializedPage data', initializedPage ), [] );
   return (
     <Suspense>
-      <Scene page={_initializedPageData} counter={counter} />
+      <Scene initializedPage={initializedPage} counter={counter} />
       <LessonInterface
         devMode={false}
-        page={_initializedPageData}
+        initializedPage={initializedPage}
         setCurrentPage={setCurrentPage}
         counter={counter}
       />
     </Suspense>
   );
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
