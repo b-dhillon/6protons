@@ -1,6 +1,18 @@
 
 TODO: 
 
+Refactor some init functions into methods 
+    initializeModelPositionsFromCamera --> method ..but where? not on each model{} --> top level of uninitializedData?
+    CreateAnimationActions --> method...but where should we place the definition? --> top level of uninitializedData?
+
+
+
+
+
+
+
+
+
 Fully understand codebase
     Need to understand Models, Camera and their Animation systems.
 

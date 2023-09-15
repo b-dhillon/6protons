@@ -26,10 +26,10 @@ export function Camera( { initializedPage, counter }: any ): JSX.Element {
 
     createAnimationActions(ref.current, camera.animationClips);
 
-    function createAnimationActions( fiberCameraRef: any, animationClips: [][] ) {
+    function createAnimationActions( ref: any, animationClips: [][] ) {
 
       function createAnimationAction( clip: THREE.AnimationClip ): THREE.AnimationAction {
-        const mixer = new THREE.AnimationMixer(fiberCameraRef);
+        const mixer = new THREE.AnimationMixer(ref);
         const animationAction = mixer.clipAction(clip);
         animationAction.loop = THREE.LoopOnce;
         animationAction.clampWhenFinished = true;
@@ -69,7 +69,7 @@ export function Camera( { initializedPage, counter }: any ): JSX.Element {
     <>
       <PerspectiveCamera
         ref={ref}
-        position={[camera.positions[0]]}
+        position={[camera.initialPosition]}
         fov={45}
         near={0.25}
         far={7}

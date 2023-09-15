@@ -6,8 +6,7 @@ import { uninitializedData } from './uninitializedData';
 import { TranslateRotate } from './components/animations/TranslateRotate';
 import { PageRenderer } from './components/PageRenderer';
 import { FindRotationAxis } from './components/FindRotationAxis';
-import { UninitializedData, InitializedData, UninitializedPage, InitializedPage } from './types/types';
-
+import { UninitializedData, UninitializedPage, InitializedPage } from './types/types';
 
 
 
@@ -29,7 +28,7 @@ import { UninitializedData, InitializedData, UninitializedPage, InitializedPage 
  * once data is loaded, calls PageConstructor()
  */
 export default function App() {
-  const [initializedData, setInitializedData] = useState<InitializedData | undefined>(undefined);
+  const [initializedPages, setInitializedPages] = useState<InitializedPage[] | undefined>(undefined);
   const [dataInitialized, setDataInitialized] = useState(false);
   const [currentPage, setCurrentPage] = useState('test_page');
 
@@ -38,20 +37,20 @@ export default function App() {
   }, []);
 
   async function Init() {
-    const initializedData = await initialize( uninitializedData );
-    console.log('initializedData', initializedData);
-    setInitializedData(initializedData);
+    const _initializedPages = await initialize( uninitializedData );
+    console.log('initializedPages', _initializedPages);
+    setInitializedPages(_initializedPages);
     setDataInitialized(true);
   }
 
   // Once app is loaded and initialized --> find the current page's data and render it with PageConstructor
   if (dataInitialized) {
 
-    const [initializedPageData] = initializedData!.pages.filter( (page: InitializedPage) => page.id === currentPage );
+    const [initializedPage] = initializedPages!.filter( (page: InitializedPage) => page.id === currentPage );
 
     return (
       <PageRenderer
-        initializedPageData={initializedPageData}
+        initializedPageData={initializedPage}
         setCurrentPage={setCurrentPage}
       />
     );
@@ -74,57 +73,8 @@ Init() is responsible for the following for each page:
   - Loading all glTF's and extracting all meshes from each glTF.
   - Creating all AnimationClips for the camera. 
 */
-async function initialize(data: UninitializedData): Promise<InitializedData> {
+async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
 
-  function initializeModelPositionsFromCamera(
-    cameraPosition: number[],
-    cameraRotation: number[],
-    rotationAxis: string
-  ) {
-    // If you rotate the camera on X axis you need to position the model on the Y axis.
-    if (rotationAxis === 'x') {
-      const rotationAngle = cameraRotation[0];
-
-      const x = cameraPosition[0];
-      const y = cameraPosition[1] + rotationAngle;
-      const z = cameraPosition[2] - 1;
-      return [x, y, z];
-    }
-
-    // If you rotate the camera on Y axis you need to offset position the model on the X axis AND Z axis.
-    if (rotationAxis === 'y') {
-      const rotationAngle = cameraRotation[1];
-
-      const offset = rotationAngle * -1;
-
-      if (rotationAngle > 0) {
-        const x = cameraPosition[0] + offset;
-        const y = cameraPosition[1];
-        const z = cameraPosition[2] + offset;
-        return [x, y, z];
-      } else {
-        const x = cameraPosition[0];
-        const y = cameraPosition[1];
-        const z = cameraPosition[2] - 1;
-        return [x, y, z];
-      }
-    }
-
-    // If you rotate the camera on Z axis you don't need to do anything to the model.
-    if (rotationAxis === 'z') {
-      const rotationAngle = cameraRotation[2];
-
-      const x = cameraPosition[0];
-      const y = cameraPosition[1];
-      const z = cameraPosition[2] - 1;
-      return [x, y, z];
-    } else {
-      const x = cameraPosition[0];
-      const y = cameraPosition[1];
-      const z = cameraPosition[2] - 1;
-      return [x, y, z];
-    }
-  }
 
   async function LoadAllVoicesOfApp() {
     /* const allVoicesOfApp: any = [][] // [ [ voice0, voice1, voice2 ], [ voice0, voice1, voice2 ], etc... ]
@@ -301,11 +251,11 @@ async function initialize(data: UninitializedData): Promise<InitializedData> {
     const animationDataStruct = page.camera.createAnimationDataStructure();
 
     return {
-      ...page,
+      ...page, // is this needed? 
 
       camera: {
-        ...page.camera,
-        animationDataStructure: page.camera.createAnimationDataStructure(), // needed for initial position assignment --> where is it being consumed? Can't initial position be consumed from the hard-coded positions array?
+        ...page.camera, // is this needed --> renderer just needs initial position and animationClips?
+        initialPosition: page.camera.positions[0],
         animationClips: page.camera.createAnimationClips(animationDataStruct),
       },
 
@@ -315,9 +265,7 @@ async function initialize(data: UninitializedData): Promise<InitializedData> {
           ...model,
           loadedMeshes: allMeshesOfApp[i][j],
 
-          // Need to access AnimationData here which is just the [][] NOT the whole [][][]. 
-          // Although you can use that too, but you'll need to loop through it.
-          initializedPositions: initializeModelPositionsFromCamera(
+          initializedPositions: data.initializeModelPositionsFromCamera(
             page.camera.positions[j + 1],
             page.camera.rotations[j + 1],
             FindRotationAxis(animationDataStruct[j])
@@ -330,11 +278,28 @@ async function initialize(data: UninitializedData): Promise<InitializedData> {
     };
   });
 
-  return {
-    pages: initializedPages
-  }
+  return initializedPages
 };
 
+
+
+
+
+
+
+
+
+
+
+// Need to access AnimationData here which is just the [][] NOT the whole [][][]. 
+// Although you can use that too, but you'll need to loop through it.
+// initializedPositions: initializeModelPositionsFromCamera(
+//   page.camera.positions[j + 1],
+//   page.camera.rotations[j + 1],
+//   FindRotationAxis(animationDataStruct[j])
+// ),
+
+// animationDataStructure: page.camera.createAnimationDataStructure(), // needed for initial position assignment --> where is it being consumed? Can't initial position be consumed from the hard-coded positions array?
 
 
 // initializedAnimationClips: animationDataStructure.map((animationData: [][], i: number) => {

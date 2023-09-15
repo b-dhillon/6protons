@@ -20,6 +20,52 @@ import { AnimationClip } from 'three';
  */
 
 export const uninitializedData: UninitializedData = {
+  initializeModelPositionsFromCamera: function( cameraPosition: number[], cameraRotation: number[], rotationAxis: string ) {
+    // rotate camera X-axis, need to re-position model on Y axis.
+    if (rotationAxis === 'x') {
+      const rotationAngle = cameraRotation[0];
+
+      const x = cameraPosition[0];
+      const y = cameraPosition[1] + rotationAngle;
+      const z = cameraPosition[2] - 1;
+      return [x, y, z];
+    }
+
+    // rotate camera Y-axis, need to re-position model on X axis AND Z axis.
+    if (rotationAxis === 'y') {
+      const rotationAngle = cameraRotation[1];
+
+      const offset = rotationAngle * -1;
+
+      if (rotationAngle > 0) {
+        const x = cameraPosition[0] + offset;
+        const y = cameraPosition[1];
+        const z = cameraPosition[2] + offset;
+        return [x, y, z];
+      } else {
+        const x = cameraPosition[0];
+        const y = cameraPosition[1];
+        const z = cameraPosition[2] - 1;
+        return [x, y, z];
+      }
+    }
+
+    // rotate camera Z-axis, don't need to do anything to the model.
+    if (rotationAxis === 'z') {
+      const rotationAngle = cameraRotation[2];
+
+      const x = cameraPosition[0];
+      const y = cameraPosition[1];
+      const z = cameraPosition[2] - 1;
+      return [x, y, z];
+    } else {
+      const x = cameraPosition[0];
+      const y = cameraPosition[1];
+      const z = cameraPosition[2] - 1;
+      return [x, y, z];
+    }
+  },
+
   pages: [
     {
       id: 'test_page',
@@ -54,7 +100,7 @@ export const uninitializedData: UninitializedData = {
           [0.00, 0.00, 0.00], // section 5 ..HIV-1-Protease
         ],
 
-        createAnimationDataStructure: function () {
+        createAnimationDataStructure: function (): number[][][] {
           const animationData: number[][][] = [];
           for (let i = 0; i < this.positions.length - 1; i++) {
             const initialPosition: number[] = this.positions[i];
@@ -85,7 +131,6 @@ export const uninitializedData: UninitializedData = {
               }),
             ];
           })
-
           return animationClips;
         },
 
@@ -202,13 +247,13 @@ export const uninitializedData: UninitializedData = {
             }),
             ScaleXYZ({
               duration: 1,
-              initial_scale: [0.1, 0.1, 0.1],
+              initial_scale: [0.066, 0.066, 0.066],
               final_scale: [0.0, 0.0, 0.0],
             }),
             ScaleXYZ({
-              duration: 3,
+              duration: 4,
               initial_scale: [0.01, 0.01, 0.01],
-              final_scale: [0.025, 0.025, 0.025],
+              final_scale: [0.050, 0.050, 0.050],
             }),
           ],
         },
@@ -235,7 +280,7 @@ export const uninitializedData: UninitializedData = {
         '/voices/fiona/voice1.mp3', // 4
       ],
       //                0     1     2     3     4
-      loadedVoices: [null, null, null, null, null],
+      // loadedVoices: [null, null, null, null, null],
 
       dispatch: useDispatch,
     },

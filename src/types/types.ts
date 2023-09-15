@@ -1,8 +1,13 @@
 import { AnimationClip, Audio, Mesh } from "three"
 
 export interface UninitializedData {
+    initializeModelPositionsFromCamera: Function,
     pages: UninitializedPage[]
 }
+
+
+
+
 
 
 export interface UninitializedPage {
@@ -15,58 +20,75 @@ export interface UninitializedPage {
     textType: string[],
     music: string[],
     voices: string[],
-    loadedVoices: null[] | Audio[] // is this property needed here?
+    // loadedVoices: null[] | Audio[] // is this property needed here?
     universe: Universe,
-    camera: LessonCamera,
-    models: Model[],
     dispatch: Function,
+    camera: UninitializedLessonCamera,
+    models: UninitializedModel[],
 };
 
 
 
-
-
-
-
-
-
-
-export interface InitializedData {
-    pages: InitializedPage[]
-} 
-
-
-export interface InitializedPage extends UninitializedPage {
+export interface InitializedPage {
+    id: string,
+    pageTitle: string,
+    section: number,
+    maxSection: number,
+    thumbnail: string,
+    text: string[],
+    textType: string[],
+    music: string[],
+    voices: string[],
+    universe: Universe,
+    dispatch: Function,
     camera: InitializedLessonCamera,
-    models: LoadedModel[],
+    models: InititalizedModel[],
     loadedVoices: Audio[],
     loadedMusic: Audio[],
 };
 
-export interface LessonCamera {
+
+
+
+
+
+
+
+// Will have to get rid of "extends" to get rid of unecessary data copying and passing. 
+// There is data and function definitions that no longer need to be copied and passed 
+// down to PageRenderer. But the savings could be far more trouble then they are worth.
+
+// export interface InitializedPage extends UninitializedPage {
+//     camera: InitializedLessonCamera,
+//     models: InititalizedModel[],
+//     loadedVoices: Audio[],
+//     loadedMusic: Audio[],
+// };
+
+export interface UninitializedLessonCamera {
     positions: number[][],
     rotations: number[][],
     createAnimationDataStructure: Function,
     createAnimationClips: Function
 };
 
-export interface InitializedLessonCamera extends LessonCamera {
-    animationDataStructure: number[][][]
+export interface InitializedLessonCamera {
+    initialPosition: number[]
     animationClips: AnimationClip[][],
 };
 
-export interface Model {
+export interface UninitializedModel {
     id: string,
     name: string,
     path: string,
     visible: boolean,
     scale: number,
-    positions: number[][],
-    rotations: number[][],
+    positions: number[][], //needed?
+    rotations: number[][], //needed?
     animationClips: THREE.AnimationClip[],
 };
 
-export interface LoadedModel extends Model {
+export interface InititalizedModel extends UninitializedModel {
     loadedMeshes: Mesh[][],
     initializedPositions: number[][],
 };

@@ -1,5 +1,4 @@
 ## Next Push
-- Create easing in camera animations
 
 - Add types to everything 
 - Reorganize all the directories 
