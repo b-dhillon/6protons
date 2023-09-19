@@ -49,10 +49,7 @@ function Header(props: any) {
     <div className='header-container'>
       <li className='home-back-container' onClick={() => GoBack}>
         <button className='homeBtn--icon'>
-          <i
-            className='fa-solid fa-arrow-left-long backBtn'
-            style={{ color: 'white' }}
-          ></i>
+          <i className='fa-solid fa-arrow-left-long backBtn' style={{ color: 'white' }}></i>
         </button>
       </li>
 
@@ -114,7 +111,7 @@ function Body(props: any) {
         </>
       );
     }
-    if (props.page.textType[props.counter] === 'left') {
+    else if (props.page.textType[props.counter] === 'left') {
       return (
         <>
           <div className='panel left'>
@@ -126,7 +123,25 @@ function Body(props: any) {
           <div className='panel right'></div>
         </>
       );
-    } else return <></>;
+    }
+
+    // Need to still create all the classes below --> /styles/overlay-styles.css
+      // .bottom
+      // .text--wrapper3
+      // .top
+    else if(props.page.textType[props.counter] === 'bottom'){
+      return (
+        <>
+          <div className='panel top'></div>
+          <div className='panel bottom'>
+            <div className='text--wrapper2'>
+              {/* < p > { props.page.text[ props.counter ] } </ p > */}
+            </div>
+          </div>
+        </>
+      );
+    }
+    else return <></>;
   }
 
   return (

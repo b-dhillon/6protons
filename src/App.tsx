@@ -268,7 +268,8 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
           initializedPositions: data.initializeModelPositionsFromCamera(
             page.camera.positions[j + 1],
             page.camera.rotations[j + 1],
-            FindRotationAxis(animationDataStruct[j])
+            FindRotationAxis(animationDataStruct[j]),
+            model.yOffsetForText
           ),
         };
       }),

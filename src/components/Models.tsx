@@ -30,38 +30,32 @@ export function Models(props: any): JSX.Element {
   useEffect(() => {
     AnimationController(animationActions, props.counter);
 
-    function AnimationController(animationActions: any, counter: number): void {
+    // Each model should have 3 animations 
+    function AnimationController(animationActions: any, section: number): void {
+
       if (animationActions.length) {
-        // animationActions.forEach( ( animationAction: any ) => {
-        //     // stops every model's main animation
-        //     // animationAction[ 0 ].stop();
-    
-        //     // stops every model's nested animation
-        //     // animationAction[ 2 ]?.stop();
-        // });
-    
+        let currentModelAnimations = animationActions[section]
         // SCALE UP ANIMATION:
-        animationActions[counter][1].startAt(8).setEffectiveTimeScale(-1).play();
-        /* animationActions[ counter ][ 1 ].startAt( 4 ).setEffectiveTimeScale( -1 ).play(); */
+        currentModelAnimations[1].startAt(8).setEffectiveTimeScale(-1).play();
     
         // MAIN ANIMATION:
-        if (counter === 0) animationActions[counter][0].play();
-        else animationActions[counter][0].startAt(9).play();
-        /* else animationActions[ counter ][ 0 ].startAt( 5 ).play(); */
-      }
-    
-      if (animationActions.length && counter > 0) {
+        if (section === 0) currentModelAnimations[0].play()
+        else currentModelAnimations[0].startAt(9).play(); //delay to wait for camera transition to finish
+
+
         // SCALE DOWN ANIMATION: -- i think these scale ups and down are the same every model so do we really need to make it based on the counter?
-        // animationActions[ (counter - 1) ][ 1 ].reset().play();
-        animationActions[ (counter - 1) ][ 1 ].reset().setEffectiveTimeScale( 0.9 ).play(); //1.2 was original
-        /* animationActions[ (counter - 1) ][ 1 ].setEffectiveTimeScale( 0.5 ).play(); */
-      }
-    
-      if (animationActions.length && animationActions[counter][2]) {
+        if (section > 0) {
+          animationActions[ (section - 1) ][ 1 ].reset().setEffectiveTimeScale( 0.9 ).play(); //1.2 was original
+          //                    ^section-1 because section will increase and we want to access the previous sections model's exit animation, not the current model.
+        }
+
         // NESTED ANIMATION:
-        animationActions[counter][2].setLoop(LoopPingPong, Infinity);
-        animationActions[counter][2].play();
+        if (currentModelAnimations[2]) {
+          currentModelAnimations[2].setLoop(LoopPingPong, Infinity);
+          currentModelAnimations[2].play();
+        }
       }
+  
     }
 
   }, [ animationActions, props.counter ]);
@@ -250,8 +244,14 @@ function CreateReactModel(props: any): JSX.Element {
 
 
 
+// STOPPING ANIMATIONS:
+// animationActions.forEach( ( animationAction: any ) => {
+//     // stops every model's main animation
+//     // animationAction[ 0 ].stop();
 
-
+//     // stops every model's nested animation
+//     // animationAction[ 2 ]?.stop();
+// });
 
 
 
@@ -279,6 +279,7 @@ function CreateReactModel(props: any): JSX.Element {
 
 
 
+        /* animationActions[ counter ][ 1 ].startAt( 4 ).setEffectiveTimeScale( -1 ).play(); */
 
 
 

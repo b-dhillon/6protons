@@ -1,17 +1,15 @@
 import { useDispatch } from 'react-redux';
-import ScaleXYZ from './components/animations/ScaleXYZ';
-import Rotate from './components/animations/Rotate';
-import SuspendInSolution from './components/animations/SuspendInSolution';
 import { UninitializedData } from './types/types';
 import { TranslateRotate } from './components/animations/TranslateRotate';
 import { FindRotationAxis } from './components/FindRotationAxis';
 import { AnimationClip } from 'three';
-
-
+import ScaleXYZ from './components/animations/ScaleXYZ';
+import Rotate from './components/animations/Rotate';
+import SuspendInSolution from './components/animations/SuspendInSolution';
 
 
 /**
- * This object is an array of all the unloaded, hard-coded data of the App. Data needed to render each page of the app.
+ * This object contains an array of all uninititalized, hard-coded data of the App. Data needed to render each page of the app.
  *
  * Hard Coded:
  *   Camera positions and rotations
@@ -19,14 +17,19 @@ import { AnimationClip } from 'three';
  *   Model paths and Voice paths
  */
 
+
 export const uninitializedData: UninitializedData = {
-  initializeModelPositionsFromCamera: function( cameraPosition: number[], cameraRotation: number[], rotationAxis: string ) {
+  initializeModelPositionsFromCamera: function( cameraPosition: number[], cameraRotation: number[], rotationAxis: string, yOffsetForText: boolean ) {
     // rotate camera X-axis, need to re-position model on Y axis.
+
+    let yOffset = 0;
+    if( yOffsetForText ) yOffset = 0.1
+
     if (rotationAxis === 'x') {
       const rotationAngle = cameraRotation[0];
 
       const x = cameraPosition[0];
-      const y = cameraPosition[1] + rotationAngle;
+      const y = cameraPosition[1] + rotationAngle + yOffset
       const z = cameraPosition[2] - 1;
       return [x, y, z];
     }
@@ -39,12 +42,12 @@ export const uninitializedData: UninitializedData = {
 
       if (rotationAngle > 0) {
         const x = cameraPosition[0] + offset;
-        const y = cameraPosition[1];
+        const y = cameraPosition[1] + yOffset;
         const z = cameraPosition[2] + offset;
         return [x, y, z];
       } else {
         const x = cameraPosition[0];
-        const y = cameraPosition[1];
+        const y = cameraPosition[1] + yOffset;
         const z = cameraPosition[2] - 1;
         return [x, y, z];
       }
@@ -55,12 +58,12 @@ export const uninitializedData: UninitializedData = {
       const rotationAngle = cameraRotation[2];
 
       const x = cameraPosition[0];
-      const y = cameraPosition[1];
+      const y = cameraPosition[1] + yOffset;
       const z = cameraPosition[2] - 1;
       return [x, y, z];
     } else {
       const x = cameraPosition[0];
-      const y = cameraPosition[1];
+      const y = cameraPosition[1] + yOffset;
       const z = cameraPosition[2] - 1;
       return [x, y, z];
     }
@@ -122,10 +125,10 @@ export const uninitializedData: UninitializedData = {
             return [
               TranslateRotate({
                 duration: 4,
-                initial_position: animationData[0],
-                final_position: animationData[1],
-                initial_angle: animationData[2],
-                final_angle: animationData[3],
+                initialPosition: animationData[0],
+                finalPosition: animationData[1],
+                initialAngle: animationData[2],
+                finalAngle: animationData[3],
                 // axis: 'x',
                 axis: FindRotationAxis(animationData),
               }),
@@ -133,10 +136,6 @@ export const uninitializedData: UninitializedData = {
           })
           return animationClips;
         },
-
-        // createAnimationActions: function() {
-
-        // }
       },
 
       models: [
@@ -146,6 +145,8 @@ export const uninitializedData: UninitializedData = {
           path: '/Fullerenes/models/instance0.glb',
           visible: true,
           scale: 0.18,
+          yOffsetForText: false,
+
           positions: [[0.0, 0.0, -1.0]], // calculated in Init() based off of camera position at the current section
           rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
@@ -164,6 +165,8 @@ export const uninitializedData: UninitializedData = {
           path: '/Fullerenes/models/instance1.glb',
           visible: false,
           scale: 0,
+          yOffsetForText: false,
+
           positions: [[0.75, 0.66, 0.0]],
           rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
@@ -186,6 +189,8 @@ export const uninitializedData: UninitializedData = {
           path: '/Fullerenes/models/instance2.glb',
           visible: true,
           scale: 0,
+          yOffsetForText: true,
+
           positions: [[0.75, 0.0, -3.0]],
           rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
@@ -197,7 +202,7 @@ export const uninitializedData: UninitializedData = {
             }),
             ScaleXYZ({
               duration: 1,
-              initial_scale: [0.18, 0.18, 0.18],
+              initial_scale: [0.15, 0.15, 0.15],
               final_scale: [0.0, 0.0, 0.0],
             }),
           ],
@@ -208,6 +213,8 @@ export const uninitializedData: UninitializedData = {
           path: '/Fullerenes/models/___instance3.glb',
           visible: true,
           scale: 0,
+          yOffsetForText: true,
+
           positions: [[0.0, -0.66, -1.0]],
           rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
@@ -236,6 +243,8 @@ export const uninitializedData: UninitializedData = {
           path: '/Fullerenes/models/___instance4.glb',
           visible: true,
           scale: 0,
+          yOffsetForText: true,
+
           positions: [[0.0, -0.1, -3.0]],
           rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
@@ -247,7 +256,7 @@ export const uninitializedData: UninitializedData = {
             }),
             ScaleXYZ({
               duration: 1,
-              initial_scale: [0.066, 0.066, 0.066],
+              initial_scale: [0.060, 0.060, 0.060],
               final_scale: [0.0, 0.0, 0.0],
             }),
             ScaleXYZ({
@@ -268,7 +277,14 @@ export const uninitializedData: UninitializedData = {
         "How can Buckminsterfullerene help cure AIDS? An enzyme (HIV-1-Protease) that is required for HIV to replicate, exhibits a non-polar pocket in its three-dimensional structure. On the protein model in front of you, notice how the non-polar Fullerene fits the exact diameter of the enzyme's binding pocket. If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible HIV-1-Protease inhibitors.",
       ],
 
-      textType: ['centered', 'centered', 'left', 'left', 'left', 'left'],
+      textType: [
+        '',
+        'centered',
+        'bottom',
+        'bottom',
+        'left',
+        'left'
+      ],
 
       music: ['/music/fullerene3.mp3'],
 

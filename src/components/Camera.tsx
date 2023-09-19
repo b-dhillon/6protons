@@ -36,7 +36,7 @@ export function Camera( { initializedPage, counter }: any ): JSX.Element {
         return animationAction;
       };
 
-      const animationActions = animationClips.map((animationClip: []) => createAnimationAction(animationClip[0]) ); //why hard-coded index 0??
+      const animationActions = animationClips.map((animationClip: []) => createAnimationAction(animationClip[0]) ); //why hard-coded index 0?? --> because theres only one animation per section
 
       setAnimationActions(animationActions);
     };

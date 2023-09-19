@@ -83,6 +83,9 @@ export interface UninitializedModel {
     path: string,
     visible: boolean,
     scale: number,
+    yOffsetForText: boolean,
+
+
     positions: number[][], //needed?
     rotations: number[][], //needed?
     animationClips: THREE.AnimationClip[],
