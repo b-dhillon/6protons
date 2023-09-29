@@ -54,7 +54,7 @@ export default function App() {
         setCurrentPage={setCurrentPage}
       />
     );
-  } else return <h2 style={ { padding: "10px 30px" } } >Loading...</h2>;
+  } else return <h3 style={ { padding: "10px 30px" } } >Loading...</h3>;
 }
 
 

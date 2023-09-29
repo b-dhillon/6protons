@@ -5,7 +5,7 @@ TODO:
     Offset section 2 and 3 models y-position by 0.1 or so.
     Make section 2 and 3 models smaller. 
     Place text underneath the model. Centered.
-    Fade in the animation
+    Fade in the animation for the text. 
 
 1. Work out all animations and transitions for camera.
     0. Need to add spline rotation around bucky-ball????? ---> Is this necessary? Could look really cool, but where would the text go?

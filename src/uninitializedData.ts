@@ -190,7 +190,6 @@ export const uninitializedData: UninitializedData = {
           visible: true,
           scale: 0,
           yOffsetForText: true,
-
           positions: [[0.75, 0.0, -3.0]],
           rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
@@ -210,6 +209,35 @@ export const uninitializedData: UninitializedData = {
         {
           id: '3',
           name: 'model3',
+          path: '/Fullerenes/models/instance2.glb',
+          visible: true,
+          scale: 0,
+          yOffsetForText: true,
+          positions: [[0.0, -0.66, -1.0]],
+          rotations: [[0.0, 0.0, 0.0]],
+          animationClips: [
+            Rotate({
+              duration: 5000,
+              axis: 'y',
+              initial_angle: 0,
+              final_angle: 360,
+            }),
+            ScaleXYZ({
+              duration: 1,
+              initial_scale: [0.18, 0.18, 0.18],
+              final_scale: [0.0, 0.0, 0.0],
+            }),
+            Rotate({
+              duration: 1500,
+              axis: 'x',
+              initial_angle: 0,
+              final_angle: 360,
+            }),
+          ],
+        },
+        {
+          id: '4',
+          name: 'model4',
           path: '/Fullerenes/models/___instance3.glb',
           visible: true,
           scale: 0,
@@ -238,13 +266,12 @@ export const uninitializedData: UninitializedData = {
           ],
         },
         {
-          id: '4',
-          name: 'model4',
+          id: '5',
+          name: 'model5',
           path: '/Fullerenes/models/___instance4.glb',
           visible: true,
           scale: 0,
           yOffsetForText: true,
-
           positions: [[0.0, -0.1, -3.0]],
           rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
@@ -254,15 +281,17 @@ export const uninitializedData: UninitializedData = {
               initial_angle: 0,
               final_angle: 360,
             }),
+            //hiv protease
             ScaleXYZ({
               duration: 1,
               initial_scale: [0.060, 0.060, 0.060],
               final_scale: [0.0, 0.0, 0.0],
             }),
+            //buckyball
             ScaleXYZ({
-              duration: 4,
-              initial_scale: [0.01, 0.01, 0.01],
-              final_scale: [0.050, 0.050, 0.050],
+              duration: 3,
+              initial_scale: [0.02, 0.02, 0.02],
+              final_scale: [0.06, 0.06, 0.06],
             }),
           ],
         },

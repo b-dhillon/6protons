@@ -3,10 +3,17 @@ import { useFrame } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
 import { LoopPingPong } from 'three'; // you already imported all of THREE on line 1
 
+/*
+All models are created and mounted to the scene as an array.
+They are all set to visible. And just scaled up via the triggering of an animation
+
+*/
+
 /** Fn Description 
  * 
- * This Fn is responsible for creating React Three objects out of my glTF model data 
- * And creating/playing/updating the model's animations.
+ * This Fn is responsible for:
+ * 1. Creating React Three objects out of my glTF model data 
+ * 2. Handling the model's animations - creating/playing/updating the animations
  * 
  * 
  * 
@@ -22,6 +29,11 @@ import { LoopPingPong } from 'three'; // you already imported all of THREE on li
  * Updates animation mixers
  * 
 */
+
+// This fn needs to be re-factored a bit. Currently there is as model created and mounted even if the section doesnt need a model. Like section 1, it is just the "vaporized graphite rods text" and yet 
+// there is still a model created and mounted. Wasteful. Bad code.
+
+// Where is .visible being mutated? OR are they all set to visible and just scaled up?
 export function Models(props: any): JSX.Element {
 
   const [ animationActions, setAnimationActions ] = useState<any[]>([]); // [ [ mainAnimation, scaleAnimation, nestedAnimation ], [ ], etc... ]
@@ -32,30 +44,24 @@ export function Models(props: any): JSX.Element {
 
     // Each model should have 3 animations 
     function AnimationController(animationActions: any, section: number): void {
-
       if (animationActions.length) {
         let currentModelAnimations = animationActions[section]
         // SCALE UP ANIMATION:
         currentModelAnimations[1].startAt(8).setEffectiveTimeScale(-1).play();
-    
         // MAIN ANIMATION:
         if (section === 0) currentModelAnimations[0].play()
         else currentModelAnimations[0].startAt(9).play(); //delay to wait for camera transition to finish
-
-
         // SCALE DOWN ANIMATION: -- i think these scale ups and down are the same every model so do we really need to make it based on the counter?
         if (section > 0) {
           animationActions[ (section - 1) ][ 1 ].reset().setEffectiveTimeScale( 0.9 ).play(); //1.2 was original
           //                    ^section-1 because section will increase and we want to access the previous sections model's exit animation, not the current model.
         }
-
         // NESTED ANIMATION:
         if (currentModelAnimations[2]) {
           currentModelAnimations[2].setLoop(LoopPingPong, Infinity);
           currentModelAnimations[2].play();
         }
       }
-  
     }
 
   }, [ animationActions, props.counter ]);
@@ -83,7 +89,7 @@ export function Models(props: any): JSX.Element {
       if (model.path) {
         return (
           <CreateReactModel
-            _model={model}
+            model={model}
             key={model.id}
             setAnimationActions={setAnimationActions}
             counter={props.counter}
@@ -108,13 +114,6 @@ export function Models(props: any): JSX.Element {
 
 
 
-
-
-
-
-
-
-
 /** Fn Description
  * 
  * Grabs meshes and animationClips from initializedPage.models[ i ].meshes & initializedPage.models[ i ].animations --> 
@@ -129,13 +128,13 @@ export function Models(props: any): JSX.Element {
 * 
 */
 function CreateReactModel(props: any): JSX.Element {
-  // create a type for the <group> object that the ref is attached to
+  // create a type for the <group> object that the ref is attached to  
   const ref = useRef(new THREE.Group());
   const nestedRef = useRef(new THREE.Mesh());
 
-  const animationClips = props._model.animationClips;
+  const animationClips = props.model.animationClips;
 
-  const mesh = props._model.loadedMeshes.map((loadedMesh: any) => {
+  const mesh = props.model.loadedMeshes.map((loadedMesh: any) => {
     const hasInstancedMeshes = loadedMesh.children.length;
     let instancedNestedMeshes = []; // Are these really instances? Or is Three making a seperate draw call for each sphere?
 
@@ -210,10 +209,10 @@ function CreateReactModel(props: any): JSX.Element {
 
   return (
     <group
-      position={props._model.initializedPositions}
-      scale={props._model.scale}
-      visible={props._model.visible}
-      name={props._model.modelNumber}
+      position={props.model.initializedPositions}
+      scale={props.model.scale}
+      visible={props.model.visible}
+      name={props.model.modelNumber}
       ref={ref}
     >
       {mesh}
