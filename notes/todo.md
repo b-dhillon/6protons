@@ -1,29 +1,24 @@
 
 TODO: 
 
-0. Figure out where text is going to go
-    Offset section 2 and 3 models y-position by 0.1 or so.
-    Make section 2 and 3 models smaller. 
-    Place text underneath the model. Centered.
-    Fade in the animation for the text. 
+Place text underneath the model. Centered.
+Fade in the animation for the text. 
 
-1. Work out all animations and transitions for camera.
-    0. Need to add spline rotation around bucky-ball????? ---> Is this necessary? Could look really cool, but where would the text go?
+Get section 2 --> section 3 model behaving properly. Section should move from 2 to 3 without animation being disrupted
+    Try to pass the time of animation of section 2 into section 3's model
+
+Work out all animations and transitions.
+    0. Need to add rotation around bucky-ball? ---> Is this necessary? Could look really cool, but where would the text go?
         0. Re-learn animation system. Whats inside a "track" again?
-        1. Re-factor the TranslateRotate file.
         2. Get the vector3 for the point that is 90 degrees away for position[3]?
-        3. Create a specific catmul-rom interpolation animationClip for that animation.
 
     1. Create glowing soccer-ball pattern animation.
-
-
-Add text for all the sections.
 
 
 Add ability to go backwards.
 
 
-All buckyball's material needs to be shifted to black. Glossy black?
+All buckyball's material needs to be shifted to black. Glossy black? --> Same as diamon thumbnail, glossy dark purple
 
 
 

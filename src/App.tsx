@@ -9,8 +9,6 @@ import { FindRotationAxis } from './components/FindRotationAxis';
 import { UninitializedData, UninitializedPage, InitializedPage } from './types/types';
 
 
-
-
 /** Fn Description
  * 
  * Responsibilities: 
@@ -43,7 +41,7 @@ export default function App() {
     setDataInitialized(true);
   }
 
-  // Once app is loaded and initialized --> find the current page's data and render it with PageConstructor
+  // Once app is loaded and initialized --> find current page's data and render with PageRenderer
   if (dataInitialized) {
 
     const [initializedPage] = initializedPages!.filter( (page: InitializedPage) => page.id === currentPage );
@@ -56,11 +54,6 @@ export default function App() {
     );
   } else return <h3 style={ { padding: "10px 30px" } } >Loading...</h3>;
 }
-
-
-
-
-
 
 
 
@@ -100,7 +93,6 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
       const loader = new THREE.AudioLoader();
       loader.load(
         path,
-
         // onLoad
         (buffer: AudioBuffer) => {
           // Set the audio object's buffer to the loaded object
@@ -109,12 +101,10 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
           AudioObject.setVolume(1);
           resolve(AudioObject);
         },
-
         // onProgress
         (xhr) => {
           // console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
         },
-
         // onError
         (err) => {
           console.log('Error loading voices', err);

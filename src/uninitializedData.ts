@@ -75,7 +75,7 @@ export const uninitializedData: UninitializedData = {
       pageTitle: 'Buckminsterfullerene',
       section: 0,
       maxSection: 6,
-      thumbnail: "url('./lesson_thumbnails/fullereneTile.png')",
+      thumbnail: "url('./lessonThumbnails/fullereneTile.png')",
 
       universe: {
         id: 'fullerene universe',
@@ -357,7 +357,7 @@ export const uninitializedData: UninitializedData = {
 
 
 
-//         // anaimation_data is built programatically w-/ Init() + this.CreateAnimationDataFromPositionsRotations()
+// anaimation_data is built programatically w-/ Init() + this.CreateAnimationDataFromPositionsRotations()
 // camera.animationData: [
 //     //  initial position      final poisition        initial rotation       final rotation
 //     [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 0
@@ -367,7 +367,7 @@ export const uninitializedData: UninitializedData = {
 //     [ [ 0.00, 0.00, 0.00 ], [ 1.00, 2.00, 0.00 ],  [ 0.00, 0.75, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 4
 //     //         0                      1                     2                       3
 // ],
-// //                  0     1     2     3     4
+//                     0     1     2     3     4
 // animationClips: [ null, null, null, null, null ],
 
 // Old DS

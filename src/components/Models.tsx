@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
-import { LoopPingPong } from 'three'; // you already imported all of THREE on line 1
+import { AnimationAction, LoopPingPong } from 'three'; // you already imported all of THREE on line 1
 
 /*
 All models are created and mounted to the scene as an array.
@@ -38,7 +38,7 @@ export function Models(props: any): JSX.Element {
 
   const [ animationActions, setAnimationActions ] = useState<any[]>([]); // [ [ mainAnimation, scaleAnimation, nestedAnimation ], [ ], etc... ]
 
-  // AnimationController --> Plays the AnimationAction based on counter
+  // AnimationController --> Plays the AnimationAction based on counter (section)
   useEffect(() => {
     AnimationController(animationActions, props.counter);
 
@@ -47,11 +47,17 @@ export function Models(props: any): JSX.Element {
       if (animationActions.length) {
         let currentModelAnimations = animationActions[section]
         // SCALE UP ANIMATION:
+
+
+        // if( someVariableOnModelToNotAnimate ) dontPayAnimation?
+
         currentModelAnimations[1].startAt(8).setEffectiveTimeScale(-1).play();
         // MAIN ANIMATION:
         if (section === 0) currentModelAnimations[0].play()
         else currentModelAnimations[0].startAt(9).play(); //delay to wait for camera transition to finish
+
         // SCALE DOWN ANIMATION: -- i think these scale ups and down are the same every model so do we really need to make it based on the counter?
+        // Also, we need a way to not play the exit animation sometimes
         if (section > 0) {
           animationActions[ (section - 1) ][ 1 ].reset().setEffectiveTimeScale( 0.9 ).play(); //1.2 was original
           //                    ^section-1 because section will increase and we want to access the previous sections model's exit animation, not the current model.
