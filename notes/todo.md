@@ -2,8 +2,8 @@
 TODO: 
 
 Place text underneath the model. Centered.
-    1. Figure out how the panel left and panel right with flex was working again
-    
+    1. Test section 2 text placement.
+
 Fade in the animation for the text. 
 
 Variable Name Changes:

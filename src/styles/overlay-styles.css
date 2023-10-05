@@ -139,10 +139,16 @@
   }
   
   
+
+  .textOnBottomHalf {
+    display: flex; 
+    flex-direction: column;
+  }
+  
   .panel {
     flex: 1;
   }
-  
+
   .left {
     background-color: red;
   }
@@ -150,7 +156,18 @@
   .right {
     background-color: blue;
   }
+
+  .top {
+    /* border: 1px solid yellow; */
+  }
   
+  .bottom {
+    display: flex; 
+    align-items: center;
+    /* border: 1px solid violet; */
+  }
+
+
   .text--wrapper {
     display: flex;
     flex: 1;
@@ -163,6 +180,41 @@
     animation: 9s delayInWithFade;
     animation-fill-mode: forwards;
     opacity: 0
+  }
+
+  .text--wrapper2 {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+
+    animation: 9s delayInWithFade;
+    animation-fill-mode: forwards;
+    opacity: 0;
+
+    /* 
+    width: 100%;
+    height: 100%; */
+  }
+
+  .text--wrapper > p {
+    width: 70%;
+    font-size: 1.5vw !important;
+    text-align: center;
+    animation: fadeIn 2s 1 ease-in-out;
+    line-height: 40px;
+  }
+
+
+
+  .text--wrapper2 > p {
+    width: 70%;
+    margin: 0;
+    font-size: 1.5vw !important;
+    text-align: center;
+    animation: fadeIn 2s 1 ease-in-out;
+    line-height: 40px;
   }
 
   @keyframes delayIn {
@@ -187,68 +239,12 @@
 
 
   
-  .text--wrapper > p {
-    width: 70%;
-    font-size: 1.5vw !important;
-    text-align: center;
-    animation: fadeIn 2s 1 ease-in-out;
-    line-height: 40px;
-  }
-  
-  .text--wrapper2 {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    z-index: 2;
-    /* border-right: 3px solid white; */
-  }
-  
-  .text--wrapper2--p {
-    width: 80%;
-    font-size: 1.5rem;
-    text-align: left;
-    line-height: 45px;
-    overflow: scroll;
-    /* animation: slideUp 2s 1 both; 
-    animation-delay: .5s; */
-  }
-
-
-
-
-  .text--wrapper--bottom {
-    display: flex;
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    flex-wrap: wrap;
-    z-index: 2;
-
-    animation: 9s delayInWithFade;
-    animation-fill-mode: forwards;
-    opacity: 0;
-
-    border: 1px solid red;
-  }
-
-  .text--wrapper--bottom > p{
-    width: 80%;
-    font-size: 1.5vw !important;
-    text-align: left;
-    line-height: 40px;
-    
-    animation: fadeIn 2s 1 ease-in-out;
-  }
-
-
-
-
 
   
+
+
+
+
   
   /* Footer */
   

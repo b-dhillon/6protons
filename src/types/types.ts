@@ -17,7 +17,7 @@ export interface UninitializedPage {
     maxSection: number,
     thumbnail: string,
     text: string[],
-    textType: string[],
+    textPlacement: string[],
     music: string[],
     voices: string[],
     // loadedVoices: null[] | Audio[] // is this property needed here?
@@ -36,7 +36,7 @@ export interface InitializedPage {
     maxSection: number,
     thumbnail: string,
     text: string[],
-    textType: string[],
+    textPlacement: string[],
     music: string[],
     voices: string[],
     universe: Universe,

@@ -102,7 +102,7 @@ function Body(props: any) {
   }
 
   function Text(props: any): JSX.Element {
-    if (props.page.textType[props.counter] === 'centered') {
+    if (props.page.textPlacement[props.counter] === 'center') {
       return (
         <>
           <div className='text--wrapper'>
@@ -111,7 +111,7 @@ function Body(props: any) {
         </>
       );
     }
-    else if (props.page.textType[props.counter] === 'left') {
+    else if (props.page.textPlacement[props.counter] === 'left') {
       return (
         <>
           <div className='panel left'>
@@ -119,7 +119,6 @@ function Body(props: any) {
               <p> { props.page.text[ props.counter ] } </p>
             </div>
           </div>
-
           <div className='panel right'></div>
         </>
       );
@@ -129,16 +128,37 @@ function Body(props: any) {
       // .bottom
       // .text--wrapper3
       // .top
-    else if(props.page.textType[props.counter] === 'bottom'){
+    else if(props.page.textPlacement[props.counter] === 'bottom'){
       return (
-        <>
+        <div className='textOnBottomHalf'>
           <div className='panel top'></div>
           <div className='panel bottom'>
             <div className='text--wrapper2'>
-              {/* < p > { props.page.text[ props.counter ] } </ p > */}
+              {/* To create better spacing and seperation between the text
+                  Lets go into unitinitializedData and modify the text data structure 
+                  We should make it a list of lists instead of just a single list.
+                  Then, we write a simple loop to create <p></p> elements of each item in the nested list
+                  
+                  {
+                    function() {
+                      let paragraphElements = [];
+                      for( let i = 0; i < page.text.[section].length; i++ ) {
+                        paragraphElements.push( <p>page.text[section][i]</p> )
+                      }
+                      return paragraphElements
+                    } ();
+
+                    or 
+
+                    page.text.[section].map( (t, i) => <p>t[i]</p> )
+
+
+                  }
+                */}
+              <p> { props.page.text[ props.counter ] } </p> 
             </div>
           </div>
-        </>
+        </div>
       );
     }
     else return <></>;

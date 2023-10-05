@@ -304,13 +304,13 @@ export const uninitializedData: UninitializedData = {
         "How can Buckminsterfullerene help cure AIDS? An enzyme (HIV-1-Protease) that is required for HIV to replicate, exhibits a non-polar pocket in its three-dimensional structure. On the protein model in front of you, notice how the non-polar Fullerene fits the exact diameter of the enzyme's binding pocket. If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible HIV-1-Protease inhibitors.",
       ],
 
-      textType: [
+      textPlacement: [
         '',
-        'left',
+        'center',
         'bottom',
         'bottom',
-        'left',
-        'left'
+        'bottom',
+        'bottom'
       ],
 
       music: ['/music/fullerene3.mp3'],
