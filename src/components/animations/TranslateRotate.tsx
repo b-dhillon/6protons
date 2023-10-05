@@ -25,24 +25,6 @@ export function TranslateRotate(config: config) {
     positionPoints
   );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const rotationTimes = [0, config.duration];
   let rotationValues: number[] = [];
   if (config.axis === 'x')

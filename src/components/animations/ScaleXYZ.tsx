@@ -3,7 +3,7 @@ import { AnimationClip, VectorKeyframeTrack } from 'three';
 function ScaleXYZ( config: config ) {
 
     const times = [ 0, config.duration ],
-          values = [ ...config.initial_scale, ...config.final_scale ],
+          values = [ ...config.initialScale, ...config.finalScale ],
           trackName = '.scale',
           track = new VectorKeyframeTrack( trackName, times, values );
 
@@ -13,8 +13,8 @@ function ScaleXYZ( config: config ) {
 
 interface config {
     duration: number, 
-    initial_scale: number[], 
-    final_scale: number[]
+    initialScale: number[], 
+    finalScale: number[]
 };
 
 export default ScaleXYZ;

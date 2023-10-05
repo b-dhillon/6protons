@@ -2,7 +2,14 @@
 TODO: 
 
 Place text underneath the model. Centered.
+    1. Figure out how the panel left and panel right with flex was working again
+    
 Fade in the animation for the text. 
+
+Variable Name Changes:
+    Change 'counter' to 'section'
+    Change text-wrapper to something more appropriate or descriptive
+
 
 Get section 2 --> section 3 model behaving properly. Section should move from 2 to 3 without animation being disrupted
     Try to pass the time of animation of section 2 into section 3's model
@@ -12,17 +19,41 @@ Work out all animations and transitions.
         0. Re-learn animation system. Whats inside a "track" again?
         2. Get the vector3 for the point that is 90 degrees away for position[3]?
 
-    1. Create glowing soccer-ball pattern animation.
+    1. Create glowing soccer-ball pattern animation?? Does it need to be glowing?? Maybe we can just pass in a new model with the soccerball pattern lit up and sync the animation with time. Animating the material may be complicated after re-factoring the animation system. Perhaps the circular camera motion effect is good enough 
+        We are not using gltfjsx anymore after the re-factor. We are extracting meshes and creating <mesh> objects inside a <group>.
+            We will need to animate the material of the soccer ball. 
+                First we need to figure out how model0 and model2 are different. They are the same model but one has the soccerball pattern in red. How is this done?
+                    Was it done in Blender? Or is it being handled programatically somewhere? 
+                    What are these instances about?
 
 
 Add ability to go backwards.
 
 
-All buckyball's material needs to be shifted to black. Glossy black? --> Same as diamon thumbnail, glossy dark purple
+All buckyball's material needs to be shifted to black. Glossy black? --> Same as diamond thumbnail, glossy dark purple
 
 
 
 
+
+
+ANIMATION SYSTEM NOTES: 
+
+Each file in ./src/components/animations contains as single function that returns a THREE.AnimationClip 
+
+The AnimationClip is created by the constructor --> new AnimationClip().
+    This constructor takes 4 paramters:
+        1. name: string
+        2. duration: number
+        3. track: KeyframeTrack
+        4. blendMode: AnimationBlendMode 
+
+Each animation takes a Track. 
+The Track is a constructor with 3 parameters: 
+    1. propertyToAnimation: string -- i.e. '.position' or '.rotation' or '.scale'
+    2. times: any[]
+    3. values: any[]
+    4. interpolation: InterpolationModes | undefined
 
 
 

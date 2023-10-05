@@ -3,7 +3,7 @@ import { AnimationClip, NumberKeyframeTrack } from "three";
 function TranslateAxis( config: config ) {
 
     const times = [ 0, config.duration ],
-          values = [ config.initial_position, config.final_position ],
+          values = [ config.initialPosition, config.finalPosition ],
           trackName = '.position[z]',
           track = new NumberKeyframeTrack( trackName, times, values );
 
@@ -14,6 +14,6 @@ function TranslateAxis( config: config ) {
 
 interface config { 
     duration: number, 
-    initial_position: number,
-    final_position: number
+    initialPosition: number,
+    finalPosition: number
 }

@@ -187,7 +187,6 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
         (gltf: any) => {
           // console.log('gltf', gltf);
           resolve(gltf);
-          // console.log('glTF loaded');
         },
         (xhr: any) => {
           // console.log('loading glTF');

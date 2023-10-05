@@ -144,11 +144,11 @@
   }
   
   .left {
-    /* background-color: red; */
+    background-color: red;
   }
   
   .right {
-    /* background-color: blue; */
+    background-color: blue;
   }
   
   .text--wrapper {
@@ -215,6 +215,39 @@
     /* animation: slideUp 2s 1 both; 
     animation-delay: .5s; */
   }
+
+
+
+
+  .text--wrapper--bottom {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    z-index: 2;
+
+    animation: 9s delayInWithFade;
+    animation-fill-mode: forwards;
+    opacity: 0;
+
+    border: 1px solid red;
+  }
+
+  .text--wrapper--bottom > p{
+    width: 80%;
+    font-size: 1.5vw !important;
+    text-align: left;
+    line-height: 40px;
+    
+    animation: fadeIn 2s 1 ease-in-out;
+  }
+
+
+
+
+
   
   
   /* Footer */

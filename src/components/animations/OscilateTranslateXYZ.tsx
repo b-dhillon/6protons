@@ -1,9 +1,9 @@
 import { AnimationClip, VectorKeyframeTrack } from 'three';
 
-function OscilateTranslateXYZ( config: config ) {
+function OscilateTranslateXYZ( config: config ): AnimationClip {
 
     const times = [ 0, config.duration / 2, config.duration ], 
-          values = [ ...config.initial_position, ...config.final_position, ...config.initial_position ],
+          values = [ ...config.initialPosition, ...config.finalPosition, ...config.initialPosition ],
           trackName = '.position',
           track = new VectorKeyframeTrack( trackName, times, values );
 
@@ -12,8 +12,8 @@ function OscilateTranslateXYZ( config: config ) {
 
 interface config {
     duration: number, 
-    initial_position: number[], 
-    final_position: number[]
+    initialPosition: number[], 
+    finalPosition: number[]
 };
 ;
 export default OscilateTranslateXYZ;

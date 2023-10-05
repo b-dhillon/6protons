@@ -116,7 +116,7 @@ function Body(props: any) {
         <>
           <div className='panel left'>
             <div className='text--wrapper2'>
-              {/* < p > { props.page.text[ props.counter ] } </ p > */}
+              <p> { props.page.text[ props.counter ] } </p>
             </div>
           </div>
 

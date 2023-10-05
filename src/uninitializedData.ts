@@ -146,15 +146,14 @@ export const uninitializedData: UninitializedData = {
           visible: true,
           scale: 0.18,
           yOffsetForText: false,
-
           positions: [[0.0, 0.0, -1.0]], // calculated in Init() based off of camera position at the current section
           rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
             SuspendInSolution(90),
             ScaleXYZ({
               duration: 1,
-              initial_scale: [0.18, 0.18, 0.18],
-              final_scale: [0, 0, 0],
+              initialScale: [0.18, 0.18, 0.18],
+              finalScale: [0, 0, 0],
             }),
           ],
         },
@@ -166,27 +165,26 @@ export const uninitializedData: UninitializedData = {
           visible: false,
           scale: 0,
           yOffsetForText: false,
-
           positions: [[0.75, 0.66, 0.0]],
           rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
             Rotate({
               duration: 5000,
               axis: 'y',
-              initial_angle: 0,
-              final_angle: 360,
+              initialAngle: 0,
+              finalAngle: 360,
             }),
             ScaleXYZ({
               duration: 1,
-              initial_scale: [0.18, 0.18, 0.18],
-              final_scale: [0.0, 0.0, 0.0],
+              initialScale: [0.18, 0.18, 0.18],
+              finalScale: [0.0, 0.0, 0.0],
             }),
           ],
         },
         {
           id: '2',
           name: 'model2',
-          path: '/Fullerenes/models/instance2.glb',
+          path: '/Fullerenes/models/instance0.glb',
           visible: true,
           scale: 0,
           yOffsetForText: true,
@@ -196,13 +194,13 @@ export const uninitializedData: UninitializedData = {
             Rotate({
               duration: 5000,
               axis: 'y',
-              initial_angle: 0,
-              final_angle: 360,
+              initialAngle: 0,
+              finalAngle: 360,
             }),
             ScaleXYZ({
               duration: 1,
-              initial_scale: [0.15, 0.15, 0.15],
-              final_scale: [0.0, 0.0, 0.0],
+              initialScale: [0.15, 0.15, 0.15],
+              finalScale: [0.0, 0.0, 0.0],
             }),
           ],
         },
@@ -219,19 +217,19 @@ export const uninitializedData: UninitializedData = {
             Rotate({
               duration: 5000,
               axis: 'y',
-              initial_angle: 0,
-              final_angle: 360,
+              initialAngle: 0,
+              finalAngle: 360,
             }),
             ScaleXYZ({
               duration: 1,
-              initial_scale: [0.18, 0.18, 0.18],
-              final_scale: [0.0, 0.0, 0.0],
+              initialScale: [0.18, 0.18, 0.18],
+              finalScale: [0.0, 0.0, 0.0],
             }),
             Rotate({
               duration: 1500,
               axis: 'x',
-              initial_angle: 0,
-              final_angle: 360,
+              initialAngle: 0,
+              finalAngle: 360,
             }),
           ],
         },
@@ -249,19 +247,19 @@ export const uninitializedData: UninitializedData = {
             Rotate({
               duration: 5000,
               axis: 'y',
-              initial_angle: 0,
-              final_angle: 360,
+              initialAngle: 0,
+              finalAngle: 360,
             }),
             ScaleXYZ({
               duration: 1,
-              initial_scale: [0.18, 0.18, 0.18],
-              final_scale: [0.0, 0.0, 0.0],
+              initialScale: [0.18, 0.18, 0.18],
+              finalScale: [0.0, 0.0, 0.0],
             }),
             Rotate({
               duration: 1500,
               axis: 'x',
-              initial_angle: 0,
-              final_angle: 360,
+              initialAngle: 0,
+              finalAngle: 360,
             }),
           ],
         },
@@ -278,20 +276,20 @@ export const uninitializedData: UninitializedData = {
             Rotate({
               duration: 5000,
               axis: 'y',
-              initial_angle: 0,
-              final_angle: 360,
+              initialAngle: 0,
+              finalAngle: 360,
             }),
             //hiv protease
             ScaleXYZ({
               duration: 1,
-              initial_scale: [0.060, 0.060, 0.060],
-              final_scale: [0.0, 0.0, 0.0],
+              initialScale: [0.060, 0.060, 0.060],
+              finalScale: [0.0, 0.0, 0.0],
             }),
             //buckyball
             ScaleXYZ({
               duration: 3,
-              initial_scale: [0.02, 0.02, 0.02],
-              final_scale: [0.06, 0.06, 0.06],
+              initialScale: [0.02, 0.02, 0.02],
+              finalScale: [0.06, 0.06, 0.06],
             }),
           ],
         },
@@ -308,7 +306,7 @@ export const uninitializedData: UninitializedData = {
 
       textType: [
         '',
-        'centered',
+        'left',
         'bottom',
         'bottom',
         'left',
@@ -435,7 +433,7 @@ export const uninitializedData: UninitializedData = {
                 ],
                 animationClips: [ 
                     SuspendInSolution( 90 ), 
-                    ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
+                    ScaleXYZ( { duration: 1, initialScale: [ 0.18, 0.18, 0.18 ], finalScale: [ 0, 0, 0 ] } )
                 ],
             },
             {
@@ -453,8 +451,8 @@ export const uninitializedData: UninitializedData = {
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animationClips: [
-                    Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
-                    ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
+                    Rotate( { duration: 5000, axis: 'y', initialAngle: 0, finalAngle: 360 } ),
+                    ScaleXYZ( { duration: 1, initialScale: [ 0.18, 0.18, 0.18 ], finalScale: [ 0, 0, 0 ] } )
                 ]
             },
             {
@@ -472,8 +470,8 @@ export const uninitializedData: UninitializedData = {
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animationClips: [
-                    Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
-                    ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } )
+                    Rotate( { duration: 5000, axis: 'y', initialAngle: 0, finalAngle: 360 } ),
+                    ScaleXYZ( { duration: 1, initialScale: [ 0.18, 0.18, 0.18 ], finalScale: [ 0, 0, 0 ] } )
                 ]
             },
             {
@@ -491,9 +489,9 @@ export const uninitializedData: UninitializedData = {
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animationClips: [
-                    Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
-                    ScaleXYZ( { duration: 1, initial_scale: [ 0.18, 0.18, 0.18 ], final_scale: [ 0, 0, 0 ] } ),
-                    Rotate( { duration: 1500, axis: 'x', initial_angle: 0, final_angle: 360 } ),
+                    Rotate( { duration: 5000, axis: 'y', initialAngle: 0, finalAngle: 360 } ),
+                    ScaleXYZ( { duration: 1, initialScale: [ 0.18, 0.18, 0.18 ], finalScale: [ 0, 0, 0 ] } ),
+                    Rotate( { duration: 1500, axis: 'x', initialAngle: 0, finalAngle: 360 } ),
                 ]
             },
             {
@@ -511,9 +509,9 @@ export const uninitializedData: UninitializedData = {
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animationClips: [
-                    Rotate( { duration: 5000, axis: 'y', initial_angle: 0, final_angle: 360 } ),
-                    ScaleXYZ( { duration: 1, initial_scale: [ 0.10, 0.10, 0.10 ], final_scale: [ 0, 0, 0 ] } ),
-                    ScaleXYZ( { duration: 3, initial_scale: [ 0.01, 0.01, 0.01 ], final_scale: [ 0.075, 0.075, 0.075 ] } )
+                    Rotate( { duration: 5000, axis: 'y', initialAngle: 0, finalAngle: 360 } ),
+                    ScaleXYZ( { duration: 1, initialScale: [ 0.10, 0.10, 0.10 ], finalScale: [ 0, 0, 0 ] } ),
+                    ScaleXYZ( { duration: 3, initialScale: [ 0.01, 0.01, 0.01 ], finalScale: [ 0.075, 0.075, 0.075 ] } )
                 ]
             }
             
@@ -620,7 +618,7 @@ export const uninitializedData: UninitializedData = {
 
 // Old TranslateRotate_x
 /*
-TranslateRotate_x: function ( duration: number, initial_position: number[], final_position: number[], axis: string, initial_angle: number[], final_angle: number[] ) {
+TranslateRotate_x: function ( duration: number, initial_position: number[], final_position: number[], axis: string, initialAngle: number[], finalAngle: number[] ) {
     // console.log( 'positions', this.positions );
 
     const times_Position = [ 0, duration ];
@@ -631,20 +629,20 @@ TranslateRotate_x: function ( duration: number, initial_position: number[], fina
     const times_Rotation = [ 0, duration ];
 
     let values_Rotation: number[];
-    values_Rotation = [ initial_angle[ 0 ], final_angle[ 0 ] ];
+    values_Rotation = [ initialAngle[ 0 ], finalAngle[ 0 ] ];
 
     // Control flow for rotation axis assignment
     
     if( axis === 'x' ) {
         console.log('break before values asignment');
-        values_Rotation = [ initial_angle[ 0 ], final_angle[ 0 ] ];
+        values_Rotation = [ initialAngle[ 0 ], finalAngle[ 0 ] ];
         console.log('break after values asignment, X');
     };
     if( axis === 'y' ) {
-        values_Rotation = [ initial_angle[ 1 ], final_angle[ 1 ] ];
+        values_Rotation = [ initialAngle[ 1 ], finalAngle[ 1 ] ];
         console.log('break after values asignment, Y');
     };
-    if( axis === 'z' ) values_Rotation = [ initial_angle[ 2 ], final_angle[ 2 ] ];
+    if( axis === 'z' ) values_Rotation = [ initialAngle[ 2 ], finalAngle[ 2 ] ];
     
     
     const trackName_Rotation = '.rotation[' + axis + ']';

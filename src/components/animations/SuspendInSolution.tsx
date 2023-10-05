@@ -8,10 +8,9 @@ function SuspendInSolution( duration: number ) {
     for( let i = 0; i < duration; i++ ) {
         timesPositionX.push( i );
         valuesPositionX.push( ( Math.sin(i / 4) ) / 30 );
-                                        //  ^velocity ^amplitude
+                                        //  ^veloc. ^amplitude
     };
     const trackPositionX = new NumberKeyframeTrack( trackNamePositionX, timesPositionX, valuesPositionX, InterpolateSmooth );
-
 
     const trackNamePositionY = '.position[y]';
     let timesPositionY: number[] = [];
@@ -23,12 +22,10 @@ function SuspendInSolution( duration: number ) {
     };
     const trackPositionY = new NumberKeyframeTrack( trackNamePositionY, timesPositionY, valuesPositionY, InterpolateSmooth );
 
-
     const trackNameRotationY = '.rotation[y]';
     const timesRotationY = [ 0, duration ];
     const valuesRotationY = [ 0, (Math.PI * 2) ];
     const trackRotationY = new NumberKeyframeTrack( trackNameRotationY, timesRotationY, valuesRotationY );
-
 
     const trackNameRotationX= '.rotation[x]';
     let timesRotationX: number[] = [];
