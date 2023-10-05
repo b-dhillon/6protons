@@ -159,10 +159,12 @@
   }
 
   .top {
-    /* border: 1px solid yellow; */
+    flex: 1;
+    border: 1px solid yellow;
   }
   
   .bottom {
+    flex: 0.8;
     display: flex; 
     /* padding-top: 100px; */
     align-items: center;
@@ -193,7 +195,7 @@
     /* align-items: center; */
     z-index: 2;
 
-    animation: 9s delayInWithFade;
+    animation: 12s delayInWithFade;
     animation-fill-mode: forwards;
     opacity: 0;
 

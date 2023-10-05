@@ -9,6 +9,47 @@ Variable Name Changes:
 Get section 2 --> section 3 model behaving properly. Section should move from 2 to 3 without animation being disrupted
     Try to pass the time of animation of section 2 into section 3's model
 
+
+
+Add ability to have multiple paragraph elements per section.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Work out all animations and transitions.
     0. Need to add rotation around bucky-ball? ---> Is this necessary? Could look really cool, but where would the text go?
         0. Re-learn animation system. Whats inside a "track" again?

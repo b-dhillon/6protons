@@ -23,7 +23,7 @@ export const uninitializedData: UninitializedData = {
     // rotate camera X-axis, need to re-position model on Y axis.
 
     let yOffset = 0;
-    if( yOffsetForText ) yOffset = 0.16 //find a more mathematical approach to calculate this offset
+    if( yOffsetForText ) yOffset = 0.15 //find a more mathematical approach to calculate this offset
 
     if (rotationAxis === 'x') {
       const rotationAngle = cameraRotation[0];
