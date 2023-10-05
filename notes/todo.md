@@ -1,11 +1,6 @@
 
 TODO: 
 
-Place text underneath the model. Centered.
-    1. Test section 2 text placement.
-
-Fade in the animation for the text. 
-
 Variable Name Changes:
     Change 'counter' to 'section'
     Change text-wrapper to something more appropriate or descriptive

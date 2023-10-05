@@ -142,6 +142,7 @@
 
   .textOnBottomHalf {
     display: flex; 
+    flex: 1;
     flex-direction: column;
   }
   
@@ -163,8 +164,9 @@
   
   .bottom {
     display: flex; 
+    /* padding-top: 100px; */
     align-items: center;
-    /* border: 1px solid violet; */
+    border: 1px solid violet;
   }
 
 
@@ -185,8 +187,10 @@
   .text--wrapper2 {
 
     display: flex;
+    flex: 1;
+
     justify-content: center;
-    align-items: center;
+    /* align-items: center; */
     z-index: 2;
 
     animation: 9s delayInWithFade;
@@ -207,10 +211,12 @@
   }
 
 
-
   .text--wrapper2 > p {
     width: 70%;
+    /* margin: 50px 0px 0px 0px; */
     margin: 0;
+    position: relative; 
+    top: 10px;
     font-size: 1.5vw !important;
     text-align: center;
     animation: fadeIn 2s 1 ease-in-out;
