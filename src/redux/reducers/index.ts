@@ -36,7 +36,7 @@ function overlay (state = false, action: { type: any; } ) {
 }
 
 const allReducers = combineReducers({
-    counter: sectionCounter,
+    section: sectionCounter,
     start: start,
     overlay: overlay,
 })

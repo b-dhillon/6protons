@@ -9,15 +9,15 @@ import DevelopmentCamera from './DevelopmentCamera';
 // import Music from './Sound';
 
 // Mounts components to scene graph and renders 3D scene.
-export function Scene({ counter, initializedPage }: any): JSX.Element {
+export function Scene({ section, initializedPage }: any): JSX.Element {
   return (
     <Suspense>
       <FadeIn />
       <Canvas>
         <Universe initializedPage={initializedPage} />
-        <Sound initializedPage={initializedPage} counter={counter} />
-        <Camera initializedPage={initializedPage} counter={counter} />
-        <Models initializedPage={initializedPage} counter={counter} />
+        <Sound initializedPage={initializedPage} section={section} />
+        <Camera initializedPage={initializedPage} section={section} />
+        <Models initializedPage={initializedPage} section={section} />
         <Lighting/>
       </Canvas>
     </Suspense>

@@ -6,6 +6,8 @@ Variable Name Changes:
     Change text-wrapper to something more appropriate or descriptive
 
 
+
+
 Get section 2 --> section 3 model behaving properly. Section should move from 2 to 3 without animation being disrupted
     Try to pass the time of animation of section 2 into section 3's model
 

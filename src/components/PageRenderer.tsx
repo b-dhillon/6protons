@@ -11,16 +11,16 @@ export function PageRenderer({
   setCurrentPage,
 }: any): JSX.Element {
   const [initializedPage, _] = useState(initializedPageData);
-  const counter = useSelector((state: any) => state.counter);
+  const section = useSelector((state: any) => state.section);
   // useEffect( () => console.log( 'initializedPage data', initializedPage ), [] );
   return (
     <Suspense>
-      <Scene initializedPage={initializedPage} counter={counter} />
+      <Scene initializedPage={initializedPage} section={section} />
       <LessonInterface
         devMode={false}
         initializedPage={initializedPage}
         setCurrentPage={setCurrentPage}
-        counter={counter}
+        section={section}
       />
     </Suspense>
   );
@@ -146,7 +146,7 @@ function UI( props ): JSX.Element {
 /* 
 <>
 {
-    props.counter === 1 || props.counter === props.data.maxSection
+    props.section === 1 || props.section === props.data.maxSection
     ?
     < div className='main-container' >
 

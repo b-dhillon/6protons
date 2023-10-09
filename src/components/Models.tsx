@@ -25,7 +25,7 @@ They are all set to visible. And just scaled up via the triggering of an animati
  * 
  * 
  * Creates all AnimationActions for the models.
- * Controls animations: counter changes --> animation at the current counter index is played.
+ * Controls animations: section changes --> animation at the current section index is played.
  * Updates animation mixers
  * 
 */
@@ -38,9 +38,9 @@ export function Models(props: any): JSX.Element {
 
   const [ animationActions, setAnimationActions ] = useState<any[]>([]); // [ [ mainAnimation, scaleAnimation, nestedAnimation ], [ ], etc... ]
 
-  // AnimationController --> Plays the AnimationAction based on counter (section)
+  // AnimationController --> Plays the AnimationAction based on section (section)
   useEffect(() => {
-    AnimationController(animationActions, props.counter);
+    AnimationController(animationActions, props.section);
 
     // Each model should have 3 animations 
     function AnimationController(animationActions: any, section: number): void {
@@ -56,7 +56,7 @@ export function Models(props: any): JSX.Element {
         if (section === 0) currentModelAnimations[0].play()
         else currentModelAnimations[0].startAt(9).play(); //delay to wait for camera transition to finish
 
-        // SCALE DOWN ANIMATION: -- i think these scale ups and down are the same every model so do we really need to make it based on the counter?
+        // SCALE DOWN ANIMATION: -- i think these scale ups and down are the same every model so do we really need to make it based on the section?
         // Also, we need a way to not play the exit animation sometimes
         if (section > 0) {
           animationActions[ (section - 1) ][ 1 ].reset().setEffectiveTimeScale( 0.9 ).play(); //1.2 was original
@@ -70,22 +70,22 @@ export function Models(props: any): JSX.Element {
       }
     }
 
-  }, [ animationActions, props.counter ]);
+  }, [ animationActions, props.section ]);
 
   // Update animation mixers on each frame.
   useFrame((_, delta) => {
     if (animationActions.length) {
       // Main animation
-      animationActions[props.counter][0]._mixer.update(delta);
+      animationActions[props.section][0]._mixer.update(delta);
 
       // Nested animation
-      animationActions[props.counter][2]?._mixer.update(delta);
+      animationActions[props.section][2]?._mixer.update(delta);
 
-      if (props.counter > 0) {
+      if (props.section > 0) {
         // Scale In animation
-        animationActions[props.counter][1]._mixer.update(delta);
+        animationActions[props.section][1]._mixer.update(delta);
         // Scale Out animation
-        animationActions[props.counter - 1][1]._mixer.update(delta);
+        animationActions[props.section - 1][1]._mixer.update(delta);
       };
     };
   });
@@ -98,7 +98,7 @@ export function Models(props: any): JSX.Element {
             model={model}
             key={model.id}
             setAnimationActions={setAnimationActions}
-            counter={props.counter}
+            section={props.section}
           />
         );
       }
@@ -271,7 +271,7 @@ function CreateReactModel(props: any): JSX.Element {
 //         _model={_model}
 //         key={_model.id}
 //         setAnimationActions={setAnimationActions}
-//         counter={props.counter}
+//         section={props.section}
 //       />
 //     );
 //   }
@@ -284,7 +284,7 @@ function CreateReactModel(props: any): JSX.Element {
 
 
 
-        /* animationActions[ counter ][ 1 ].startAt( 4 ).setEffectiveTimeScale( -1 ).play(); */
+        /* animationActions[ section ][ 1 ].startAt( 4 ).setEffectiveTimeScale( -1 ).play(); */
 
 
 

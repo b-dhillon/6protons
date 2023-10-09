@@ -18,18 +18,18 @@ export function LessonInterface(props: any) {
       <div className='global-overlay-container'>
         <Header
           page={props.initializedPage}
-          counter={props.counter}
+          section={props.section}
           setCurrentPage={props.setCurrentPage}
         />
-        <Body page={props.initializedPage} counter={props.counter} />
-        <Footer page={props.initializedPage} counter={props.counter} />
+        <Body page={props.initializedPage} section={props.section} />
+        <Footer page={props.initializedPage} section={props.section} />
       </div>
     );
   }
 }
 
 function Header(props: any) {
-  let section: number = props.counter;
+  let section: number = props.section;
   let lesson: any = props.page;
 
   // can we move dispatch to the data object as a method? but why?
@@ -102,21 +102,21 @@ function Body(props: any) {
   }
 
   function Text(props: any): JSX.Element {
-    if (props.page.textPlacement[props.counter] === 'center') {
+    if (props.page.textPlacement[props.section] === 'center') {
       return (
         <>
           <div className='text--wrapper'>
-            <p> {props.page.text[props.counter]} </p>
+            <p> {props.page.text[props.section]} </p>
           </div>
         </>
       );
     }
-    else if (props.page.textPlacement[props.counter] === 'left') {
+    else if (props.page.textPlacement[props.section] === 'left') {
       return (
         <>
           <div className='panel left'>
             <div className='text--wrapper2'>
-              <p> { props.page.text[ props.counter ] } </p>
+              <p> { props.page.text[ props.section ] } </p>
             </div>
           </div>
           <div className='panel right'></div>
@@ -128,7 +128,7 @@ function Body(props: any) {
       // .bottom
       // .text--wrapper3
       // .top
-    else if(props.page.textPlacement[props.counter] === 'bottom'){
+    else if(props.page.textPlacement[props.section] === 'bottom'){
       return (
         <div className='textOnBottomHalf'>
           <div className='panel top'></div>
@@ -155,7 +155,7 @@ function Body(props: any) {
 
                   }
                 */}
-              <p> { props.page.text[ props.counter ] } </p> 
+              <p> { props.page.text[ props.section ] } </p> 
             </div>
           </div>
         </div>
@@ -166,10 +166,10 @@ function Body(props: any) {
 
   return (
     <>
-      {props.counter > 0 ? (
+      {props.section > 0 ? (
         <div className='body-container'>
           <LessonNavigationButton type={'back'} />
-          <Text page={props.page} counter={props.counter} />
+          <Text page={props.page} section={props.section} />
           <LessonNavigationButton type={'next'} />
         </div>
       ) : (
@@ -183,7 +183,7 @@ function Footer(props: any) {
   const dispatch = useDispatch();
   return (
     <>
-      {props.counter === 0 ? (
+      {props.section === 0 ? (
         <div className='footer-container'>
           <button
             className='startLessonBtn'

@@ -8,14 +8,14 @@ import { PerspectiveCamera } from '@react-three/drei';
  * 
  * Creates React Three Camera,
  * Creates all AnimationActions for camera transitions 
- * Plays the correct Animation, based on counter.
+ * Plays the correct Animation, based on section.
  * Updates the animation mixer.
  * Renders cameraHelper when called.
  * 
 */ 
 
 
-export function Camera( { initializedPage, counter }: any ): JSX.Element {
+export function Camera( { initializedPage, section }: any ): JSX.Element {
   
   const [ AnimationActions, setAnimationActions ] = useState([]);
   const camera = initializedPage.camera;
@@ -43,22 +43,22 @@ export function Camera( { initializedPage, counter }: any ): JSX.Element {
 
   }, []);
 
-  // AnimationController --> Plays the AnimationAction based on counter
+  // AnimationController --> Plays the AnimationAction based on section
   useEffect(() => {
 
     AnimationController();
 
     function AnimationController() {
       if (AnimationActions.length)
-        AnimationActions[counter].play().warp(1, 0.01, 7.8); // .warp( 1.3, 0.01, 4.6 );
+        AnimationActions[section].play().warp(1, 0.01, 7.8); // .warp( 1.3, 0.01, 4.6 );
     }
 
-  }, [AnimationActions, counter]);
+  }, [AnimationActions, section]);
 
   // Updates the animation via the mixer
   useFrame((_, delta) => {
     if (AnimationActions.length)
-      AnimationActions[counter]._mixer.update(delta);
+      AnimationActions[section]._mixer.update(delta);
   });
 
   // Setting the scene's camera. There are two. Perspective and Development.
@@ -106,7 +106,7 @@ function SetCamera(cam): void {
 
 
 {
-  /* < UpdateCamera _ref={ref} counter={ counter } camera_data={ camera_data } /> */
+  /* < UpdateCamera _ref={ref} section={ section } camera_data={ camera_data } /> */
 }
 {
   /* < PerspectiveCamera ref={ref} position={ page.camera._animation_data[ 0 ][ 0 ] } fov={ 45 } near={ 0.15 } far={ 8 } /> */
