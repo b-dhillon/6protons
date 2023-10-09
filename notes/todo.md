@@ -2,18 +2,17 @@
 TODO: 
 
 Variable Name Changes:
-    Change 'counter' to 'section'
     Change text-wrapper to something more appropriate or descriptive
+    Re-factor all names in overlay-styles.css to be inline with kebab-casing
 
 
-
+Add ability to have multiple paragraph elements per section.
 
 Get section 2 --> section 3 model behaving properly. Section should move from 2 to 3 without animation being disrupted
     Try to pass the time of animation of section 2 into section 3's model
 
 
 
-Add ability to have multiple paragraph elements per section.
 
 
 
@@ -65,12 +64,31 @@ Work out all animations and transitions.
                     What are these instances about?
 
 
-Add ability to go backwards.
 
 
-All buckyball's material needs to be shifted to black. Glossy black? --> Same as diamond thumbnail, glossy dark purple
 
 
+
+
+
+
+
+NEXT:
+
+- Add ability to go backwards.
+------------------------
+------------------------
+------------------------
+- Hook back into home page. 
+- Make sure all other lessons are working.
+- Add section 1 to Diamond lesson with the Diamon Lattice from Blender. 
+- Create message to let users know only Buckminsterfullerene lesson is finished.
+--------------------------
+
+OPTIONAL:
+- All buckyball's material needs to be shifted to black. Glossy black? --> Same as diamond thumbnail, glossy dark purple
+
+--------------------------
 
 
 
@@ -99,19 +117,7 @@ The Track is a constructor with 3 parameters:
 
 
 
-------------------------
-------------------------
-------------------------
 
-Hook back into home page. 
-
-Make sure all other lessons are working.
-
-Add section 1 to Diamond lesson with the Diamon Lattice from Blender. 
-
-Create message to let users know only Buckminsterfullerene lesson is finished.
-
---------------------------
 
 
 Change voice 1 ("gas" needs to end less abruptly)...might cost $50 though.

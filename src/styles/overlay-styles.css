@@ -1,6 +1,5 @@
-/* Lesson Overlay Styles --> Move all to seperate CSS File */
 
-.global-overlay-container {
+.lesson-overlay {
   position: absolute;
   top: 0; 
   width: 100%; 
@@ -13,217 +12,179 @@
   animation: fadeIn 4.5s 1 ease-in;
 }
   
-  /* Header */
-  .header-container {
+/* Header */
+  .lesson-header {
     height: 10vh;
     width: 100%; 
     display: flex;
     z-index: 3;
   }
-  
-  .title-container {
-    height: 10vh;
-    width: 80%;
-    flex: 1;
-    background: transparent;
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-  }
-  
-  .title {
-    color: #f07167;
-    font-size: 60px;
-    /* animation: slideUp 2s 1 both; 
-    animation-delay: .5s; */
-    margin: 0;
-    padding: 10px;
-    z-index: 2;
-    font-weight: 600;
-    letter-spacing: 5px;
-    font-family: Quicksand !important;
-  }
-  
-  .home-back-container {
-    width: 120px;
-    list-style: none;
-    background: transparent;
-    /* border: 1px solid blue;  */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  
-  .backBtn:hover {
-    transform: scale(1.2)
-  }
-  
-  .homeBtn--icon {  
-    /* width: 3rem;
-    padding: 30px; */
 
-    background: transparent;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.75rem;  
-    text-decoration: none;  
-    transition: .5s linear;
-    position: relative;
-    z-index: 1;
-    margin: auto;
-    cursor: pointer;  
-  }
-  
-  /* .homeBtn--icon:hover {
-    transform: scale(1.2);
-  } */
-  
-  .homeIcon:hover {  
-    transform: scale(1.25)
-  }
-  
-  .fullerene-redirect {
-    width: 170px; 
-    height: 40px; 
-    background: black;
-    color: #f07167;
-    border: 1px solid #f07167;
-    border-radius: 10px;
-    cursor: pointer;
-    animation: fadeIn 2s 1 ease-in-out;
-  }
-  /* Main */
-  
-  .body-container {
+    .lesson-header__title {
+      height: 10vh;
+      width: 80%;
+      flex: 1;
+      background: transparent;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+    }
+      .title {
+        color: #f07167;
+        font-size: 60px;
+        /* animation: slideUp 2s 1 both; 
+        animation-delay: .5s; */
+        margin: 0;
+        padding: 10px;
+        z-index: 2;
+        font-weight: 600;
+        letter-spacing: 5px;
+        font-family: Quicksand !important;
+      }
+    
+    .lesson-header__button-container {
+      width: 120px;
+      list-style: none;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }  
+      .lesson-header__button-container__button {  
+        /* width: 3rem;
+        padding: 30px; */
+        background: transparent;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;  
+        text-decoration: none;  
+        transition: .5s linear;
+        position: relative;
+        z-index: 1;
+        margin: auto;
+        cursor: pointer;  
+      }
+        .icon--home:hover {  
+          transform: scale(1.25)
+        }
+        .icon--back:hover {
+          transform: scale(1.2)
+        }
+/**/
+
+
+
+
+
+/* Body */
+
+  .lesson-body {
     display: flex; 
     height: 80vh; 
     z-index: 2;
     
   }
   
-  .lessonNav-container {
-    width: 150px;
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    z-index: 2;
-  }
+    .lesson-body__navigation {
+      width: 150px;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      z-index: 2;
+    }
   
-  .lessonNav-container > button 
-  {
-    width: 2.7rem;
-    height: 2.7rem;
-    border-radius: 50%;
-    background: transparent;
-    border: 2px solid white;
-  }
+      .lesson-body__navigation > button {
+        width: 2.7rem;
+        height: 2.7rem;
+        border-radius: 50%;
+        background: transparent;
+        border: 2px solid white;
+      }
   
-  .lesson--nextBtn {
-    /* box-shadow: 0 0 10px 4px white; */
-    box-shadow: 0 0 10px 2px white;
-    transform: scale(1.2);
-    animation: grow-and-glow 4s infinite;
-    cursor: pointer;
-    top: 0; 
-  }
-  
-  .lesson--backBtn {
-    cursor: pointer;
-  }
-  
-  .lesson--backtBtn:hover {
-    transform: scale(1.1);
-  }
-  
-  
+      .lesson-body__navigation__button--forwards {
+        box-shadow: 0 0 10px 2px white;
+        transform: scale(1.2);
+        animation: grow-and-glow 4s infinite;
+        cursor: pointer;
+        top: 0; 
+      }
+      
+      .lesson-body__navigation__button--backwards {
+        cursor: pointer;
+      }
 
-  .textOnBottomHalf {
-    display: flex; 
-    flex: 1;
-    flex-direction: column;
-  }
-  
-  .panel {
-    flex: 1;
-  }
-
-  .left {
-    background-color: red;
-  }
-  
-  .right {
-    background-color: blue;
-  }
-
-  .top {
-    flex: 1;
-    border: 1px solid yellow;
-  }
-  
-  .bottom {
-    flex: 0.8;
-    display: flex; 
-    /* padding-top: 100px; */
-    align-items: center;
-    border: 1px solid violet;
-  }
+      .lesson-body__navigation__button--backwards:hover {
+        transform: scale(1.1);
+      }
 
 
-  .text--wrapper {
-    display: flex;
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    flex-wrap: wrap;
-    z-index: 2;
 
-    animation: 9s delayInWithFade;
-    animation-fill-mode: forwards;
-    opacity: 0
-  }
+    .lesson-body__text--no-model {
+      display: flex;
+      flex: 1;
+      z-index: 2;
+      justify-content: center;
 
-  .text--wrapper2 {
+      align-items: center;
+      flex-direction: column;
+      flex-wrap: wrap;
 
-    display: flex;
-    flex: 1;
+      animation: 9s delayInWithFade;
+      animation-fill-mode: forwards;
+      opacity: 0
+    }
 
-    justify-content: center;
-    /* align-items: center; */
-    z-index: 2;
+    .lesson-body__text--no-model > p {
+      width: 70%;
+      font-size: 1.5vw !important;
+      text-align: center;
+      animation: fadeIn 2s 1 ease-in-out;
+      line-height: 40px;
+    }
 
-    animation: 12s delayInWithFade;
-    animation-fill-mode: forwards;
-    opacity: 0;
+    .lesson-body__text-container--with-model {
+      display: flex; 
+      flex: 1;
+      flex-direction: column;
+    }
 
-    /* 
-    width: 100%;
-    height: 100%; */
-  }
+      .panel--top {
+        flex: 1;
+        /* border: 1px solid yellow; */
+      }
+      
+      .panel--bottom {
+        flex: 0.8;
+        display: flex; 
+        align-items: center;
+        /* border: 1px solid violet; */
+      }
 
-  .text--wrapper > p {
-    width: 70%;
-    font-size: 1.5vw !important;
-    text-align: center;
-    animation: fadeIn 2s 1 ease-in-out;
-    line-height: 40px;
-  }
+        .lesson-body__text--with-model {
+          display: flex;
+          flex: 1;
+          z-index: 2;
+          justify-content: center;
 
+          animation: 12s delayInWithFade;
+          animation-fill-mode: forwards;
+          opacity: 0;
+        }
 
-  .text--wrapper2 > p {
-    width: 70%;
-    /* margin: 50px 0px 0px 0px; */
-    margin: 0;
-    position: relative; 
-    top: 10px;
-    font-size: 1.5vw !important;
-    text-align: center;
-    animation: fadeIn 2s 1 ease-in-out;
-    line-height: 40px;
-  }
+        .lesson-body__text--with-model > p {
+          width: 70%;
+          /* margin: 50px 0px 0px 0px; */
+          margin: 0;
+          position: relative; 
+          top: 10px;
+          font-size: 1.5vw !important;
+          text-align: center;
+          animation: fadeIn 2s 1 ease-in-out;
+          line-height: 40px;
+        }
+
 
   @keyframes delayIn {
     99% {
@@ -245,40 +206,39 @@
     }
   }
 
-
+  @keyframes pulse {
+    from {
+      opacity: 0;
+    }
   
+    to {
+      opacity: 0.5;
+    }
+  }
 
+/**/
+
+
+
+
+
+/* Footer */
   
-
-
-
-
-  
-  /* Footer */
-  
-  .footer-container {
+  .lesson-footer {
+    /* width: 100%; 
+    height: 10vh;  */
     position: absolute;
     width: 100%;
     height: 10%;
     top: 87%;
     left: 0;
-    /* width: 100%; 
-    height: 10vh;  */
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 3;
   }
   
-  .startLessonBtn--wrapper {
-  
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 3;
-  }
-  
-  .startLessonBtn {
+  .lesson-footer__start-button {
     width: 150px;
     height: 45px;
     font-size: 1rem;
@@ -293,17 +253,16 @@
     border-radius: 10px;
   }
   
-  .startLessonBtn:hover {
+  .lesson-footer__start-button:hover {
     color: #f07167;
     border: 2px solid #f07167;
   }
   
-  span 
-  {
+  span {
     color: #f07167;
   }
   
-  .scrolldown--wrapper {
+  .scroll-down-wrapper {
     position: absolute;
     top: 80%; 
     display: flex;
@@ -315,7 +274,7 @@
     /* border: 1px solid red; */
   }
   
-  .scrolldown {
+  .scroll-down {
     width: 50px; 
     height: 50px;
     --color: white;
@@ -333,7 +292,7 @@
     align-items: center;
   }
   
-  .chevrondown {
+  .chevron--down {
     margin-top: -6px;
     position: relative;
     border: solid var(--color);
@@ -344,11 +303,11 @@
     transform: rotate(45deg);
   }
   
-  .chevrondown:nth-child(odd) {
+  .chevron--down:nth-child(odd) {
     animation: pulse 1000ms ease infinite alternate;
   }
   
-  .chevrondown:nth-child(even) {
+  .chevron--down:nth-child(even) {
     animation: pulse 1000ms ease infinite alternate 500ms;
   }
   
@@ -374,13 +333,69 @@
       opacity: 0;
     }
   }
+
+
+/**/
   
-  @keyframes pulse {
-    from {
-      opacity: 0;
-    }
-  
-    to {
-      opacity: 0.5;
-    }
-  }
+
+
+
+
+.fullerene-redirect {
+  width: 170px; 
+  height: 40px; 
+  background: black;
+  color: #f07167;
+  border: 1px solid #f07167;
+  border-radius: 10px;
+  cursor: pointer;
+  animation: fadeIn 2s 1 ease-in-out;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* .panel {
+  flex: 1;
+} */
+
+/* .panel--left {
+  flex: 1;
+  background-color: red;
+}
+
+.panel--right {
+  flex: 1;
+  background-color: blue;
+} */
+
+/* .startLessonBtn--wrapper {
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+} */
+

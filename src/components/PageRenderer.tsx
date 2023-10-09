@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Suspense, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 // import { Page, LoadedPage } from '../types      //types';
-import { LessonInterface } from './LessonInterface';
+import { LessonOverlay } from './LessonOverlay';
 import { Scene } from './Scene';
 import '../styles/overlay-styles.css';
 
@@ -16,7 +16,7 @@ export function PageRenderer({
   return (
     <Suspense>
       <Scene initializedPage={initializedPage} section={section} />
-      <LessonInterface
+      <LessonOverlay
         devMode={false}
         initializedPage={initializedPage}
         setCurrentPage={setCurrentPage}
