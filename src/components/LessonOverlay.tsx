@@ -190,28 +190,10 @@ function LessonBody( { page, section }: any ): JSX.Element {
           <div className='panel--top'></div>
           <div className='panel--bottom'>
             <div className='lesson-body__text--with-model'>
-              {/* To create better spacing and seperation between the text
-                  Lets go into unitinitializedData and modify the text data structure 
-                  We should make it a list of lists instead of just a single list.
-                  Then, we write a simple loop to create <p></p> elements of each item in the nested list
-                  
-                  {
-                    function() {
-                      let paragraphElements = [];
-                      for( let i = 0; i < page.text.[section].length; i++ ) {
-                        paragraphElements.push( <p>page.text[section][i]</p> )
-                      }
-                      return paragraphElements
-                    } ();
-
-                    or 
-
-                    page.text.[section].map( (t, i) => <p>t[i]</p> )
-
-
-                  }
-                */}
-              <p> { props.page.text[ props.section ] } </p> 
+              {
+                page._text[section].map( (t: any, i: number) => <p className={ `fade${i}` }>{t}</p> )  
+              }
+              {/* <p> { props.page.text[ props.section ] } </p>  */}
             </div>
           </div>
         </div>
@@ -234,6 +216,22 @@ function LessonBody( { page, section }: any ): JSX.Element {
     </>
   );
 }
+
+// To create better spacing and seperation between the text
+//                   Lets go into unitinitializedData and modify the text data structure 
+//                   We should make it a list of lists instead of just a single list.
+//                   Then, we write a simple loop to create <p></p> elements of each item in the nested list
+                  
+//                   {
+//                     function() {
+//                       let paragraphElements = [];
+//                       for( let i = 0; i < page.text.[section].length; i++ ) {
+//                         paragraphElements.push( <p>page.text[section][i]</p> )
+//                       }
+//                       return paragraphElements
+//                     } ();
+
+//                     or 
 
 
 

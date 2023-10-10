@@ -17,6 +17,7 @@ export interface UninitializedPage {
     maxSection: number,
     thumbnail: string,
     text: string[],
+    _text: string[][],
     textPlacement: string[],
     music: string[],
     voices: string[],

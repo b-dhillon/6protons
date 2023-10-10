@@ -165,10 +165,29 @@
         .lesson-body__text--with-model {
           display: flex;
           flex: 1;
+          flex-direction: column;
           z-index: 2;
-          justify-content: center;
+          align-items: center;
+          /* justify-content: center; */
+          /* animation: 12s delayInWithFade;
+          animation-fill-mode: forwards;
+          opacity: 0; */
+        }
 
+        .fade0 {
           animation: 12s delayInWithFade;
+          animation-fill-mode: forwards;
+          opacity: 0;
+        }
+
+        .fade1 {
+          animation: 13s delayInWithFade;
+          animation-fill-mode: forwards;
+          opacity: 0;
+        }
+
+        .fade2 {
+          animation: 14s delayInWithFade;
           animation-fill-mode: forwards;
           opacity: 0;
         }
@@ -176,13 +195,13 @@
         .lesson-body__text--with-model > p {
           width: 70%;
           /* margin: 50px 0px 0px 0px; */
-          margin: 0;
-          position: relative; 
-          top: 10px;
-          font-size: 1.5vw !important;
+          margin: 16px 0px;
+          /* position: relative; 
+          top: 10px; */
+          font-size: 1.4vw !important;
           text-align: center;
-          animation: fadeIn 2s 1 ease-in-out;
-          line-height: 40px;
+          /* animation: fadeIn 2s 1 ease-in-out; */
+          line-height: 35px;
         }
 
 
