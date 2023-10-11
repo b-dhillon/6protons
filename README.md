@@ -5,7 +5,7 @@
 # 6 Protons
 
 ### Project Description:
-- Six Protons is a VR minimum viable product. It is designed to teach organic chemistry via visualizing concepts using interactive 3D models embedded in a virtual universe. The project in its current form focuses on organic chemistry aka carbon chemistry (carbon being the atom with 6 protons) however, this software is capable of creating 3D lessons to teach a variety of STEM subjects. The application is under development and currently being re-written. 
+- Six Protons is a VR minimum viable product. It is designed to teach organic chemistry via visualizing concepts using interactive 3D models embedded in a virtual universe. The project, in its current form, focuses on organic chemistry. However, the software, once finished, will be scalable and allow for the creation of 3D lessons across a variety of STEM subjects. This application is very much still under development. It is currently being rewritten. 
 
 
 
@@ -81,13 +81,17 @@
 ## Data Architecture:
 
 ## Rendering Pattern: 
-SPA with server side rendering & hydration. 
+SPA with server-side rendering & hydration. 
 
 ## Stack:
+Front:
 - TypeScript
 - React
 - WebGL 
 
+Back:
+- Node
+- Express
 
 
 
@@ -97,11 +101,9 @@ SPA with server side rendering & hydration.
 
 ## User Interface (stills) :
 <img src="./readme_img/img-ui/ui-1.png" style="width:750px;"/>
-<img src="./readme_img/img-ui/ui-2.png" style="width:750px;"/>
-<img src="./readme_img/img-ui/ui-3.png" style="width:750px;"/>
 <img src="./readme_img/img-ui/ui-4.jpg" style="width:750px;"/>
 
-## Demo:
+<!-- ## Demo:
 
 ##### UI is responsive and scalable:
 https://user-images.githubusercontent.com/88413313/190004640-e058fe2b-e85b-453f-bf7c-51be5e2a056b.mp4
@@ -117,14 +119,14 @@ https://user-images.githubusercontent.com/88413313/190005139-403e5162-d019-4523-
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 Instructions:
-1. Download the source code by clicking the green "code" button at the top of this README file and click "Download Zip"  
+1. Download source code by clicking the green "code" button at the top of this README file and click "Download Zip"  
 
     <!-- ![image](src/images/download-readme.jpg) -->
 
     <img src="./src/images/download-readme.jpg" style="width:300px;"/>
 
 
-2. Next, using the command line, naviagate to the project directory.
+<!-- 2. Next, using the command line, naviagate to the project directory.
     ```bash
     cd 3D-Textbook-master
     ``` 
@@ -136,4 +138,10 @@ Instructions:
     ```bash
     npm start
     ``` 
-5. Happy hacking.
+5. Happy hacking. -->
+
+
+
+<!-- Removed: -->
+<!-- <img src="./readme_img/img-ui/ui-2.png" style="width:750px;"/> -->
+<!-- <img src="./readme_img/img-ui/ui-3.png" style="width:750px;"/> -->
