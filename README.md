@@ -78,10 +78,10 @@
         └── .gitignore
 ```
 
-## Data Architecture:
+## Architecture:
 
 ## Rendering Pattern: 
-SPA with server-side rendering & hydration. 
+
 
 ## Stack:
 Front:
@@ -123,7 +123,6 @@ Instructions:
 
     <!-- ![image](src/images/download-readme.jpg) -->
 
-    <img src="./src/images/download-readme.jpg" style="width:300px;"/>
 
 
 <!-- 2. Next, using the command line, naviagate to the project directory.
@@ -143,5 +142,6 @@ Instructions:
 
 
 <!-- Removed: -->
+<!-- <img src="./src/images/download-readme.jpg" style="width:300px;"/> -->
 <!-- <img src="./readme_img/img-ui/ui-2.png" style="width:750px;"/> -->
 <!-- <img src="./readme_img/img-ui/ui-3.png" style="width:750px;"/> -->
