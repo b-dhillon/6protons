@@ -4,6 +4,21 @@ TODO:
 
 Get section 2 --> section 3 model behaving properly. Section should move from 2 to 3 without animation being disrupted
     Try to pass the time of animation of section 2 into section 3's model
+        It looks like to accomplish this we just need to access the .time property on the AnimationAction before switching the AnimationAction 
+
+        First, log the AnimationActions[section].time to the console. 
+        Then, figure out how to write the logic for passing the time variable properly.
+
+
+    Psuedocode:
+        if (section === 2) {
+            AnimationActions[2].pause;
+            AnimationActions[3].time = AnimationActions[2].time;
+            AnimationActions[3].play();
+        }
+
+
+
 
 
 
@@ -116,7 +131,7 @@ The AnimationClip is created by the constructor --> new AnimationClip().
 
 Each animation takes a Track. 
 The Track is a constructor with 3 parameters: 
-    1. propertyToAnimation: string -- i.e. '.position' or '.rotation' or '.scale'
+    1. propertyToAnimate: string -- i.e. '.position' or '.rotation' or '.scale'
     2. times: any[]
     3. values: any[]
     4. interpolation: InterpolationModes | undefined

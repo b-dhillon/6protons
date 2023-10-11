@@ -12,7 +12,7 @@ They are all set to visible. And just scaled up via the triggering of an animati
 /** Fn Description 
  * 
  * This Fn is responsible for:
- * 1. Creating React Three objects out of my glTF model data 
+ * 1. Creating React Three objects out of binary .glb model data 
  * 2. Handling the model's animations - creating/playing/updating the animations
  * 
  * 
@@ -34,58 +34,109 @@ They are all set to visible. And just scaled up via the triggering of an animati
 // there is still a model created and mounted. Wasteful. Bad code.
 
 // Where is .visible being mutated? OR are they all set to visible and just scaled up?
-export function Models(props: any): JSX.Element {
+export function Models( { initializedPage, section } : any): JSX.Element {
 
   const [ animationActions, setAnimationActions ] = useState<any[]>([]); // [ [ mainAnimation, scaleAnimation, nestedAnimation ], [ ], etc... ]
 
   // AnimationController --> Plays the AnimationAction based on section (section)
   useEffect(() => {
-    AnimationController(animationActions, props.section);
+    AnimationController(animationActions, section);
 
-    // Each model should have 3 animations 
+    // ANIMATION CONTROLLER NEEDS TO BE REFACTORED 
+      // CODE IS UNREADABLE
+      // Will need to re-factor the data structure from an array to an object to make it more readable.
+      // This can be done in the setAnimationActions. Make it an array of objects. 
+      //    You access the model, based on section, that makes sense. But then the model's animations should be in an object with the following properties
+              // .mainAnimation
+              // .scaleAnimation
+              // .nestedAnimation
+
+    // Each model should have 3 animationActions
     function AnimationController(animationActions: any, section: number): void {
       if (animationActions.length) {
-        let currentModelAnimations = animationActions[section]
-        // SCALE UP ANIMATION:
+        let currentModel = animationActions[section]
+
+        // Section++ event
+
+          // Pause/Stop main animation:
+          //    animationActions[section-1].mainAnimation.stop();
+
+          // if( !newModelLocation ):
+          //   1. Grab old model's animation time
+          //      const oldT = animationActions[section-1].mainAnimation.time;
+          //    
+          //   2. Set new model's animation to this time. 
+          //        animationActions[section].mainAnimation.time = oldT
+          //
+          //   3. Play new model's animation
+          //      animationActions[section].mainAnimation.play();
 
 
-        // if( someVariableOnModelToNotAnimate ) dontPayAnimation?
+          // else:
+          //  1. Trigger old model's exit animation:
+          //      animationActions[section - 1].exitAnimation.play();
 
-        currentModelAnimations[1].startAt(8).setEffectiveTimeScale(-1).play();
-        // MAIN ANIMATION:
-        if (section === 0) currentModelAnimations[0].play()
-        else currentModelAnimations[0].startAt(9).play(); //delay to wait for camera transition to finish
+          //  2. Play new model's entrance animation:
+          //      animationActions[section].entranceAnimation.play();
 
-        // SCALE DOWN ANIMATION: -- i think these scale ups and down are the same every model so do we really need to make it based on the section?
-        // Also, we need a way to not play the exit animation sometimes
+          //  3. Play new model's main animation:
+          //      animationActions[section].mainAnimation.play();
+
+
+          // ^^NEED TO HANDLE NESTED ANIMATION IN THE PSEUDOCODE ABOVE:
+
+
+
+
+
+
+
+
+        // ANIMATION ACTION DATA STRUCTURE REWRITE TEST:
+
+        // Scaling up:
+        currentModel.scaleAnimation.startAt(8).setEffectiveTimeScale(-1).play();
+
+        // Main animation:
+        if (section === 0) currentModel.mainAnimation.play()
+        else currentModel.mainAnimation.startAt(9).play(); //delay to wait for camera transition to finish
+
+        // Scaling down:
+        // I think these scale ups and down are the same every model so do we really need to make it based on the section?
+        // Also, we need a way to not play the exit animation conditionally.
         if (section > 0) {
-          animationActions[ (section - 1) ][ 1 ].reset().setEffectiveTimeScale( 0.9 ).play(); //1.2 was original
+          animationActions[ (section - 1) ].scaleAnimation.reset().setEffectiveTimeScale( 0.9 ).play(); //1.2 was original
           //                    ^section-1 because section will increase and we want to access the previous sections model's exit animation, not the current model.
         }
-        // NESTED ANIMATION:
-        if (currentModelAnimations[2]) {
-          currentModelAnimations[2].setLoop(LoopPingPong, Infinity);
-          currentModelAnimations[2].play();
+
+        // Nested animation:
+        if (currentModel.nestedAnimation) {
+          currentModel.nestedAnimation.setLoop(LoopPingPong, Infinity);
+          currentModel.nestedAnimation.play();
         }
+
+
       }
     }
 
-  }, [ animationActions, props.section ]);
+  }, [ animationActions, section ]);
 
   // Update animation mixers on each frame.
   useFrame((_, delta) => {
     if (animationActions.length) {
+
       // Main animation
-      animationActions[props.section][0]._mixer.update(delta);
+      animationActions[section].mainAnimation._mixer.update(delta);
+
 
       // Nested animation
-      animationActions[props.section][2]?._mixer.update(delta);
+      animationActions[section].nestedAnimation?._mixer.update(delta);
 
-      if (props.section > 0) {
+      if (section > 0) {
         // Scale In animation
-        animationActions[props.section][1]._mixer.update(delta);
+        animationActions[section].scaleAnimation._mixer.update(delta);
         // Scale Out animation
-        animationActions[props.section - 1][1]._mixer.update(delta);
+        animationActions[section - 1].scaleAnimation._mixer.update(delta);
       };
     };
   });
@@ -98,7 +149,7 @@ export function Models(props: any): JSX.Element {
             model={model}
             key={model.id}
             setAnimationActions={setAnimationActions}
-            section={props.section}
+            section={section}
           />
         );
       }
@@ -107,7 +158,7 @@ export function Models(props: any): JSX.Element {
       };
     });
     return ReactModels // [ $$typeof: Symbol(react.element), $$typeof:Symbol(react.element) ]
-  }; const ReactModels = CreateReactModels( props.initializedPage.models );
+  }; const ReactModels = CreateReactModels( initializedPage.models );
 
 
   return (
@@ -175,27 +226,51 @@ function CreateReactModel(props: any): JSX.Element {
   });
 
   // Create and store AnimationActions in Models() state
-  useEffect( () => {
+
+    useEffect( () => {
     props.setAnimationActions((animationAction: any) => [
       ...animationAction,
-      [
-        createAnimationAction(ref.current, animationClips[0], {
+      {
+        mainAnimation: createAnimationAction(ref.current, animationClips[0], {
           clamped: false,
           loop: true,
           repetitions: 5,
         }),
-        createAnimationAction(ref.current, animationClips[1], {
+        scaleAnimation: createAnimationAction(ref.current, animationClips[1], {
           clamped: true,
           loop: false,
           repetitions: 1,
         }),
-        createAnimationAction(nestedRef.current, animationClips[2], {
+        nestedAnimation: createAnimationAction(nestedRef.current, animationClips[2], {
           clamped: true,
           loop: true,
           repetitions: 1,
         }),
-      ],
+      }
     ])
+
+
+  // useEffect( () => {
+  //   props.setAnimationActions((animationAction: any) => [
+  //     ...animationAction,
+  //     [
+  //       createAnimationAction(ref.current, animationClips[0], {
+  //         clamped: false,
+  //         loop: true,
+  //         repetitions: 5,
+  //       }),
+  //       createAnimationAction(ref.current, animationClips[1], {
+  //         clamped: true,
+  //         loop: false,
+  //         repetitions: 1,
+  //       }),
+  //       createAnimationAction(nestedRef.current, animationClips[2], {
+  //         clamped: true,
+  //         loop: true,
+  //         repetitions: 1,
+  //       }),
+  //     ],
+  //   ])
 
     function createAnimationAction(
       ReactModel: any,
@@ -233,22 +308,6 @@ function CreateReactModel(props: any): JSX.Element {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // STOPPING ANIMATIONS:
 // animationActions.forEach( ( animationAction: any ) => {
 //     // stops every model's main animation
@@ -257,6 +316,41 @@ function CreateReactModel(props: any): JSX.Element {
 //     // stops every model's nested animation
 //     // animationAction[ 2 ]?.stop();
 // });
+
+
+
+
+
+
+
+
+
+// GRAVEYARD: ☠️☠️☠️☠️☠️
+
+
+
+// // SCALE UP ANIMATION:
+// currentModelAnimations[1].startAt(8).setEffectiveTimeScale(-1).play();
+
+// // MAIN ANIMATION:
+// if (section === 0) currentModelAnimations[0].play()
+// else currentModelAnimations[0].startAt(9).play(); //delay to wait for camera transition to finish
+
+// // SCALE DOWN ANIMATION: -- i think these scale ups and down are the same every model so do we really need to make it based on the section?
+// // Also, we need a way to not play the exit animation conditionally.
+// if (section > 0) {
+//   animationActions[ (section - 1) ][ 1 ].reset().setEffectiveTimeScale( 0.9 ).play(); //1.2 was original
+//   //                    ^section-1 because section will increase and we want to access the previous sections model's exit animation, not the current model.
+// }
+// // NESTED ANIMATION:
+// if (currentModelAnimations[2]) {
+//   currentModelAnimations[2].setLoop(LoopPingPong, Infinity);
+//   currentModelAnimations[2].play();
+// }
+
+
+
+
 
 
 

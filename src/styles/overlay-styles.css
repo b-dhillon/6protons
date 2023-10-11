@@ -192,6 +192,12 @@
           opacity: 0;
         }
 
+        .fade3 {
+          animation: 15s delayInWithFade;
+          animation-fill-mode: forwards;
+          opacity: 0;
+        }
+
         .lesson-body__text--with-model > p {
           width: 70%;
           /* margin: 50px 0px 0px 0px; */

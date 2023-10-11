@@ -83,6 +83,7 @@ export interface UninitializedModel {
     name: string,
     path: string,
     visible: boolean,
+    newModelLocation: boolean,
     scale: number,
     yOffsetForText: boolean,
 
