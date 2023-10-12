@@ -1,20 +1,17 @@
 import * as THREE from 'three';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
 import { AnimationAction, LoopPingPong } from 'three'; // you already imported all of THREE on line 1
 
-/*
-All models are created and mounted to the scene as an array.
-They are all set to visible. And just scaled up via the triggering of an animation
-
-*/
 
 /** Fn Description 
  * 
  * This Fn is responsible for:
- * 1. Creating React Three objects out of binary .glb model data 
- * 2. Handling the model's animations - creating/playing/updating the animations
+ *  1. Creating React Three objects out of binary .glb model data 
+ *  2. Handling the model's animations - creating/playing/updating the animationActions and animationAction._mixers
  * 
+ * All models are created and mounted to the scene as an array.
+ * They live in state.scene.children as a list of objects. Alongside the lights and stars.
  * 
  * 
  * Loops initializedPage.models[] --> calls CreateReactModel() for each model in lesson.
@@ -22,78 +19,84 @@ They are all set to visible. And just scaled up via the triggering of an animati
  * These {}'s have a FiberNode{} inside them that holds the data for the model ( the group of meshes )
  * This array of {}'s are mounted to the scene graph when Models() is called by Scene()
  * 
- * 
- * 
- * Creates all AnimationActions for the models.
- * Controls animations: section changes --> animation at the current section index is played.
- * Updates animation mixers
+ * This fn needs to be re-factored a bit. Currently there is as model created and mounted even if the section doesnt need a model. 
+ * i.e. section 1, it is just the "vaporized graphite rods text" and yet 
+ * there is still a model created and mounted. Wasteful. Bad code.
  * 
 */
-
-// This fn needs to be re-factored a bit. Currently there is as model created and mounted even if the section doesnt need a model. Like section 1, it is just the "vaporized graphite rods text" and yet 
-// there is still a model created and mounted. Wasteful. Bad code.
-
-// Where is .visible being mutated? OR are they all set to visible and just scaled up?
 export function Models( { initializedPage, section } : any): JSX.Element {
 
   const [ animationActions, setAnimationActions ] = useState<any[]>([]); // [ [ mainAnimation, scaleAnimation, nestedAnimation ], [ ], etc... ]
+  const set = useThree((state) => state.set);
+
+  // VisibilityController --> Mutates the visibility of models. 
+    // Sets current model's visibility to true.
+    // Sets the previousModel visibility to false if no newModelLocation
+  useEffect(() => {
+
+    set((state) => {
+
+      const modelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section}`);
+      state.scene.children[modelIndex].visible = true;
+
+      // If section is greater than 0 and there is NOT a newModelLocation, then mutate the previous model's visibility to false.
+      // If there is a newModelLocation, then we keep the visibility true so that the exit animation can play
+      if(section > 0 && !initializedPage.models[section].newModelLocation) {
+        const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section - 1}`);
+        state.scene.children[prevModelIndex].visible = false;
+      };
+    });
+
+  }, [section])
 
   // AnimationController --> Plays the AnimationAction based on section (section)
   useEffect(() => {
     AnimationController(animationActions, section);
 
-    // ANIMATION CONTROLLER NEEDS TO BE REFACTORED 
-      // CODE IS UNREADABLE
-      // Will need to re-factor the data structure from an array to an object to make it more readable.
-      // This can be done in the setAnimationActions. Make it an array of objects. 
-      //    You access the model, based on section, that makes sense. But then the model's animations should be in an object with the following properties
-              // .mainAnimation
-              // .scaleAnimation
-              // .nestedAnimation
-
-    // Each model should have 3 animationActions
     function AnimationController(animationActions: any, section: number): void {
       if (animationActions.length) {
+
         let currentModel = animationActions[section]
+        let previousModel = animationActions[section-1]
 
-        // Section++ event
+        // 1. Section++
+        // 2. Control flow for not new location
+        if( !initializedPage.models[section].newModelLocation ){
+          // A. Grab previous model's animation time
+          const oldT = animationActions[section-1].mainAnimation.time;
 
-          // Pause/Stop main animation:
-          //    animationActions[section-1].mainAnimation.stop();
+          // B. Set new model's animation to this time. 
+          animationActions[section].mainAnimation.time = oldT;
 
-          // if( !newModelLocation ):
-          //   1. Grab old model's animation time
-          //      const oldT = animationActions[section-1].mainAnimation.time;
-          //    
-          //   2. Set new model's animation to this time. 
-          //        animationActions[section].mainAnimation.time = oldT
-          //
-          //   3. Play new model's animation
-          //      animationActions[section].mainAnimation.play();
+          // C. Play new model's animation
+          animationActions[section].mainAnimation.play();
+        }
+        else {
+          // A. Trigger old model's exit animation:
+          if(section > 0) animationActions[ (section - 1) ].scaleAnimation.reset().setEffectiveTimeScale( 0.9 ).play();
 
+          // B. Play new model's entrance animation:
+          animationActions[section].scaleAnimation.startAt(8).setEffectiveTimeScale(-1).play();
 
-          // else:
-          //  1. Trigger old model's exit animation:
-          //      animationActions[section - 1].exitAnimation.play();
+          // C. Play new model's main animation:
+          if (section === 0) animationActions[section].mainAnimation.play() //first model should play right away
+          else animationActions[section].mainAnimation.startAt(9).play(); //every other model needs a delay to wait for camera transition to finish
 
-          //  2. Play new model's entrance animation:
-          //      animationActions[section].entranceAnimation.play();
+          // D. Play Nested animation if it exists:
+          if (animationActions[section].nestedAnimation) {
+            animationActions[section].nestedAnimation.setLoop(LoopPingPong, Infinity);
+            animationActions[section].nestedAnimation.play();
+          }
+        };
 
-          //  3. Play new model's main animation:
-          //      animationActions[section].mainAnimation.play();
-
-
-          // ^^NEED TO HANDLE NESTED ANIMATION IN THE PSEUDOCODE ABOVE:
-
-
-
-
-
+        // 3. Pause/Stop animation of previousModel:
+        if( section > 0 ) animationActions[section-1].mainAnimation.stop(); // What about stopping the nestedAnimation and scaleAnimation??
 
 
 
         // ANIMATION ACTION DATA STRUCTURE REWRITE TEST:
 
+        /*
         // Scaling up:
         currentModel.scaleAnimation.startAt(8).setEffectiveTimeScale(-1).play();
 
@@ -114,6 +117,7 @@ export function Models( { initializedPage, section } : any): JSX.Element {
           currentModel.nestedAnimation.setLoop(LoopPingPong, Infinity);
           currentModel.nestedAnimation.play();
         }
+        */
 
 
       }
@@ -160,7 +164,6 @@ export function Models( { initializedPage, section } : any): JSX.Element {
     return ReactModels // [ $$typeof: Symbol(react.element), $$typeof:Symbol(react.element) ]
   }; const ReactModels = CreateReactModels( initializedPage.models );
 
-
   return (
     <>
       {ReactModels}
@@ -175,14 +178,14 @@ export function Models( { initializedPage, section } : any): JSX.Element {
  * 
  * Grabs meshes and animationClips from initializedPage.models[ i ].meshes & initializedPage.models[ i ].animations --> 
  *
- * Returns a <group> of all the <mesh>es of the model. 
+ * Returns a <group> of all <mesh> of the model. 
  * Essentially converts a model{} in data.ts into a jsx <group>
  * <group> is an object of type Group with a prototype of Object3D.
- * [ <group> ] mounted to the scene graph when the parent fxn (Models) is called;
+ * [ <group> ] mounted to the scene graph when the parent fxn, Models() is called by Scene().
 
-* After returning, useEffect creates an array of AnimationActions from the AnimationClips in initializedPage.models[ i ].animations
-* and attaches them to the model (group).
-* 
+ * After returning, useEffect creates an array of AnimationActions from the AnimationClips in initializedPage.models[ i ].animations
+ * and links them to the model ( <group>) via a ref.
+ * 
 */
 function CreateReactModel(props: any): JSX.Element {
   // create a type for the <group> object that the ref is attached to  
@@ -226,51 +229,28 @@ function CreateReactModel(props: any): JSX.Element {
   });
 
   // Create and store AnimationActions in Models() state
+  useEffect( () => {
+  props.setAnimationActions((animationAction: any) => [
+    ...animationAction,
+    {
+      mainAnimation: createAnimationAction(ref.current, animationClips[0], {
+        clamped: false,
+        loop: true,
+        repetitions: 5,
+      }),
+      scaleAnimation: createAnimationAction(ref.current, animationClips[1], {
+        clamped: true,
+        loop: false,
+        repetitions: 1,
+      }),
+      nestedAnimation: createAnimationAction(nestedRef.current, animationClips[2], {
+        clamped: true,
+        loop: true,
+        repetitions: 1,
+      }),
+    }
+  ])
 
-    useEffect( () => {
-    props.setAnimationActions((animationAction: any) => [
-      ...animationAction,
-      {
-        mainAnimation: createAnimationAction(ref.current, animationClips[0], {
-          clamped: false,
-          loop: true,
-          repetitions: 5,
-        }),
-        scaleAnimation: createAnimationAction(ref.current, animationClips[1], {
-          clamped: true,
-          loop: false,
-          repetitions: 1,
-        }),
-        nestedAnimation: createAnimationAction(nestedRef.current, animationClips[2], {
-          clamped: true,
-          loop: true,
-          repetitions: 1,
-        }),
-      }
-    ])
-
-
-  // useEffect( () => {
-  //   props.setAnimationActions((animationAction: any) => [
-  //     ...animationAction,
-  //     [
-  //       createAnimationAction(ref.current, animationClips[0], {
-  //         clamped: false,
-  //         loop: true,
-  //         repetitions: 5,
-  //       }),
-  //       createAnimationAction(ref.current, animationClips[1], {
-  //         clamped: true,
-  //         loop: false,
-  //         repetitions: 1,
-  //       }),
-  //       createAnimationAction(nestedRef.current, animationClips[2], {
-  //         clamped: true,
-  //         loop: true,
-  //         repetitions: 1,
-  //       }),
-  //     ],
-  //   ])
 
     function createAnimationAction(
       ReactModel: any,
@@ -293,7 +273,7 @@ function CreateReactModel(props: any): JSX.Element {
       position={props.model.initializedPositions}
       scale={props.model.scale}
       visible={props.model.visible}
-      name={props.model.modelNumber}
+      name={props.model.name}
       ref={ref}
     >
       {mesh}
@@ -308,15 +288,101 @@ function CreateReactModel(props: any): JSX.Element {
 
 
 
-// STOPPING ANIMATIONS:
-// animationActions.forEach( ( animationAction: any ) => {
-//     // stops every model's main animation
-//     // animationAction[ 0 ].stop();
 
-//     // stops every model's nested animation
-//     // animationAction[ 2 ]?.stop();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// STOPPING ANIMATIONS:
+// animationActions[section].forEach( ( animation: AnimationAction ) => {
+//  animation.stop();
 // });
 
+
+
+// useEffect( () => {
+//   props.setAnimationActions((animationAction: any) => [
+//     ...animationAction,
+//     [
+//       createAnimationAction(ref.current, animationClips[0], {
+//         clamped: false,
+//         loop: true,
+//         repetitions: 5,
+//       }),
+//       createAnimationAction(ref.current, animationClips[1], {
+//         clamped: true,
+//         loop: false,
+//         repetitions: 1,
+//       }),
+//       createAnimationAction(nestedRef.current, animationClips[2], {
+//         clamped: true,
+//         loop: true,
+//         repetitions: 1,
+//       }),
+//     ],
+//   ])
+
+// Section++ event
+
+  // Pause/Stop main animation:
+  //    animationActions[section-1].mainAnimation.stop();
+
+  // if( !initializedPage.models[section].newModelLocation ):
+  //   1. Grab old model's animation time
+  //      const oldT = animationActions[section-1].mainAnimation.time;
+  //    
+  //   2. Set new model's animation to this time. 
+  //        animationActions[section].mainAnimation.time = oldT
+  //
+  //   3. Play new model's animation
+  //      animationActions[section].mainAnimation.play();
+
+
+  // else:
+  //  1. Trigger old model's exit animation:
+  //      animationActions[section - 1].exitAnimation.play();
+
+  //  2. Play new model's entrance animation:
+  //      animationActions[section].entranceAnimation.play();
+
+  //  3. Play new model's main animation:
+  //      animationActions[section].mainAnimation.play();
 
 
 

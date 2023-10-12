@@ -10,15 +10,15 @@ Get section 2 --> section 3 model behaving properly. Section should move from 2 
         Then, figure out how to write the logic for passing the time variable properly.
 
 
-    Psuedocode:
-        if (section === 2) {
-            AnimationActions[2].pause;
-            AnimationActions[3].time = AnimationActions[2].time;
-            AnimationActions[3].play();
-        }
 
 
+Clean up models in the public folder. Specifically for the Buckminsterfullerene lesson
+    - Delete unused models
+    - Rename models to better names + change paths in uninitializedData
 
+
+Add small sound effects when text appears? Like the two piano notes
+you hear in the song "Lost In Thought" by KOAN Sound at 1:05
 
 
 

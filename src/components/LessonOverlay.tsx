@@ -135,6 +135,8 @@ function LessonBody( { page, section }: any ): JSX.Element {
   // const dispatch = props.data.dispatch(); // this dispatch
   const dispatch = useDispatch();
 
+  const cameraMovement = page.models[section].newModelLocation ? true : false
+
   function LessonNavigation(props: any): JSX.Element {
     return (
       <div className='lesson-body__navigation'>
@@ -179,11 +181,6 @@ function LessonBody( { page, section }: any ): JSX.Element {
         </>
       );
     }
-
-    // Need to still create all the classes below --> /styles/overlay-styles.css
-      // .bottom
-      // .text--wrapper3
-      // .top
     else if(props.page.textPlacement[props.section] === 'bottom'){
       return (
         <div className='lesson-body__text-container--with-model'>
@@ -191,9 +188,8 @@ function LessonBody( { page, section }: any ): JSX.Element {
           <div className='panel--bottom'>
             <div className='lesson-body__text--with-model'>
               {
-                page._text[section].map( (t: any, i: number) => <p className={ `fade${i}` }>{t}</p> )  
+                page.text[section].map( (t: any, i: number) => <p className={ cameraMovement ? `fade--cam-move-${i}` : `fade--no-cam-move-${i}` }>{t}</p> )  
               }
-              {/* <p> { props.page.text[ props.section ] } </p>  */}
             </div>
           </div>
         </div>

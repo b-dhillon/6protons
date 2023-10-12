@@ -143,7 +143,7 @@ export const uninitializedData: UninitializedData = {
           id: '0',
           name: 'model0',
           path: '/Fullerenes/models/instance0.glb',
-          visible: true,
+          visible: false,
           newModelLocation: true,
           scale: 0.18,
           yOffsetForText: false,
@@ -164,7 +164,7 @@ export const uninitializedData: UninitializedData = {
           // path: '',
           path: '/Fullerenes/models/instance1.glb',
           visible: false,
-          newModelLocation: false,
+          newModelLocation: true,
           scale: 0,
           yOffsetForText: false,
           positions: [[0.75, 0.66, 0.0]],
@@ -178,7 +178,7 @@ export const uninitializedData: UninitializedData = {
             }),
             ScaleXYZ({
               duration: 1,
-              initialScale: [0.18, 0.18, 0.18],
+              initialScale: [0.0, 0.0, 0.0],
               finalScale: [0.0, 0.0, 0.0],
             }),
           ],
@@ -187,7 +187,7 @@ export const uninitializedData: UninitializedData = {
           id: '2',
           name: 'model2',
           path: '/Fullerenes/models/instance0.glb',
-          visible: true,
+          visible: false,
           newModelLocation: true,
           scale: 0,
           yOffsetForText: true,
@@ -211,11 +211,11 @@ export const uninitializedData: UninitializedData = {
           id: '3',
           name: 'model3',
           path: '/Fullerenes/models/instance2.glb',
-          visible: true,
+          visible: false,
           newModelLocation: false,
-          scale: 0,
+          scale: 0.18,
           yOffsetForText: true,
-          positions: [[0.0, -0.66, -1.0]],
+          positions: [[0.75, 0.0, -3.0]],
           rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
             Rotate({
@@ -228,20 +228,14 @@ export const uninitializedData: UninitializedData = {
               duration: 1,
               initialScale: [0.18, 0.18, 0.18],
               finalScale: [0.0, 0.0, 0.0],
-            }),
-            Rotate({
-              duration: 1500,
-              axis: 'x',
-              initialAngle: 0,
-              finalAngle: 360,
-            }),
-          ],
+            })
+          ]
         },
         {
           id: '4',
           name: 'model4',
           path: '/Fullerenes/models/___instance3.glb',
-          visible: true,
+          visible: false,
           newModelLocation: true,
           scale: 0,
           yOffsetForText: true,
@@ -272,7 +266,7 @@ export const uninitializedData: UninitializedData = {
           id: '5',
           name: 'model5',
           path: '/Fullerenes/models/___instance4.glb',
-          visible: true,
+          visible: false,
           newModelLocation: true,
           scale: 0,
           yOffsetForText: true,
@@ -302,15 +296,6 @@ export const uninitializedData: UninitializedData = {
       ],
 
       text: [
-        '',
-        'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas...',
-        'Firing lazers at graphite rods in a supersonic helium beam, produced novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered. This molecule would go on to be named Buckminsterfullerene.',
-        'The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball. Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.',
-        'For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known. These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems. Scientists have even turned their attention to Buckminsterfullerene in their quest for a cure for AIDS.',
-        "How can Buckminsterfullerene help cure AIDS? An enzyme (HIV-1-Protease) that is required for HIV to replicate, exhibits a non-polar pocket in its three-dimensional structure. On the protein model in front of you, notice how the non-polar Fullerene fits the exact diameter of the enzyme's binding pocket. If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible HIV-1-Protease inhibitors.",
-      ],
-
-      _text: [
         [''],
         [
           'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas...'
@@ -370,7 +355,14 @@ export const uninitializedData: UninitializedData = {
 
 
 
-
+// text: [
+//   '',
+//   'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas...',
+//   'Firing lazers at graphite rods in a supersonic helium beam, produced novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere. The largest and most symmetrical form of pure carbon ever discovered. This molecule would go on to be named Buckminsterfullerene.',
+//   'The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball. Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space. And because they are essentially hollow cages, they can be manipulated to make materials never before known.',
+//   'For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known. These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems. Scientists have even turned their attention to Buckminsterfullerene in their quest for a cure for AIDS.',
+//   "How can Buckminsterfullerene help cure AIDS? An enzyme (HIV-1-Protease) that is required for HIV to replicate, exhibits a non-polar pocket in its three-dimensional structure. On the protein model in front of you, notice how the non-polar Fullerene fits the exact diameter of the enzyme's binding pocket. If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible HIV-1-Protease inhibitors.",
+// ],
 
 
 

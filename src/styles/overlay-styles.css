@@ -174,40 +174,57 @@
           opacity: 0; */
         }
 
-        .fade0 {
+        /* Write a better way to do these text fades: */
+        .fade--no-cam-move-0 {
+          animation: 2s delayInWithFade;
+          animation-fill-mode: forwards;
+          opacity: 0;
+        }
+        .fade--no-cam-move-1 {
+          animation: 3s delayInWithFade;
+          animation-fill-mode: forwards;
+          opacity: 0;
+        }
+        .fade--no-cam-move-2 {
+          animation: 4s delayInWithFade;
+          animation-fill-mode: forwards;
+          opacity: 0;
+        }
+
+        .fade--cam-move-0 {
           animation: 12s delayInWithFade;
           animation-fill-mode: forwards;
           opacity: 0;
         }
 
-        .fade1 {
+        .fade--cam-move-1 {
           animation: 13s delayInWithFade;
           animation-fill-mode: forwards;
           opacity: 0;
         }
 
-        .fade2 {
+        .fade--cam-move-2 {
           animation: 14s delayInWithFade;
           animation-fill-mode: forwards;
           opacity: 0;
         }
 
-        .fade3 {
+        .fade--cam-move-3 {
           animation: 15s delayInWithFade;
           animation-fill-mode: forwards;
           opacity: 0;
         }
 
         .lesson-body__text--with-model > p {
-          width: 70%;
+          width: 80%;
           /* margin: 50px 0px 0px 0px; */
           margin: 16px 0px;
           /* position: relative; 
           top: 10px; */
           font-size: 1.4vw !important;
-          text-align: center;
+          text-align: left;
           /* animation: fadeIn 2s 1 ease-in-out; */
-          line-height: 35px;
+          line-height: 38px;
         }
 
 
