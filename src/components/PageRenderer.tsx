@@ -17,7 +17,7 @@ export function PageRenderer({
     <Suspense>
       <Scene initializedPage={initializedPage} section={section} />
       <LessonOverlay
-        devMode={false}
+        devMode={true}
         initializedPage={initializedPage}
         setCurrentPage={setCurrentPage}
         section={section}

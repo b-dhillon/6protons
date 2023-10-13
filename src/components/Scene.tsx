@@ -12,11 +12,12 @@ import DevelopmentCamera from './DevelopmentCamera';
 export function Scene({ section, initializedPage }: any): JSX.Element {
   return (
     <Suspense>
-      <FadeIn />
+      {/* <FadeIn /> */}
       <Canvas>
         <Universe initializedPage={initializedPage} />
         <Sound initializedPage={initializedPage} section={section} />
         <Camera initializedPage={initializedPage} section={section} />
+        <DevelopmentCamera/>
         <Models initializedPage={initializedPage} section={section} />
         <Lighting/>
       </Canvas>

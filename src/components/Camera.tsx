@@ -2,17 +2,32 @@
 import * as THREE from 'three';
 import { useEffect, useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { PerspectiveCamera } from '@react-three/drei';
+import { PerspectiveCamera, useHelper } from '@react-three/drei';
 
 /** FN Description
  * 
  * Creates React Three Camera,
  * Creates all AnimationActions for camera transitions 
- * Plays the correct Animation, based on section.
- * Updates the animation mixer.
+ * Creates and calls an AnimationController() that:
+ *   Plays the correct Animation, based on section.
+ *   Updates the animation mixer.
  * Renders cameraHelper when called.
  * 
 */ 
+
+// 2. See if you can hook up the decrement button click to just calling the same animation but in reverse with: setEffectiveTimeScale(-1)
+//  if increment
+//      animationActions[section].play.warp()
+//  if decrement
+//      animationActions[section].setEffectiveTimeScale(-1).play.warp()
+
+
+// Just need to figure out how to set up increment vs decrement. 
+// And if the decrement will need the section, or section-1, or section+1 to reverse?
+
+
+
+// animationData --> animationClips --> animationActions --> animationController
 
 
 export function Camera( { initializedPage, section }: any ): JSX.Element {
@@ -36,7 +51,7 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
         return animationAction;
       };
 
-      const animationActions = animationClips.map((animationClip: []) => createAnimationAction(animationClip[0]) ); //why hard-coded index 0?? --> because theres only one animation per section
+      const animationActions = animationClips.map((animationClip: []) => createAnimationAction(animationClip[0]) ); //why is index hard-coded 0?? --> because theres only one animation per section
 
       setAnimationActions(animationActions);
     };
@@ -46,9 +61,9 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
   // AnimationController --> Plays the AnimationAction based on section
   useEffect(() => {
 
-    AnimationController();
+    animationController();
 
-    function AnimationController() {
+    function animationController() {
       if (AnimationActions.length)
         AnimationActions[section].play().warp(1, 0.01, 7.8); // .warp( 1.3, 0.01, 4.6 );
     }
@@ -61,9 +76,12 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
       AnimationActions[section]._mixer.update(delta);
   });
 
+  useHelper( ref, THREE.CameraHelper );
+
+
   // Setting the scene's camera. There are two. Perspective and Development.
   const set = useThree((state) => state.set);
-  useEffect(() => set({ camera: ref.current }));
+  // useEffect(() => set({ camera: ref.current }));
 
   return (
     <>
@@ -96,13 +114,12 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
 
 
 
-// useHelper( ref, THREE.CameraHelper );
 // import { CameraHelper } from "three"; <-- Not needed if THREE is already imported with *
 
 
-function SetCamera(cam): void {
-  set({ camera: cam });
-}
+// function SetCamera(cam): void {
+//   set({ camera: cam });
+// }
 
 
 {

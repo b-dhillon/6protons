@@ -152,14 +152,14 @@
 
       .panel--top {
         flex: 1;
-        /* border: 1px solid yellow; */
+        border: 1px solid yellow;
       }
       
       .panel--bottom {
-        flex: 0.8;
+        flex: 0.75;
         display: flex; 
         align-items: center;
-        /* border: 1px solid violet; */
+        border: 1px solid violet;
       }
 
         .lesson-body__text--with-model {
@@ -174,6 +174,18 @@
           opacity: 0; */
         }
 
+        .lesson-body__text--with-model > p {
+          /* width: 80%; */
+          max-width: 65ch;
+          margin: 16px 0px;
+          font-size: 1.4vw !important;
+          text-align: left;
+          /* animation: fadeIn 2s 1 ease-in-out; */
+          line-height: 38px;
+          border: 1px solid red;
+        }
+
+
         /* Write a better way to do these text fades: */
         .fade--no-cam-move-0 {
           animation: 2s delayInWithFade;
@@ -181,12 +193,12 @@
           opacity: 0;
         }
         .fade--no-cam-move-1 {
-          animation: 3s delayInWithFade;
+          animation: 4s delayInWithFade;
           animation-fill-mode: forwards;
           opacity: 0;
         }
         .fade--no-cam-move-2 {
-          animation: 4s delayInWithFade;
+          animation: 6s delayInWithFade;
           animation-fill-mode: forwards;
           opacity: 0;
         }
@@ -215,17 +227,6 @@
           opacity: 0;
         }
 
-        .lesson-body__text--with-model > p {
-          width: 80%;
-          /* margin: 50px 0px 0px 0px; */
-          margin: 16px 0px;
-          /* position: relative; 
-          top: 10px; */
-          font-size: 1.4vw !important;
-          text-align: left;
-          /* animation: fadeIn 2s 1 ease-in-out; */
-          line-height: 38px;
-        }
 
 
   @keyframes delayIn {

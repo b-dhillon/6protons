@@ -51,9 +51,9 @@ export function Models( { initializedPage, section } : any): JSX.Element {
 
   // AnimationController --> Plays the AnimationAction based on section (section)
   useEffect(() => {
-    AnimationController(animationActions, section);
+    animationController(animationActions, section);
 
-    function AnimationController(animationActions: any, section: number): void {
+    function animationController(animationActions: any, section: number): void {
       if (animationActions.length) {
 
         let currentModel = animationActions[section]
@@ -63,29 +63,32 @@ export function Models( { initializedPage, section } : any): JSX.Element {
         // 2. Control flow for not new location
         if( !initializedPage.models[section].newModelLocation ){
           // A. Grab previous model's animation time
-          const oldT = animationActions[section-1].mainAnimation.time;
+          // const oldT = animationActions[section-1].mainAnimation.time;
+          const oldT = previousModel.mainAnimation.time;
 
-          // B. Set new model's animation to this time. 
-          animationActions[section].mainAnimation.time = oldT;
+          // B. Set current model's animation to this time. 
+          // animationActions[section].mainAnimation.time = oldT;
+          currentModel.mainAnimation.time = oldT;
 
-          // C. Play new model's animation
-          animationActions[section].mainAnimation.play();
+          // C. Play current model's animation
+          // animationActions[section].mainAnimation.play();
+          currentModel.mainAnimation.play();
         }
         else {
           // A. Trigger old model's exit animation:
-          if(section > 0) animationActions[ (section - 1) ].scaleAnimation.reset().setEffectiveTimeScale( 0.9 ).play();
+          if(section > 0) previousModel.scaleAnimation.reset().setEffectiveTimeScale( 0.9 ).play();
 
           // B. Play new model's entrance animation:
-          animationActions[section].scaleAnimation.startAt(8).setEffectiveTimeScale(-1).play();
+          currentModel.scaleAnimation.startAt(8).setEffectiveTimeScale(-1).play();
 
           // C. Play new model's main animation:
-          if (section === 0) animationActions[section].mainAnimation.play() //first model should play right away
-          else animationActions[section].mainAnimation.startAt(9).play(); //every other model needs a delay to wait for camera transition to finish
+          if (section === 0) currentModel.mainAnimation.play() //first model should play right away
+          else currentModel.mainAnimation.startAt(9).play(); //every other model needs a delay to wait for camera transition to finish
 
           // D. Play Nested animation if it exists:
-          if (animationActions[section].nestedAnimation) {
-            animationActions[section].nestedAnimation.setLoop(LoopPingPong, Infinity);
-            animationActions[section].nestedAnimation.play();
+          if (currentModel.nestedAnimation) {
+            currentModel.nestedAnimation.setLoop(LoopPingPong, Infinity);
+            currentModel.nestedAnimation.play();
           }
         };
 

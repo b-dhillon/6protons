@@ -2,14 +2,52 @@
 TODO: 
 
 
-Get section 2 --> section 3 model behaving properly. Section should move from 2 to 3 without animation being disrupted
-    Try to pass the time of animation of section 2 into section 3's model
-        It looks like to accomplish this we just need to access the .time property on the AnimationAction before switching the AnimationAction 
+- Add ability to navigatye backwards:
 
-        First, log the AnimationActions[section].time to the console. 
-        Then, figure out how to write the logic for passing the time variable properly.
+    It looks we need to create animationClips for the backward animations. All we need to do for that is just 
+    switch the initialPosition/finalPosition as well as initialRotation/finalRotation on the method below. Then we call that animation when the decrement button is clicked.
+
+    AnimationController for Models() will need to be updated too. You will need to add control flow for increment vs. decrement. 
+        During decrement it should be prevModel = section + 1 and currModel = section
+        During increment: prevModel = section - 1 and currModel = section
+
+createAnimationClips: function(animationDataStructure: any ): AnimationClip[][] {
+    const animationClips = animationDataStructure.map((animationData: [][], i: number) => {
+    return [
+        TranslateRotate({
+        duration: 4,
+        initialPosition: animationData[0],
+        finalPosition: animationData[1],
+        initialAngle: animationData[2],
+        finalAngle: animationData[3],
+        // axis: 'x',
+        axis: FindRotationAxis(animationData),
+        }),
+    ];
+    })
+    return animationClips;
+},
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- Add title of lesson to the Header of the overlay. Get it working again. Likely change the color?
 
 
 Clean up models in the public folder. Specifically for the Buckminsterfullerene lesson
@@ -44,6 +82,9 @@ you hear in the song "Lost In Thought" by KOAN Sound at 1:05
 
 
 
+
+
+
 DONE:
     Variable Name Changes:
         Change text-wrapper to something more appropriate or descriptive
@@ -52,6 +93,12 @@ DONE:
 
 
 
+Get section 2 --> section 3 model behaving properly. Section should move from 2 to 3 without animation being disrupted
+    Try to pass the time of animation of section 2 into section 3's model
+        It looks like to accomplish this we just need to access the .time property on the AnimationAction before switching the AnimationAction 
+
+        First, log the AnimationActions[section].time to the console. 
+        Then, figure out how to write the logic for passing the time variable properly.
 
 
 
@@ -100,7 +147,6 @@ Work out all animations and transitions.
 
 NEXT:
 
-- Add ability to go backwards.
 ------------------------
 ------------------------
 ------------------------

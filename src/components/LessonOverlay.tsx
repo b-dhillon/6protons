@@ -30,11 +30,18 @@ export function LessonOverlay( { devMode, initializedPage, section, setCurrentPa
 
   if (devMode) {
     return (
-      <button 
-        onClick={() => dispatch(increment())} 
-        style={{ position: 'absolute', zIndex: 10, top: 0 }}>
-          next
-      </button>
+      <>
+        <button 
+          onClick={() => dispatch(increment())} 
+          style={{ position: 'absolute', zIndex: 10, top: 0 }}>
+            forwards
+        </button>
+        <button 
+          onClick={() => dispatch(decrement())} 
+          style={{ position: 'absolute', zIndex: 10, top: 20 }}>
+            backwards
+        </button>
+      </>
     );
   } 
 
