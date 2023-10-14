@@ -4,12 +4,18 @@ TODO:
 
 - Add ability to navigatye backwards:
 
+    AnimationController for Models() will need to be updated too. You will need to add control flow for increment vs. decrement. 
+        During decrement: prevModel = section + 1 and currModel = section
+        During increment: prevModel = section - 1 and currModel = section
+
+    LessonText will also need to be updated as well. You will need to add control for this too.
+    
+
+
     It looks we need to create animationClips for the backward animations. All we need to do for that is just 
     switch the initialPosition/finalPosition as well as initialRotation/finalRotation on the method below. Then we call that animation when the decrement button is clicked.
 
-    AnimationController for Models() will need to be updated too. You will need to add control flow for increment vs. decrement. 
-        During decrement it should be prevModel = section + 1 and currModel = section
-        During increment: prevModel = section - 1 and currModel = section
+
 
 createAnimationClips: function(animationDataStructure: any ): AnimationClip[][] {
     const animationClips = animationDataStructure.map((animationData: [][], i: number) => {

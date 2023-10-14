@@ -15,11 +15,37 @@ import { PerspectiveCamera, useHelper } from '@react-three/drei';
  * 
 */ 
 
-// 2. See if you can hook up the decrement button click to just calling the same animation but in reverse with: setEffectiveTimeScale(-1)
-//  if increment
-//      animationActions[section].play.warp()
-//  if decrement
-//      animationActions[section].setEffectiveTimeScale(-1).play.warp()
+/**
+ * 
+ * Figure out how to hook/pass increment vs. decrement.
+ *  A. We can use document.querySelector to figure out what button was clicked...
+ *  B. We can take a delta. const delta: number = prevSection - currSection 
+ *    If delta negative --> section increased --> forwardsNavigation
+ *    If delta positive --> section decreased --> backwardsNavigation
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * On decrement. trigger the backwards block. trigger the animationActions[section + 1]
+ * For mixers, 
+ *  on decrement, trigger the backwards block and animationActions[section + 1]._mixer
+ *  on increment, trigger the forwards block and animationActions[section]._mixer
+ *  Will also need to add control flow for first and last sections. 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
+
+
+
+
+
+
 
 
 // Just need to figure out how to set up increment vs decrement. 
@@ -36,6 +62,27 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
   const camera = initializedPage.camera;
   const ref = useRef();
 
+  const prevSection = useRef();
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   // Creates AnimationActions for each camera rotation and translation via looping camera.animationClips[]
   useEffect(() => {
 
@@ -64,16 +111,68 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
     animationController();
 
     function animationController() {
-      if (AnimationActions.length)
-        AnimationActions[section].play().warp(1, 0.01, 7.8); // .warp( 1.3, 0.01, 4.6 );
+      if (AnimationActions.length) {
+        // if (section !== 1) 
+        // AnimationActions[section].play().warp(1, 0.01, 7.8); // .warp( 1.3, 0.01, 4.6 );
+
+
+
+
+
+
+        // This is needed for the first animation before the start-button is clicked.
+        if( section === 0 ) {
+          console.log("ORIGIN block!", section);
+          AnimationActions[0].reset();
+          AnimationActions[0].timeScale = 1;
+          AnimationActions[0].play();
+          prevSection.current = 0;
+        }
+
+        if (prevSection.current !== undefined && section !== 0) {
+          console.log('prevSection', prevSection.current);
+          console.log('section', section);
+
+          const forwardsNavigation: boolean = (prevSection.current - section) < 0;
+          const backwardsNavigation: boolean = (prevSection.current - section) > 0;
+
+          if (forwardsNavigation) {
+            console.log("FORWARDS!", section);
+            AnimationActions[section].reset();
+            AnimationActions[section].timeScale = 1;
+            AnimationActions[section].play();
+            prevSection.current = section;
+          }
+
+          else if(backwardsNavigation) {
+            console.log("BACKWARDS!", section);
+            AnimationActions[section + 1].reset();
+            AnimationActions[section + 1].time = camera.animationClips[section - 1][0].duration
+            AnimationActions[section + 1].timeScale = -1;
+            AnimationActions[section + 1].play();
+            prevSection.current = section;
+
+          }
+        }
+
+
+      }
     }
 
   }, [AnimationActions, section]);
 
   // Updates the animation via the mixer
   useFrame((_, delta) => {
-    if (AnimationActions.length)
-      AnimationActions[section]._mixer.update(delta);
+    if (AnimationActions.length) {
+
+      // This needs to be cleaned up and written better. 
+      if (section===0) AnimationActions[0]._mixer.update(delta)
+      AnimationActions[section]._mixer.update(delta)
+      if (section!==0)AnimationActions[section+1]._mixer.update(delta)
+
+
+    };
+    // AnimationActions[1]._mixer.update(delta);
   });
 
   useHelper( ref, THREE.CameraHelper );
