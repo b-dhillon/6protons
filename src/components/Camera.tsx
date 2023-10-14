@@ -17,11 +17,19 @@ import { PerspectiveCamera, useHelper } from '@react-three/drei';
 
 /**
  * 
- * Figure out how to hook/pass increment vs. decrement.
- *  A. We can use document.querySelector to figure out what button was clicked...
- *  B. We can take a delta. const delta: number = prevSection - currSection 
- *    If delta negative --> section increased --> forwardsNavigation
- *    If delta positive --> section decreased --> backwardsNavigation
+ * Now, we just need to control for the camera entrance animation. 
+ * Then, we need to try to clean up the mixers.
+ * Essentially, we just need to re-factor it a bit, and control for the entrance animation.
+ * 
+ * Will also need to add control flow for first and last sections.
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+
  * 
  * 
  * 
@@ -32,7 +40,11 @@ import { PerspectiveCamera, useHelper } from '@react-three/drei';
  * For mixers, 
  *  on decrement, trigger the backwards block and animationActions[section + 1]._mixer
  *  on increment, trigger the forwards block and animationActions[section]._mixer
- *  Will also need to add control flow for first and last sections. 
+ * ^^ the problem here, is that the mixers are not scoped within forwardsNavigation and backwardsNavigation booleans. 
+ *    those booleans are scoped inside of the useEffect, because they need to be updated everytime section changes. 
+ *    
+ *    Perhaps, we can set them in state, and then the mixers will have access to them too.
+ *    OR, we can just declare those variables as let at top level of the fn. And then just mutate them inside the useEffect?
  * 
  * 
  * 
@@ -61,28 +73,10 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
   const [ AnimationActions, setAnimationActions ] = useState([]);
   const camera = initializedPage.camera;
   const ref = useRef();
-
   const prevSection = useRef();
 
 
 
-
-
-
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   // Creates AnimationActions for each camera rotation and translation via looping camera.animationClips[]
   useEffect(() => {
 
@@ -114,8 +108,6 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
       if (AnimationActions.length) {
         // if (section !== 1) 
         // AnimationActions[section].play().warp(1, 0.01, 7.8); // .warp( 1.3, 0.01, 4.6 );
-
-
 
 
 
