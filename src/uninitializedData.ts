@@ -71,7 +71,7 @@ export const uninitializedData: UninitializedData = {
       id: 'test_page',
       pageTitle: 'Buckminsterfullerene',
       section: 0,
-      maxSection: 6,
+      maxSection: 5, //including 0, total number of section is 6.
       thumbnail: "url('./lessonThumbnails/fullereneTile.png')",
 
       universe: {

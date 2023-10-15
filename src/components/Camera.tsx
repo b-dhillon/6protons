@@ -17,7 +17,6 @@ import { PerspectiveCamera, useHelper } from '@react-three/drei';
 
 /**
  * 
- * Now, we just need to control for the camera entrance animation. 
  * Then, we need to try to clean up the mixers.
  * Essentially, we just need to re-factor it a bit, and control for the entrance animation.
  * 
@@ -71,10 +70,11 @@ import { PerspectiveCamera, useHelper } from '@react-three/drei';
 export function Camera( { initializedPage, section }: any ): JSX.Element {
   
   const [ AnimationActions, setAnimationActions ] = useState([]);
-  const [ mixer, setMixer ] = useState();
+  // const [ mixer, setMixer ] = useState();
   const camera = initializedPage.camera;
   const ref = useRef();
   const prevSection = useRef();
+  const maxSection = initializedPage.maxSection
 
 
 
@@ -83,19 +83,19 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
   // Creates AnimationActions for each camera rotation and translation via looping camera.animationClips[]
   useEffect(() => {
 
-    if( !mixer ) {
-      setMixer(new THREE.AnimationMixer(ref.current));
-      console.log("Animation mixer created");
-    } 
+    // if( !mixer ) {
+    //   setMixer(new THREE.AnimationMixer(ref.current));
+    //   console.log("Animation mixer created");
+    // } 
 
-    if (mixer ) {
+    // if (mixer) {
 
       createAnimationActions(ref.current, camera.animationClips);
   
       function createAnimationActions( ref: any, animationClips: [][] ) {
   
         function createAnimationAction( clip: THREE.AnimationClip ): THREE.AnimationAction {
-          // const mixer = new THREE.AnimationMixer(ref);
+          const mixer = new THREE.AnimationMixer(ref);
           const animationAction = mixer.clipAction(clip);
           animationAction.loop = THREE.LoopOnce;
           animationAction.clampWhenFinished = true;
@@ -107,11 +107,11 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
         setAnimationActions(animationActions);
       };
 
-    }
+    // }
 
 
 
-  }, [mixer]);
+  }, []);
 
   // AnimationController --> Plays the AnimationAction based on section
   useEffect(() => {
@@ -124,14 +124,25 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
         // AnimationActions[section].play().warp(1, 0.01, 7.8); // .warp( 1.3, 0.01, 4.6 );
 
 
-
-
         // This is needed for the first animation before the start-button is clicked.
         if( section === 0 ) {
           console.log("ORIGIN block!", section);
-          AnimationActions[0].reset();
-          AnimationActions[0].timeScale = 1;
-          AnimationActions[0].play();
+
+          const backwardsNavigation: boolean = (prevSection.current - section) > 0;
+
+
+          if (!backwardsNavigation) {
+            AnimationActions[0].reset();
+            AnimationActions[0].timeScale = 1;
+            AnimationActions[0].play();
+          }
+          else {
+            console.log("BACKWARDS!", section);
+            AnimationActions[section + 1].reset();
+            AnimationActions[section + 1].time = camera.animationClips[0][0].duration
+            AnimationActions[section + 1].timeScale = -1;
+            AnimationActions[section + 1].play();
+          }
           prevSection.current = 0;
         }
 
@@ -169,16 +180,19 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
 
   // Updates the animation via the mixer
   useFrame((_, delta) => {
-    if (AnimationActions.length && mixer) {
+    if (AnimationActions.length) {
 
       // This needs to be cleaned up and written better. 
       // Im pretty sure only 1 mixer is needed.
-      mixer.update(delta)
+      // mixer.update(delta)
 
 
-      // if (section===0) AnimationActions[0]._mixer.update(delta)
-      // AnimationActions[section]._mixer.update(delta)
+      // For the entrance animation
+      if (section===0) AnimationActions[0]._mixer.update(delta)
+      // For the forwards and reverse animations 
+      AnimationActions[section]._mixer.update(delta)
       // if (section!==0)AnimationActions[section+1]._mixer.update(delta)
+      if( section < maxSection ) AnimationActions[section+1]._mixer.update(delta)
     };
     // AnimationActions[1]._mixer.update(delta);
   });
