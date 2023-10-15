@@ -7,9 +7,16 @@ import { Sound } from './Sound';
 import { Universe } from './Universe';
 import DevelopmentCamera from './DevelopmentCamera';
 // import Music from './Sound';
-
 // Mounts components to scene graph and renders 3D scene.
 export function Scene({ section, initializedPage }: any): JSX.Element {
+  function Lighting(): JSX.Element {
+    return (
+      <>
+        <ambientLight intensity={0.25} />
+        <spotLight position={[-10, 10, 10]} intensity={0.9} />
+      </>
+    );
+  };
   return (
     <Suspense>
       {/* <FadeIn /> */}
@@ -25,21 +32,6 @@ export function Scene({ section, initializedPage }: any): JSX.Element {
   );
 };
 
-
-
-
-function Lighting(): JSX.Element {
-  return (
-    <>
-      <ambientLight intensity={0.25} />
-      <spotLight position={[-10, 10, 10]} intensity={0.9} />
-    </>
-  );
-};
-
-
-
-
 function FadeIn() {
   const [fadeDone, setFadeDone] = useState(false);
   function handleFadeDoneAfter(seconds: number) {
@@ -49,11 +41,12 @@ function FadeIn() {
   if (!fadeDone) return <div className='blackFade'></div>;
   else return <></>;
 }
+<FadeIn />
+
 
 
 
 {/* < DevelopmentCamera  /> */}
 /* < BackgroundMusic /> */
-<FadeIn />
 
 

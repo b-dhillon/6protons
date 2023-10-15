@@ -71,33 +71,47 @@ import { PerspectiveCamera, useHelper } from '@react-three/drei';
 export function Camera( { initializedPage, section }: any ): JSX.Element {
   
   const [ AnimationActions, setAnimationActions ] = useState([]);
+  const [ mixer, setMixer ] = useState();
   const camera = initializedPage.camera;
   const ref = useRef();
   const prevSection = useRef();
 
 
 
+
+
   // Creates AnimationActions for each camera rotation and translation via looping camera.animationClips[]
   useEffect(() => {
 
-    createAnimationActions(ref.current, camera.animationClips);
+    if( !mixer ) {
+      setMixer(new THREE.AnimationMixer(ref.current));
+      console.log("Animation mixer created");
+    } 
 
-    function createAnimationActions( ref: any, animationClips: [][] ) {
+    if (mixer ) {
 
-      function createAnimationAction( clip: THREE.AnimationClip ): THREE.AnimationAction {
-        const mixer = new THREE.AnimationMixer(ref);
-        const animationAction = mixer.clipAction(clip);
-        animationAction.loop = THREE.LoopOnce;
-        animationAction.clampWhenFinished = true;
-        return animationAction;
+      createAnimationActions(ref.current, camera.animationClips);
+  
+      function createAnimationActions( ref: any, animationClips: [][] ) {
+  
+        function createAnimationAction( clip: THREE.AnimationClip ): THREE.AnimationAction {
+          // const mixer = new THREE.AnimationMixer(ref);
+          const animationAction = mixer.clipAction(clip);
+          animationAction.loop = THREE.LoopOnce;
+          animationAction.clampWhenFinished = true;
+          return animationAction;
+        };
+  
+        const animationActions = animationClips.map((animationClip: []) => createAnimationAction(animationClip[0]) ); //why is index hard-coded 0?? --> because theres only one animation per section
+  
+        setAnimationActions(animationActions);
       };
 
-      const animationActions = animationClips.map((animationClip: []) => createAnimationAction(animationClip[0]) ); //why is index hard-coded 0?? --> because theres only one animation per section
+    }
 
-      setAnimationActions(animationActions);
-    };
 
-  }, []);
+
+  }, [mixer]);
 
   // AnimationController --> Plays the AnimationAction based on section
   useEffect(() => {
@@ -155,14 +169,16 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
 
   // Updates the animation via the mixer
   useFrame((_, delta) => {
-    if (AnimationActions.length) {
+    if (AnimationActions.length && mixer) {
 
       // This needs to be cleaned up and written better. 
-      if (section===0) AnimationActions[0]._mixer.update(delta)
-      AnimationActions[section]._mixer.update(delta)
-      if (section!==0)AnimationActions[section+1]._mixer.update(delta)
+      // Im pretty sure only 1 mixer is needed.
+      mixer.update(delta)
 
 
+      // if (section===0) AnimationActions[0]._mixer.update(delta)
+      // AnimationActions[section]._mixer.update(delta)
+      // if (section!==0)AnimationActions[section+1]._mixer.update(delta)
     };
     // AnimationActions[1]._mixer.update(delta);
   });

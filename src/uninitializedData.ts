@@ -1,13 +1,4 @@
-import { useDispatch } from 'react-redux';
-import { UninitializedData } from './types/types';
-import { TranslateRotate } from './components/animations/TranslateRotate';
-import { FindRotationAxis } from './components/FindRotationAxis';
-import { AnimationClip } from 'three';
-import ScaleXYZ from './components/animations/ScaleXYZ';
-import Rotate from './components/animations/Rotate';
-import SuspendInSolution from './components/animations/SuspendInSolution';
-
-
+// File Description:
 /**
  * This object contains an array of all uninititalized, hard-coded data of the App. Data needed to render each page of the app.
  *
@@ -16,8 +7,14 @@ import SuspendInSolution from './components/animations/SuspendInSolution';
  *   Which animations each model will have access too. i.e. Model's AnimationClips
  *   Model paths and Voice paths
  */
-
-
+import { useDispatch } from 'react-redux';
+import { UninitializedData } from './types/types';
+import { TranslateRotate } from './components/animations/TranslateRotate';
+import { FindRotationAxis } from './components/FindRotationAxis';
+import { AnimationClip } from 'three';
+import ScaleXYZ from './components/animations/ScaleXYZ';
+import Rotate from './components/animations/Rotate';
+import SuspendInSolution from './components/animations/SuspendInSolution';
 export const uninitializedData: UninitializedData = {
   initializeModelPositionsFromCamera: function( cameraPosition: number[], cameraRotation: number[], rotationAxis: string, yOffsetForText: boolean ) {
     // rotate camera X-axis, need to re-position model on Y axis.
