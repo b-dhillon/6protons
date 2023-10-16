@@ -1,12 +1,15 @@
 import { combineReducers } from 'redux';
 
-function sectionCounter(state = 0, action: { type: any; } ) {
+function sectionCounter(state = 0, action: { type: string; } ) {
     switch (action.type) {
         case 'INCREMENT':
             return state + 1
         case 'DECREMENT':
             return state - 1
         case 'RESET':
+            // better to treat this like a stack and start at -1.
+            // this might require a re-thinking of how the animation data structure 
+            // is set up and how it plugs into the generation of animationClips.
             return state = 0
         default:
             return state;

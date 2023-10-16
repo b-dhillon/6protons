@@ -4,6 +4,16 @@ TODO:
 
 - Add ability to navigatye backwards:
 
+
+    Create a stack with sections. With the entrance animation being -1 on the stack.
+        on-load: section goes from -1 to 0, triggering the entrance animation.
+        
+
+
+
+
+
+
     AnimationController for Models() will need to be updated too. You will need to add control flow for increment vs. decrement. 
         During decrement: prevModel = section + 1 and currModel = section
         During increment: prevModel = section - 1 and currModel = section

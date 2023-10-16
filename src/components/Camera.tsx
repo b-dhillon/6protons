@@ -13,174 +13,135 @@ import { PerspectiveCamera, useHelper } from '@react-three/drei';
  *   Updates the animation mixer.
  * Renders cameraHelper when called.
  * 
+* 
+
+
+/** reversing navigation to-do:
+ * 
+ * 2. Try to clean up the mixers. -- Try 1 mixer again, but this time without the weird [section-1]
+ * 3. Prevent ability to animate camera past maxSection and minSection
+ * 4. Re-factor and clean up code
+ * 5. Add checks for isRunning so that user cant click increment again if animation is currently still running.
+ * 5. Get lessonText and lessonModels behaving properly as well.
+ * 
 */ 
-
-/**
- * 
- * Then, we need to try to clean up the mixers.
- * Essentially, we just need to re-factor it a bit, and control for the entrance animation.
- * 
- * Will also need to add control flow for first and last sections.
- * 
- * 
- * 
- * 
- * 
- * 
- * 
-
- * 
- * 
- * 
- * 
- * 
- * 
- * On decrement. trigger the backwards block. trigger the animationActions[section + 1]
- * For mixers, 
- *  on decrement, trigger the backwards block and animationActions[section + 1]._mixer
- *  on increment, trigger the forwards block and animationActions[section]._mixer
- * ^^ the problem here, is that the mixers are not scoped within forwardsNavigation and backwardsNavigation booleans. 
- *    those booleans are scoped inside of the useEffect, because they need to be updated everytime section changes. 
- *    
- *    Perhaps, we can set them in state, and then the mixers will have access to them too.
- *    OR, we can just declare those variables as let at top level of the fn. And then just mutate them inside the useEffect?
- * 
- * 
- * 
- * 
- * 
- * 
- */
-
-
-
-
-
-
-
-
-// Just need to figure out how to set up increment vs decrement. 
-// And if the decrement will need the section, or section-1, or section+1 to reverse?
-
-
-
-// animationData --> animationClips --> animationActions --> animationController
-
-
 export function Camera( { initializedPage, section }: any ): JSX.Element {
   
-  const [ AnimationActions, setAnimationActions ] = useState([]);
-  // const [ mixer, setMixer ] = useState();
+  const [ animations, setAnimations ] = useState<AnimationAction[]|[]>([]);
   const camera = initializedPage.camera;
   const ref = useRef();
   const prevSection = useRef();
   const maxSection = initializedPage.maxSection
+  // const [ mixer, setMixer ] = useState();
 
 
-
-
-
-  // Creates AnimationActions for each camera rotation and translation via looping camera.animationClips[]
+  // creates all AnimationActions via looping camera.animationClips[]
   useEffect(() => {
 
-    // if( !mixer ) {
-    //   setMixer(new THREE.AnimationMixer(ref.current));
-    //   console.log("Animation mixer created");
-    // } 
+    // creating only 1 mixer:
+    /**
+      if( !mixer ) {
+         setMixer(new THREE.AnimationMixer(ref.current));
+        console.log("Animation mixer created");
+      } 
+      if (mixer) {
+     * 
+     */
 
-    // if (mixer) {
-
-      createAnimationActions(ref.current, camera.animationClips);
+      // maps over animationClips and creates an AnimationAction for each AnimationClip
+      function createAnimations( ref: any, animationClips: [][] ): AnimationAction[] {
   
-      function createAnimationActions( ref: any, animationClips: [][] ) {
-  
-        function createAnimationAction( clip: THREE.AnimationClip ): THREE.AnimationAction {
+        function createAnimation( clip: THREE.AnimationClip ): THREE.AnimationAction {
           const mixer = new THREE.AnimationMixer(ref);
-          const animationAction = mixer.clipAction(clip);
-          animationAction.loop = THREE.LoopOnce;
-          animationAction.clampWhenFinished = true;
-          return animationAction;
-        };
+          const animation = mixer.clipAction(clip);
+          animation.loop = THREE.LoopOnce;
+          animation.clampWhenFinished = true;
+          return animation;
+        }; 
   
-        const animationActions = animationClips.map((animationClip: []) => createAnimationAction(animationClip[0]) ); //why is index hard-coded 0?? --> because theres only one animation per section
+        return animationClips.map((animationClip: []) => createAnimation(animationClip[0]) ); 
+        // Why is index hard-coded 0?? --> because theres only one animation per section
+        // I believe I initially built it to be explandable to multiple animations per section.
+        // But this should be re-factored to an object, like what we did with the model's multiple animations.
   
-        setAnimationActions(animationActions);
       };
-
+      setAnimations( createAnimations(ref.current, camera.animationClips) );
+      
     // }
-
-
-
   }, []);
 
-  // AnimationController --> Plays the AnimationAction based on section
+
+  // animationController --> Plays the AnimationAction based on section
   useEffect(() => {
 
     animationController();
 
     function animationController() {
-      if (AnimationActions.length) {
+      if (animations.length) {
         // if (section !== 1) 
-        // AnimationActions[section].play().warp(1, 0.01, 7.8); // .warp( 1.3, 0.01, 4.6 );
+        // animations[section].play().warp(1, 0.01, 7.8); // .warp( 1.3, 0.01, 4.6 );
 
 
         // This is needed for the first animation before the start-button is clicked.
         if( section === 0 ) {
-          console.log("ORIGIN block!", section);
+          console.log("ORIGIN block!, currSection:", section);
 
           const backwardsNavigation: boolean = (prevSection.current - section) > 0;
+          const forwards = !backwardsNavigation
 
-
-          if (!backwardsNavigation) {
-            AnimationActions[0].reset();
-            AnimationActions[0].timeScale = 1;
-            AnimationActions[0].play();
+          if (forwards) {
+            animations[0].reset();
+            animations[0].timeScale = 1; // needed if warp? first argument in warp() sets the timeScale
+            
+            animations[0].play().warp(1, 0.01, 7.8);
           }
           else {
-            console.log("BACKWARDS!", section);
-            AnimationActions[section + 1].reset();
-            AnimationActions[section + 1].time = camera.animationClips[0][0].duration
-            AnimationActions[section + 1].timeScale = -1;
-            AnimationActions[section + 1].play();
+            console.log("BACKWARDS!, currSection:", section);
+            animations[section + 1].reset();
+            animations[section + 1].time = camera.animationClips[0][0].duration
+            // animations[section + 1].timeScale = -1; // needed if warp? first argument in warp() sets the timeScale
+            
+            animations[section + 1].play().warp(-1, 0.01, 7.8);
           }
           prevSection.current = 0;
-        }
+        };
 
         if (prevSection.current !== undefined && section !== 0) {
           console.log('prevSection', prevSection.current);
-          console.log('section', section);
 
-          const forwardsNavigation: boolean = (prevSection.current - section) < 0;
-          const backwardsNavigation: boolean = (prevSection.current - section) > 0;
+          // if delta negative, move up the stack:
+          const forwardsNavigation: boolean = ( prevSection.current - section ) < 0;
+          // if delta positive, move down the stack:
+          const backwardsNavigation: boolean = ( prevSection.current - section ) > 0;
 
           if (forwardsNavigation) {
-            console.log("FORWARDS!", section);
-            AnimationActions[section].reset();
-            AnimationActions[section].timeScale = 1;
-            AnimationActions[section].play();
+            console.log("FORWARDS!, currSection:", section);
+            animations[section].reset();
+            // animations[section].timeScale = 1; // needed if warp? first argument in warp() sets the timeScale
+            
+            animations[section].play().warp(1, 0.01, 7.8);
             prevSection.current = section;
-          }
+          };
 
-          else if(backwardsNavigation) {
-            console.log("BACKWARDS!", section);
-            AnimationActions[section + 1].reset();
-            AnimationActions[section + 1].time = camera.animationClips[section - 1][0].duration
-            AnimationActions[section + 1].timeScale = -1;
-            AnimationActions[section + 1].play();
+          if (backwardsNavigation) {
+            console.log("BACKWARDS!, currSection:", section);
+            animations[section + 1].reset();
+            animations[section + 1].time = camera.animationClips[section][0].duration
+            // animations[section + 1].timeScale = -1; // needed if warp? first argument in warp() sets the timeScale
+            animations[section + 1].play().warp(-1, 0.01, 7.8);
             prevSection.current = section;
+          };
+        };
+      };
+    };
 
-          }
-        }
+  }, [animations, section]);
 
 
-      }
-    }
 
-  }, [AnimationActions, section]);
-
-  // Updates the animation via the mixer
+  // Updates animation via mixer
   useFrame((_, delta) => {
-    if (AnimationActions.length) {
+    if (animations.length) {
 
       // This needs to be cleaned up and written better. 
       // Im pretty sure only 1 mixer is needed.
@@ -188,21 +149,24 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
 
 
       // For the entrance animation
-      if (section===0) AnimationActions[0]._mixer.update(delta)
+      if (section===0) animations[0]._mixer.update(delta)
       // For the forwards and reverse animations 
-      AnimationActions[section]._mixer.update(delta)
-      // if (section!==0)AnimationActions[section+1]._mixer.update(delta)
-      if( section < maxSection ) AnimationActions[section+1]._mixer.update(delta)
+      animations[section]._mixer.update(delta)
+      // if (section!==0)animations[section+1]._mixer.update(delta)
+      if( section < maxSection ) animations[section+1]._mixer.update(delta)
     };
-    // AnimationActions[1]._mixer.update(delta);
+    // animations[1]._mixer.update(delta);
   });
 
-  useHelper( ref, THREE.CameraHelper );
 
 
   // Setting the scene's camera. There are two. Perspective and Development.
-  const set = useThree((state) => state.set);
-  // useEffect(() => set({ camera: ref.current }));
+  useHelper( ref, THREE.CameraHelper );
+  /** 
+   const set = useThree((state) => state.set);
+   useEffect(() => set({ camera: ref.current }));
+  */
+
 
   return (
     <>
