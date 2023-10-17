@@ -2,7 +2,7 @@
 TODO: 
 
 
-- Add ability to navigatye backwards:
+# Add ability to navigatye backwards:
 
 
     Create a stack with sections. With the entrance animation being -1 on the stack.
@@ -63,16 +63,13 @@ createAnimationClips: function(animationDataStructure: any ): AnimationClip[][] 
 
 
 
-- Add title of lesson to the Header of the overlay. Get it working again. Likely change the color?
+#  Add title of lesson to the Header of the overlay. Get it working again. Likely change the color?
 
 
-Clean up models in the public folder. Specifically for the Buckminsterfullerene lesson
-    - Delete unused models
-    - Rename models to better names + change paths in uninitializedData
 
 
-Add small sound effects when text appears? Like the two piano notes
-you hear in the song "Lost In Thought" by KOAN Sound at 1:05
+# Add small sound effects when text appears? Like the two piano notes
+    you hear in the song "Lost In Thought" by KOAN Sound at 1:05
 
 
 
@@ -91,30 +88,6 @@ you hear in the song "Lost In Thought" by KOAN Sound at 1:05
 
 
 
-
-
-
-
-
-
-
-
-
-
-DONE:
-    Variable Name Changes:
-        Change text-wrapper to something more appropriate or descriptive
-        Re-factor all names in overlay-styles.css to be inline with kebab-casing
-
-
-
-
-Get section 2 --> section 3 model behaving properly. Section should move from 2 to 3 without animation being disrupted
-    Try to pass the time of animation of section 2 into section 3's model
-        It looks like to accomplish this we just need to access the .time property on the AnimationAction before switching the AnimationAction 
-
-        First, log the AnimationActions[section].time to the console. 
-        Then, figure out how to write the logic for passing the time variable properly.
 
 
 

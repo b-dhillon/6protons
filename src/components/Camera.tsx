@@ -16,11 +16,24 @@ import { PerspectiveCamera, useHelper } from '@react-three/drei';
 * 
 
 
-/** reversing navigation to-do:
+/** reversing lesson to-do:
  * 
- * 3. 
- * 4. Re-factor and clean up code
- * 5. Add checks for isRunning so that user cant click increment again if animation is currently still running.
+ * 4. Add checks for isRunning so that user can't click increment again if animation is currently still running.
+ *      This is going to be trickier than I thought. Because the animation takes 12s to 'complete' when in reality
+ *      from the user's point of view it only takes 8s. 
+ 
+ *          calling animation[x].halt(7.8) slows the camera enough at end. We need to compare 
+            the animation of using .warp and .halt, see if there is any significant difference in smoothness.
+            If not: 
+              1. switch all .warp to .halt instead. 
+              2. check .isRunning inside useFrame. if !.isRunning, then setCameraAnimationFinished
+                  This cameraAnimationFinished state should be lifted to PageRenderer, the navigation buttons will need access to it.
+
+              3. disable the navigation buttons based on the setAnimationFinished state.
+
+
+
+ * 
  * 5. Get lessonText and lessonModels behaving properly as well.
  * 
 */ 
@@ -56,6 +69,10 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
         // But this should be re-factored to an object, like what we did with the model's multiple animations.
       };
       setAnimations( createAnimations(ref.current, camera.animationClips) );
+      // Add an eventListener for the "finished" event
+      mixer.addEventListener('finished', function (event) {
+        console.log('Animation finished!', event.action);  // event.action gives you the action that has just finished.
+      });
     }
   }, [mixer]);
 
@@ -67,7 +84,9 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
     function animationController() {
       if (animations.length) {
         // ensure all animations are stopped before playing the next one:
-        animations.forEach( ( animation: AnimationAction ) => animation.stop() );
+        // you can also just use mixer.stopAllAction to all actions on the mixer in one go!!
+        mixer.stopAllAction();
+        // animations.forEach( ( animation: AnimationAction ) => animation.stop() );
 
         // This is needed for the first animation, before the start-button is clicked.
         // This should be re-factored however. Make the whole camera a stack. Start the stack at -1. 
@@ -76,17 +95,21 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
         if( section === 0 ) {
           console.log("ORIGIN block!, currSection:", section);
           const backwards: boolean = (prevSection.current - section) > 0;
-          const forwards = !backwards
+          const forwards = !backwards;
           if (forwards && section <= maxSection ) {
             animations[0].reset();
-            animations[0].play().warp(1, 0.01, 7.8);
-          } 
+            animations[0].play()
+            animations[0].halt(7.8);
+
+
+          };
           if(backwards && section >= 0) {
             console.log("BACKWARDS!, currSection:", section);
             animations[section + 1].reset();
             animations[section + 1].time = camera.animationClips[0][0].duration
             animations[section + 1].play().warp(-1, 0.01, 7.8);
           };
+          // sets prevSection to currSection to get ready for next navigation
           prevSection.current = 0;
         };
 
@@ -100,6 +123,7 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
             console.log("FORWARDS!, currSection:", section);
             animations[section].reset();
             animations[section].play().warp(1, 0.01, 7.8);
+            // sets prevSection to currSection to get ready for next navigation
             prevSection.current = section;
           };
           if (backwards && section >= 0) {
@@ -107,6 +131,7 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
             animations[section + 1].reset();
             animations[section + 1].time = camera.animationClips[section][0].duration
             animations[section + 1].play().warp(-1, 0.01, 7.8);
+            // sets prevSection to currSection to get ready for next navigation
             prevSection.current = section;
           };
         };
@@ -116,15 +141,18 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
 
   // Updates animation via mixer
   useFrame((_, delta) => {
-    if (animations.length && mixer ) mixer.update(delta)
+    if (animations.length && mixer ){
+      mixer.update(delta)
+      console.log(animations[0].isRunning());
+    } 
   });
 
   // Setting the scene's camera. There are two. Perspective and Development.
   useHelper( ref, THREE.CameraHelper );
-  /** 
-   const set = useThree((state) => state.set);
-   useEffect(() => set({ camera: ref.current }));
-  */
+  // /** 
+  //  const set = useThree((state) => state.set);
+  //  useEffect(() => set({ camera: ref.current }));
+  // */
 
   return (
     <>
@@ -153,7 +181,7 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
 
 
 
-
+// .warp(1, 0.01, 7.8);
 
 
 

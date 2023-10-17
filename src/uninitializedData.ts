@@ -139,7 +139,7 @@ export const uninitializedData: UninitializedData = {
         {
           id: '0',
           name: 'model0',
-          path: '/Fullerenes/models/instance0.glb',
+          path: '/fullerene/models/m0.glb',
           visible: false,
           newModelLocation: true,
           scale: 0.18,
@@ -159,7 +159,7 @@ export const uninitializedData: UninitializedData = {
           id: '1',
           name: 'model1',
           // path: '',
-          path: '/Fullerenes/models/instance1.glb',
+          path: '/fullerene/models/m1.glb',
           visible: false,
           newModelLocation: true,
           scale: 0,
@@ -183,7 +183,7 @@ export const uninitializedData: UninitializedData = {
         {
           id: '2',
           name: 'model2',
-          path: '/Fullerenes/models/instance0.glb',
+          path: '/fullerene/models/m0.glb',
           visible: false,
           newModelLocation: true,
           scale: 0,
@@ -207,7 +207,7 @@ export const uninitializedData: UninitializedData = {
         {
           id: '3',
           name: 'model3',
-          path: '/Fullerenes/models/instance2.glb',
+          path: '/fullerene/models/m2.glb',
           visible: false,
           newModelLocation: false,
           scale: 0.18,
@@ -231,7 +231,7 @@ export const uninitializedData: UninitializedData = {
         {
           id: '4',
           name: 'model4',
-          path: '/Fullerenes/models/___instance3.glb',
+          path: '/fullerene/models/m3.glb',
           visible: false,
           newModelLocation: true,
           scale: 0,
@@ -262,7 +262,7 @@ export const uninitializedData: UninitializedData = {
         {
           id: '5',
           name: 'model5',
-          path: '/Fullerenes/models/___instance4.glb',
+          path: '/fullerene/models/m4.glb',
           visible: false,
           newModelLocation: true,
           scale: 0,
@@ -285,7 +285,7 @@ export const uninitializedData: UninitializedData = {
             //buckyball
             ScaleXYZ({
               duration: 5, //higher number is slower
-              initialScale: [0.01, 0.01, 0.01],
+              initialScale: [0.03, 0.03, 0.03],
               finalScale: [0.063, 0.063, 0.063],
             }),
           ],
