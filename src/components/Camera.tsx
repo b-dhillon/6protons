@@ -18,7 +18,7 @@ import { PerspectiveCamera, useHelper } from '@react-three/drei';
 
 /** reversing navigation to-do:
  * 
- * 3. Prevent ability to animate camera past maxSection and minSection
+ * 3. 
  * 4. Re-factor and clean up code
  * 5. Add checks for isRunning so that user cant click increment again if animation is currently still running.
  * 5. Get lessonText and lessonModels behaving properly as well.
@@ -33,13 +33,11 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
   const maxSection = initializedPage.maxSection
   const [ mixer, setMixer ] = useState();
 
-
   // creates all AnimationActions via looping camera.animationClips[]
   useEffect(() => {
     // if no mixer, create mixer
     if( !mixer ) {
       setMixer(new THREE.AnimationMixer(ref.current));
-      console.log("Animation mixer created");
     } 
     // if mixer, animations are ready to be created from mixer:
     else {
@@ -51,7 +49,7 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
           animation.loop = THREE.LoopOnce;
           animation.clampWhenFinished = true;
           return animation;
-        }; 
+        };
         return animationClips.map((animationClip: []) => createAnimation(animationClip[0]) ); 
         // Why is index hard-coded 0?? --> because theres only one animation per section
         // I believe I initially built it to be explandable to multiple animations per section.
@@ -60,7 +58,6 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
       setAnimations( createAnimations(ref.current, camera.animationClips) );
     }
   }, [mixer]);
-
 
   // animationController --> Plays the AnimationAction based on section
   useEffect(() => {
@@ -78,12 +75,13 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
         // With that logic, you would theoretically not need this extra block.
         if( section === 0 ) {
           console.log("ORIGIN block!, currSection:", section);
-          const backwardsNavigation: boolean = (prevSection.current - section) > 0;
-          const forwards = !backwardsNavigation
-          if (forwards) {
+          const backwards: boolean = (prevSection.current - section) > 0;
+          const forwards = !backwards
+          if (forwards && section <= maxSection ) {
             animations[0].reset();
             animations[0].play().warp(1, 0.01, 7.8);
-          } else {
+          } 
+          if(backwards && section >= 0) {
             console.log("BACKWARDS!, currSection:", section);
             animations[section + 1].reset();
             animations[section + 1].time = camera.animationClips[0][0].duration
@@ -95,16 +93,16 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
         if (prevSection.current !== undefined && section !== 0) {
           console.log('prevSection', prevSection.current);
           // if delta negative, move up the stack:
-          const forwardsNavigation: boolean = ( prevSection.current - section ) < 0;
+          const forwards: boolean = ( prevSection.current - section ) < 0;
           // if delta positive, move down the stack:
-          const backwardsNavigation: boolean = ( prevSection.current - section ) > 0;
-          if (forwardsNavigation) {
+          const backwards: boolean = ( prevSection.current - section ) > 0;
+          if (forwards && section <= maxSection) {
             console.log("FORWARDS!, currSection:", section);
             animations[section].reset();
             animations[section].play().warp(1, 0.01, 7.8);
             prevSection.current = section;
           };
-          if (backwardsNavigation) {
+          if (backwards && section >= 0) {
             console.log("BACKWARDS!, currSection:", section);
             animations[section + 1].reset();
             animations[section + 1].time = camera.animationClips[section][0].duration
