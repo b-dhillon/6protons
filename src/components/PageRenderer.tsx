@@ -12,6 +12,7 @@ export function PageRenderer({
 }: any): JSX.Element {
   const [initializedPage, _] = useState(initializedPageData);
   const section = useSelector((state: any) => state.section);
+  const isCameraAnimating = useSelector((state: any) => state.isCameraAnimating);
   // useEffect( () => console.log( 'initializedPage data', initializedPage ), [] );
   return (
     <Suspense>
@@ -21,6 +22,7 @@ export function PageRenderer({
         initializedPage={initializedPage}
         setCurrentPage={setCurrentPage}
         section={section}
+        isCameraAnimating={isCameraAnimating}
       />
     </Suspense>
   );

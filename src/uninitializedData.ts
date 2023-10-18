@@ -15,6 +15,7 @@ import { AnimationClip } from 'three';
 import ScaleXYZ from './components/animations/ScaleXYZ';
 import Rotate from './components/animations/Rotate';
 import SuspendInSolution from './components/animations/SuspendInSolution';
+
 export const uninitializedData: UninitializedData = {
   initializeModelPositionsFromCamera: function( cameraPosition: number[], cameraRotation: number[], rotationAxis: string, yOffsetForText: boolean ) {
     // rotate camera X-axis, need to re-position model on Y axis.

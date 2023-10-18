@@ -1,8 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { decrement, increment, reset, start } from '../redux/actions';
 
-
-
 /** Fn Description
  * 
  * LessonOverlay() configures and returns the overlay that will sit on top of the 3D WebGL scene:
@@ -24,7 +22,13 @@ import { decrement, increment, reset, start } from '../redux/actions';
  *     start-button
  *
 */
-export function LessonOverlay( { devMode, initializedPage, section, setCurrentPage }: any ): JSX.Element {
+
+export function LessonOverlay({
+  devMode, 
+  initializedPage, 
+  section, 
+  setCurrentPage, 
+  isCameraAnimating }: any ): JSX.Element {
 
   const dispatch = useDispatch();
 
@@ -32,12 +36,14 @@ export function LessonOverlay( { devMode, initializedPage, section, setCurrentPa
     return (
       <>
         <button 
+          disabled={ isCameraAnimating }
           onClick={() => dispatch(increment())} 
           id='forwardNav'          
           style={{ position: 'absolute', zIndex: 10, top: 0 }}>
             forwards
         </button>
         <button 
+          disabled={ isCameraAnimating }
           onClick={() => dispatch(decrement())} 
           id='backwardNav'
           style={{ position: 'absolute', zIndex: 10, top: 20 }}>
@@ -51,7 +57,7 @@ export function LessonOverlay( { devMode, initializedPage, section, setCurrentPa
     return (
       <div className='lesson-overlay'>
         <LessonHeader page={initializedPage} section={section} setCurrentPage={setCurrentPage}/>
-        <LessonBody page={initializedPage} section={section} />
+        <LessonBody page={initializedPage} section={section} isCameraAnimating={isCameraAnimating} />
         <LessonFooter page={initializedPage} section={section} />
       </div>
     );

@@ -47,22 +47,6 @@ createAnimationClips: function(animationDataStructure: any ): AnimationClip[][] 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #  Add title of lesson to the Header of the overlay. Get it working again. Likely change the color?
 
 

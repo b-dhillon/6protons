@@ -3,6 +3,8 @@ import * as THREE from 'three';
 import { useEffect, useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { PerspectiveCamera, useHelper } from '@react-three/drei';
+import { useDispatch } from 'react-redux';
+import { setCameraAnimating } from '../redux/actions';
 
 /** FN Description
  * 
@@ -18,18 +20,8 @@ import { PerspectiveCamera, useHelper } from '@react-three/drei';
 
 /** reversing lesson to-do:
  * 
- * 4. Add checks for isRunning so that user can't click increment again if animation is currently still running.
- *      This is going to be trickier than I thought. Because the animation takes 12s to 'complete' when in reality
- *      from the user's point of view it only takes 8s. 
- 
- *          calling animation[x].halt(7.8) slows the camera enough at end. We need to compare 
-            the animation of using .warp and .halt, see if there is any significant difference in smoothness.
-            If not: 
-              1. switch all .warp to .halt instead. 
-              2. check .isRunning inside useFrame. if !.isRunning, then setCameraAnimationFinished
-                  This cameraAnimationFinished state should be lifted to PageRenderer, the navigation buttons will need access to it.
-
-              3. disable the navigation buttons based on the setAnimationFinished state.
+ * 4. Prevent navigation when cameraAnimating
+ *      problem: .halt() is fucking up the timescale for the backwards navigation.
 
 
 
@@ -40,13 +32,16 @@ import { PerspectiveCamera, useHelper } from '@react-three/drei';
 export function Camera( { initializedPage, section }: any ): JSX.Element {
   
   const [ animations, setAnimations ] = useState<AnimationAction[]|[]>([]);
+  const [ mixer, setMixer ] = useState();
   const camera = initializedPage.camera;
   const ref = useRef();
   const prevSection = useRef();
   const maxSection = initializedPage.maxSection
-  const [ mixer, setMixer ] = useState();
 
-  // creates all AnimationActions via looping camera.animationClips[]
+  const dispatch = useDispatch();
+
+
+  /* creates all AnimationActions via looping camera.animationClips[] */
   useEffect(() => {
     // if no mixer, create mixer
     if( !mixer ) {
@@ -76,38 +71,49 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
     }
   }, [mixer]);
 
-  // animationController --> Plays the AnimationAction based on section
+  /* animationController --> Plays the AnimationAction based on section */
   useEffect(() => {
 
     animationController();
 
     function animationController() {
       if (animations.length) {
-        // ensure all animations are stopped before playing the next one:
-        // you can also just use mixer.stopAllAction to all actions on the mixer in one go!!
+        /* ensure all animations are stopped before playing the next one:
+         * you can also just use mixer.stopAllAction to all actions on the mixer in one go!
+        */
         mixer.stopAllAction();
         // animations.forEach( ( animation: AnimationAction ) => animation.stop() );
 
-        // This is needed for the first animation, before the start-button is clicked.
-        // This should be re-factored however. Make the whole camera a stack. Start the stack at -1. 
-        // When lesson is loaded, move the stack from -1 to 0, triggering the first entrance animation as a forwards animation
-        // With that logic, you would theoretically not need this extra block.
+
+        /* This is needed for the first animation, before the start-button is clicked.
+         * This should be re-factored however. Make the whole camera a stack. Start the stack at -1. 
+         * When lesson is loaded, move the stack from -1 to 0, triggering the first entrance animation as a forwards animation
+         * With that logic, you would theoretically not need this extra block.
+        */
         if( section === 0 ) {
           console.log("ORIGIN block!, currSection:", section);
           const backwards: boolean = (prevSection.current - section) > 0;
           const forwards = !backwards;
           if (forwards && section <= maxSection ) {
+
+            dispatch( setCameraAnimating(true) );
+
             animations[0].reset();
+            animations[section].setEffectiveTimeScale(1);
             animations[0].play()
             animations[0].halt(7.8);
-
-
           };
           if(backwards && section >= 0) {
             console.log("BACKWARDS!, currSection:", section);
+            
+            dispatch( setCameraAnimating(true) );
+
             animations[section + 1].reset();
             animations[section + 1].time = camera.animationClips[0][0].duration
-            animations[section + 1].play().warp(-1, 0.01, 7.8);
+            animations[section + 1].setEffectiveTimeScale(-1);
+            animations[section + 1].play();
+            animations[section + 1].halt(7.8);
+            // animations[section + 1].play().warp(-1, 0.01, 7.8);
           };
           // sets prevSection to currSection to get ready for next navigation
           prevSection.current = 0;
@@ -119,21 +125,36 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
           const forwards: boolean = ( prevSection.current - section ) < 0;
           // if delta positive, move down the stack:
           const backwards: boolean = ( prevSection.current - section ) > 0;
+
           if (forwards && section <= maxSection) {
             console.log("FORWARDS!, currSection:", section);
+            
+            dispatch( setCameraAnimating(true) );
+
             animations[section].reset();
-            animations[section].play().warp(1, 0.01, 7.8);
-            // sets prevSection to currSection to get ready for next navigation
-            prevSection.current = section;
+            animations[section].setEffectiveTimeScale(1);
+            animations[section].play();
+            animations[section].halt(7.8);
+            // animations[section].play().warp(1, 0.01, 7.8);
           };
+
+          // don't need >= to 0 check because the outer if block prevents 0 i.e. section !== 0
           if (backwards && section >= 0) {
             console.log("BACKWARDS!, currSection:", section);
+
+            dispatch( setCameraAnimating(true) );
+
             animations[section + 1].reset();
             animations[section + 1].time = camera.animationClips[section][0].duration
-            animations[section + 1].play().warp(-1, 0.01, 7.8);
-            // sets prevSection to currSection to get ready for next navigation
-            prevSection.current = section;
+            animations[section + 1].setEffectiveTimeScale(-1);
+            console.log( 'timescale before halt', animations[section + 1].getEffectiveTimeScale());
+            animations[section + 1].play();
+            animations[section + 1].halt(7.8);
+            console.log( 'timescale after halt', animations[section + 1].getEffectiveTimeScale());
+            // animations[section + 1].play().warp(-1, 0.01, 7.8);
           };
+          /* sets prevSection to currSection to get ready for next navigation */
+          prevSection.current = section;
         };
       };
     };
@@ -143,7 +164,10 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
   useFrame((_, delta) => {
     if (animations.length && mixer ){
       mixer.update(delta)
-      console.log(animations[0].isRunning());
+
+      // Will need to think about the backwards animations too. But first, lets see if forwards
+      // works with disabling the buttons.
+      if (!animations[section].isRunning() && !animations[section + 1]?.isRunning()) dispatch( setCameraAnimating(false) )
     } 
   });
 
