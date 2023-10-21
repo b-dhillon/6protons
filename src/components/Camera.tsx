@@ -17,8 +17,6 @@ import { setCameraAnimating } from '../redux/actions';
  * 
 */
 
-
-
 export function Camera( { initializedPage, section }: any ): JSX.Element {
   
   const [ animations, setAnimations ] = useState<AnimationAction[]|[]>([]);
@@ -67,7 +65,7 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
     animationController();
 
     function animationController() {
-      if (animations.length) {
+      if (animations.length && section >= 0) {
         /* ensure all animations are stopped before playing the next one:
          * you can also just use mixer.stopAllAction to all actions on the mixer in one go!
         */
@@ -81,23 +79,17 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
          * With that logic, you would theoretically not need this extra block.
         */
         if( section === 0 ) {
-          console.log("ORIGIN block!, currSection:", section);
           const backwards: boolean = (prevSection.current - section) > 0;
           const forwards = !backwards;
           if (forwards && section <= maxSection ) {
-
             dispatch( setCameraAnimating(true) );
-
             animations[0].reset();
             animations[section].setEffectiveTimeScale(1);
             animations[0].play()
             animations[0].halt(7.8);
           };
-          if(backwards && section >= 0) {
-            console.log("BACKWARDS!, currSection:", section);
-            
+          if(backwards) {            
             dispatch( setCameraAnimating(true) );
-
             animations[section + 1].reset();
             animations[section + 1].time = camera.animationClips[0][0].duration
             animations[section + 1].setEffectiveTimeScale(-1);
@@ -105,7 +97,7 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
             animations[section + 1].halt(7.8);
             // animations[section + 1].play().warp(-1, 0.01, 7.8);
           };
-          // sets prevSection to currSection to get ready for next navigation
+          /* set prevSection to currSection to get ready for next navigation */
           prevSection.current = 0;
         };
 
@@ -116,11 +108,8 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
           // if delta positive, move down the stack:
           const backwards: boolean = ( prevSection.current - section ) > 0;
 
-          if (forwards && section <= maxSection) {
-            // console.log("FORWARDS!, currSection:", section);
-            
+          if (forwards && section <= maxSection) {            
             dispatch( setCameraAnimating(true) );
-
             animations[section].reset();
             animations[section].setEffectiveTimeScale(1);
             animations[section].play();
@@ -128,12 +117,8 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
             // animations[section].play().warp(1, 0.01, 7.8);
           };
 
-          // don't need >= to 0 check because the outer if block prevents 0 i.e. section !== 0
-          if (backwards && section >= 0) {
-            // console.log("BACKWARDS!, currSection:", section);
-
+          if (backwards) {
             dispatch( setCameraAnimating(true) );
-
             animations[section + 1].reset();
             animations[section + 1].time = camera.animationClips[section][0].duration
             animations[section + 1].setEffectiveTimeScale(-1);
@@ -150,12 +135,12 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
 
   // Updates animation via mixer
   useFrame((_, delta) => {
-    if (animations.length && mixer ){
+    if (animations.length && mixer && section >= 0){
       mixer.update(delta)
-
-      // Will need to think about the backwards animations too. But first, lets see if forwards
+      // Will need to think about backwards animations too. But first, lets see if forwards
       // works with disabling the buttons.
-      if (!animations[section].isRunning() && !animations[section + 1]?.isRunning()) dispatch( setCameraAnimating(false) )
+      if (!animations[section].isRunning() && !animations[section + 1]?.isRunning())
+        dispatch( setCameraAnimating(false) )
     } 
   });
 

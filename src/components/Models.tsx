@@ -55,7 +55,6 @@ import { LoopPingPong } from 'three'; // you already imported all of THREE on li
  * there is still a model created and mounted. Wasteful. Bad code.
  * 
 */
-
 interface ModelAnimations {
   mainAnimation: THREE.AnimationAction, 
   scaleAnimation: THREE.AnimationAction, 
@@ -83,14 +82,12 @@ export function Models( { initializedPage, section } : any): JSX.Element {
    * 
   */  
   useEffect(() => {
+    console.log('prevSection:', prevSection.current, 'currSection:', section);
 
-    console.log('prevSection:', prevSection.current);
-    console.log('currSection:', section);
-
-    function animationController(animationActions: any, section: number): void {
+    function animationController( animationActions: ModelAnimations[], section: number ): void {
       /* 1. section mutates, this fn is popped onto the call-stack: */
 
-      if (animationActions.length) {
+      if (animationActions.length && section >= 0) {
 
         /* 2. Check is mutation was forwards or backwards: */
         const forwards: boolean = ( prevSection.current - section ) < 0; // if delta -, move up stack:  
@@ -122,43 +119,35 @@ export function Models( { initializedPage, section } : any): JSX.Element {
         });
 
         /* 4. Handle animation assignment */
-        //    Mutate top-level currModelAnimations, and prevModelAnimations based on if forwards or backwards
+        // Mutate top-level currModelAnimations, and prevModelAnimations based on if forwards or backwards
         currModelAnimations.current = animationActions[ section ];
         if (forwards) prevModelAnimations.current = animationActions[ section - 1 ];
         if (backwards) prevModelAnimations.current = animationActions[ section + 1 ];
 
-
         /* 5. Handle animation playback: */
-
         // If camera didn't move location:
         if( cameraDidntMove ) {
           // A. Grab earlier model's animation time
           const oldT = animationActions[ forwards ? section - 1 : section + 1 ].mainAnimation.time;
-
           // B. Set current model's animation to this time. 
           currModelAnimations.current.mainAnimation.time = oldT;
-
           // C. Play current model's animation
           currModelAnimations.current.mainAnimation.play();
         } 
-
         // If camera did move:
         else {
           // A. Play prevModel's shrink animation:
           prevModelAnimations.current?.scaleAnimation.stop().setEffectiveTimeScale( 0.9 ).play();
-
           // B. Play current model's entrance animation:
           currModelAnimations.current.scaleAnimation.stop().setEffectiveTimeScale(-1).play(); // currModelAnimations.current.scaleAnimation.startAt(8).setEffectiveTimeScale(-1).play();
-
           // C. Play current model's main animation:
           if (section === 0) currModelAnimations.current.mainAnimation.play() //first model should play right away
           else currModelAnimations.current.mainAnimation.startAt(9).play(); //every other model needs a delay to wait for camera transition to finish
-
           // D. Play Nested animation, if exists:
           if (currModelAnimations.current.nestedAnimation) {
             currModelAnimations.current.nestedAnimation.setLoop(LoopPingPong, Infinity);
             currModelAnimations.current.nestedAnimation.play();
-          }
+          };
         };
 
         /* 6. Pause/Stop animation of previousModel: */
@@ -224,6 +213,10 @@ export function Models( { initializedPage, section } : any): JSX.Element {
     </>
   );
 }
+
+
+
+
 
 
 

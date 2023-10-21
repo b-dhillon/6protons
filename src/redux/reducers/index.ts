@@ -5,7 +5,8 @@ function sectionCounter(state = 0, action: { type: string }): number {
     case 'INCREMENT':
       return state + 1;
     case 'DECREMENT':
-      return state - 1;
+      if (state > 0) return state - 1;
+      else return state;
     case 'RESET':
       // better to treat this like a stack and start at -1.
       // this might require a re-thinking of how the animation data structure
