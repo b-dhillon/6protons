@@ -15,20 +15,10 @@ import { setCameraAnimating } from '../redux/actions';
  *   Updates the animation mixer.
  * Renders cameraHelper when called.
  * 
-* 
-
-
-/** reversing lesson to-do:
- * 
- * 4. Prevent navigation when cameraAnimating
- *      problem: .halt() is fucking up the timescale for the backwards navigation.
+*/
 
 
 
- * 
- * 5. Get lessonText and lessonModels behaving properly as well.
- * 
-*/ 
 export function Camera( { initializedPage, section }: any ): JSX.Element {
   
   const [ animations, setAnimations ] = useState<AnimationAction[]|[]>([]);
@@ -120,14 +110,14 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
         };
 
         if (prevSection.current !== undefined && section !== 0) {
-          console.log('prevSection', prevSection.current);
+          // console.log('prevSection', prevSection.current);
           // if delta negative, move up the stack:
           const forwards: boolean = ( prevSection.current - section ) < 0;
           // if delta positive, move down the stack:
           const backwards: boolean = ( prevSection.current - section ) > 0;
 
           if (forwards && section <= maxSection) {
-            console.log("FORWARDS!, currSection:", section);
+            // console.log("FORWARDS!, currSection:", section);
             
             dispatch( setCameraAnimating(true) );
 
@@ -140,17 +130,15 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
 
           // don't need >= to 0 check because the outer if block prevents 0 i.e. section !== 0
           if (backwards && section >= 0) {
-            console.log("BACKWARDS!, currSection:", section);
+            // console.log("BACKWARDS!, currSection:", section);
 
             dispatch( setCameraAnimating(true) );
 
             animations[section + 1].reset();
             animations[section + 1].time = camera.animationClips[section][0].duration
             animations[section + 1].setEffectiveTimeScale(-1);
-            console.log( 'timescale before halt', animations[section + 1].getEffectiveTimeScale());
             animations[section + 1].play();
             animations[section + 1].halt(7.8);
-            console.log( 'timescale after halt', animations[section + 1].getEffectiveTimeScale());
             // animations[section + 1].play().warp(-1, 0.01, 7.8);
           };
           /* sets prevSection to currSection to get ready for next navigation */

@@ -174,29 +174,44 @@ function LessonBody( { page, section }: any ): JSX.Element {
     );
   }
 
-  function LessonText(props: any): JSX.Element {
-    if (props.page.textPlacement[props.section] === 'center') {
+  function LessonText(): JSX.Element {
+
+    // I dont think we need 'forwards' and 'backwards' here like the camera
+    // because we simply just want to display the text of the current section. 
+    // the previous section shouldn't factor into it at all. 
+
+    // I just need to make sure there is no bug with fading in and out. 
+    // Perhaps start with disabling the animations, and see if the bug is still there.
+    // If not, then re-add the classes and see.
+
+    
+    // if(navigationType === 'forwards') {
+
+    // }
+
+
+    if (page.textPlacement[section] === 'center') {
       return (
         <>
           <div className='lesson-body__text--no-model'>
-            <p> {props.page.text[props.section]} </p>
+            <p> {page.text[section]} </p>
           </div>
         </>
       );
     }
-    else if (props.page.textPlacement[props.section] === 'left') {
+    else if (page.textPlacement[section] === 'left') {
       return (
         <>
           <div className='panel--left'>
             {/* <div className='text-wrapper--with-model'>
-              <p> { props.page.text[ props.section ] } </p>
+              <p> { page.text[ section ] } </p>
             </div> */}
           </div>
           <div className='panel--right'></div>
         </>
       );
     }
-    else if(props.page.textPlacement[props.section] === 'bottom'){
+    else if(page.textPlacement[section] === 'bottom'){
       return (
         <div className='lesson-body__text-container--with-model'>
           <div className='panel--top'></div>
@@ -218,7 +233,7 @@ function LessonBody( { page, section }: any ): JSX.Element {
       {section > 0 ? (
         <div className='lesson-body'>
           <LessonNavigation type={'backwards'} />
-          <LessonText page={page} section={section} />
+          <LessonText />
           <LessonNavigation type={'forwards'} />
         </div>
       ) : (
