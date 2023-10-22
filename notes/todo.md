@@ -4,45 +4,38 @@ TODO:
 
 # Add ability to navigatye backwards:
 
+// Todo: 
+  // Fix model0 reversing. When revsersing back to section-0, model-0 isn't there. 
+  // Get text reversing properly 
+  // Add chime for text
+
 
     Create a stack with sections. With the entrance animation being -1 on the stack.
         on-load: section goes from -1 to 0, triggering the entrance animation.
-        
 
 
 
+CAMERA REVERSAL:
 
-
-
-    AnimationController for Models() will need to be updated too. You will need to add control flow for increment vs. decrement. 
-        During decrement: prevModel = section + 1 and currModel = section
-        During increment: prevModel = section - 1 and currModel = section
-
-    LessonText will also need to be updated as well. You will need to add control for this too.
-    
-
-
-    It looks we need to create animationClips for the backward animations. All we need to do for that is just 
-    switch the initialPosition/finalPosition as well as initialRotation/finalRotation on the method below. Then we call that animation when the decrement button is clicked.
-
-
-
-createAnimationClips: function(animationDataStructure: any ): AnimationClip[][] {
-    const animationClips = animationDataStructure.map((animationData: [][], i: number) => {
-    return [
-        TranslateRotate({
-        duration: 4,
-        initialPosition: animationData[0],
-        finalPosition: animationData[1],
-        initialAngle: animationData[2],
-        finalAngle: animationData[3],
-        // axis: 'x',
-        axis: FindRotationAxis(animationData),
-        }),
-    ];
-    })
-    return animationClips;
-},
+  It looks we might to create animationClips for the backward animations. All we need to do for that is just 
+  switch the initialPosition/finalPosition as well as initialRotation/finalRotation on the method below. Then we call that animation when the decrement button is clicked.
+  
+  createAnimationClips: function(animationDataStructure: any ): AnimationClip[][] {
+      const animationClips = animationDataStructure.map((animationData: [][], i: number) => {
+      return [
+          TranslateRotate({
+          duration: 4,
+          initialPosition: animationData[0],
+          finalPosition: animationData[1],
+          initialAngle: animationData[2],
+          finalAngle: animationData[3],
+          // axis: 'x',
+          axis: FindRotationAxis(animationData),
+          }),
+      ];
+      })
+      return animationClips;
+  },
 
 
 
@@ -125,7 +118,7 @@ NEXT:
 ------------------------
 - Hook back into home page. 
 - Make sure all other lessons are working.
-- Add section 1 to Diamond lesson with the Diamon Lattice from Blender. 
+- Add section 1 to Diamond lesson with the Diamond Lattice from Blender. 
 - Create message to let users know only Buckminsterfullerene lesson is finished.
 --------------------------
 

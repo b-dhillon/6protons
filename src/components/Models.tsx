@@ -9,7 +9,11 @@ import { LoopPingPong } from 'three'; // you already imported all of THREE on li
  *  .startAt(8) is fucking up the backwards nav for some reason
  *    - When we navigate forwards to section2 it works. 
  *    - Then navigating backwards to section1 and then forwards to section2 leads to model2 being at time0 (full scale)
- *        - I think navigating backwards is doing something to that AnimationAction
+ *        - I think navigating backwards is doing something to that AnimationAction:
+ *              It is messing up the following properties: 
+ *                paused: 
+ *                _effectiveTimeScale
+ *                _startTime
  * 
  * 
  *    After logging the currModelAnimationAction to the console I discovered: 
@@ -66,23 +70,12 @@ import { LoopPingPong } from 'three'; // you already imported all of THREE on li
  * 
  * 
  * I think I just need to re-factor the mixers now and get them updating properly.
- *    You only need one mixer for each model. The mixer can control up to three animations: main, scale, and nested.
+ *    You only need one mixer for each model. The mixer can control animations for: mainAnimation and scaleAnimation but nested
+ *    will need another mixer because it is a different Object3D
+ * 
  *    We will likely need to copy a lot of code from Camera.tsx's animationController
  *  
- * 
- * let currModelAnimations = model[ section ]
- * if (forwards) let prevModel = model[ section - 1 ]
- * if (backards) let prevModel = model[ section + 1 ]
- *   
- * Exit Animation Logic:  
- *  if forwards 
- *    model[ section - 1 ]
- *  if backwards
- *    model[ section + 1 ]
- * 
- * Entance Animation && Main Animation Logic:
- *    if forwards || backwards
- *      model[ section ]
+ *
  * 
 */
 
@@ -137,19 +130,10 @@ export function Models( { initializedPage, section } : any): JSX.Element {
   useEffect(() => {
     console.log('prevSection:', prevSection.current, 'currSection:', section);
 
+    /* 1. section mutates, this fn is popped onto the call-stack: */
     function animationController( animationActions: ModelAnimations[], section: number ): void {
-      /* 1. section mutates, this fn is popped onto the call-stack: */
-
-
 
       if (animationActions.length && section >= 0) {
-
-        // animationActions.forEach( ( animations: ModelAnimations ) => {
-        //   animations.mainAnimation.reset();
-        //   //@ts-ignore
-        //   animations.scaleAnimation.reset();
-        //   animations?.nestedAnimation?.reset();
-        // } );
 
         /* 2. Check if mutation was forwards or backwards: */
         const forwards: boolean = ( prevSection.current - section ) < 0; // if delta -, move up stack:  
@@ -161,35 +145,36 @@ export function Models( { initializedPage, section } : any): JSX.Element {
         /* 3. Handle visibility of models: */
         set((state) => {
 
-          // Always set current model visibility to true:
+          // 3.1) If camera-did-move, then we keep the prevModel visibility true so that the exit animation can play
+
+          // 3.2) Always set current model visibility to true:
           const currModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section}`);
           state.scene.children[currModelIndex].visible = true;
     
-          // If camera-did-move, then we keep the prevModel visibility true so that the exit animation can play
 
-          // If cameraDidntMove, we have to set the prevModel visibility to false to make room for the new model.
-          // A.) If forwards, section is greater than 0, and cameraDidntMove, then mutate LOWER ON STACK (section -1) model's visibility to false.
+          // 3.3) If cameraDidntMove, we have to set the prevModel visibility to false to make room for the new model.
+          // 3.3--A) If forwards, section is greater than 0, and cameraDidntMove, then mutate LOWER ON STACK (section -1) model's visibility to false.
           if(forwards && section > 0 && cameraDidntMove ) {
             const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section - 1}`);
             state.scene.children[prevModelIndex].visible = false;
           }
-          // B.) If backwards, section is greater than 0, and cameraDidntMove, then mutate HIGHER ON STACK (section + 1) model's visibility to false.
+          // 3.3--B) If backwards, section is greater than 0, and cameraDidntMove, then mutate HIGHER ON STACK (section + 1) model's visibility to false.
           else if (backwards && section > 0 && cameraDidntMove ) {
             // let cameraDidntMove = !initializedPage.models[section+1].newModelLocation;
             const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section + 1}`);
             state.scene.children[prevModelIndex].visible = false;
           };
-
         });
 
+      
         /* 4. Handle animation assignment */
-        // Mutate top-level currModelAnimations, and prevModelAnimations based on if forwards or backwards
+        // 4.1 Mutate top-level currModelAnimations, and prevModelAnimations based on if forwards or backwards
         currModelAnimations.current = animationActions[ section ];
         if (forwards) prevModelAnimations.current = animationActions[ section - 1 ];
         if (backwards) prevModelAnimations.current = animationActions[ section + 1 ];
 
         /* 5. Handle animation playback: */
-        // If camera didn't move location:
+        // 5.1--A) If camera didn't move location:
         if( cameraDidntMove ) {
           // A. Grab earlier model's animation time
           const oldT = animationActions[ forwards ? section - 1 : section + 1 ].mainAnimation.time;
@@ -198,45 +183,31 @@ export function Models( { initializedPage, section } : any): JSX.Element {
           // C. Play current model's animation
           currModelAnimations.current.mainAnimation.play();
         } 
-        // If camera did move:
+        // 5.1--B) If camera did move:
         else {
 
           if(section > 0) {
-            // A. Play prevModel's shrink animation:
-            // prevModelAnimations.current?.scaleAnimation.setEffectiveTimeScale( 0.9 ).play();
-            animationActions[ forwards ? section - 1 : section + 1 ].scaleAnimation.reset().setEffectiveTimeScale( 0.9 ).play();
+            // I. Play prevModel's shrink animation:
+            prevModelAnimations.current?.scaleAnimation.reset().setEffectiveTimeScale( 0.9 ).play();
 
-            // @ts-ignore
-            // animationActions[ forwards ? section - 1 : section + 1 ].scaleAnimation._mixer.addEventListener( 'finished', ( e: any) => {
-            //   console.log("Shrinking exitAnimation completed");
-            // })
-  
-  
-            // B. Play current model's entrance animation:
-            // currModelAnimations.current.scaleAnimation.stop()
-            // animationActions[ section ].scaleAnimation.stop();
-            // console.log(animationActions[ section ].scaleAnimation.paused);
-            // @ts-ignore
-            // animationActions[ section ].scaleAnimation._mixer.stopAllAction()
-            // animationActions[ section ].scaleAnimation.paused = false;
-            console.log(animationActions[ section ].scaleAnimation);
+            // II. Play current model's entrance animation:
             setTimeout( () => {
               animationActions[ section ].scaleAnimation.stop().setEffectiveTimeScale(-1).play(); // currModelAnimations.current.scaleAnimation.startAt(8).setEffectiveTimeScale(-1).play();
             }, 8000 )
           }
           
-          
-          // C. Play current model's main animation:
+          // III. Play current model's main animation:
           if (section === 0) currModelAnimations.current.mainAnimation.play() //first model should play right away
           else currModelAnimations.current.mainAnimation.startAt(9).play(); //every other model needs a delay to wait for camera transition to finish
-          // D. Play Nested animation, if exists:
+
+          // IV. Play Nested animation, if exists:
           if (currModelAnimations.current.nestedAnimation) {
             currModelAnimations.current.nestedAnimation.setLoop(LoopPingPong, Infinity);
             currModelAnimations.current.nestedAnimation.play();
           };
         };
 
-        /* 6. Pause/Stop animation of previousModel: */
+        /* 6. Pause/Stop mainAnimation of previousModel: */
         if( section > 0 ) {
           prevModelAnimations.current?.mainAnimation.stop();
         } // What about stopping the nestedAnimation and scaleAnimation??
@@ -251,11 +222,6 @@ export function Models( { initializedPage, section } : any): JSX.Element {
   // Update animation mixers on each frame.
   useFrame((_, delta) => {
     if (animationActions.length ) {
-      // console.log(currModelAnimations.current.scaleAnimation.time);
-      // if (animationActions[ section ].scaleAnimation.paused) animationActions[ section ].scaleAnimation.paused = false;
-      // console.log(animationActions[ section ].scaleAnimation.paused);
-
-
       // Main animation
       // @ts-ignore
       currModelAnimations.current.mainAnimation._mixer.update(delta);
@@ -422,19 +388,34 @@ function CreateFiberModel(props: any): JSX.Element {
 
 
 
+            // animationActions[ forwards ? section - 1 : section + 1 ].scaleAnimation.reset().setEffectiveTimeScale( 0.9 ).play();
+
+
+  // currModelAnimations.current.scaleAnimation.stop()
+  // animationActions[ section ].scaleAnimation.stop();
+  // console.log(animationActions[ section ].scaleAnimation.paused);
+  // @ts-ignore
+  // animationActions[ section ].scaleAnimation._mixer.stopAllAction()
+  // animationActions[ section ].scaleAnimation.paused = false;
 
 
 
 
+  // @ts-ignore
+  // animationActions[ forwards ? section - 1 : section + 1 ].scaleAnimation._mixer.addEventListener( 'finished', ( e: any) => {
+  //   console.log("Shrinking exitAnimation completed");
+  //   animationActions[ forwards ? section - 1 : section + 1 ].scaleAnimation.stop()
+      // })
 
 
 
 
-
-
-
-
-
+  // animationActions.forEach( ( animations: ModelAnimations ) => {
+  //   animations.mainAnimation.reset();
+  //   //@ts-ignore
+  //   animations.scaleAnimation.reset();
+  //   animations?.nestedAnimation?.reset();
+  // } );
 
 
 
