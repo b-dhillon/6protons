@@ -1,5 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { decrement, increment, reset, start } from '../redux/actions';
+import { InitializedPage } from '../types/types';
 
 /** Fn Description
  * 
@@ -23,12 +24,21 @@ import { decrement, increment, reset, start } from '../redux/actions';
  *
 */
 
+interface LessonOverlayConfig {
+  devMode: boolean,
+  initializedPage: InitializedPage,
+  section: number,
+  setCurrentPage: Function, 
+  isCameraAnimating: boolean, 
+}
+
 export function LessonOverlay({
-  devMode, 
-  initializedPage, 
-  section, 
-  setCurrentPage, 
-  isCameraAnimating }: any ): JSX.Element {
+    devMode, 
+    initializedPage, 
+    section, 
+    setCurrentPage, 
+    isCameraAnimating 
+  }: LessonOverlayConfig ): JSX.Element {
 
   const dispatch = useDispatch();
 

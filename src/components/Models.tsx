@@ -6,10 +6,63 @@ import { LoopPingPong } from 'three'; // you already imported all of THREE on li
 /** Reversing Navigation
  * 
  * Problems: 
- *  Doped buckyball wont shrink out if going backwards. 
- *    --> because else block isnt triggering, since the previous model (soccer ball model) triggers the if block right before
- *  Soccer buckyball wont re-appear
- *    --> probably because the else block is what triggers it to grow.
+ *  .startAt(8) is fucking up the backwards nav for some reason
+ *    - When we navigate forwards to section2 it works. 
+ *    - Then navigating backwards to section1 and then forwards to section2 leads to model2 being at time0 (full scale)
+ *        - I think navigating backwards is doing something to that AnimationAction
+ * 
+ * 
+ *    After logging the currModelAnimationAction to the console I discovered: 
+ *    When NOT calling .stop()
+ *      On the first run:   
+ *          timeScale: -1
+
+ *          time: 0
+ *          paused: false
+ *          _effectiveTimeScale = -1
+ *          _startTime: 8
+ * 
+ *      
+ *      On the second run: 
+ *          timeScale: -1
+ * 
+ *          time: 1
+ *          paused: true
+ *          _effectiveTimeScale = 0
+ *          _startTime: null
+ * 
+ * 
+ *      When calling .stop()
+ *        On the first run:   
+ *          timeScale: -1
+ *          time: 0
+ * 
+ *          paused: false
+ *          _effectiveTimeScale = -1
+ *          _startTime: 8
+ *      
+ *        On the second run: 
+ *          timeScale: -1
+ *          time: 0
+ * 
+ *          paused: true
+ *          _effectiveTimeScale = 0
+ *          _startTime: null
+ * 
+ * 
+ * 
+ * TO MUCH COMPLEXITY STICKING TO THIS ROUTE. JUST GO MAKE TWO SEPERATE ANIMATIONS FOR SCALE IN AND SCALE OUT
+ * IT WILL MAKE THE WHOLE THING MORE READABLE TOO 
+ * 
+ *    - Test this with the mainAnimation. That one has a delay too, see if it works?
+ * 
+ * WORKED WITH setTimeout HACK!!!! But need to test on the entire lesson!
+ * 
+ * Only DownSide: 
+ *  Perhaps less performant with more mixers?
+ *          
+ * 
+ * 
  * 
  * 
  * I think I just need to re-factor the mixers now and get them updating properly.
@@ -68,7 +121,7 @@ export function Models( { initializedPage, section } : any): JSX.Element {
   const prevSection = useRef(-1);
 
   let currModelAnimations = useRef<ModelAnimations>(animationActions[0]);
-  let prevModelAnimations = useRef<ModelAnimations>(animationActions[0]);
+  let prevModelAnimations = useRef<ModelAnimations>();
 
   /** AnimationController --> Plays the AnimationAction based on section (section)
    * 
@@ -87,13 +140,23 @@ export function Models( { initializedPage, section } : any): JSX.Element {
     function animationController( animationActions: ModelAnimations[], section: number ): void {
       /* 1. section mutates, this fn is popped onto the call-stack: */
 
+
+
       if (animationActions.length && section >= 0) {
 
-        /* 2. Check is mutation was forwards or backwards: */
+        // animationActions.forEach( ( animations: ModelAnimations ) => {
+        //   animations.mainAnimation.reset();
+        //   //@ts-ignore
+        //   animations.scaleAnimation.reset();
+        //   animations?.nestedAnimation?.reset();
+        // } );
+
+        /* 2. Check if mutation was forwards or backwards: */
         const forwards: boolean = ( prevSection.current - section ) < 0; // if delta -, move up stack:  
         const backwards: boolean = ( prevSection.current - section ) > 0; // if delta +, move down stack:
         
         let cameraDidntMove = !initializedPage.models[ forwards ? section : section + 1].newModelLocation;
+
 
         /* 3. Handle visibility of models: */
         set((state) => {
@@ -103,7 +166,8 @@ export function Models( { initializedPage, section } : any): JSX.Element {
           state.scene.children[currModelIndex].visible = true;
     
           // If camera-did-move, then we keep the prevModel visibility true so that the exit animation can play
-          // but if cameraDidntMove, we have to set the prevModel visibility to false to make room for the new model.
+
+          // If cameraDidntMove, we have to set the prevModel visibility to false to make room for the new model.
           // A.) If forwards, section is greater than 0, and cameraDidntMove, then mutate LOWER ON STACK (section -1) model's visibility to false.
           if(forwards && section > 0 && cameraDidntMove ) {
             const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section - 1}`);
@@ -136,10 +200,32 @@ export function Models( { initializedPage, section } : any): JSX.Element {
         } 
         // If camera did move:
         else {
-          // A. Play prevModel's shrink animation:
-          prevModelAnimations.current?.scaleAnimation.stop().setEffectiveTimeScale( 0.9 ).play();
-          // B. Play current model's entrance animation:
-          currModelAnimations.current.scaleAnimation.stop().setEffectiveTimeScale(-1).play(); // currModelAnimations.current.scaleAnimation.startAt(8).setEffectiveTimeScale(-1).play();
+
+          if(section > 0) {
+            // A. Play prevModel's shrink animation:
+            // prevModelAnimations.current?.scaleAnimation.setEffectiveTimeScale( 0.9 ).play();
+            animationActions[ forwards ? section - 1 : section + 1 ].scaleAnimation.reset().setEffectiveTimeScale( 0.9 ).play();
+
+            // @ts-ignore
+            // animationActions[ forwards ? section - 1 : section + 1 ].scaleAnimation._mixer.addEventListener( 'finished', ( e: any) => {
+            //   console.log("Shrinking exitAnimation completed");
+            // })
+  
+  
+            // B. Play current model's entrance animation:
+            // currModelAnimations.current.scaleAnimation.stop()
+            // animationActions[ section ].scaleAnimation.stop();
+            // console.log(animationActions[ section ].scaleAnimation.paused);
+            // @ts-ignore
+            // animationActions[ section ].scaleAnimation._mixer.stopAllAction()
+            // animationActions[ section ].scaleAnimation.paused = false;
+            console.log(animationActions[ section ].scaleAnimation);
+            setTimeout( () => {
+              animationActions[ section ].scaleAnimation.stop().setEffectiveTimeScale(-1).play(); // currModelAnimations.current.scaleAnimation.startAt(8).setEffectiveTimeScale(-1).play();
+            }, 8000 )
+          }
+          
+          
           // C. Play current model's main animation:
           if (section === 0) currModelAnimations.current.mainAnimation.play() //first model should play right away
           else currModelAnimations.current.mainAnimation.startAt(9).play(); //every other model needs a delay to wait for camera transition to finish
@@ -152,7 +238,7 @@ export function Models( { initializedPage, section } : any): JSX.Element {
 
         /* 6. Pause/Stop animation of previousModel: */
         if( section > 0 ) {
-          prevModelAnimations.current.mainAnimation.stop();
+          prevModelAnimations.current?.mainAnimation.stop();
         } // What about stopping the nestedAnimation and scaleAnimation??
 
         /* 7. set prevSection to currSection to get ready for next navigation */
@@ -165,11 +251,14 @@ export function Models( { initializedPage, section } : any): JSX.Element {
   // Update animation mixers on each frame.
   useFrame((_, delta) => {
     if (animationActions.length ) {
+      // console.log(currModelAnimations.current.scaleAnimation.time);
+      // if (animationActions[ section ].scaleAnimation.paused) animationActions[ section ].scaleAnimation.paused = false;
+      // console.log(animationActions[ section ].scaleAnimation.paused);
+
 
       // Main animation
       // @ts-ignore
       currModelAnimations.current.mainAnimation._mixer.update(delta);
-
       // Nested animation
       // @ts-ignore
       currModelAnimations.current.nestedAnimation?._mixer.update(delta);
@@ -181,18 +270,17 @@ export function Models( { initializedPage, section } : any): JSX.Element {
         // Scale Out animation
         // @ts-ignore
         prevModelAnimations.current.scaleAnimation._mixer.update(delta);
-
         // @ts-ignore
         // animationActions[section + 1].scaleAnimation._mixer.update(delta);
       };
     };
   });
 
-  function CreateReactModels( initializedModels: any ) {
-    const ReactModels = initializedModels.map((model: any, i: number) => {
+  function CreateFiberModels( initializedModels: any ) {
+    const FiberModels = initializedModels.map((model: any, i: number) => {
       if (model.path) {
         return (
-          <CreateReactModel
+          <CreateFiberModel
             model={model}
             key={model.id}
             setAnimationActions={setAnimationActions}
@@ -204,12 +292,12 @@ export function Models( { initializedPage, section } : any): JSX.Element {
         return <></>;
       };
     });
-    return ReactModels // [ $$typeof: Symbol(react.element), $$typeof:Symbol(react.element) ]
-  }; const ReactModels = CreateReactModels( initializedPage.models );
+    return FiberModels // [ $$typeof: Symbol(react.element), $$typeof:Symbol(react.element) ]
+  }; const FiberModels = CreateFiberModels( initializedPage.models );
 
   return (
     <>
-      {ReactModels}
+      {FiberModels}
     </>
   );
 }
@@ -234,14 +322,14 @@ export function Models( { initializedPage, section } : any): JSX.Element {
  * and links them to the model ( <group>) via a ref.
  * 
 */
-function CreateReactModel(props: any): JSX.Element {
+function CreateFiberModel(props: any): JSX.Element {
   // create a type for the <group> object that the ref is attached to  
   const ref = useRef(new THREE.Group());
   const nestedRef = useRef(new THREE.Mesh());
 
   const animationClips = props.model.animationClips;
 
-  const mesh = props.model.loadedMeshes.map((loadedMesh: any) => {
+  const mesh = props.model.loadedMeshes.map((loadedMesh: any ) => {
     const hasInstancedMeshes = loadedMesh.children.length;
     let instancedNestedMeshes = []; // Are these really instances? Or is Three making a seperate draw call for each sphere?
 
@@ -502,7 +590,7 @@ function CreateReactModel(props: any): JSX.Element {
 // const ReactModels = props.page.models.map((_model: any, i: number) => {
 //   if (_model.path) {
 //     return (
-//       <CreateReactModel
+//       <CreateFiberModel
 //         _model={_model}
 //         key={_model.id}
 //         setAnimationActions={setAnimationActions}
