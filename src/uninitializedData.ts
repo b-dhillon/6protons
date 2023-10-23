@@ -17,11 +17,12 @@ import Rotate from './components/animations/Rotate';
 import SuspendInSolution from './components/animations/SuspendInSolution';
 
 export const uninitializedData: UninitializedData = {
-  initializeModelPositionsFromCamera: function( cameraPosition: number[], cameraRotation: number[], rotationAxis: string, yOffsetForText: boolean ) {
+  initializeModelPositionsFromCamera: function( cameraPosition: number[], cameraRotation: number[], rotationAxis: string, yOffsetForText: number ) {
     // rotate camera X-axis, need to re-position model on Y axis.
 
-    let yOffset = 0;
-    if( yOffsetForText ) yOffset = 0.15 //find a more mathematical approach to calculate this offset
+    let yOffset = yOffsetForText;
+    // if( yOffsetForText ) yOffset = 0.15 //find a more mathematical approach to calculate this offset
+    // if( smallerYOffsetForText ) yOffset = 0.05 //find a more mathematical approach to calculate this offset
 
     if (rotationAxis === 'x') {
       const rotationAngle = cameraRotation[0];
@@ -144,7 +145,8 @@ export const uninitializedData: UninitializedData = {
           visible: false,
           newModelLocation: true,
           scale: 0.18,
-          yOffsetForText: false,
+          yOffsetForText: 0,
+
           zoomInOnReverse: false,
 
           positions: [[0.0, 0.0, -1.0]], // calculated in Init() based off of camera position at the current section
@@ -166,7 +168,7 @@ export const uninitializedData: UninitializedData = {
           visible: false,
           newModelLocation: true,
           scale: 0,
-          yOffsetForText: false,
+          yOffsetForText: 0,
           zoomInOnReverse: false,
           positions: [[0.75, 0.66, 0.0]],
           rotations: [[0.0, 0.0, 0.0]],
@@ -191,7 +193,7 @@ export const uninitializedData: UninitializedData = {
           visible: false,
           newModelLocation: true,
           scale: 0,
-          yOffsetForText: true,
+          yOffsetForText: 0.15,
           zoomInOnReverse: false,
 
           positions: [[0.75, 0.0, -3.0]],
@@ -217,7 +219,7 @@ export const uninitializedData: UninitializedData = {
           visible: false,
           newModelLocation: false,
           scale: 0.18,
-          yOffsetForText: true,
+          yOffsetForText: 0.15,
           zoomInOnReverse: false,
 
           positions: [[0.75, 0.0, -3.0]],
@@ -243,7 +245,7 @@ export const uninitializedData: UninitializedData = {
           visible: false,
           newModelLocation: true,
           scale: 0,
-          yOffsetForText: true,
+          yOffsetForText: 0.15,
           zoomInOnReverse: true,
 
           positions: [[0.0, -0.66, -1.0]],
@@ -275,7 +277,7 @@ export const uninitializedData: UninitializedData = {
           visible: false,
           newModelLocation: true,
           scale: 0,
-          yOffsetForText: false,
+          yOffsetForText: 0.05,
           zoomInOnReverse: false,
           positions: [[0.0, -0.1, -3.0]],
           rotations: [[0.0, 0.0, 0.0]],

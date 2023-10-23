@@ -1,14 +1,13 @@
 
 
 # To-do: 
-  ## Fix y-position of protease model
-  ## Add title of lesson to the Header of the overlay. Get it working again. Likely change the color?
-  ## Fix model0 reversing. When revsersing back to section-0, model-0 isn't there. 
-  ## Fix camera not animating to completion with .halt
-  ## Add chime for text - "Lost In Thought" by KOAN Sound at 1:05
+  # Add title of lesson to the Header of the overlay. Get it working again. Likely change the color?
+  # Fix model0 reversing. When revsersing back to section-0, model-0 isn't there. 
+  # Fix camera not animating to completion with .halt
+  # Add chime for text - "Lost In Thought" by KOAN Sound at 1:05
 
 
-  ## Rebuild Home page
+  # Rebuild Home page
 
 
 

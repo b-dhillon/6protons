@@ -84,7 +84,7 @@ export interface UninitializedModel {
     visible: boolean,
     newModelLocation: boolean,
     scale: number,
-    yOffsetForText: boolean,
+    yOffsetForText: number,
     zoomInOnReverse: boolean,
 
 
