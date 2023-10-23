@@ -24,6 +24,7 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
   const camera = initializedPage.camera;
   const ref = useRef();
   const prevSection = useRef();
+  const cameraDidntMove = useRef(false);
   const maxSection = initializedPage.maxSection
 
   const dispatch = useDispatch();
@@ -107,6 +108,8 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
           const forwards: boolean = ( prevSection.current - section ) < 0;
           // if delta positive, move down the stack:
           const backwards: boolean = ( prevSection.current - section ) > 0;
+          cameraDidntMove.current = !initializedPage.models[ forwards ? section : section + 1].newModelLocation;
+
 
           if (forwards && section <= maxSection) {            
             dispatch( setCameraAnimating(true) );
@@ -139,16 +142,16 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
       mixer.update(delta)
       // Will need to think about backwards animations too. But first, lets see if forwards
       // works with disabling the buttons.
-      if (!animations[section].isRunning() && !animations[section + 1]?.isRunning())
+      if (!animations[section].isRunning() && !animations[section + 1]?.isRunning() || cameraDidntMove.current)
         dispatch( setCameraAnimating(false) )
     } 
   });
 
   // Setting the scene's camera. There are two. Perspective and Development.
-  useHelper( ref, THREE.CameraHelper );
+  // useHelper( ref, THREE.CameraHelper );
   // /** 
-  //  const set = useThree((state) => state.set);
-  //  useEffect(() => set({ camera: ref.current }));
+   const set = useThree((state) => state.set);
+   useEffect(() => set({ camera: ref.current }));
   // */
 
   return (

@@ -24,7 +24,7 @@ export function Scene({ section, initializedPage }: any): JSX.Element {
         <Universe initializedPage={initializedPage} />
         <Sound initializedPage={initializedPage} section={section} />
         <Camera initializedPage={initializedPage} section={section} />
-        <DevelopmentCamera/>
+        {/* <DevelopmentCamera/> */}
         <Models initializedPage={initializedPage} section={section} />
         <Lighting/>
       </Canvas>

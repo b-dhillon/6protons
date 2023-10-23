@@ -1,6 +1,39 @@
 import { useDispatch } from 'react-redux';
 import { decrement, increment, reset, start } from '../redux/actions';
 import { InitializedPage } from '../types/types';
+import { useEffect, useState } from 'react';
+
+
+/** Reversing Navigation
+ * 
+ * It seems like after setting up isCameraAnimating, the text aniamtions seem to have messed up. 
+ * Need to confirm with section2 and section3 text. 
+ * 
+ * But what I think is going on now is that, due to this extra state variable that mutates, LessonOverlay is rendered again
+ * which triggers the CSS animation to re-fire. 
+ * 
+ * We should instead have a local state that is mutated when isCameraAnimating is false. 
+ * When this state is true, we fire off the text fade in animation. 
+ * This will likely mean we have to do some JavaScript styles or something for the animations. 
+ * I think this is good anyways, because it allows us to fade the animations of multiple paragraph elements in a better way than just 
+ * creating a bunch of css classes.
+ * 
+ * Also, it will allow us to hook up the chime in sync with the text in a better way. 
+ * Because when !isCameraAnimating we just trigger the chime animation to happen, which 
+ * essentially signals the mutating of the state and start of the text animations! Nice!
+ * This should be one of the last major things we need to solve.
+ * 
+ * 
+ * Step-1: Figure out to implement jss text fades.
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
 
 /** Fn Description
  * 
@@ -39,6 +72,15 @@ export function LessonOverlay({
     setCurrentPage, 
     isCameraAnimating 
   }: LessonOverlayConfig ): JSX.Element {
+
+  console.log("OVERLAY RENDERED");
+
+  const [ readyToAnimateText, setReadyToAnimateText ] = useState<boolean>( false );
+
+  useEffect( () => {
+    if ( !isCameraAnimating ) setReadyToAnimateText( true )
+  }, [ isCameraAnimating ] )
+
 
   const dispatch = useDispatch();
 
@@ -155,7 +197,7 @@ function LessonHeader( { page, section, setCurrentPage }: any ): JSX.Element {
  *  LessonText
  * 
 */
-function LessonBody( { page, section }: any ): JSX.Element {
+function LessonBody( { page, section, isCameraAnimating }: any ): JSX.Element {
   // Decide between these two dispatch methods
   // const dispatch = props.data.dispatch(); // this dispatch
   const dispatch = useDispatch();
@@ -166,6 +208,8 @@ function LessonBody( { page, section }: any ): JSX.Element {
     return (
       <div className='lesson-body__navigation'>
         <button
+          disabled={ isCameraAnimating }
+
           className={`lesson-body__navigation__button--${props.type}`}
           onClick={() =>
             props.type === 'forwards'
@@ -193,11 +237,6 @@ function LessonBody( { page, section }: any ): JSX.Element {
     // I just need to make sure there is no bug with fading in and out. 
     // Perhaps start with disabling the animations, and see if the bug is still there.
     // If not, then re-add the classes and see.
-
-    
-    // if(navigationType === 'forwards') {
-
-    // }
 
 
     if (page.textPlacement[section] === 'center') {
@@ -228,7 +267,7 @@ function LessonBody( { page, section }: any ): JSX.Element {
           <div className='panel--bottom'>
             <div className='lesson-body__text--with-model'>
               {
-                page.text[section].map( (t: any, i: number) => <p className={ cameraMovement ? `fade--cam-move-${i}` : `fade--no-cam-move-${i}` }>{t}</p> )  
+                page.text[section].map( (t: any, i: number) => <p >{t}</p> )  
               }
             </div>
           </div>
@@ -252,6 +291,13 @@ function LessonBody( { page, section }: any ): JSX.Element {
     </>
   );
 }
+
+//className={ cameraMovement ? `fade--cam-move-${i}` : `fade--no-cam-move-${i}` }
+
+
+
+
+
 
 // To create better spacing and seperation between the text
 //                   Lets go into unitinitializedData and modify the text data structure 
