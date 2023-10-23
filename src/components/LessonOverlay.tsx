@@ -75,11 +75,20 @@ export function LessonOverlay({
 
   console.log("OVERLAY RENDERED");
 
-  const [ readyToAnimateText, setReadyToAnimateText ] = useState<boolean>( false );
+  // const [ readyToAnimateText, setReadyToAnimateText ] = useState<boolean>( false );
 
-  useEffect( () => {
-    if ( !isCameraAnimating ) setReadyToAnimateText( true )
-  }, [ isCameraAnimating ] )
+
+
+  // useEffect( () => {
+  //   if ( !isCameraAnimating ) setReadyToAnimateText( true )
+  // }, [ isCameraAnimating ] )
+
+
+
+
+
+
+
 
 
   const dispatch = useDispatch();
@@ -228,27 +237,53 @@ function LessonBody( { page, section, isCameraAnimating }: any ): JSX.Element {
     );
   }
 
+  // I dont think we need 'forwards' and 'backwards' here like the camera
+  // because we simply just want to display the text of the current section. 
+  // the previous section shouldn't factor into it at all. 
+
+  // I just need to make sure there is no bug with fading in and out. 
+  // Perhaps start with disabling the animations, and see if the bug is still there.
+  // If not, then re-add the classes and see.
   function LessonText(): JSX.Element {
 
-    // I dont think we need 'forwards' and 'backwards' here like the camera
-    // because we simply just want to display the text of the current section. 
-    // the previous section shouldn't factor into it at all. 
+    const [currentDisplayIndex, setCurrentDisplayIndex] = useState(-1);
+    const paragraphsOfSection = page.text[section];
+    const hiddenStyle = {
+      opacity: 0,
+      transition: 'opacity 1s ease-in-out'
+    };
+    const fadeInStyle = {
+      opacity: 1,
+      transition: 'opacity 1s ease-in-out'
+    };
 
-    // I just need to make sure there is no bug with fading in and out. 
-    // Perhaps start with disabling the animations, and see if the bug is still there.
-    // If not, then re-add the classes and see.
+    // Control the display of paragraphs in sequence after camera finishes animation
+    useEffect(() => {
+      if (!isCameraAnimating && currentDisplayIndex < paragraphsOfSection.length - 1) {
+        const timer = setTimeout(() => {
+          setCurrentDisplayIndex(prevIndex => prevIndex + 1);
+        }, 1000); // Show next paragraph every second after camera stops animating
+        return () => clearTimeout(timer);
+      };
+    }, [isCameraAnimating, currentDisplayIndex]);
 
 
     if (page.textPlacement[section] === 'center') {
       return (
         <>
           <div className='lesson-body__text--no-model'>
-            <p> {page.text[section]} </p>
+            {
+              paragraphsOfSection.map((paragraph: string, index: number) => (
+                <p key={index} style={index <= currentDisplayIndex ? fadeInStyle : hiddenStyle}>
+                  {paragraph}
+                </p>
+              ))
+            }
+            {/* <p> {page.text[section]} </p> */}
           </div>
         </>
       );
-    }
-    else if (page.textPlacement[section] === 'left') {
+    } else if (page.textPlacement[section] === 'left') {
       return (
         <>
           <div className='panel--left'>
@@ -259,15 +294,18 @@ function LessonBody( { page, section, isCameraAnimating }: any ): JSX.Element {
           <div className='panel--right'></div>
         </>
       );
-    }
-    else if(page.textPlacement[section] === 'bottom'){
+    } else if(page.textPlacement[section] === 'bottom') {
       return (
         <div className='lesson-body__text-container--with-model'>
           <div className='panel--top'></div>
           <div className='panel--bottom'>
             <div className='lesson-body__text--with-model'>
-              {
-                page.text[section].map( (t: any, i: number) => <p >{t}</p> )  
+              { 
+                paragraphsOfSection.map((paragraph: string, index: number) => (
+                  <p key={index} style={index <= currentDisplayIndex ? fadeInStyle : hiddenStyle}>
+                    {paragraph}
+                  </p>
+                ))
               }
             </div>
           </div>

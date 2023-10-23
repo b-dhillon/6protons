@@ -191,6 +191,7 @@ export function Models( { initializedPage, section } : any): JSX.Element {
             prevModelAnimations.current?.scaleAnimation.reset().setEffectiveTimeScale( 0.9 ).play();
 
             // II. Play current model's entrance animation:
+            // DO WE NEED TO CLEAN UP THIS TIME OUT? --> Pretty sure we do?
             setTimeout( () => {
               animationActions[ section ].scaleAnimation.stop().setEffectiveTimeScale(-1).play(); // currModelAnimations.current.scaleAnimation.startAt(8).setEffectiveTimeScale(-1).play();
             }, 8000 )
@@ -209,7 +210,9 @@ export function Models( { initializedPage, section } : any): JSX.Element {
 
         /* 6. Pause/Stop mainAnimation of previousModel: */
         if( section > 0 ) {
-          prevModelAnimations.current?.mainAnimation.stop();
+          setTimeout( () => {
+            prevModelAnimations.current?.mainAnimation.stop();
+          }, 2000 )
         } // What about stopping the nestedAnimation and scaleAnimation??
 
         /* 7. set prevSection to currSection to get ready for next navigation */
