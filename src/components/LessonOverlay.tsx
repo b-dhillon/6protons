@@ -160,6 +160,8 @@ function LessonHeader( { page, section, setCurrentPage }: any ): JSX.Element {
     setCurrentPage(`home`);
   }
 
+  console.log(page);
+
   return (
     <div className='lesson-header'>
 
@@ -173,7 +175,7 @@ function LessonHeader( { page, section, setCurrentPage }: any ): JSX.Element {
       <div className='lesson-header__title'>
         {section === 0 ? (
           <div>
-            <h1 className='title' style={{}}>
+            <h1 className='title'>
               {page.title}
             </h1>
           </div>
@@ -210,8 +212,6 @@ function LessonBody( { page, section, isCameraAnimating }: any ): JSX.Element {
   // Decide between these two dispatch methods
   // const dispatch = props.data.dispatch(); // this dispatch
   const dispatch = useDispatch();
-
-  const cameraMovement = page.models[section].newModelLocation ? true : false
 
   function LessonNavigation(props: any): JSX.Element {
     return (
@@ -262,7 +262,7 @@ function LessonBody( { page, section, isCameraAnimating }: any ): JSX.Element {
       if (!isCameraAnimating && currentDisplayIndex < paragraphsOfSection.length - 1) {
         const timer = setTimeout(() => {
           setCurrentDisplayIndex(prevIndex => prevIndex + 1);
-        }, 1000); // Show next paragraph every second after camera stops animating
+        }, 700); // Show next paragraph every second after camera stops animating
         return () => clearTimeout(timer);
       };
     }, [isCameraAnimating, currentDisplayIndex]);

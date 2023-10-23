@@ -30,16 +30,18 @@
       justify-content: center;
     }
       .title {
-        color: #f07167;
+        color: white;
         font-size: 60px;
         /* animation: slideUp 2s 1 both; 
         animation-delay: .5s; */
         margin: 0;
         padding: 10px;
         z-index: 2;
-        font-weight: 600;
+        font-weight: 500;
         letter-spacing: 5px;
-        font-family: Quicksand !important;
+        /* font-family: Arial, Helvetica, sans-serif; */
+        font-family: 'Courier New', Courier, monospace;
+        /* font-family: Quicksand !important; */
       }
     
     .lesson-header__button-container {
@@ -163,9 +165,11 @@
       
       .panel--bottom {
         flex: 0.75;
+        max-height: 40%;
         display: flex; 
         align-items: center;
         border: 1px solid violet;
+        overflow-y: scroll;
       }
 
         .lesson-body__text--with-model {
@@ -193,6 +197,7 @@
 
 
         /* Write a better way to do these text fades: */
+        /*
         .fade--no-cam-move-0 {
           animation: 2s delayInWithFade;
           animation-fill-mode: forwards;
@@ -232,6 +237,7 @@
           animation-fill-mode: forwards;
           opacity: 0;
         }
+      */
 
 
 

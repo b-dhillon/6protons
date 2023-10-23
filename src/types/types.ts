@@ -12,7 +12,7 @@ export interface UninitializedData {
 
 export interface UninitializedPage {
     id: string,
-    pageTitle: string,
+    title: string,
     section: number,
     maxSection: number,
     thumbnail: string,
@@ -31,7 +31,7 @@ export interface UninitializedPage {
 
 export interface InitializedPage {
     id: string,
-    pageTitle: string,
+    title: string,
     section: number,
     maxSection: number,
     thumbnail: string,

@@ -1,10 +1,13 @@
 
 
-# To-do: 
-  # Add title of lesson to the Header of the overlay. Get it working again. Likely change the color?
+# To-do:
+  # Set max height for panel--bottom
+  
   # Fix model0 reversing. When revsersing back to section-0, model-0 isn't there. 
-  # Fix camera not animating to completion with .halt
   # Add chime for text - "Lost In Thought" by KOAN Sound at 1:05
+  
+  # Fix camera not animating to completion with .halt
+
 
 
   # Rebuild Home page
