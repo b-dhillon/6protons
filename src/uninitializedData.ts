@@ -73,7 +73,7 @@ export const uninitializedData: UninitializedData = {
       id: 'test_page',
       title: 'Buckminsterfullerene',
       section: 0,
-      maxSection: 5, //including 0, total number of section is 6.
+      maxSection: 5, //including section0, total sections = sections.length === 6.
       thumbnail: "url('./lessonThumbnails/fullereneTile.png')",
 
       universe: {
@@ -277,16 +277,16 @@ export const uninitializedData: UninitializedData = {
           visible: false,
           newModelLocation: true,
           scale: 0,
-          yOffsetForText: 0.05,
+          yOffsetForText: 0.04,
           zoomInOnReverse: false,
           positions: [[0.0, -0.1, -3.0]],
           rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
             Rotate({
-              duration: 5000,
+              duration: 4000,
               axis: 'y',
               initialAngle: 0,
-              finalAngle: 360,
+              finalAngle: 180,
             }),
             //hiv protease
             ScaleXYZ({
@@ -296,8 +296,8 @@ export const uninitializedData: UninitializedData = {
             }),
             //buckyball
             ScaleXYZ({
-              duration: 3, //higher number is slower
-              initialScale: [0.04, 0.04, 0.04],
+              duration: 2.5, //higher number is slower
+              initialScale: [0.05, 0.05, 0.05],
               finalScale: [0.063, 0.063, 0.063],
             }),
           ],

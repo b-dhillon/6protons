@@ -179,9 +179,6 @@
           z-index: 2;
           align-items: center;
           /* justify-content: center; */
-          /* animation: 12s delayInWithFade;
-          animation-fill-mode: forwards;
-          opacity: 0; */
         }
 
         .lesson-body__text--with-model > p {
@@ -190,7 +187,6 @@
           margin: 16px 0px;
           font-size: 1.4vw !important;
           text-align: left;
-          /* animation: fadeIn 2s 1 ease-in-out; */
           line-height: 38px;
           border: 1px solid red;
         }

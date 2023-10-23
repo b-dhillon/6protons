@@ -1,7 +1,6 @@
 
 
 # To-do:
-  # Set max height for panel--bottom
   
   # Fix model0 reversing. When revsersing back to section-0, model-0 isn't there. 
   # Add chime for text - "Lost In Thought" by KOAN Sound at 1:05

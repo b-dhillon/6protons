@@ -73,24 +73,6 @@ export function LessonOverlay({
     isCameraAnimating 
   }: LessonOverlayConfig ): JSX.Element {
 
-  console.log("OVERLAY RENDERED");
-
-  // const [ readyToAnimateText, setReadyToAnimateText ] = useState<boolean>( false );
-
-
-
-  // useEffect( () => {
-  //   if ( !isCameraAnimating ) setReadyToAnimateText( true )
-  // }, [ isCameraAnimating ] )
-
-
-
-
-
-
-
-
-
   const dispatch = useDispatch();
 
   if (devMode) {
@@ -159,8 +141,6 @@ function LessonHeader( { page, section, setCurrentPage }: any ): JSX.Element {
     dispatch(reset());
     setCurrentPage(`home`);
   }
-
-  console.log(page);
 
   return (
     <div className='lesson-header'>
@@ -250,11 +230,11 @@ function LessonBody( { page, section, isCameraAnimating }: any ): JSX.Element {
     const paragraphsOfSection = page.text[section];
     const hiddenStyle = {
       opacity: 0,
-      transition: 'opacity 1s ease-in-out'
+      transition: 'opacity 0.7s ease-in-out'
     };
     const fadeInStyle = {
       opacity: 1,
-      transition: 'opacity 1s ease-in-out'
+      transition: 'opacity 0.7s ease-in-out'
     };
 
     // Control the display of paragraphs in sequence after camera finishes animation
@@ -262,7 +242,7 @@ function LessonBody( { page, section, isCameraAnimating }: any ): JSX.Element {
       if (!isCameraAnimating && currentDisplayIndex < paragraphsOfSection.length - 1) {
         const timer = setTimeout(() => {
           setCurrentDisplayIndex(prevIndex => prevIndex + 1);
-        }, 700); // Show next paragraph every second after camera stops animating
+        }, 900); // Show next paragraph every second after camera stops animating
         return () => clearTimeout(timer);
       };
     }, [isCameraAnimating, currentDisplayIndex]);
