@@ -192,22 +192,26 @@ export function Models( { initializedPage, section } : any): JSX.Element {
         // 5.1--B) If camera did move:
         else {
 
-          if(section > 0) {
-            // I. Play prevModel's exit animation:
-            //    but only if not backwards & cameraDidntMove
-            // if(forwards && !cameraDidntMove) 
-            
-              prevModelAnimations.current?.scaleAnimation.reset().setEffectiveTimeScale( 0.9 ).play();
+          // if(section > 0) {
+            prevModelAnimations.current?.scaleAnimation.reset().setEffectiveTimeScale( 0.9 ).play();
 
             // II. Play current model's entrance animation:
             // DO WE NEED TO CLEAN UP THIS TIME OUT? --> Pretty sure we do?
-            setTimeout( () => {
-              animationActions[ section ].scaleAnimation.stop().setEffectiveTimeScale(-1).play(); // currModelAnimations.current.scaleAnimation.startAt(8).setEffectiveTimeScale(-1).play();
-            }, 8000 )
-          }
+            if (section !== 0) {
+              setTimeout( () => {
+                animationActions[ section ].scaleAnimation.stop().setEffectiveTimeScale(-1).play(); // currModelAnimations.current.scaleAnimation.startAt(8).setEffectiveTimeScale(-1).play();
+              }, 8000 )
+            }
+          // }
           
-          // III. Play current model's main animation:
-          if (section === 0) currModelAnimations.current.mainAnimation.play() //first model should play right away
+          if (section === 0) {
+            // getting first model to re-appear when going backwards
+            // after having been shrunk from going forwards
+            animationActions[ 0 ].scaleAnimation.stop(); 
+            
+            // III. Play current model's main animation:
+            currModelAnimations.current.mainAnimation.play() // first model should play right away
+          } 
           else currModelAnimations.current.mainAnimation.startAt(9).play(); //every other model needs a delay to wait for camera transition to finish
 
           // IV. Play Nested animation, if exists:

@@ -2,14 +2,16 @@
 
 # To-do:
   
-  # Fix model0 reversing. When revsersing back to section-0, model-0 isn't there. 
   # Add chime for text - "Lost In Thought" by KOAN Sound at 1:05
   
+
   # Fix camera not animating to completion with .halt
 
 
 
+
   # Rebuild Home page
+  # Redo styling of lessonText -- new font, new font-size, line-height and everything.
 
 
 
