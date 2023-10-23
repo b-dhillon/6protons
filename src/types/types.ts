@@ -85,6 +85,7 @@ export interface UninitializedModel {
     newModelLocation: boolean,
     scale: number,
     yOffsetForText: boolean,
+    zoomInOnReverse: boolean,
 
 
     positions: number[][], //needed?

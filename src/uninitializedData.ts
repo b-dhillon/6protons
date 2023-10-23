@@ -145,6 +145,8 @@ export const uninitializedData: UninitializedData = {
           newModelLocation: true,
           scale: 0.18,
           yOffsetForText: false,
+          zoomInOnReverse: false,
+
           positions: [[0.0, 0.0, -1.0]], // calculated in Init() based off of camera position at the current section
           rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
@@ -165,6 +167,7 @@ export const uninitializedData: UninitializedData = {
           newModelLocation: true,
           scale: 0,
           yOffsetForText: false,
+          zoomInOnReverse: false,
           positions: [[0.75, 0.66, 0.0]],
           rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
@@ -189,6 +192,8 @@ export const uninitializedData: UninitializedData = {
           newModelLocation: true,
           scale: 0,
           yOffsetForText: true,
+          zoomInOnReverse: false,
+
           positions: [[0.75, 0.0, -3.0]],
           rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
@@ -213,6 +218,8 @@ export const uninitializedData: UninitializedData = {
           newModelLocation: false,
           scale: 0.18,
           yOffsetForText: true,
+          zoomInOnReverse: false,
+
           positions: [[0.75, 0.0, -3.0]],
           rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
@@ -237,6 +244,7 @@ export const uninitializedData: UninitializedData = {
           newModelLocation: true,
           scale: 0,
           yOffsetForText: true,
+          zoomInOnReverse: true,
 
           positions: [[0.0, -0.66, -1.0]],
           rotations: [[0.0, 0.0, 0.0]],
@@ -268,6 +276,7 @@ export const uninitializedData: UninitializedData = {
           newModelLocation: true,
           scale: 0,
           yOffsetForText: false,
+          zoomInOnReverse: false,
           positions: [[0.0, -0.1, -3.0]],
           rotations: [[0.0, 0.0, 0.0]],
           animationClips: [

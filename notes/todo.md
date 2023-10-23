@@ -1,17 +1,59 @@
 
-TODO: 
+
+# To-do: 
+  ## Fix y-position of protease model
+  ## Add title of lesson to the Header of the overlay. Get it working again. Likely change the color?
+  ## Fix model0 reversing. When revsersing back to section-0, model-0 isn't there. 
+  ## Fix camera not animating to completion with .halt
+  ## Add chime for text - "Lost In Thought" by KOAN Sound at 1:05
 
 
-# Add ability to navigatye backwards:
-
-// Todo: 
-  // Fix model0 reversing. When revsersing back to section-0, model-0 isn't there. 
-  // Get text reversing properly 
-  // Add chime for text
+  ## Rebuild Home page
 
 
-    Create a stack with sections. With the entrance animation being -1 on the stack.
-        on-load: section goes from -1 to 0, triggering the entrance animation.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -40,13 +82,9 @@ CAMERA REVERSAL:
 
 
 
-#  Add title of lesson to the Header of the overlay. Get it working again. Likely change the color?
 
 
 
-
-# Add small sound effects when text appears? Like the two piano notes
-    you hear in the song "Lost In Thought" by KOAN Sound at 1:05
 
 
 

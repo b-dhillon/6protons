@@ -163,7 +163,13 @@ export function Models( { initializedPage, section } : any): JSX.Element {
             // let cameraDidntMove = !initializedPage.models[section+1].newModelLocation;
             const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section + 1}`);
             state.scene.children[prevModelIndex].visible = false;
-          };
+          }
+          // REFACTOR THIS TOO MANY UN-NECESSARY CHECKS:
+          else if (backwards) {
+            const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section + 1}`);
+            if (initializedPage.models[section + 1].zoomInOnReverse)
+              state.scene.children[prevModelIndex].visible = false
+          }
         });
 
       
@@ -187,8 +193,11 @@ export function Models( { initializedPage, section } : any): JSX.Element {
         else {
 
           if(section > 0) {
-            // I. Play prevModel's shrink animation:
-            prevModelAnimations.current?.scaleAnimation.reset().setEffectiveTimeScale( 0.9 ).play();
+            // I. Play prevModel's exit animation:
+            //    but only if not backwards & cameraDidntMove
+            // if(forwards && !cameraDidntMove) 
+            
+              prevModelAnimations.current?.scaleAnimation.reset().setEffectiveTimeScale( 0.9 ).play();
 
             // II. Play current model's entrance animation:
             // DO WE NEED TO CLEAN UP THIS TIME OUT? --> Pretty sure we do?
