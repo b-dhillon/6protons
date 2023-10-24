@@ -7,15 +7,25 @@ export function Sound({ initializedPage, section, isCameraAnimating }: any): JSX
 
   const textChime: Audio = initializedPage.loadedTextChime;
 
-  // Playing text chime
+  // Playing text chime if camera isnt animating 
+  // and if the section actually has text
+  // a timeout of 700ms is set to control for the async
+  // update of isCameraAnimating state
   useEffect( () => {
-    if(!isCameraAnimating) textChime.play()
+    const timer = setTimeout( () => {
+      if(!isCameraAnimating && initializedPage.text[section][0]) {
+        textChime.play();
+        console.log("played chime");
+      }
+    }, 700 )
 
-  }, [ isCameraAnimating ] );
+    return () => clearTimeout(timer)
+
+  }, [ isCameraAnimating, section ] );
 
 
   // Playing background music
-  music[0].play();
+  // music[0].play();
 
 
   // if (section > 0) {
