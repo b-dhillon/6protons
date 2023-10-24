@@ -8,7 +8,7 @@ import { Universe } from './Universe';
 import DevelopmentCamera from './DevelopmentCamera';
 // import Music from './Sound';
 // Mounts components to scene graph and renders 3D scene.
-export function Scene({ section, initializedPage }: any): JSX.Element {
+export function Scene({ section, initializedPage, isCameraAnimating }: any): JSX.Element {
   function Lighting(): JSX.Element {
     return (
       <>
@@ -19,10 +19,10 @@ export function Scene({ section, initializedPage }: any): JSX.Element {
   };
   return (
     <Suspense>
-      {/* <FadeIn /> */}
+      <FadeIn />
       <Canvas>
         <Universe initializedPage={initializedPage} />
-        <Sound initializedPage={initializedPage} section={section} />
+        <Sound initializedPage={initializedPage} section={section} isCameraAnimating={isCameraAnimating} />
         <Camera initializedPage={initializedPage} section={section} />
         {/* <DevelopmentCamera/> */}
         <Models initializedPage={initializedPage} section={section} />
@@ -41,7 +41,7 @@ function FadeIn() {
   if (!fadeDone) return <div className='blackFade'></div>;
   else return <></>;
 }
-<FadeIn />
+{/* <FadeIn /> */}
 
 
 

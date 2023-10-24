@@ -1,3 +1,4 @@
+/*
 import { AnimationClip, Mesh, Vector3 } from 'three';
 import { 
     CameraPositionToModelPosition, 
@@ -7,7 +8,7 @@ import {
     ExtractAllMeshesOfApp
 } from '../../unused/Init/Helpers';
 
-import Vec3ToArr from '../components/Vec3ToArr';
+import Vec3ToArr from '../components/vec-3-to-array';
 import data from '../uninitializedData';
 // import { Init } from '../_components/Init';
 // import SuspendInSolution from '../_components/animations/SuspendInSolution';
@@ -19,7 +20,7 @@ import data from '../uninitializedData';
 
 // .toEqual used for objects and arrays -- does a deep check, .toBe used for primitive types
 // onLoad 
-/*
+
 Camera Load:
 - _animation_data -- WRITTEN -- CreateAnimationDataFromPositionsRotations()
 - _animation_clips -- WRITTEN -- ConstructCameraAnimationClips()
@@ -28,7 +29,6 @@ Model Load:
 
 - loadedMeshes -- WRITTEN -- ExtractAllMeshesOfApp()
 - _loaded_voices -- WRITTEN -- ExtractAllVoicesOfApp()
-*/
 
 
 
@@ -317,6 +317,9 @@ describe( 'Init', () => {
     });
 });
 */
+
+
+
 
 
 

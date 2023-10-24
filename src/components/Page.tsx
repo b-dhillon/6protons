@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { Suspense, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 // import { Page, LoadedPage } from '../types      //types';
-import { LessonOverlay } from './LessonOverlay';
+import { Interface } from './Interface';
 import { Scene } from './Scene';
 import '../styles/overlay-styles.css';
 
-export function PageRenderer({
+export function Page({
   initializedPageData,
   setCurrentPage,
 }: any): JSX.Element {
@@ -16,8 +16,8 @@ export function PageRenderer({
   // useEffect( () => console.log( 'initializedPage data', initializedPage ), [] );
   return (
     <Suspense>
-      <Scene initializedPage={initializedPage} section={section} />
-      <LessonOverlay
+      <Scene initializedPage={initializedPage} section={section} isCameraAnimating={isCameraAnimating} />
+      <Interface
         devMode={false}
         initializedPage={initializedPage}
         setCurrentPage={setCurrentPage}

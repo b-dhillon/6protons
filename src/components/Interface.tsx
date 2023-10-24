@@ -65,7 +65,7 @@ interface LessonOverlayConfig {
   isCameraAnimating: boolean, 
 }
 
-export function LessonOverlay({
+export function Interface({
     devMode, 
     initializedPage, 
     section, 

@@ -116,7 +116,7 @@ export function Models( { initializedPage, section } : any): JSX.Element {
   let currModelAnimations = useRef<ModelAnimations>(animationActions[0]);
   let prevModelAnimations = useRef<ModelAnimations>();
 
-  /** AnimationController --> Plays the AnimationAction based on section (section)
+  /** controller --> Plays the AnimationAction based on section (section)
    * 
    * 1. section mutates, this fn is popped onto the call-stack:
    * 2. Check is mutation was forwards or backwards:
@@ -128,10 +128,12 @@ export function Models( { initializedPage, section } : any): JSX.Element {
    * 
   */  
   useEffect(() => {
-    console.log('prevSection:', prevSection.current, 'currSection:', section);
+    // console.log('prevSection:', prevSection.current, 'currSection:', section);
 
-    /* 1. section mutates, this fn is popped onto the call-stack: */
-    function animationController( animationActions: ModelAnimations[], section: number ): void {
+    controller(animationActions, section);
+
+    /* 1. section mutates, controller is popped onto the call-stack: */
+    function controller( animationActions: ModelAnimations[], section: number ): void {
 
       if (animationActions.length && section >= 0) {
 
@@ -231,7 +233,7 @@ export function Models( { initializedPage, section } : any): JSX.Element {
         /* 7. set prevSection to currSection to get ready for next navigation */
         prevSection.current = section;
       }
-    } animationController(animationActions, section);
+    } 
 
   }, [ animationActions, section ]);
 

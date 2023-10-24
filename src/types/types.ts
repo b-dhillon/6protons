@@ -2,6 +2,7 @@ import { AnimationClip, Audio, Mesh } from "three"
 
 export interface UninitializedData {
     initializeModelPositionsFromCamera: Function,
+    textChimePath: string,
     pages: UninitializedPage[]
 }
 
@@ -41,9 +42,11 @@ export interface InitializedPage {
     voices: string[],
     universe: Universe,
     dispatch: Function,
+
     camera: InitializedLessonCamera,
     models: InititalizedModel[],
-    loadedVoices: Audio[],
+    loadedTextChime: any // should be Audio
+    loadedVoices: Audio[] | null,
     loadedMusic: Audio[],
 };
 

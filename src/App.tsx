@@ -4,8 +4,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { uninitializedData } from './uninitializedData';
 import { TranslateRotate } from './components/animations/TranslateRotate';
-import { PageRenderer } from './components/PageRenderer';
-import { FindRotationAxis } from './components/FindRotationAxis';
+import { Page } from './components/Page';
+import { FindRotationAxis } from './utility-functions/find-rotation-axis';
 import { UninitializedData, UninitializedPage, InitializedPage } from './types/types';
 
 
@@ -47,7 +47,7 @@ export default function App() {
     const [initializedPage] = initializedPages!.filter( (page: InitializedPage) => page.id === currentPage );
 
     return (
-      <PageRenderer
+      <Page
         initializedPageData={initializedPage}
         setCurrentPage={setCurrentPage}
       />
@@ -68,7 +68,7 @@ Init() is responsible for the following for each page:
 */
 async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
 
-
+  // LoadVoices and LoadMusic is the same code? 
   async function LoadAllVoicesOfApp() {
     /* const allVoicesOfApp: any = [][] // [ [ voice0, voice1, voice2 ], [ voice0, voice1, voice2 ], etc... ]
                                                             ^ voices[] of page0          ^ voices[] of page1      */
@@ -88,28 +88,39 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
 
   function LoadVoice(path: string) {
     return new Promise((resolve, reject) => {
-      const listener = new THREE.AudioListener();
-      const AudioObject = new THREE.Audio(listener);
-      const loader = new THREE.AudioLoader();
-      loader.load(
-        path,
-        // onLoad
-        (buffer: AudioBuffer) => {
-          // Set the audio object's buffer to the loaded object
-          AudioObject.setBuffer(buffer);
-          AudioObject.setLoop(false);
-          AudioObject.setVolume(1);
-          resolve(AudioObject);
-        },
-        // onProgress
-        (xhr) => {
-          // console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-        },
-        // onError
-        (err) => {
-          console.log('Error loading voices', err);
-        }
-      );
+      console.log(path);
+      try {
+        const listener = new THREE.AudioListener();
+        const AudioObject = new THREE.Audio(listener);
+        const loader = new THREE.AudioLoader();
+        loader.load(
+          path,
+          // onLoad
+          (buffer: AudioBuffer) => {
+            // Set the audio object's buffer to the loaded object
+            try {
+              AudioObject.setBuffer(buffer);
+              AudioObject.setLoop(false);
+              AudioObject.setVolume(1);
+              resolve(AudioObject);
+            } catch(e) {
+              console.error(e);
+              reject(e)
+            }
+          },
+          // onProgress
+          (xhr) => {
+            // console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+          },
+          // onError
+          (err) => {
+            console.log('Error loading voices', err);
+          }
+        );
+      } catch(e) {
+        console.log(e);
+        reject(e)
+      }
     });
   }
 
@@ -232,8 +243,10 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
   }
 
   const allMeshesOfApp: any = await ExtractAllMeshesOfApp();
-  const allVoicesOfApp: any = await LoadAllVoicesOfApp();
+  // const allVoicesOfApp: any = await LoadAllVoicesOfApp();
   const allMusicOfApp: any = await LoadAllMusicOfApp();
+
+  const textChime = await LoadVoice(uninitializedData.textChimePath)
 
   const initializedPages = data.pages.map((page: UninitializedPage, i: number): InitializedPage => {
 
@@ -263,7 +276,9 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
         };
       }),
 
-      loadedVoices: allVoicesOfApp[i],
+      loadedTextChime: textChime,
+      // loadedVoices: allVoicesOfApp[i],
+      loadedVoices: null,
       loadedMusic: allMusicOfApp[i],
     };
   });

@@ -8,9 +8,9 @@ import { setCameraAnimating } from '../redux/actions';
 
 /** FN Description
  * 
- * Creates React Three Camera,
- * Creates all AnimationActions for camera transitions 
- * Creates and calls an AnimationController() that:
+ * Creates Camera,
+ * Creates all AnimationActions for 3d camera movements 
+ * Creates + calls an AnimationController() that:
  *   Plays the correct Animation, based on section.
  *   Updates the animation mixer.
  * Renders cameraHelper when called.
@@ -20,13 +20,12 @@ import { setCameraAnimating } from '../redux/actions';
 export function Camera( { initializedPage, section }: any ): JSX.Element {
   
   const [ animations, setAnimations ] = useState<AnimationAction[]|[]>([]);
-  const [ mixer, setMixer ] = useState();
-  const camera = initializedPage.camera;
+  const [ mixer, setMixer ] = useState<THREE.AnimationMixer | null>();
   const ref = useRef();
   const prevSection = useRef();
   const cameraDidntMove = useRef(false);
+  const camera = initializedPage.camera;
   const maxSection = initializedPage.maxSection
-
   const dispatch = useDispatch();
 
 
@@ -60,12 +59,13 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
     }
   }, [mixer]);
 
-  /* animationController --> Plays the AnimationAction based on section */
+  /* controller --> Plays AnimationAction based on section */
   useEffect(() => {
 
-    animationController();
+    controller();
 
-    function animationController() {
+    /* 1. section mutates, controller is popped onto the call-stack: */
+    function controller() {
       if (animations.length && section >= 0) {
         /* ensure all animations are stopped before playing the next one:
          * you can also just use mixer.stopAllAction to all actions on the mixer in one go!
@@ -74,7 +74,7 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
         // animations.forEach( ( animation: AnimationAction ) => animation.stop() );
 
 
-        /* This is needed for the first animation, before the start-button is clicked.
+        /* Needed for the first animation, before the start-button is clicked.
          * This should be re-factored however. Make the whole camera a stack. Start the stack at -1. 
          * When lesson is loaded, move the stack from -1 to 0, triggering the first entrance animation as a forwards animation
          * With that logic, you would theoretically not need this extra block.

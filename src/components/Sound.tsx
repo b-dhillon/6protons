@@ -1,11 +1,23 @@
+import { useEffect } from 'react';
 import { Audio } from 'three';
 
-export function Sound({ initializedPage, section }: any): JSX.Element {
+export function Sound({ initializedPage, section, isCameraAnimating }: any): JSX.Element {
   const voices: Audio[] = initializedPage.loadedVoices;
   const music: Audio[] = initializedPage.loadedMusic;
 
-  // Configuring background music
+  const textChime: Audio = initializedPage.loadedTextChime;
+
+  // Playing text chime
+  useEffect( () => {
+    if(!isCameraAnimating) textChime.play()
+
+  }, [ isCameraAnimating ] );
+
+
+  // Playing background music
   music[0].play();
+
+
   // if (section > 0) {
   //   // music[ 0 ].pause();
   //   music[0].setVolume(0.15);

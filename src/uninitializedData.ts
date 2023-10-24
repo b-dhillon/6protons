@@ -10,7 +10,7 @@
 import { useDispatch } from 'react-redux';
 import { UninitializedData } from './types/types';
 import { TranslateRotate } from './components/animations/TranslateRotate';
-import { FindRotationAxis } from './components/FindRotationAxis';
+import { FindRotationAxis } from './utility-functions/find-rotation-axis';
 import { AnimationClip } from 'three';
 import ScaleXYZ from './components/animations/ScaleXYZ';
 import Rotate from './components/animations/Rotate';
@@ -67,6 +67,8 @@ export const uninitializedData: UninitializedData = {
       return [x, y, z];
     }
   },
+
+  textChimePath: '/audio/sound-effects/chime-0.mp3',
 
   pages: [
     {
@@ -341,14 +343,14 @@ export const uninitializedData: UninitializedData = {
         'bottom'
       ],
 
-      music: ['/music/fullerene3.mp3'],
+      music: ['/audio/music/fullerene3.mp3'],
 
       voices: [
-        '/voices/fiona/voice0.mp3', // 0
-        '/voices/fiona/voice0.mp3', // 1
-        '/voices/fiona/voice1.mp3', // 2
-        '/voices/fiona/voice1.mp3', // 3
-        '/voices/fiona/voice1.mp3', // 4
+        '/audio/voices/fiona/voice0.mp3', // 0
+        '/audio/voices/fiona/voice0.mp3', // 1
+        '/audio/voices/fiona/voice1.mp3', // 2
+        '/audio/voices/fiona/voice1.mp3', // 3
+        '/audio/voices/fiona/voice1.mp3', // 4
       ],
       //                0     1     2     3     4
       // loadedVoices: [null, null, null, null, null],
