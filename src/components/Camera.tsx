@@ -17,6 +17,8 @@ import { setCameraAnimating } from '../redux/actions';
  * 
 */
 
+
+
 export function Camera( { initializedPage, section }: any ): JSX.Element {
   
   const [ animations, setAnimations ] = useState<AnimationAction[]|[]>([]);
@@ -85,9 +87,12 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
           if (forwards && section <= maxSection ) {
             dispatch( setCameraAnimating(true) );
             animations[0].reset();
-            animations[section].setEffectiveTimeScale(1);
-            animations[0].play()
-            animations[0].halt(7.8);
+            animations[section].setEffectiveTimeScale(0.1);
+            animations[0].play();
+            // animations[0].halt(7.8);
+            // setTimeout( ()=> {
+            //   animations[0].time = animations[0].duration
+            // }, 7800 )
           };
           if(backwards) {            
             dispatch( setCameraAnimating(true) );
@@ -116,7 +121,7 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
             animations[section].reset();
             animations[section].setEffectiveTimeScale(1);
             animations[section].play();
-            animations[section].halt(7.8);
+            // animations[section].halt(7.8);
             // animations[section].play().warp(1, 0.01, 7.8);
           };
 
@@ -137,8 +142,11 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
   }, [animations, section]);
 
   // Updates animation via mixer
+  // let i = 0;
   useFrame((_, delta) => {
+    
     if (animations.length && mixer && section >= 0){
+
       mixer.update(delta)
       // Will need to think about backwards animations too. But first, lets see if forwards
       // works with disabling the buttons.
@@ -169,7 +177,26 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
 
 
 
+// const elapsed = animations[section].time;
+      
+// const duration = animations[section]._clip.duration;
+// console.log('elapsed', elapsed);
 
+// // i++
+// // console.log('i' ,i);
+
+
+
+// if (elapsed > 0.25 && elapsed < duration) {
+//   // Adjust the timeScale based on our custom function
+//   // console.log('calling setter');
+//   console.log('easing output', easeOutQuartic(elapsed / duration));
+//   let aTS = easeOutQuartic(elapsed / duration);
+//   // if (aTS === 0) aTS = 0.01
+//   animations[section].timeScale = aTS
+// }
+
+// console.log( 'time scale', animations[section].getEffectiveTimeScale());
 
 
 

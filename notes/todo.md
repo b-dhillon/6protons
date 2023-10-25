@@ -2,12 +2,16 @@
 
 ## Tuesday:
 
-  # Add chime for text - "Lost In Thought" by KOAN Sound at 1:05
-    - Need to test if it worked
-
-  # Redo styling of lessonText -- new font, new font-size, line-height and everything.
 
   # Fix camera not animating to completion with .halt
+
+
+  
+  
+  
+  
+  # Redo styling of lessonText -- new font, new font-size, line-height and everything.
+
 
 
 ## Rest of the week:

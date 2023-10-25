@@ -4,6 +4,16 @@
   src: url(/fonts/Quicksand-Regular.ttf);
 } */
 
+@font-face {
+  font-family: 'JetBrainsMono-Regular';
+  src: url('../assets/fonts/Jetbrains/JetBrainsMono-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'JetBrainsMono-Italic';
+  src: url('../assets/fonts/Jetbrains/JetBrainsMono-Italic.ttf');
+}
+
 * {
   box-sizing: border-box;
 }

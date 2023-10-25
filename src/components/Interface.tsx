@@ -22,18 +22,8 @@ import { useEffect, useState } from 'react';
  * Because when !isCameraAnimating we just trigger the chime animation to happen, which 
  * essentially signals the mutating of the state and start of the text animations! Nice!
  * This should be one of the last major things we need to solve.
- * 
- * 
- * Step-1: Figure out to implement jss text fades.
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- */
+ *         
+*/
 
 /** Fn Description
  * 
@@ -242,7 +232,7 @@ function LessonBody( { page, section, isCameraAnimating }: any ): JSX.Element {
       if (!isCameraAnimating && currentDisplayIndex < paragraphsOfSection.length - 1) {
         const timer = setTimeout(() => {
           setCurrentDisplayIndex(prevIndex => prevIndex + 1);
-        }, 900); // Show next paragraph every second after camera stops animating
+        }, 1000); // Show next paragraph every second after camera stops animating
         return () => clearTimeout(timer);
       };
     }, [isCameraAnimating, currentDisplayIndex]);

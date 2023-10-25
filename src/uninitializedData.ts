@@ -125,7 +125,8 @@ export const uninitializedData: UninitializedData = {
           const animationClips = animationDataStructure.map((animationData: [][], i: number) => {
             return [
               TranslateRotate({
-                duration: 4,
+                // duration: 4,
+                duration: 1,
                 initialPosition: animationData[0],
                 finalPosition: animationData[1],
                 initialAngle: animationData[2],

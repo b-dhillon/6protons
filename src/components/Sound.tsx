@@ -17,7 +17,7 @@ export function Sound({ initializedPage, section, isCameraAnimating }: any): JSX
         textChime.play();
         console.log("played chime");
       }
-    }, 700 )
+    }, 800 )
 
     return () => clearTimeout(timer)
 

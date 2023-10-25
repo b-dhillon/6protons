@@ -36,7 +36,7 @@ export default function App() {
 
   async function Init() {
     const _initializedPages = await initialize( uninitializedData );
-    console.log('initializedPages', _initializedPages);
+    // console.log('initializedPages', _initializedPages);
     setInitializedPages(_initializedPages);
     setDataInitialized(true);
   }
@@ -88,7 +88,6 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
 
   function LoadVoice(path: string) {
     return new Promise((resolve, reject) => {
-      console.log(path);
       try {
         const listener = new THREE.AudioListener();
         const AudioObject = new THREE.Audio(listener);
