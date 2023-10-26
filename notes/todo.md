@@ -1,16 +1,30 @@
 # To-do:
 
-## Tuesday:
+  # Interpolation 
+
+    - Hook up model animations to trigger if !isCameraAnimating
+
+    - Decide on scaling factor --> ease-in is too slow, lets speed it up.
+
+    - Finalize the easing function to use. 
+
+    - Decide on duration:
+      - Should we keep the duration at 1 and use a time-scale adjustment 
+      - Or set the proper duration and keep time-scale at 1 and -1?
 
 
-  # Fix camera not animating to completion with .halt
+  # If backwards, display all text after camera stops animating.
 
 
-  
-  
-  
-  
+
+
+
+
   # Redo styling of lessonText -- new font, new font-size, line-height and everything.
+
+
+
+
 
 
 

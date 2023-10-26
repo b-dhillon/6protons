@@ -169,7 +169,7 @@
         align-items: center;
         justify-content: center;
         /* border: 1px solid violet; */
-        overflow-y: scroll;
+        overflow-y: auto;
       }
 
         .lesson-body__text--with-model {

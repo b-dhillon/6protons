@@ -18,15 +18,12 @@ import SuspendInSolution from './components/animations/SuspendInSolution';
 
 export const uninitializedData: UninitializedData = {
   initializeModelPositionsFromCamera: function( cameraPosition: number[], cameraRotation: number[], rotationAxis: string, yOffsetForText: number ) {
-    // rotate camera X-axis, need to re-position model on Y axis.
-
+    
     let yOffset = yOffsetForText;
-    // if( yOffsetForText ) yOffset = 0.15 //find a more mathematical approach to calculate this offset
-    // if( smallerYOffsetForText ) yOffset = 0.05 //find a more mathematical approach to calculate this offset
-
+    
+    // rotate camera X-axis, need to re-position model on Y axis.
     if (rotationAxis === 'x') {
       const rotationAngle = cameraRotation[0];
-
       const x = cameraPosition[0];
       const y = cameraPosition[1] + rotationAngle + yOffset
       const z = cameraPosition[2] - 1;
@@ -36,9 +33,7 @@ export const uninitializedData: UninitializedData = {
     // rotate camera Y-axis, need to re-position model on X axis AND Z axis.
     if (rotationAxis === 'y') {
       const rotationAngle = cameraRotation[1];
-
       const offset = rotationAngle * -1;
-
       if (rotationAngle > 0) {
         const x = cameraPosition[0] + offset;
         const y = cameraPosition[1] + yOffset;
@@ -55,7 +50,6 @@ export const uninitializedData: UninitializedData = {
     // rotate camera Z-axis, don't need to do anything to the model.
     if (rotationAxis === 'z') {
       const rotationAngle = cameraRotation[2];
-
       const x = cameraPosition[0];
       const y = cameraPosition[1] + yOffset;
       const z = cameraPosition[2] - 1;
@@ -86,7 +80,7 @@ export const uninitializedData: UninitializedData = {
 
       camera: {
         positions: [
-          [0.00, 0.00, 3.00], // Start
+          [0.00, 0.00, 5.00], // Start
           [0.00, 0.00, 0.00], // Opening position, section 0 
           [0.00, 0.00, 1.00], // section 1 ..1985
           [0.75, 0.00,-2.00], // section 2 ..most symmetrical form
@@ -133,6 +127,7 @@ export const uninitializedData: UninitializedData = {
                 finalAngle: animationData[3],
                 // axis: 'x',
                 axis: FindRotationAxis(animationData),
+                easingType: i === 0 ? 'out' : 'inOut'
               }),
             ];
           })
@@ -299,9 +294,9 @@ export const uninitializedData: UninitializedData = {
             }),
             //buckyball
             ScaleXYZ({
-              duration: 2.5, //higher number is slower
+              duration: 2, //higher number is slower
               initialScale: [0.05, 0.05, 0.05],
-              finalScale: [0.063, 0.063, 0.063],
+              finalScale: [0.065, 0.065, 0.065],
             }),
           ],
         },

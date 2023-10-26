@@ -166,12 +166,15 @@ export function Models( { initializedPage, section } : any): JSX.Element {
             const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section + 1}`);
             state.scene.children[prevModelIndex].visible = false;
           }
+          // ZoomIn conditional. If camera transition is a zoom-in, then the shrink animation 
+          // looks too janky, so instead we just set the visibility to zero.
+          
           // REFACTOR THIS TOO MANY UN-NECESSARY CHECKS:
-          else if (backwards) {
-            const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section + 1}`);
-            if (initializedPage.models[section + 1].zoomInOnReverse)
-              state.scene.children[prevModelIndex].visible = false
-          }
+          // else if (backwards) {
+          //   const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section + 1}`);
+          //   if (initializedPage.models[section + 1].zoomInOnReverse)
+          //     state.scene.children[prevModelIndex].visible = false
+          // }
         });
 
       

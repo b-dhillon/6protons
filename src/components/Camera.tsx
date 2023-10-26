@@ -17,8 +17,6 @@ import { setCameraAnimating } from '../redux/actions';
  * 
 */
 
-
-
 export function Camera( { initializedPage, section }: any ): JSX.Element {
   
   const [ animations, setAnimations ] = useState<AnimationAction[]|[]>([]);
@@ -31,15 +29,13 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
   const dispatch = useDispatch();
 
 
-  /* creates all AnimationActions via looping camera.animationClips[] */
+  /* Creates all AnimationActions via looping camera.animationClips[] */
   useEffect(() => {
-    // if no mixer, create mixer
-    if( !mixer ) {
-      setMixer(new THREE.AnimationMixer(ref.current));
-    } 
-    // if mixer, animations are ready to be created from mixer:
+    /* if no mixer, create mixer */
+    if( !mixer ) setMixer(new THREE.AnimationMixer(ref.current))
+    /* if mixer, create AnimationActions from mixer */
     else {
-      // maps over animationClips and creates an AnimationAction for each AnimationClip
+      /* Map over animationClips and creates an AnimationAction for each AnimationClip */
       function createAnimations( ref: any, animationClips: [][] ): AnimationAction[] {
         function createAnimation( clip: THREE.AnimationClip ): THREE.AnimationAction {
           // mixer = new THREE.AnimationMixer(ref);
@@ -49,16 +45,17 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
           return animation;
         };
         return animationClips.map((animationClip: []) => createAnimation(animationClip[0]) ); 
-        // Why is index hard-coded 0?? --> because theres only one animation per section
-        // I believe I initially built it to be explandable to multiple animations per section.
-        // But this should be re-factored to an object, like what we did with the model's multiple animations.
+        /** Why is index hard-coded 0?? --> because theres only one animation per section
+         * I believe I initially built it to be explandable to multiple animations per section.
+         * But this should be re-factored to an object, like what we did with the model's multiple animations.
+        */
       };
       setAnimations( createAnimations(ref.current, camera.animationClips) );
-      // Add an eventListener for the "finished" event
+      /* Add an eventListener for the "finished" event */
       mixer.addEventListener('finished', function (event) {
         console.log('Animation finished!', event.action);  // event.action gives you the action that has just finished.
       });
-    }
+    };
   }, [mixer]);
 
   /* controller --> Plays AnimationAction based on section */
@@ -69,12 +66,8 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
     /* 1. section mutates, controller is popped onto the call-stack: */
     function controller() {
       if (animations.length && section >= 0) {
-        /* ensure all animations are stopped before playing the next one:
-         * you can also just use mixer.stopAllAction to all actions on the mixer in one go!
-        */
+        /* Ensure all animations are stopped before playing the next one:*/
         mixer.stopAllAction();
-        // animations.forEach( ( animation: AnimationAction ) => animation.stop() );
-
 
         /* Needed for the first animation, before the start-button is clicked.
          * This should be re-factored however. Make the whole camera a stack. Start the stack at -1. 
@@ -87,20 +80,18 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
           if (forwards && section <= maxSection ) {
             dispatch( setCameraAnimating(true) );
             animations[0].reset();
-            animations[section].setEffectiveTimeScale(0.1);
+            animations[section].setEffectiveTimeScale(0.2);
             animations[0].play();
             // animations[0].halt(7.8);
-            // setTimeout( ()=> {
-            //   animations[0].time = animations[0].duration
-            // }, 7800 )
           };
           if(backwards) {            
             dispatch( setCameraAnimating(true) );
             animations[section + 1].reset();
             animations[section + 1].time = camera.animationClips[0][0].duration
-            animations[section + 1].setEffectiveTimeScale(-1);
+            animations[section + 1].setEffectiveTimeScale(-0.2);
             animations[section + 1].play();
-            animations[section + 1].halt(7.8);
+
+            // animations[section + 1].halt(7.8);
             // animations[section + 1].play().warp(-1, 0.01, 7.8);
           };
           /* set prevSection to currSection to get ready for next navigation */
@@ -109,9 +100,10 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
 
         if (prevSection.current !== undefined && section !== 0) {
           // console.log('prevSection', prevSection.current);
-          // if delta negative, move up the stack:
+
+          /* if delta negative, move up the stack: */
           const forwards: boolean = ( prevSection.current - section ) < 0;
-          // if delta positive, move down the stack:
+          /* if delta positive, move down the stack: */
           const backwards: boolean = ( prevSection.current - section ) > 0;
           cameraDidntMove.current = !initializedPage.models[ forwards ? section : section + 1].newModelLocation;
 
@@ -119,8 +111,9 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
           if (forwards && section <= maxSection) {            
             dispatch( setCameraAnimating(true) );
             animations[section].reset();
-            animations[section].setEffectiveTimeScale(1);
+            animations[section].setEffectiveTimeScale(0.2);
             animations[section].play();
+
             // animations[section].halt(7.8);
             // animations[section].play().warp(1, 0.01, 7.8);
           };
@@ -129,9 +122,10 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
             dispatch( setCameraAnimating(true) );
             animations[section + 1].reset();
             animations[section + 1].time = camera.animationClips[section][0].duration
-            animations[section + 1].setEffectiveTimeScale(-1);
+            animations[section + 1].setEffectiveTimeScale(-0.2);
             animations[section + 1].play();
-            animations[section + 1].halt(7.8);
+
+            // animations[section + 1].halt(7.8);
             // animations[section + 1].play().warp(-1, 0.01, 7.8);
           };
           /* sets prevSection to currSection to get ready for next navigation */
@@ -176,6 +170,17 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+// animations.forEach( ( animation: AnimationAction ) => animation.stop() );
 
 // const elapsed = animations[section].time;
       
