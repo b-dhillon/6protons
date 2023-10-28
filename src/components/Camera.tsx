@@ -61,19 +61,16 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
   /* controller --> Plays AnimationAction based on section */
   useEffect(() => {
 
-    // cameraDidntMove.current = !initializedPage.models[ forwards ? section : section + 1].newModelLocation;
-    // cameraDidntMove.current = !initializedPage.models[ section ].newModelLocation;
-    // if(!cameraDidntMove) dispatch( setCameraAnimating(true) );
-
     controller();
 
     /* 1. section mutates, controller is popped onto the call-stack: */
     function controller() {
       if (animations.length && section >= 0) {
+
         /* Ensure all animations are stopped before playing the next one:*/
         mixer.stopAllAction();
 
-        /* Needed for the first animation, before the start-button is clicked.
+        /* Needed for the first animation, before start-button is clicked.
          * This should be re-factored however. Make the whole camera a stack. Start the stack at -1. 
          * When lesson is loaded, move the stack from -1 to 0, triggering the first entrance animation as a forwards animation
          * With that logic, you would theoretically not need this extra block.
@@ -81,33 +78,27 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
         if( section === 0 ) {
           const backwards: boolean = (prevSection.current - section) > 0;
           const forwards = !backwards;
+
           if (forwards && section <= maxSection ) {
             dispatch( setCameraAnimating(true) );
-            console.log('setting cameraAnimating to true');
-
             animations[0].reset();
             animations[section].setEffectiveTimeScale(0.2);
             animations[0].play();
-            // animations[0].halt(7.8);
           };
+
           if(backwards) {            
             dispatch( setCameraAnimating(true) );
-            console.log('setting cameraAnimating to true');
-
             animations[section + 1].reset();
             animations[section + 1].time = camera.animationClips[0][0].duration
             animations[section + 1].setEffectiveTimeScale(-0.2);
             animations[section + 1].play();
-
-            // animations[section + 1].halt(7.8);
-            // animations[section + 1].play().warp(-1, 0.01, 7.8);
           };
+
           /* set prevSection to currSection to get ready for next navigation */
           prevSection.current = 0;
         };
 
         if (prevSection.current !== undefined && section !== 0) {
-          // console.log('prevSection', prevSection.current);
 
           /* if delta negative, move up the stack: */
           const forwards: boolean = ( prevSection.current - section ) < 0;
@@ -118,25 +109,19 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
 
           if (forwards && section <= maxSection) {            
             dispatch( setCameraAnimating(true) );
-            console.log('setting cameraAnimating to true');
             animations[section].reset();
             animations[section].setEffectiveTimeScale(0.2);
             animations[section].play();
-
-            // animations[section].halt(7.8);
-            // animations[section].play().warp(1, 0.01, 7.8);
           };
 
           if ( backwards ) {
             dispatch( setCameraAnimating(true) );
-            console.log('setting cameraAnimating to true');
             animations[section + 1].reset();
             animations[section + 1].time = camera.animationClips[section][0].duration
             animations[section + 1].setEffectiveTimeScale(-0.2);
             animations[section + 1].play();
-            // animations[section + 1].halt(7.8);
-            // animations[section + 1].play().warp(-1, 0.01, 7.8);
           };
+
           /* sets prevSection to currSection to get ready for next navigation */
           prevSection.current = section;
         };
@@ -144,20 +129,18 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
     };
   }, [animations, section]);
 
-  // Updates animation via mixer
-  // let i = 0;
+  /** Update animation via mixer */
   useFrame((_, delta) => {
-    
+    /** This conditional needs to be re-thought */
     if (animations.length && mixer && section >= 0){
-
-      mixer.update(delta)
-      // Will need to think about backwards animations too. But first, lets see if forwards
-      // works with disabling the buttons.
-      if (isCameraAnimating && !animations[section].isRunning() && !animations[section + 1]?.isRunning() || cameraDidntMove.current){
-        console.log('setting camera animating to false');
-        dispatch( setCameraAnimating(false) )
+      mixer.update(delta);
+      /** This conditional needs to be re-factored */
+      if (
+        isCameraAnimating && !animations[section].isRunning() && !animations[section + 1]?.isRunning() 
+        || cameraDidntMove.current && isCameraAnimating) {
+          dispatch( setCameraAnimating(false) )
       }
-    } 
+    };
   });
 
   // Setting the scene's camera. There are two. Perspective and Development.

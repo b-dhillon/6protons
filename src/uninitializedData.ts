@@ -294,9 +294,9 @@ export const uninitializedData: UninitializedData = {
             }),
             //buckyball
             ScaleXYZ({
-              duration: 1.5, //higher number is slower
+              duration: 1.6, //higher number is slower
               initialScale: [0.045, 0.045, 0.045],
-              finalScale: [0.067, 0.067, 0.067],
+              finalScale: [0.070, 0.070, 0.070],
             }),
           ],
         },

@@ -116,13 +116,14 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
 
   let currModelAnimations = useRef<ModelAnimations>(animationActions[0]);
   let prevModelAnimations = useRef<ModelAnimations>();
+  let cameraDidntMove = useRef<boolean>(false);
 
-  /** controller --> Plays the AnimationActions based on section + handles model visibility
+  /** controllers --> handles AnimationActions based on state + handles model visibility
    * 
    * controller1:
    *   1. section mutates, controller1 is popped onto the call-stack:
    *   2. Check if mutation forwards or backwards:
-   *   3 Check if cameraDidntMove
+   *   3 Check if cameraDidntMove.current
    *   4. Handle visibility of models:
    *   5. Handle animation assignment
    *   6. Handle exitAnimation of prevModel:
@@ -144,14 +145,14 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
 
       if ( animationActions.length && section >= 0 ) {
 
-        console.log('top of controller prevSection:', prevSection.current, 'currSection:', section);
+        // console.log('top of controller prevSection:', prevSection.current, 'currSection:', section);
 
         /* 2. Check if mutation was forwards or backwards: */
         const forwards: boolean = ( prevSection.current - section ) < 0; // if delta -, move up stack:  
         const backwards: boolean = ( prevSection.current - section ) > 0; // if delta +, move down stack:
         
-        /* 3 Check if cameraDidntMove */
-        let cameraDidntMove = !initializedPage.models[ forwards ? section : section + 1].newModelLocation;
+        /* 3 Check if cameraDidntMove.current */
+        cameraDidntMove.current = !initializedPage.models[ forwards ? section : section + 1].newModelLocation;
 
 
         /* 4. Handle visibility of models: */
@@ -164,16 +165,16 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
           state.scene.children[currModelIndex].visible = true;
     
 
-          // 4.3) If cameraDidntMove, we have to set the prevModel visibility to false to make room for the new model.
+          // 4.3) If cameraDidntMove, we set prevModel visibility to false to make room for new model.
 
           // 4.3--A) If forwards, section is greater than 0, and cameraDidntMove, then mutate LOWER ON STACK (section -1) model's visibility to false.
-          if(forwards && section > 0 && cameraDidntMove ) {
+          if(forwards && section > 0 && cameraDidntMove.current ) {
             const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section - 1}`);
             state.scene.children[prevModelIndex].visible = false;
           }
-          // 4.3--B) If backwards, section is greater than 0, and cameraDidntMove, then mutate HIGHER ON STACK (section + 1) model's visibility to false.
-          else if (backwards && section > 0 && cameraDidntMove ) {
-            // let cameraDidntMove = !initializedPage.models[section+1].newModelLocation;
+          // 4.3--B) If backwards, section is greater than 0, and cameraDidntMove.current, then mutate HIGHER ON STACK (section + 1) model's visibility to false.
+          else if (backwards && section > 0 && cameraDidntMove.current ) {
+            // let cameraDidntMove.current = !initializedPage.models[section+1].newModelLocation;
             const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section + 1}`);
             state.scene.children[prevModelIndex].visible = false;
           }
@@ -186,7 +187,7 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
         currModelAnimations.current = animationActions[ section ];
         if (forwards) {
           prevModelAnimations.current = animationActions[ section - 1 ];
-          console.log("Forwards!");
+          // console.log("Forwards!");
         };
         if (backwards) prevModelAnimations.current = animationActions[ section + 1 ];
 
@@ -194,7 +195,7 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
         /* 6. Handle animation playback: */
 
         /* 6.1--A) If camera didn't move location: */
-        if( cameraDidntMove ) {
+        if( cameraDidntMove.current ) {
           /* A. Grab earlier model's animation time */
           const oldT = animationActions[ forwards ? section - 1 : section + 1 ].mainAnimation.time;
           /* B. Set current model's animation to this time.  */
@@ -224,33 +225,29 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
         };
 
         /* 7. Pause/Stop mainAnimation of previousModel: 
-         *     This is hacky and should be re-thought
-         *     Instead of setting a hard-coded timeout, 
-         *     perhaps make it half the duration of the animation
+         *      This is hacky and should be re-thought
+         *      Instead of setting a hard-coded timeout, 
+         *      perhaps make it half the duration of the animation
         */
         if ( section > 0 ) {
           setTimeout( () => {
             prevModelAnimations.current?.mainAnimation.stop();
           }, 2500 )
         } /* What about stopping the nestedAnimation and scaleAnimation?? */
-
       }
-
-      /* 7. set prevSection to currSection to get ready for next navigation */
     } 
-
   }, [ animationActions, section ]);
 
 
-  /** controller2 */ 
+  /** controller2 --> handles mainAnimation and entranceAnimation after camera completes animating */ 
   useEffect( () => {
-    console.log("controller2, isCameraAnimating:", isCameraAnimating);
 
-    if(!isCameraAnimating && section > 0 ) {
-      console.log('inside entranceAnimation trigger block');
+    // let cameraDidntMove = !initializedPage.models[ section ].newModelLocation;
 
-      /** Trigger currModel entrance animation when camera stops animating */
-      animationActions[ section ].scaleAnimation.stop().setEffectiveTimeScale(-1).play();
+    if( !isCameraAnimating && section ) {
+
+      /** Trigger currModel entrance animation when camera stops animating and if camera did move */
+      if( !cameraDidntMove.current ) animationActions[ section ].scaleAnimation.stop().setEffectiveTimeScale(-1).play();
 
       /** Trigger currModel mainAnimation when camera stops animating */
       currModelAnimations.current.mainAnimation.play();
@@ -260,12 +257,12 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
         currModelAnimations.current.nestedAnimation.setLoop(LoopPingPong, Infinity);
         currModelAnimations.current.nestedAnimation.play();
       };
-    }
+    };
 
     /* We are now done controlling, set prevSection to section to get ready for next navigation */
     prevSection.current = section;
 
-  }, [ isCameraAnimating ] )
+  }, [ isCameraAnimating ] );
 
 
 
@@ -313,12 +310,10 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
 
   return (
     <>
-      {FiberModels}
+      { FiberModels }
     </>
   );
 }
-
-
 
 
 

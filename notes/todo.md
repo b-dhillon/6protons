@@ -1,36 +1,58 @@
 # To-do:
 
-  # Interpolation 
-
-
-
-    - Decide on scaling factor --> ease-in is too slow? lets speed it up.
-    - Finalize the easing function to use. 
-    - Decide on duration:
-      - Should we keep the duration at 1 and use a time-scale adjustment 
-      - Or set the proper duration and keep time-scale at 1 and -1?
-
-
   # If backwards, display all text after camera stops animating.
+    ## Encountering a weird bug with setting up prevSection. 
+
+      I need a prevSection variable to tell if it is forwards or backwards navigation
+      if forwards I render 1 by 1 
+
+      But if backwards, I give them all the fadeIn class at once. 
+
+      Problem is, prevSection.current is stuck at -1 so it always thinks its a forwards movement.
+        Why? Is LessonText being un-mounted and re-mounted when section mutates?
 
 
-
-
+  # Add quarter circle curve between section2 and section3
 
 
   # Redo styling of lessonText -- new font, new font-size, line-height and everything.
 
 
+  # Hookup Start Button's disabled state to isCameraAnimating too.
 
 
 
 
 
-## Rest of the week:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Next:
   # Rebuild Home page.
+  # Find better chime
+  # Clean and refactor.
+  # Get all other lessons working.
+  # Add diamond lattice to diamond model -- essentially build section1 of the diamond lesson
+  # Add re-direct buttons to all lessons.
+  # Create diagrams + update readme.md on GitHub
 
-
-# Clean and refactor.
 
 
 
@@ -227,3 +249,12 @@ Need to understand Models, Camera and their Animation systems.
     when the controller is done controlling everything. This is when the 
     camera has finished updating and the controller has been triggered for
     the second time.
+
+
+# Interpolation 
+
+  - Decide on scaling factor --> ease-in is too slow? lets speed it up.
+  - Finalize the easing function to use. 
+  - Decide on duration:
+    - Should we keep the duration at 1 and use a time-scale adjustment 
+    - Or set the proper duration and keep time-scale at 1 and -1?

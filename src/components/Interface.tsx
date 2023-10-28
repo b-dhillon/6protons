@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
 import { decrement, increment, reset, start } from '../redux/actions';
 import { InitializedPage } from '../types/types';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 
 /** Reversing Navigation
@@ -183,12 +183,23 @@ function LessonBody( { page, section, isCameraAnimating }: any ): JSX.Element {
   // const dispatch = props.data.dispatch(); // this dispatch
   const dispatch = useDispatch();
 
+
+  
+
+
+  const prevSection = useRef<number>(-1);
+  const forwards = useRef<boolean>();
+
+
+
+
+
+
   function LessonNavigation(props: any): JSX.Element {
     return (
       <div className='lesson-body__navigation'>
         <button
           disabled={ isCameraAnimating }
-
           className={`lesson-body__navigation__button--${props.type}`}
           onClick={() =>
             props.type === 'forwards'
@@ -227,14 +238,54 @@ function LessonBody( { page, section, isCameraAnimating }: any ): JSX.Element {
       transition: 'opacity 0.7s ease-in-out'
     };
 
+
+
+    useEffect( () => {
+
+      /* if delta negative, move up the stack: */
+      console.log('setting forwards.current');
+      console.log("prevSection:", prevSection.current, "currSection", section);
+      forwards.current = ( prevSection.current - section ) < 0;
+      /* if delta positive, move down the stack: */
+      // const backwards: boolean = ( prevSection.current - section ) > 0;
+
+    }, [section] ) 
+
+
     // Control the display of paragraphs in sequence after camera finishes animation
     useEffect(() => {
-      if (!isCameraAnimating && currentDisplayIndex < paragraphsOfSection.length - 1) {
-        const timer = setTimeout(() => {
-          setCurrentDisplayIndex(prevIndex => prevIndex + 1);
-        }, 1000); // Show next paragraph every second after camera stops animating
-        return () => clearTimeout(timer);
+
+      console.log("Forwards inside interface:", forwards.current );
+
+      if (forwards.current && !isCameraAnimating ) {
+
+        if(currentDisplayIndex < paragraphsOfSection.length - 1) {
+          const timer = setTimeout(() => {
+            setCurrentDisplayIndex(prevIndex => prevIndex + 1);
+          }, 1000); // Show next paragraph every second after camera stops animating
+          return () => clearTimeout(timer);
+        } else if (currentDisplayIndex === paragraphsOfSection.length - 1 ) {
+
+
+          // we are done controlling forwards, set prevSection
+          // prevSection seems to be stuck at -1
+          // even though this console.log statement makes it to the console
+          console.log("Setting prevSection");
+          prevSection.current = section;
+        }
+
       };
+
+      if( !forwards.current && !isCameraAnimating && currentDisplayIndex < paragraphsOfSection.length - 1 ) {
+        console.log("INSIDE THIS BLOCK");
+        // this should display all the paragraphs at once by giving them all a fadeInStyle 
+        setCurrentDisplayIndex( paragraphsOfSection.length - 1 )
+      
+        // we are done controlling backwards, set prevSection
+        prevSection.current = section;
+      }
+
+
     }, [isCameraAnimating, currentDisplayIndex]);
 
 
