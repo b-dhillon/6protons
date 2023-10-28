@@ -1,24 +1,19 @@
 # To-do:
 
-  # If backwards, display all text after camera stops animating.
-    ## Encountering a weird bug with setting up prevSection. 
-
-      I need a prevSection variable to tell if it is forwards or backwards navigation
-      if forwards I render 1 by 1 
-
-      But if backwards, I give them all the fadeIn class at once. 
-
-      Problem is, prevSection.current is stuck at -1 so it always thinks its a forwards movement.
-        Why? Is LessonText being un-mounted and re-mounted when section mutates?
-
-
   # Add quarter circle curve between section2 and section3
 
 
   # Redo styling of lessonText -- new font, new font-size, line-height and everything.
 
 
-  # Hookup Start Button's disabled state to isCameraAnimating too.
+
+
+
+
+
+
+
+
 
 
 
@@ -233,7 +228,7 @@ Need to understand Models, Camera and their Animation systems.
 # 10.27.23
 
 
-- Hook up model animations to trigger if !isCameraAnimating
+ ## Hook up model animations to trigger if !isCameraAnimating
   This required us to add isCameraAnimating to the dependency array of the model controller
   This created an additional problem with setting prevSection
     Now prevSection was being set twice, because the controller was being called twice:
@@ -251,10 +246,34 @@ Need to understand Models, Camera and their Animation systems.
     the second time.
 
 
-# Interpolation 
-
+ ## Interpolation 
   - Decide on scaling factor --> ease-in is too slow? lets speed it up.
   - Finalize the easing function to use. 
   - Decide on duration:
     - Should we keep the duration at 1 and use a time-scale adjustment 
     - Or set the proper duration and keep time-scale at 1 and -1?
+
+
+
+
+
+
+
+
+
+
+
+
+# 10.27.23
+
+
+  ## If backwards, display all text after camera stops animating.
+    ## Encountering a weird bug with setting up prevSection. 
+
+      I need a prevSection variable to tell if it is forwards or backwards navigation
+      if forwards I render 1 by 1 
+
+      But if backwards, I give them all the fadeIn class at once. 
+
+      Problem is, prevSection.current is stuck at -1 so it always thinks its a forwards movement.
+        Why? Is LessonText being un-mounted and re-mounted when section mutates?

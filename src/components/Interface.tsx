@@ -91,7 +91,7 @@ export function Interface({
       <div className='lesson-overlay'>
         <LessonHeader page={initializedPage} section={section} setCurrentPage={setCurrentPage}/>
         <LessonBody page={initializedPage} section={section} isCameraAnimating={isCameraAnimating} />
-        <LessonFooter page={initializedPage} section={section} />
+        <LessonFooter page={initializedPage} section={section} isCameraAnimating={isCameraAnimating} />
       </div>
     );
   }
@@ -184,7 +184,7 @@ function LessonBody( { page, section, isCameraAnimating }: any ): JSX.Element {
   const dispatch = useDispatch();
 
 
-  
+
 
 
   const prevSection = useRef<number>(-1);
@@ -351,7 +351,44 @@ function LessonBody( { page, section, isCameraAnimating }: any ): JSX.Element {
   );
 }
 
-//className={ cameraMovement ? `fade--cam-move-${i}` : `fade--no-cam-move-${i}` }
+
+
+
+
+
+
+/** Fn Description
+ * Outputs the start-button to start the lesson or just an empty string if lesson already started
+ */
+
+function LessonFooter( {section, isCameraAnimating}: any): JSX.Element {
+  const dispatch = useDispatch();
+  return (
+    <>
+      {section === 0 ? (
+        <div className='lesson-footer'>
+          <button disabled={isCameraAnimating} className='lesson-footer__start-button' onClick={() => dispatch(increment())}>
+            Start Lesson
+          </button>
+        </div>
+      ) : (
+        ''
+      )}
+    </>
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -373,29 +410,3 @@ function LessonBody( { page, section, isCameraAnimating }: any ): JSX.Element {
 //                     } ();
 
 //                     or 
-
-
-
-
-
-
-/** Fn Description
- * Outputs the start-button to start the lesson or just an empty string if lesson already started
- */
-
-function LessonFooter( {section}: any): JSX.Element {
-  const dispatch = useDispatch();
-  return (
-    <>
-      {section === 0 ? (
-        <div className='lesson-footer'>
-          <button className='lesson-footer__start-button' onClick={() => dispatch(increment())}>
-            Start Lesson
-          </button>
-        </div>
-      ) : (
-        ''
-      )}
-    </>
-  );
-}
