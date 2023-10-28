@@ -2,12 +2,10 @@
 
   # Interpolation 
 
-    - Hook up model animations to trigger if !isCameraAnimating
 
-    - Decide on scaling factor --> ease-in is too slow, lets speed it up.
 
+    - Decide on scaling factor --> ease-in is too slow? lets speed it up.
     - Finalize the easing function to use. 
-
     - Decide on duration:
       - Should we keep the duration at 1 and use a time-scale adjustment 
       - Or set the proper duration and keep time-scale at 1 and -1?
@@ -207,3 +205,25 @@ CreateAnimationActions --> method...but where should we place the definition? --
 
 Fully understand codebase
 Need to understand Models, Camera and their Animation systems.
+
+
+
+# 10.27.23
+
+
+- Hook up model animations to trigger if !isCameraAnimating
+  This required us to add isCameraAnimating to the dependency array of the model controller
+  This created an additional problem with setting prevSection
+    Now prevSection was being set twice, because the controller was being called twice:
+      First: when section mutated 
+      Second: when isCameraAnimating mutated to false
+    This created some bugs with the animation. After camera finished animating, 
+    the prevSection was already set to currentSection. 
+
+    To fix this, we need to set prevSection only when 
+    the controller is done controlling everything for that section
+
+    I created a seperate useEffect that only triggers
+    when the controller is done controlling everything. This is when the 
+    camera has finished updating and the controller has been triggered for
+    the second time.

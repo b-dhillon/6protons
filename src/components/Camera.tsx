@@ -17,7 +17,7 @@ import { setCameraAnimating } from '../redux/actions';
  * 
 */
 
-export function Camera( { initializedPage, section }: any ): JSX.Element {
+export function Camera( { initializedPage, section, isCameraAnimating }: any ): JSX.Element {
   
   const [ animations, setAnimations ] = useState<AnimationAction[]|[]>([]);
   const [ mixer, setMixer ] = useState<THREE.AnimationMixer | null>();
@@ -35,7 +35,7 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
     if( !mixer ) setMixer(new THREE.AnimationMixer(ref.current))
     /* if mixer, create AnimationActions from mixer */
     else {
-      /* Map over animationClips and creates an AnimationAction for each AnimationClip */
+      /* Map over AnimationClips and creates an AnimationAction for each AnimationClip */
       function createAnimations( ref: any, animationClips: [][] ): AnimationAction[] {
         function createAnimation( clip: THREE.AnimationClip ): THREE.AnimationAction {
           // mixer = new THREE.AnimationMixer(ref);
@@ -44,10 +44,10 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
           animation.clampWhenFinished = true;
           return animation;
         };
-        return animationClips.map((animationClip: []) => createAnimation(animationClip[0]) ); 
+        return animationClips.map( (animationClip: []) => createAnimation(animationClip[0]) );
         /** Why is index hard-coded 0?? --> because theres only one animation per section
-         * I believe I initially built it to be explandable to multiple animations per section.
-         * But this should be re-factored to an object, like what we did with the model's multiple animations.
+         *  I believe I initially built it to be explandable to multiple animations per section.
+         *  But this should be re-factored to an object, like what we did with the model's multiple animations.
         */
       };
       setAnimations( createAnimations(ref.current, camera.animationClips) );
@@ -60,6 +60,10 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
 
   /* controller --> Plays AnimationAction based on section */
   useEffect(() => {
+
+    // cameraDidntMove.current = !initializedPage.models[ forwards ? section : section + 1].newModelLocation;
+    // cameraDidntMove.current = !initializedPage.models[ section ].newModelLocation;
+    // if(!cameraDidntMove) dispatch( setCameraAnimating(true) );
 
     controller();
 
@@ -79,6 +83,8 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
           const forwards = !backwards;
           if (forwards && section <= maxSection ) {
             dispatch( setCameraAnimating(true) );
+            console.log('setting cameraAnimating to true');
+
             animations[0].reset();
             animations[section].setEffectiveTimeScale(0.2);
             animations[0].play();
@@ -86,6 +92,8 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
           };
           if(backwards) {            
             dispatch( setCameraAnimating(true) );
+            console.log('setting cameraAnimating to true');
+
             animations[section + 1].reset();
             animations[section + 1].time = camera.animationClips[0][0].duration
             animations[section + 1].setEffectiveTimeScale(-0.2);
@@ -110,6 +118,7 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
 
           if (forwards && section <= maxSection) {            
             dispatch( setCameraAnimating(true) );
+            console.log('setting cameraAnimating to true');
             animations[section].reset();
             animations[section].setEffectiveTimeScale(0.2);
             animations[section].play();
@@ -118,13 +127,13 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
             // animations[section].play().warp(1, 0.01, 7.8);
           };
 
-          if (backwards) {
+          if ( backwards ) {
             dispatch( setCameraAnimating(true) );
+            console.log('setting cameraAnimating to true');
             animations[section + 1].reset();
             animations[section + 1].time = camera.animationClips[section][0].duration
             animations[section + 1].setEffectiveTimeScale(-0.2);
             animations[section + 1].play();
-
             // animations[section + 1].halt(7.8);
             // animations[section + 1].play().warp(-1, 0.01, 7.8);
           };
@@ -144,8 +153,10 @@ export function Camera( { initializedPage, section }: any ): JSX.Element {
       mixer.update(delta)
       // Will need to think about backwards animations too. But first, lets see if forwards
       // works with disabling the buttons.
-      if (!animations[section].isRunning() && !animations[section + 1]?.isRunning() || cameraDidntMove.current)
+      if (isCameraAnimating && !animations[section].isRunning() && !animations[section + 1]?.isRunning() || cameraDidntMove.current){
+        console.log('setting camera animating to false');
         dispatch( setCameraAnimating(false) )
+      }
     } 
   });
 

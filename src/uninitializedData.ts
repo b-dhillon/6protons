@@ -275,7 +275,7 @@ export const uninitializedData: UninitializedData = {
           visible: false,
           newModelLocation: true,
           scale: 0,
-          yOffsetForText: 0.04,
+          yOffsetForText: 0.05,
           zoomInOnReverse: false,
           positions: [[0.0, -0.1, -3.0]],
           rotations: [[0.0, 0.0, 0.0]],
@@ -294,9 +294,9 @@ export const uninitializedData: UninitializedData = {
             }),
             //buckyball
             ScaleXYZ({
-              duration: 2, //higher number is slower
-              initialScale: [0.05, 0.05, 0.05],
-              finalScale: [0.065, 0.065, 0.065],
+              duration: 1.5, //higher number is slower
+              initialScale: [0.045, 0.045, 0.045],
+              finalScale: [0.067, 0.067, 0.067],
             }),
           ],
         },

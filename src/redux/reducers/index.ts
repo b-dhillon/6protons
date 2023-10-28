@@ -39,7 +39,7 @@ function overlay(state = false, action: { type: any }) {
   }
 }
 
-function isCameraAnimating(state = false, action: { type: any }): boolean {
+function isCameraAnimating(state = true, action: { type: any }): boolean {
   switch (action.type) {
     case 'TRUE':
       return true;

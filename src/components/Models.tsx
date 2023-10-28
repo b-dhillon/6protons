@@ -107,156 +107,185 @@ interface ModelAnimations {
   nestedAnimation: THREE.AnimationAction
 }
 
-export function Models( { initializedPage, section } : any): JSX.Element {
+export function Models( { initializedPage, section, isCameraAnimating } : any): JSX.Element {
 
   const [ animationActions, setAnimationActions ] = useState<ModelAnimations[]>([]); // [ { mainAnimation, scaleAnimation, nestedAnimation }, [ ], etc... ]
+  const [ doneControlling, setDoneControlling ] = useState<boolean>(() => false);
   const set = useThree((state) => state.set);
   const prevSection = useRef(-1);
 
   let currModelAnimations = useRef<ModelAnimations>(animationActions[0]);
   let prevModelAnimations = useRef<ModelAnimations>();
 
-  /** controller --> Plays the AnimationAction based on section (section)
+  /** controller --> Plays the AnimationActions based on section + handles model visibility
    * 
-   * 1. section mutates, this fn is popped onto the call-stack:
-   * 2. Check is mutation was forwards or backwards:
-   * 3. Handle visibility of models:
-   * 4. Handle animation assignment
-   * 5. Handle animation playback:
-   * 6. Pause/Stop animation of previousModel:
-   * 7. set prevSection to currSection to get ready for next navigation
+   * controller1:
+   *   1. section mutates, controller1 is popped onto the call-stack:
+   *   2. Check if mutation forwards or backwards:
+   *   3 Check if cameraDidntMove
+   *   4. Handle visibility of models:
+   *   5. Handle animation assignment
+   *   6. Handle exitAnimation of prevModel:
+   *   7. Pause/Stop animation of previousModel:
+   * 
+   * controller2:
+   *   1. isCameraAnimating mutates, controller2 is popped onto the call-stack:
+   *   2. Trigger entranceAnimation, mainAnimation, and nestedAnimation of currModel 
+   *   3. set prevSection to currSection to get ready for next navigation
    * 
   */  
   useEffect(() => {
-    // console.log('prevSection:', prevSection.current, 'currSection:', section);
 
-    controller(animationActions, section);
+    // if(doneControlling) setDoneControlling( false );
+    controller1(animationActions, section);
 
-    /* 1. section mutates, controller is popped onto the call-stack: */
-    function controller( animationActions: ModelAnimations[], section: number ): void {
+    /* 1. section mutates, controller1 is popped onto the call-stack: */
+    function controller1( animationActions: ModelAnimations[], section: number ): void {
 
-      if (animationActions.length && section >= 0) {
+      if ( animationActions.length && section >= 0 ) {
+
+        console.log('top of controller prevSection:', prevSection.current, 'currSection:', section);
 
         /* 2. Check if mutation was forwards or backwards: */
         const forwards: boolean = ( prevSection.current - section ) < 0; // if delta -, move up stack:  
         const backwards: boolean = ( prevSection.current - section ) > 0; // if delta +, move down stack:
         
+        /* 3 Check if cameraDidntMove */
         let cameraDidntMove = !initializedPage.models[ forwards ? section : section + 1].newModelLocation;
 
 
-        /* 3. Handle visibility of models: */
+        /* 4. Handle visibility of models: */
         set((state) => {
 
-          // 3.1) If camera-did-move, then we keep the prevModel visibility true so that the exit animation can play
+          // 4.1) If camera-did-move, then we keep the prevModel visibility true so that the exit animation can play
 
-          // 3.2) Always set current model visibility to true:
+          // 4.2) Always set current model visibility to true:
           const currModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section}`);
           state.scene.children[currModelIndex].visible = true;
     
 
-          // 3.3) If cameraDidntMove, we have to set the prevModel visibility to false to make room for the new model.
-          // 3.3--A) If forwards, section is greater than 0, and cameraDidntMove, then mutate LOWER ON STACK (section -1) model's visibility to false.
+          // 4.3) If cameraDidntMove, we have to set the prevModel visibility to false to make room for the new model.
+
+          // 4.3--A) If forwards, section is greater than 0, and cameraDidntMove, then mutate LOWER ON STACK (section -1) model's visibility to false.
           if(forwards && section > 0 && cameraDidntMove ) {
             const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section - 1}`);
             state.scene.children[prevModelIndex].visible = false;
           }
-          // 3.3--B) If backwards, section is greater than 0, and cameraDidntMove, then mutate HIGHER ON STACK (section + 1) model's visibility to false.
+          // 4.3--B) If backwards, section is greater than 0, and cameraDidntMove, then mutate HIGHER ON STACK (section + 1) model's visibility to false.
           else if (backwards && section > 0 && cameraDidntMove ) {
             // let cameraDidntMove = !initializedPage.models[section+1].newModelLocation;
             const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section + 1}`);
             state.scene.children[prevModelIndex].visible = false;
           }
-          // ZoomIn conditional. If camera transition is a zoom-in, then the shrink animation 
-          // looks too janky, so instead we just set the visibility to zero.
-          
-          // REFACTOR THIS TOO MANY UN-NECESSARY CHECKS:
-          // else if (backwards) {
-          //   const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section + 1}`);
-          //   if (initializedPage.models[section + 1].zoomInOnReverse)
-          //     state.scene.children[prevModelIndex].visible = false
-          // }
         });
 
       
-        /* 4. Handle animation assignment */
-        // 4.1 Mutate top-level currModelAnimations, and prevModelAnimations based on if forwards or backwards
+        /* 5. Handle animation assignment */
+
+        /* 5.1 Mutate top-level currModelAnimations, and prevModelAnimations based on if forwards or backwards */
         currModelAnimations.current = animationActions[ section ];
-        if (forwards) prevModelAnimations.current = animationActions[ section - 1 ];
+        if (forwards) {
+          prevModelAnimations.current = animationActions[ section - 1 ];
+          console.log("Forwards!");
+        };
         if (backwards) prevModelAnimations.current = animationActions[ section + 1 ];
 
-        /* 5. Handle animation playback: */
-        // 5.1--A) If camera didn't move location:
+
+        /* 6. Handle animation playback: */
+
+        /* 6.1--A) If camera didn't move location: */
         if( cameraDidntMove ) {
-          // A. Grab earlier model's animation time
+          /* A. Grab earlier model's animation time */
           const oldT = animationActions[ forwards ? section - 1 : section + 1 ].mainAnimation.time;
-          // B. Set current model's animation to this time. 
+          /* B. Set current model's animation to this time.  */
           currModelAnimations.current.mainAnimation.time = oldT;
-          // C. Play current model's animation
+          /* C. Play current model's animation */
           currModelAnimations.current.mainAnimation.play();
         } 
-        // 5.1--B) If camera did move:
+        /* 6.1--B) If camera did move: */
         else {
 
-          // if(section > 0) {
+          /** Trigger prevModel exit animation as camera moves */
+          // if(isCameraAnimating) {
             prevModelAnimations.current?.scaleAnimation.reset().setEffectiveTimeScale( 0.9 ).play();
-
-            // II. Play current model's entrance animation:
-            // DO WE NEED TO CLEAN UP THIS TIME OUT? --> Pretty sure we do?
-            if (section !== 0) {
-              setTimeout( () => {
-                animationActions[ section ].scaleAnimation.stop().setEffectiveTimeScale(-1).play(); // currModelAnimations.current.scaleAnimation.startAt(8).setEffectiveTimeScale(-1).play();
-              }, 8000 )
-            }
           // }
           
           if (section === 0) {
-            // getting first model to re-appear when going backwards
-            // after having been shrunk from going forwards
+            /* Getting first model to re-appear when going backwards, it is shrunk from going forwards */
             animationActions[ 0 ].scaleAnimation.stop(); 
-            
-            // III. Play current model's main animation:
-            currModelAnimations.current.mainAnimation.play() // first model should play right away
-          } 
-          else currModelAnimations.current.mainAnimation.startAt(9).play(); //every other model needs a delay to wait for camera transition to finish
 
-          // IV. Play Nested animation, if exists:
-          if (currModelAnimations.current.nestedAnimation) {
-            currModelAnimations.current.nestedAnimation.setLoop(LoopPingPong, Infinity);
-            currModelAnimations.current.nestedAnimation.play();
-          };
+            /* Triggering suspension animation on model0 */
+            currModelAnimations.current.mainAnimation.play();
+
+            /* Playing current model's main animation: */
+            // currModelAnimations.current.mainAnimation.play();
+          } 
+
         };
 
-        /* 6. Pause/Stop mainAnimation of previousModel: */
-        if( section > 0 ) {
+        /* 7. Pause/Stop mainAnimation of previousModel: 
+         *     This is hacky and should be re-thought
+         *     Instead of setting a hard-coded timeout, 
+         *     perhaps make it half the duration of the animation
+        */
+        if ( section > 0 ) {
           setTimeout( () => {
             prevModelAnimations.current?.mainAnimation.stop();
-          }, 2000 )
-        } // What about stopping the nestedAnimation and scaleAnimation??
+          }, 2500 )
+        } /* What about stopping the nestedAnimation and scaleAnimation?? */
 
-        /* 7. set prevSection to currSection to get ready for next navigation */
-        prevSection.current = section;
       }
+
+      /* 7. set prevSection to currSection to get ready for next navigation */
     } 
 
   }, [ animationActions, section ]);
 
-  // Update animation mixers on each frame.
+
+  /** controller2 */ 
+  useEffect( () => {
+    console.log("controller2, isCameraAnimating:", isCameraAnimating);
+
+    if(!isCameraAnimating && section > 0 ) {
+      console.log('inside entranceAnimation trigger block');
+
+      /** Trigger currModel entrance animation when camera stops animating */
+      animationActions[ section ].scaleAnimation.stop().setEffectiveTimeScale(-1).play();
+
+      /** Trigger currModel mainAnimation when camera stops animating */
+      currModelAnimations.current.mainAnimation.play();
+
+      /** Trigger nested animation, if exists: */ 
+      if (currModelAnimations.current.nestedAnimation) {
+        currModelAnimations.current.nestedAnimation.setLoop(LoopPingPong, Infinity);
+        currModelAnimations.current.nestedAnimation.play();
+      };
+    }
+
+    /* We are now done controlling, set prevSection to section to get ready for next navigation */
+    prevSection.current = section;
+
+  }, [ isCameraAnimating ] )
+
+
+
+  /* Update animation mixers on each frame. */
   useFrame((_, delta) => {
     if (animationActions.length ) {
-      // Main animation
+      /* Main animation */
       // @ts-ignore
       currModelAnimations.current.mainAnimation._mixer.update(delta);
-      // Nested animation
+      /* Nested animation */
       // @ts-ignore
       currModelAnimations.current.nestedAnimation?._mixer.update(delta);
 
       if (section > 0) {
-        // Scale In animation
+        /* Scale In animation */
         // @ts-ignore
         currModelAnimations.current.scaleAnimation._mixer.update(delta);
-        // Scale Out animation
+        /* Scale Out animation */
         // @ts-ignore
-        prevModelAnimations.current.scaleAnimation._mixer.update(delta);
+        prevModelAnimations.current?.scaleAnimation?._mixer.update(delta);
         // @ts-ignore
         // animationActions[section + 1].scaleAnimation._mixer.update(delta);
       };
@@ -288,6 +317,61 @@ export function Models( { initializedPage, section } : any): JSX.Element {
     </>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// useEffect( () => {
+//   /* 7. set prevSection to currSection to get ready for next navigation */
+//   if(doneControlling && !isCameraAnimating) {
+//     console.log('setting prevSection');
+//     prevSection.current = section;
+//     setDoneControlling( false );
+//   }
+// }, [ doneControlling, isCameraAnimating ] ) 
+
+
+
+
+
+/** Hacky startAt trigger of mainAnimation */
+// else currModelAnimations.current.mainAnimation.startAt(9).play(); //every other model needs a delay to wait for camera transition to finish
+
+
+
+/** Visibility Controller for making prevModel invisible if zoomIn */
+// ZoomIn conditional. If camera transition is a zoom-in, then the shrink animation 
+// looks too janky, so instead we just set the visibility to zero.
+// REFACTOR THIS TOO MANY UN-NECESSARY CHECKS:
+// else if (backwards) {
+//   const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section + 1}`);
+//   if (initializedPage.models[section + 1].zoomInOnReverse)
+//     state.scene.children[prevModelIndex].visible = false
+// }
+
+
+
+/** Hacky useEffect trigger of entranceAnimation */
+// II. Play current model's entrance animation:
+// DO WE NEED TO CLEAN UP THIS TIME OUT? --> Pretty sure we do?
+// if (section !== 0) {
+//   setTimeout( () => {
+//     animationActions[ section ].scaleAnimation.stop().setEffectiveTimeScale(-1).play(); // currModelAnimations.current.scaleAnimation.startAt(8).setEffectiveTimeScale(-1).play();
+//   }, 8000 )
+// }
+// }
+
+
 
 
 
