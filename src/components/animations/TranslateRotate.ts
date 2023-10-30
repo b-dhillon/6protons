@@ -31,7 +31,7 @@ export function TranslateRotate(config: config) {
     const positionValues = [];
   
     for (let i = 0; i < n; i++) {
-      const t = i / n;  // Normalize i to 0 -> 1
+      const t = i / (n-1);  // Normalize i to 0 -> 1
       const easedT = easingFn(t);
       const iX = startPosition[0] + (endPosition[0] - startPosition[0]) * easedT;
       const iY = startPosition[1] + (endPosition[1] - startPosition[1]) * easedT;
@@ -113,10 +113,11 @@ export function TranslateRotate(config: config) {
     return rotationTrack
   }
 
-  return new AnimationClip('TranslateRotateCamera', 1, [
-    createIPositionTrack(),
-    createIRotationTrack(),
-  ]);
+  return new AnimationClip(
+    'TranslateRotateCamera',
+    1,
+    [ createIPositionTrack(), createIRotationTrack() ]
+  );
 }
 
 

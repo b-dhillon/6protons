@@ -23,6 +23,7 @@ export function Scene({ section, initializedPage, isCameraAnimating }: any): JSX
       <Canvas>
         <Universe initializedPage={initializedPage} />
         <Sound initializedPage={initializedPage} section={section} isCameraAnimating={isCameraAnimating} />
+        {/* < DevelopmentCamera  /> */}
         <Camera initializedPage={initializedPage} section={section} isCameraAnimating={isCameraAnimating} />
         <Models initializedPage={initializedPage} section={section} isCameraAnimating={isCameraAnimating}/>
         <Lighting/>
@@ -45,7 +46,6 @@ function FadeIn() {
 
 
 
-{/* < DevelopmentCamera  /> */}
 /* < BackgroundMusic /> */
 
 

@@ -208,7 +208,7 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
 
           /** Trigger prevModel exit animation as camera moves */
           // if(isCameraAnimating) {
-            prevModelAnimations.current?.scaleAnimation.reset().setEffectiveTimeScale( 0.9 ).play();
+            // prevModelAnimations.current?.scaleAnimation.reset().setEffectiveTimeScale( 1.5 ).play();
           // }
           
           if (section === 0) {

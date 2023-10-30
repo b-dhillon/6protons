@@ -2,6 +2,72 @@
 
   # Add quarter circle curve between section2 and section3
 
+    1. Implement first by hard-coding the section2-section3 transition. 
+    2. Debug and get it working as intended. 
+
+
+      initial section(2): [ 0.75, 0.00,-2.00 ]
+      final section(3): [ 2.00, 0.00, 0.75 ]
+
+      Plotting both initial and final positions proves they are a quarter circle apart.
+
+      Changing the first model's position and re-performing the animation shows that the finalPosition seems to be almost accurate.
+        - Just need to flip the x-axis! Camera currently on left-side of model instead of right-side after rotation.
+
+
+      START: 
+        . Add camera.lookAt feature and test section0 to section1 with the perspective camera
+        . If everything works as intended --> flip x-axis?
+        . See why it isn't working for section2 --> section3 
+
+
+
+
+
+
+
+
+    3. Work out implementation details without hard-coding
+        - How are the camera positions set? Hard-coded? 
+        - How do we know when to create a TranslateCircle vs. a TranslateRotate animation clip?
+        - Figure out implementation details of lookAt() on the camera
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    - Figure out to get the vec3 thats a quarter circle away in the x-z plane
+    - Figure out how to interpolate the positions in a circle, with easing. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   # Redo styling of lessonText -- new font, new font-size, line-height and everything.
 
@@ -39,14 +105,17 @@
 
 
 
+
+
 ## Next:
   # Rebuild Home page.
-  # Find better chime
+  # Add/rethink music.
+  # Find better chime.
   # Clean and refactor.
   # Get all other lessons working.
-  # Add diamond lattice to diamond model -- essentially build section1 of the diamond lesson
+  # Add diamond lattice to diamond model -- essentially build section1 of the diamond lesson.
   # Add re-direct buttons to all lessons.
-  # Create diagrams + update readme.md on GitHub
+  # Create diagrams + update readme.md on GitHub.
 
 
 

@@ -17,13 +17,37 @@ import { setCameraAnimating } from '../redux/actions';
  * 
 */
 
+
+/**
+
+  // Grab object from scene
+  let currModel;
+  set((state) => {
+
+    const currModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section}`);
+
+    currModel = state.scene.children[ currModelIndex ];
+
+  });
+
+  /* Make camera lookAt that object
+
+  // this variable is set everytime section mutates and if section > 0
+  // the lookAt needs to be set before the AnimationAction is triggered.
+  if (cameraDidntMove) {
+    ref.current.lookAt( currModel.position )
+  }
+ 
+ 
+ */
+
 export function Camera( { initializedPage, section, isCameraAnimating }: any ): JSX.Element {
   
   const [ animations, setAnimations ] = useState<AnimationAction[]|[]>([]);
   const [ mixer, setMixer ] = useState<THREE.AnimationMixer | null>();
   const ref = useRef();
-  const prevSection = useRef();
-  const cameraDidntMove = useRef(false);
+  const prevSection = useRef<number>(-1);
+  const cameraDidntMove = useRef<boolean>(false);
   const camera = initializedPage.camera;
   const maxSection = initializedPage.maxSection
   const dispatch = useDispatch();
@@ -38,7 +62,6 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
       /* Map over AnimationClips and creates an AnimationAction for each AnimationClip */
       function createAnimations( ref: any, animationClips: [][] ): AnimationAction[] {
         function createAnimation( clip: THREE.AnimationClip ): THREE.AnimationAction {
-          // mixer = new THREE.AnimationMixer(ref);
           const animation = mixer.clipAction(clip);
           animation.loop = THREE.LoopOnce;
           animation.clampWhenFinished = true;
@@ -51,9 +74,11 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
         */
       };
       setAnimations( createAnimations(ref.current, camera.animationClips) );
+
       /* Add an eventListener for the "finished" event */
       mixer.addEventListener('finished', function (event) {
         console.log('Animation finished!', event.action);  // event.action gives you the action that has just finished.
+        dispatch( setCameraAnimating(false) );
       });
     };
   }, [mixer]);
@@ -67,79 +92,55 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
     function controller() {
       if (animations.length && section >= 0) {
 
-        /* Ensure all animations are stopped before playing the next one:*/
+        /* 2. Check if mutation was forwards or backwards: */
+        const forwards: boolean = ( prevSection.current - section ) < 0;
+        const backwards = !forwards;
+        cameraDidntMove.current = !initializedPage.models[ forwards ? section : section + 1].newModelLocation;
+
+        /* 3. Ensure all camera animations are stopped before playing the next one: */
         mixer.stopAllAction();
 
-        /* Needed for the first animation, before start-button is clicked.
-         * This should be re-factored however. Make the whole camera a stack. Start the stack at -1. 
-         * When lesson is loaded, move the stack from -1 to 0, triggering the first entrance animation as a forwards animation
-         * With that logic, you would theoretically not need this extra block.
-        */
-        if( section === 0 ) {
-          const backwards: boolean = (prevSection.current - section) > 0;
-          const forwards = !backwards;
 
-          if (forwards && section <= maxSection ) {
-            dispatch( setCameraAnimating(true) );
-            animations[0].reset();
-            animations[section].setEffectiveTimeScale(0.2);
-            animations[0].play();
-          };
-
-          if(backwards) {            
-            dispatch( setCameraAnimating(true) );
-            animations[section + 1].reset();
-            animations[section + 1].time = camera.animationClips[0][0].duration
-            animations[section + 1].setEffectiveTimeScale(-0.2);
-            animations[section + 1].play();
-          };
-
-          /* set prevSection to currSection to get ready for next navigation */
-          prevSection.current = 0;
+        /* 4. Handle animation playback: */
+        if ( forwards && section <= maxSection ) {
+          dispatch( setCameraAnimating(true) );
+          animations[section].reset();
+          animations[section].setEffectiveTimeScale(0.2);
+          animations[section].play();
+          /* set prevSection to currSection for next navigation */
+          prevSection.current = section;
         };
 
-        if (prevSection.current !== undefined && section !== 0) {
-
-          /* if delta negative, move up the stack: */
-          const forwards: boolean = ( prevSection.current - section ) < 0;
-          /* if delta positive, move down the stack: */
-          const backwards: boolean = ( prevSection.current - section ) > 0;
-          cameraDidntMove.current = !initializedPage.models[ forwards ? section : section + 1].newModelLocation;
-
-
-          if (forwards && section <= maxSection) {            
-            dispatch( setCameraAnimating(true) );
-            animations[section].reset();
-            animations[section].setEffectiveTimeScale(0.2);
-            animations[section].play();
-          };
-
-          if ( backwards ) {
-            dispatch( setCameraAnimating(true) );
-            animations[section + 1].reset();
-            animations[section + 1].time = camera.animationClips[section][0].duration
-            animations[section + 1].setEffectiveTimeScale(-0.2);
-            animations[section + 1].play();
-          };
-
-          /* sets prevSection to currSection to get ready for next navigation */
+        if ( backwards && section >= 0 ) {
+          dispatch( setCameraAnimating(true) );
+          const x = section + 1
+          animations[x].reset();
+          animations[x].time = camera.animationClips[section][0].duration
+          animations[x].setEffectiveTimeScale(-0.2);
+          animations[x].play();
+          /* sets prevSection to currSection for next navigation */
           prevSection.current = section;
         };
       };
     };
   }, [animations, section]);
 
+  const pos = new THREE.Vector3( 0, 0, 0 );
+  // console.log(pos);
+
   /** Update animation via mixer */
   useFrame((_, delta) => {
     /** This conditional needs to be re-thought */
     if (animations.length && mixer && section >= 0){
+      // if( section > 0 ) ref.current.lookAt( pos )
+      // console.log(ref.current);
       mixer.update(delta);
       /** This conditional needs to be re-factored */
-      if (
-        isCameraAnimating && !animations[section].isRunning() && !animations[section + 1]?.isRunning() 
-        || cameraDidntMove.current && isCameraAnimating) {
-          dispatch( setCameraAnimating(false) )
-      }
+      // if (
+      //   isCameraAnimating && !animations[section].isRunning() && !animations[section + 1]?.isRunning() 
+      //   || cameraDidntMove.current && isCameraAnimating) {
+      //     dispatch( setCameraAnimating(false) )
+      // }
     };
   });
 
@@ -169,6 +170,68 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const backwards: boolean = ( prevSection.current - section ) > 0;
+
+// if (prevSection.current !== undefined) {
+
+
+
+/* Needed for the first animation, before start-button is clicked.
+  * This should be re-factored however. Make the whole camera a stack. Start the stack at -1. 
+  * When lesson is loaded, move the stack from -1 to 0, triggering the first entrance animation as a forwards animation
+  * With that logic, you would theoretically not need this extra block.
+*/
+// if ( section === 0 ) {
+
+//   if ( forwards && section <= maxSection ) {
+//     dispatch( setCameraAnimating(true) );
+//     animations[0].reset();
+//     animations[section].setEffectiveTimeScale(0.2);
+//     animations[0].play();
+//   };
+
+//   if( backwards ) {            
+//     dispatch( setCameraAnimating(true) );
+//     animations[section + 1].reset();
+//     animations[section + 1].time = camera.animationClips[0][0].duration
+//     animations[section + 1].setEffectiveTimeScale(-0.2);
+//     animations[section + 1].play();
+//   };
+
+//   /* set prevSection to currSection to get ready for next navigation */
+//   prevSection.current = 0;
+// };
 
 
 

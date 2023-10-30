@@ -250,6 +250,8 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
   const initializedPages = data.pages.map((page: UninitializedPage, i: number): InitializedPage => {
 
     const animationDataStruct = page.camera.createAnimationDataStructure();
+    const animationTypes = page.models
+
 
     return {
       ...page, // is this needed? 
