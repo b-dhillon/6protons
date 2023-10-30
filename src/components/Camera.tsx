@@ -20,6 +20,17 @@ import { setCameraAnimating } from '../redux/actions';
 
 /**
 
+
+  Next, grab currModel's position when sameModelLocation
+
+  let pos: THREE.Vector3;
+  if(sameModelLocation) {
+    pos = new Vector3(initializedPage.models[section - 1].position)
+  }
+
+
+
+
   // Grab object from scene
   let currModel;
   set((state) => {
@@ -47,10 +58,13 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
   const [ mixer, setMixer ] = useState<THREE.AnimationMixer | null>();
   const ref = useRef();
   const prevSection = useRef<number>(-1);
-  const cameraDidntMove = useRef<boolean>(false);
+  const sameModelPosition = useRef<boolean>(false);
   const camera = initializedPage.camera;
-  const maxSection = initializedPage.maxSection
+  const maxSection = initializedPage.maxSection;
   const dispatch = useDispatch();
+
+  let pos = useRef<THREE.Vector3>();
+
 
 
   /* Creates all AnimationActions via looping camera.animationClips[] */
@@ -92,16 +106,21 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
     function controller() {
       if (animations.length && section >= 0) {
 
-        /* 2. Check if mutation was forwards or backwards: */
+        /* 2. Check if mutation was forwards or backwards */
         const forwards: boolean = ( prevSection.current - section ) < 0;
         const backwards = !forwards;
-        cameraDidntMove.current = !initializedPage.models[ forwards ? section : section + 1].newModelLocation;
 
-        /* 3. Ensure all camera animations are stopped before playing the next one: */
+        /* 3. Check if model is in same position as prev section */
+        sameModelPosition.current = !initializedPage.models[ forwards ? section : section + 1].newModelLocation;
+        /* 3.5 if model is in same position, grab the pos of the prevModel (section - 1) to pipe into .lookAt() */
+        if(sameModelPosition) {
+          pos.current = new THREE.Vector3(initializedPage.models[ section > 0 ? section - 1 : section ].position);
+        };
+
+        /* 4. Ensure all camera animations are stopped before playing the next one: */
         mixer.stopAllAction();
 
-
-        /* 4. Handle animation playback: */
+        /* 5. Handle animation playback: */
         if ( forwards && section <= maxSection ) {
           dispatch( setCameraAnimating(true) );
           animations[section].reset();
@@ -125,22 +144,14 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
     };
   }, [animations, section]);
 
-  const pos = new THREE.Vector3( 0, 0, 0 );
+  // const pos = new THREE.Vector3( 0, 0, 0 );
   // console.log(pos);
 
   /** Update animation via mixer */
   useFrame((_, delta) => {
-    /** This conditional needs to be re-thought */
-    if (animations.length && mixer && section >= 0){
-      // if( section > 0 ) ref.current.lookAt( pos )
-      // console.log(ref.current);
+    if (animations.length){
+      if( sameModelPosition ) ref.current.lookAt( pos.current );
       mixer.update(delta);
-      /** This conditional needs to be re-factored */
-      // if (
-      //   isCameraAnimating && !animations[section].isRunning() && !animations[section + 1]?.isRunning() 
-      //   || cameraDidntMove.current && isCameraAnimating) {
-      //     dispatch( setCameraAnimating(false) )
-      // }
     };
   });
 
@@ -199,7 +210,12 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
 
 
 
-
+/** This conditional needs to be re-factored */
+// if (
+//   isCameraAnimating && !animations[section].isRunning() && !animations[section + 1]?.isRunning() 
+//   || cameraDidntMove.current && isCameraAnimating) {
+//     dispatch( setCameraAnimating(false) )
+// }
 
 // const backwards: boolean = ( prevSection.current - section ) > 0;
 
