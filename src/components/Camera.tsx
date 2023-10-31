@@ -60,11 +60,17 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
   const prevSection = useRef<number>(-1);
   const sameModelPosition = useRef<boolean>(false);
   const camera = initializedPage.camera;
+
+  const AnimationClips = camera.animationClips;
+  // AnimationClips[2][0]
+  // AnimationClips[3][0]
+  // console.log('Camera Animation Clips', AnimationClips );
+
+
+
   const maxSection = initializedPage.maxSection;
   const dispatch = useDispatch();
-
   let pos = useRef<THREE.Vector3>();
-
 
 
   /* Creates all AnimationActions via looping camera.animationClips[] */
@@ -97,7 +103,14 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
     };
   }, [mixer]);
 
-  /* controller --> Plays AnimationAction based on section */
+  /** controller --> Plays AnimationAction based on section 
+   * 1.  section mutates, controller is popped onto the call-stack
+   * 2.  Check if mutation was forwards or backwards
+   * 3.  Check if model is in same position as prev section
+   * 4. If model is in same position, grab the pos of the prevModel (section - 1) to pipe into .lookAt()
+   * 5.  Ensure all camera animations are stopped before playing the next one
+   * 6.  Handle animation playback
+  */
   useEffect(() => {
 
     controller();
@@ -112,15 +125,18 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
 
         /* 3. Check if model is in same position as prev section */
         sameModelPosition.current = !initializedPage.models[ forwards ? section : section + 1].newModelLocation;
-        /* 3.5 if model is in same position, grab the pos of the prevModel (section - 1) to pipe into .lookAt() */
-        if(sameModelPosition) {
-          pos.current = new THREE.Vector3(initializedPage.models[ section > 0 ? section - 1 : section ].position);
+        /* 4. if model is in same position, grab the pos of the prevModel (section - 1) to pipe into .lookAt() */
+        if(sameModelPosition.current) {
+          // const p = initializedPage.models[ section > 0 ? section - 1 : section ].initializedPositions
+          const p = initializedPage.models[ section ].initializedPositions
+          pos.current = new THREE.Vector3(p[0], p[1], p[2]);
+          // console.log('model position when sameModelPosition', pos.current ); 
         };
 
-        /* 4. Ensure all camera animations are stopped before playing the next one: */
+        /* 5. Ensure all camera animations are stopped before playing the next one */
         mixer.stopAllAction();
 
-        /* 5. Handle animation playback: */
+        /* 6. Handle animation playback */
         if ( forwards && section <= maxSection ) {
           dispatch( setCameraAnimating(true) );
           animations[section].reset();
@@ -144,23 +160,21 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
     };
   }, [animations, section]);
 
-  // const pos = new THREE.Vector3( 0, 0, 0 );
-  // console.log(pos);
 
   /** Update animation via mixer */
   useFrame((_, delta) => {
     if (animations.length){
-      if( sameModelPosition ) ref.current.lookAt( pos.current );
+      if( sameModelPosition.current ) ref.current.lookAt( pos.current );
       mixer.update(delta);
     };
   });
 
   // Setting the scene's camera. There are two. Perspective and Development.
-  // useHelper( ref, THREE.CameraHelper );
-  // /** 
+  useHelper( ref, THREE.CameraHelper );
+  /** 
    const set = useThree((state) => state.set);
    useEffect(() => set({ camera: ref.current }));
-  // */
+  */
 
   return (
     <>

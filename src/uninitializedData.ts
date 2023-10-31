@@ -8,7 +8,7 @@
  *   Model paths and Voice paths
  */
 import { useDispatch } from 'react-redux';
-import { UninitializedData } from './types/types';
+import { UninitializedData, UninitializedPage } from './types/types';
 import { TranslateRotate } from './components/animations/TranslateRotate';
 import { FindRotationAxis } from './utility-functions/find-rotation-axis';
 import { AnimationClip, Vector3 } from 'three';
@@ -45,17 +45,28 @@ function getFinalPositionAfter90DegreeTurn(initialPosition: number[]): number[] 
   return finalPosition;
 }
 
-const testPos = getFinalPositionAfter90DegreeTurn([0.75, 0.00,-2.00]);
+// const testPos = getFinalPositionAfter90DegreeTurn([0.75, 0.00,-2.00]);
 
-console.log('test', testPos ); 
+// console.log('test', testPos ); 
 
 
 
 
 export const uninitializedData: UninitializedData = {
-  initializeModelPositionsFromCamera: function( cameraPosition: number[], cameraRotation: number[], rotationAxis: string, yOffsetForText: number ) {
+  createModelPosFromCamPos: function( cameraPosition: number[], cameraRotation: number[], rotationAxis: string, yOffsetForText: number ) {
     
     let yOffset = yOffsetForText;
+
+
+
+
+    // let camPos = cameraPosition;
+    // if( models[i].sameModelLocation ) camPos = cameraPositions[ i - 1 ];
+
+
+
+
+
     
     // rotate camera X-axis, need to re-position model on Y axis.
     if (rotationAxis === 'x') {
@@ -102,10 +113,10 @@ export const uninitializedData: UninitializedData = {
 
   pages: [
     {
-      id: 'test_page',
+      id: 'test-page',
       title: 'Buckminsterfullerene',
       section: 0,
-      maxSection: 5, //including section0, total sections = sections.length === 6.
+      maxSection: 5, //including section0, total sections => sections.length === 6.
       thumbnail: "url('./lessonThumbnails/fullereneTile.png')",
 
       universe: {
@@ -115,33 +126,52 @@ export const uninitializedData: UninitializedData = {
       },
 
       camera: {
+        // animationTypes: [
+        //   'TranslateRotate', // -1 --> 0
+        //   'TranslateRotate', //  0 --> 1
+        //   'TranslateRotate', //  1 --> 2
+        //   'TranslateCircle', //  2 --> 3
+        //   'TranslateRotate', //  3 --> 4
+        //   'TranslateRotate', //  4 --> 5
+        // ],
+
+        /** instead of hard-coded. This array could be generated
+         *  programatically by checking models[i].newModelLocation
+         *  if true: TranslateRotate, else: TranslateCircle
+        */
+        animationTypes: [
+          TranslateRotate, // -1 --> 0
+          TranslateRotate, //  0 --> 1
+          TranslateRotate, //  1 --> 2
+          TranslateCircle, //  2 --> 3
+          TranslateRotate, //  3 --> 4
+          TranslateRotate, //  4 --> 5
+        ],
+
         positions: [
           [0.00, 0.00, 5.00], // -1 
-          [0.00, 0.00, 1.00], //  0 Opening position, section 0 <-- Change z back to 0 after testing TranslateCircle
-          getFinalPositionAfter90DegreeTurn([0, 0, 1]),
-          // [0.00, 0.00, 1.00], //  1 ..1985
+          [0.00, 0.00, 0.00], //  0 Opening position, section 0 <-- Change z back to 0 after testing TranslateCircle
+          [0.00, 0.00, 1.00], //  1 ..1985
           [0.75, 0.00,-2.00], //  2 ..most symmetrical form
 
-
-          // [0.75, 0.00,-2.00], //  3 ..soccer ball pattern
-          getFinalPositionAfter90DegreeTurn([0.75, 0.00,-2.00]),
-
+          getFinalPositionAfter90DegreeTurn([0.75, 0.00,-2.00]), //  3 ..soccer ball pattern
           
           [0.75, 0.00, 1.00], //  4 ..doped
           [1.00, 2.00, 0.00], //  5 ..HIV-1-Protease
         ],
+
         rotations: [
           [0.00, 0.00, 0.00], // Start
           [0.00, 0.00, 0.00], // Opening position, section 0 
-          [0.00, 0.00, 0.00], // Opening position, section 0  <-- DELETE THIS LINE AFTER TESTING TranslateCircle
-          // [0.66, 0.00, 0.00], // section 1 ..1985
+          // [0.00, 0.00, 0.00], // Opening position, section 0  <-- DELETE THIS LINE AFTER TESTING TranslateCircle
+          [0.66, 0.00, 0.00], // section 1 ..1985
           [0.00, 0.00, 0.00], // section 2 ..most symmetrical form
           [0.00, 0.00, 0.00], // section 3 ..soccer ball pattern
           [0.00, 0.00, 0.00], // section 4 ..doped
           [0.00, 0.00, 0.00], // section 5 ..HIV-1-Protease
         ],
 
-        createAnimationDataStructure: function (): number[][][] {
+        createAnimationDS: function (): number[][][] {
           const animationData: number[][][] = [];
           for (let i = 0; i < this.positions.length - 1; i++) {
             const initialPosition: number[] = this.positions[i];
@@ -158,11 +188,14 @@ export const uninitializedData: UninitializedData = {
           return animationData;
         },
 
-        createAnimationClips: function(animationDataStructure: any ): AnimationClip[][] {
-          const animationClips = animationDataStructure.map((animationData: [][], i: number) => {
-            if (i === 0) {
+        createAnimationClips: function( animationDS: any, page: UninitializedPage ): AnimationClip[][] {
+          const animationClips = animationDS.map((animationData: [][], i: number) => {
+
+            let animationClipConstructor = this.animationTypes[i]
+
+            // if (i === 0) {
               return [
-                TranslateRotate({
+                animationClipConstructor({
                   // duration: 4,
                   duration: 1,
                   initialPosition: animationData[0],
@@ -174,20 +207,20 @@ export const uninitializedData: UninitializedData = {
                   easingType: i === 0 ? 'out' : 'inOut'
                 }),
               ];
-            }
-            else return [
-              TranslateCircle({
-                // duration: 4,
-                duration: 1,
-                initialPosition: animationData[0],
-                finalPosition: animationData[1],
-                initialAngle: animationData[2],
-                finalAngle: animationData[3],
-                // axis: 'x',
-                axis: FindRotationAxis(animationData),
-                easingType: i === 0 ? 'out' : 'inOut'
-              }),
-            ];
+            // }
+            // else return [
+            //   TranslateCircle({
+            //     // duration: 4,
+            //     duration: 1,
+            //     initialPosition: animationData[0],
+            //     finalPosition: animationData[1],
+            //     initialAngle: animationData[2],
+            //     finalAngle: animationData[3],
+            //     // axis: 'x',
+            //     axis: FindRotationAxis(animationData),
+            //     easingType: i === 0 ? 'out' : 'inOut'
+            //   }),
+            // ];
           })
           return animationClips;
         },
@@ -415,12 +448,344 @@ export const uninitializedData: UninitializedData = {
 
       dispatch: useDispatch,
     },
+
+
+
+
+    {
+      id: 'test-page-2',
+      title: 'testing arena',
+      section: 0,
+      maxSection: 5,
+      thumbnail: "url('./lessonThumbnails/fullereneTile.png')",
+
+      universe: {
+        id: 'fullerene universe',
+        star_count: 25000,
+        radius: 5,
+      },
+
+      camera: {
+    
+        /** instead of hard-coded. This array could be generated
+         *  programatically by checking models[i].newModelLocation
+         *  if true: TranslateRotate, else: TranslateCircle
+        */
+        animationTypes: [
+          TranslateRotate, // -1 --> 0
+          TranslateCircle, //  0 --> 1
+          TranslateRotate, //  1 --> 2
+          TranslateCircle, //  2 --> 3
+          TranslateRotate, //  3 --> 4
+          TranslateRotate, //  4 --> 5
+        ],
+
+        positions: [
+          [0.00, 0.00, 5.00], // -1 
+          [0.00, 0.00, 1.00], //  0 Opening position, section 0 <-- Change z back to 0 after testing TranslateCircle
+          getFinalPositionAfter90DegreeTurn([0, 0, 1]), //  1 ..soccer ball pattern
+          // [0.00, 0.00, 1.00], //  1 ..1985
+          [0.75, 0.00,-2.00], //  2 ..most symmetrical form
+          getFinalPositionAfter90DegreeTurn([0.75, 0.00,-2.00]), //  3 ..soccer ball pattern
+          [0.75, 0.00, 1.00], //  4 ..doped
+          [1.00, 2.00, 0.00], //  5 ..HIV-1-Protease
+        ],
+        
+        rotations: [
+          [0.00, 0.00, 0.00], // Start
+          [0.00, 0.00, 0.00], // Opening position, section 0 
+          [0.00, 0.00, 0.00], // Opening position, section 1  <-- DELETE THIS LINE AFTER TESTING TranslateCircle
+          [0.66, 0.00, 0.00], // section 1 ..1985          [0.00, 0.00, 0.00], // section 2 ..most symmetrical form
+          [0.00, 0.00, 0.00], // section 3 ..soccer ball pattern
+          [0.00, 0.00, 0.00], // section 4 ..doped
+          [0.00, 0.00, 0.00], // section 5 ..HIV-1-Protease
+        ],
+
+        createAnimationDS: function (): number[][][] {
+          const animationData: number[][][] = [];
+          for (let i = 0; i < this.positions.length - 1; i++) {
+            const initialPosition: number[] = this.positions[i];
+            const finalPosition: number[] = this.positions[i + 1];
+            const initialRotation: number[] = this.rotations[i];
+            const finalRotation: number[] = this.rotations[i + 1];
+            animationData.push([
+              initialPosition,
+              finalPosition,
+              initialRotation,
+              finalRotation,
+            ]);
+          }
+          return animationData;
+        },
+
+        createAnimationClips: function( animationDS: any, page: UninitializedPage ): AnimationClip[][] {
+          const animationClips = animationDS.map((animationData: [][], i: number) => {
+            let animationClipConstructor = this.animationTypes[i]
+            return [
+              animationClipConstructor({
+                duration: 1,
+                initialPosition: animationData[0],
+                finalPosition: animationData[1],
+                initialAngle: animationData[2],
+                finalAngle: animationData[3],
+                axis: FindRotationAxis(animationData),
+                easingType: i === 0 ? 'out' : 'inOut'
+              }),
+            ];
+          })
+          return animationClips;
+        },  
+      },
+
+      models: [
+        {
+          id: '0',
+          name: 'model0',
+          path: '/fullerene/models/m0.glb',
+          visible: false,
+          newModelLocation: true,
+          scale: 0.18,
+          yOffsetForText: 0,
+
+          zoomInOnReverse: false,
+
+          positions: [[0.0, 0.0, -1.0]], // calculated in Init() based off of camera position at the current section
+          rotations: [[0.0, 0.0, 0.0]],
+          animationClips: [
+            SuspendInSolution(90),
+            ScaleXYZ({
+              duration: 1,
+              initialScale: [0.18, 0.18, 0.18],
+              finalScale: [0, 0, 0],
+            }),
+          ],
+        },
+        {
+          id: '1',
+          name: 'model1',
+          // path: '',
+          path: '/fullerene/models/m1.glb',
+          visible: false,
+          newModelLocation: false,
+          scale: 0.18,
+          yOffsetForText: 0,
+          zoomInOnReverse: false,
+          positions: [[0.75, 0.66, 0.0]],
+          rotations: [[0.0, 0.0, 0.0]],
+          animationClips: [
+            Rotate({
+              duration: 5000,
+              axis: 'y',
+              initialAngle: 0,
+              finalAngle: 360,
+            }),
+            ScaleXYZ({
+              duration: 1,
+              initialScale: [0.0, 0.0, 0.0],
+              finalScale: [0.0, 0.0, 0.0],
+            }),
+          ],
+        },
+        {
+          id: '2',
+          name: 'model2',
+          path: '/fullerene/models/m0.glb',
+          visible: false,
+          newModelLocation: true,
+          scale: 0,
+          yOffsetForText: 0.15,
+          zoomInOnReverse: false,
+
+          positions: [[0.75, 0.0, -3.0]],
+          rotations: [[0.0, 0.0, 0.0]],
+          animationClips: [
+            Rotate({
+              duration: 5000,
+              axis: 'y',
+              initialAngle: 0,
+              finalAngle: 360,
+            }),
+            ScaleXYZ({
+              duration: 1,
+              initialScale: [0.18, 0.18, 0.18],
+              finalScale: [0.0, 0.0, 0.0],
+            }),
+          ],
+        },
+        {
+          id: '3',
+          name: 'model3',
+          path: '/fullerene/models/m2.glb',
+          visible: false,
+          newModelLocation: false,
+          scale: 0.18,
+          yOffsetForText: 0.15,
+          zoomInOnReverse: false,
+
+          positions: [[0.75, 0.0, -3.0]],
+          rotations: [[0.0, 0.0, 0.0]],
+          animationClips: [
+            Rotate({
+              duration: 5000,
+              axis: 'y',
+              initialAngle: 0,
+              finalAngle: 360,
+            }),
+            ScaleXYZ({
+              duration: 1,
+              initialScale: [0.18, 0.18, 0.18],
+              finalScale: [0.0, 0.0, 0.0],
+            })
+          ]
+        },
+        {
+          id: '4',
+          name: 'model4',
+          path: '/fullerene/models/m3.glb',
+          visible: false,
+          newModelLocation: true,
+          scale: 0,
+          yOffsetForText: 0.15,
+          zoomInOnReverse: true,
+
+          positions: [[0.0, -0.66, -1.0]],
+          rotations: [[0.0, 0.0, 0.0]],
+          animationClips: [
+            Rotate({
+              duration: 5000,
+              axis: 'y',
+              initialAngle: 0,
+              finalAngle: 360,
+            }),
+            ScaleXYZ({
+              duration: 1,
+              initialScale: [0.18, 0.18, 0.18],
+              finalScale: [0.0, 0.0, 0.0],
+            }),
+            Rotate({
+              duration: 1500,
+              axis: 'x',
+              initialAngle: 0,
+              finalAngle: 360,
+            }),
+          ],
+        },
+        {
+          id: '5',
+          name: 'model5',
+          path: '/fullerene/models/m4.glb',
+          visible: false,
+          newModelLocation: true,
+          scale: 0,
+          yOffsetForText: 0.05,
+          zoomInOnReverse: false,
+          positions: [[0.0, -0.1, -3.0]],
+          rotations: [[0.0, 0.0, 0.0]],
+          animationClips: [
+            Rotate({
+              duration: 4000,
+              axis: 'y',
+              initialAngle: 0,
+              finalAngle: 180,
+            }),
+            //hiv protease
+            ScaleXYZ({
+              duration: 1,
+              initialScale: [0.060, 0.060, 0.060],
+              finalScale: [0.0, 0.0, 0.0],
+            }),
+            //buckyball
+            ScaleXYZ({
+              duration: 1.6, //higher number is slower
+              initialScale: [0.045, 0.045, 0.045],
+              finalScale: [0.070, 0.070, 0.070],
+            }),
+          ],
+        },
+      ],
+
+      text: [
+        [''],
+        [
+          'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas...'
+        ],
+        [
+          'Firing lazers at graphite rods in a supersonic helium beam, produced novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere.',
+          'The largest and most symmetrical form of pure carbon ever discovered.', 
+          'This molecule would go on to be named Buckminsterfullerene.'
+        ],
+        [
+          'The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball.', 
+          'Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space.', 
+          'And because they are essentially hollow cages, they can be manipulated to make materials never before known.'
+        ],
+        [
+          'For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known.', 
+          'These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems.',
+          'Scientists have even turned their attention to Buckminsterfullerene in their quest for a cure for AIDS.'
+        ],
+        [
+          'How can Buckminsterfullerene help cure AIDS?',
+          'An enzyme (HIV-1-Protease) that is required for HIV to replicate, exhibits a non-polar pocket in its three-dimensional structure.', 
+          "On the protein model in front of you, notice how the non-polar Fullerene fits the exact diameter of the enzyme's binding pocket.",
+          'If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible HIV-1-Protease inhibitors.'
+        ]
+      ],
+      
+      textPlacement: [
+        '',
+        'center',
+        'bottom',
+        'bottom',
+        'bottom',
+        'bottom'
+      ],
+
+      music: ['/audio/music/fullerene3.mp3'],
+
+      voices: [
+        '/audio/voices/fiona/voice0.mp3', // 0
+        '/audio/voices/fiona/voice0.mp3', // 1
+        '/audio/voices/fiona/voice1.mp3', // 2
+        '/audio/voices/fiona/voice1.mp3', // 3
+        '/audio/voices/fiona/voice1.mp3', // 4
+      ],
+
+      dispatch: useDispatch,
+    },
   ],
 };
 
 
+/* Original Positions before TranslateCircle
+positions: [
+  [0.00, 0.00, 5.00], // -1 
+  [0.00, 0.00, 1.00], //  0 Opening position, section 0 <-- Change z back to 0 after testing TranslateCircle
+  [0.00, 0.00, 1.00], //  1 ..1985
+  [0.75, 0.00,-2.00], //  2 ..most symmetrical form
+  [0.75, 0.00,-2.00], //  3 ..soccer ball pattern
+  [0.75, 0.00, 1.00], //  4 ..doped
+  [1.00, 2.00, 0.00], //  5 ..HIV-1-Protease
+],
+*/
+
+/* Testing TranslateCircle Positions 
+positions: [
+  [0.00, 0.00, 5.00], // -1 
+  [0.00, 0.00, 1.00], //  0 Opening position, section 0 <-- Change z back to 0 after testing TranslateCircle
+  getFinalPositionAfter90DegreeTurn([0, 0, 1]),
+  // [0.00, 0.00, 1.00], //  1 ..1985
+  [0.75, 0.00,-2.00], //  2 ..most symmetrical form
 
 
+  // [0.75, 0.00,-2.00], //  3 ..soccer ball pattern
+  getFinalPositionAfter90DegreeTurn([0.75, 0.00,-2.00]),
+
+  
+  [0.75, 0.00, 1.00], //  4 ..doped
+  [1.00, 2.00, 0.00], //  5 ..HIV-1-Protease
+],
+*/
 
 
 

@@ -114,6 +114,26 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
   const set = useThree((state) => state.set);
   const prevSection = useRef(-1);
 
+
+
+
+
+  const modelPositions: number[][] = initializedPage.models.map( (model: any) => model.initializedPositions) 
+  // console.log('model positions', modelPositions);
+  const passingTest = 
+    modelPositions[2][0] === modelPositions[3][0] &&
+    modelPositions[2][1] === modelPositions[3][1] &&
+    modelPositions[2][2] === modelPositions[3][2]
+  ;
+  // console.log( 'model positions passing?', passingTest);
+
+
+
+
+
+
+
+
   let currModelAnimations = useRef<ModelAnimations>(animationActions[0]);
   let prevModelAnimations = useRef<ModelAnimations>();
   let cameraDidntMove = useRef<boolean>(false);
@@ -123,7 +143,7 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
    * controller1:
    *   1. section mutates, controller1 is popped onto the call-stack:
    *   2. Check if mutation forwards or backwards:
-   *   3 Check if cameraDidntMove.current
+   *   3. Check if cameraDidntMove.current
    *   4. Handle visibility of models:
    *   5. Handle animation assignment
    *   6. Handle exitAnimation of prevModel:
@@ -174,7 +194,6 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
           }
           // 4.3--B) If backwards, section is greater than 0, and cameraDidntMove.current, then mutate HIGHER ON STACK (section + 1) model's visibility to false.
           else if (backwards && section > 0 && cameraDidntMove.current ) {
-            // let cameraDidntMove.current = !initializedPage.models[section+1].newModelLocation;
             const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section + 1}`);
             state.scene.children[prevModelIndex].visible = false;
           }
@@ -208,7 +227,7 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
 
           /** Trigger prevModel exit animation as camera moves */
           // if(isCameraAnimating) {
-            // prevModelAnimations.current?.scaleAnimation.reset().setEffectiveTimeScale( 1.5 ).play();
+            prevModelAnimations.current?.scaleAnimation.reset().setEffectiveTimeScale( 1.5 ).play();
           // }
           
           if (section === 0) {
@@ -218,8 +237,6 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
             /* Triggering suspension animation on model0 */
             currModelAnimations.current.mainAnimation.play();
 
-            /* Playing current model's main animation: */
-            // currModelAnimations.current.mainAnimation.play();
           } 
 
         };
@@ -487,8 +504,11 @@ function CreateFiberModel(props: any): JSX.Element {
 
 
 
+  // position={ model.newModelLocation ? model : initializedModels[i - 1] } 
 
-            // animationActions[ forwards ? section - 1 : section + 1 ].scaleAnimation.reset().setEffectiveTimeScale( 0.9 ).play();
+
+
+  // animationActions[ forwards ? section - 1 : section + 1 ].scaleAnimation.reset().setEffectiveTimeScale( 0.9 ).play();
 
 
   // currModelAnimations.current.scaleAnimation.stop()

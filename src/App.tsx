@@ -28,7 +28,7 @@ import { UninitializedData, UninitializedPage, InitializedPage } from './types/t
 export default function App() {
   const [initializedPages, setInitializedPages] = useState<InitializedPage[] | undefined>(undefined);
   const [dataInitialized, setDataInitialized] = useState(false);
-  const [currentPage, setCurrentPage] = useState('test_page');
+  const [currentPage, setCurrentPage] = useState('test-page-2');
 
   useEffect(() => {
     Init();
@@ -249,7 +249,7 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
 
   const initializedPages = data.pages.map((page: UninitializedPage, i: number): InitializedPage => {
 
-    const animationDataStruct = page.camera.createAnimationDataStructure();
+    const animationDS = page.camera.createAnimationDS();
     const animationTypes = page.models
 
 
@@ -259,19 +259,26 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
       camera: {
         ...page.camera, // is this needed --> renderer just needs initial position and animationClips?
         initialPosition: page.camera.positions[0],
-        animationClips: page.camera.createAnimationClips(animationDataStruct),
+        animationClips: page.camera.createAnimationClips(animationDS),
       },
 
       // add meshes and positions to each model
       models: page.models.map((model: any, j: number) => {
+
+        let newPos = model.newModelLocation
+        
+
         return {
           ...model,
           loadedMeshes: allMeshesOfApp[i][j],
 
-          initializedPositions: data.initializeModelPositionsFromCamera(
-            page.camera.positions[j + 1],
-            page.camera.rotations[j + 1],
-            FindRotationAxis(animationDataStruct[j]),
+          initializedPositions: data.createModelPosFromCamPos(
+            /** If model in new pos we do j+1 because first index in camera.positions is technichally -1 
+             *  if not, just j because we want position of previous model for camera.lookAt() for TranslateCircle
+            */
+            page.camera.positions[ newPos ? j + 1 : j ], // cameraPosition: number[]
+            page.camera.rotations[ newPos ? j + 1 : j ], // cameraRotation: number[]
+            FindRotationAxis(animationDS[j]),
             model.yOffsetForText
           ),
         };
@@ -302,10 +309,10 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
 // initializedPositions: initializeModelPositionsFromCamera(
 //   page.camera.positions[j + 1],
 //   page.camera.rotations[j + 1],
-//   FindRotationAxis(animationDataStruct[j])
+//   FindRotationAxis(animationDS[j])
 // ),
 
-// animationDataStructure: page.camera.createAnimationDataStructure(), // needed for initial position assignment --> where is it being consumed? Can't initial position be consumed from the hard-coded positions array?
+// animationDataStructure: page.camera.createAnimationDS(), // needed for initial position assignment --> where is it being consumed? Can't initial position be consumed from the hard-coded positions array?
 
 
 // initializedAnimationClips: animationDataStructure.map((animationData: [][], i: number) => {

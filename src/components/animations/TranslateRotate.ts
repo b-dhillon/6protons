@@ -114,7 +114,7 @@ export function TranslateRotate(config: config) {
   }
 
   return new AnimationClip(
-    'TranslateRotateCamera',
+    'TranslateRotate',
     1,
     [ createIPositionTrack(), createIRotationTrack() ]
   );

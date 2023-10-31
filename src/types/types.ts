@@ -1,7 +1,7 @@
 import { AnimationClip, Audio, Mesh } from "three"
 
 export interface UninitializedData {
-    initializeModelPositionsFromCamera: Function,
+    createModelPosFromCamPos: Function,
     textChimePath: string,
     pages: UninitializedPage[]
 }
@@ -69,9 +69,10 @@ export interface InitializedPage {
 // };
 
 export interface UninitializedLessonCamera {
+    animationTypes: Function[],
     positions: number[][],
     rotations: number[][],
-    createAnimationDataStructure: Function,
+    createAnimationDS: Function,
     createAnimationClips: Function
 };
 
