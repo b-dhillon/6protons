@@ -22,6 +22,37 @@ interface config {
   easingType: string;
 }
 
+
+
+
+
+
+/** Debugging Quarter Cirlce with negative Z
+ * 
+ * 
+ * neg z: 
+ *  initial: 0, 0, -1
+ *  final:  -1, 0, 0 (-1.5 x 10^-7)
+ *  ^ Z SHOULD BE -2 NOT ZERO!!!!!
+ * 
+ * Okay, here you are going from z = -1 to z = 0, so you are pulling OUT
+ * 
+ * 
+ * pos z:
+ *   initial: 0, 0, 1
+ *   final:  -1, 0, 0 (-1.87 x 10^-8)
+ * 
+ * Here, we have the final position as the same, BUT we move from z=1 to z=0, we are pulling IN 
+ * 
+ * 
+ * 
+ * So, we dont need the same finalPosition, we need the right position given the correct initialPosition.
+ * 
+ */
+
+
+
+
 export function TranslateCircle(config: config): AnimationClip {
 
   let easingFn = config.easingType === 'out' ? easeOutCubic : easeInOutCubic;
@@ -34,23 +65,56 @@ export function TranslateCircle(config: config): AnimationClip {
      *    Because, we are moving in the x-z plane. Therefore the origin (center) is x=0 and z=0. 
      *    But the y-position needs to be the same y-position as the camera or else 
      *    the camera will move in a spiral and not purely in the x-z plane.
+     * 
+     *    BUT, if we move the camera past 0,0,1 like 0,0,-2, then the origin is not 0,0,0. We want the circle center
+     *    to just be the position of the model. 
+     *    Which is just: 
+     *      const modelPosition = new Vector3(initialPosition.x, initialPosition.y, initialPosition.z - 1)
+     *    
+     *    We can also grab this from initializedData 
+     *    or
+     *    We can compute this with our fn.
     */
-    const circleCenter = new Vector3(0, initialPosition.y, 0); 
+    // const circleCenter = new Vector3(0, initialPosition.y, 0);
+    const modelPosition = new Vector3(initialPosition.x, initialPosition.y, initialPosition.z - 1);
+    const circleCenter = modelPosition;
+
+
+
+
+
+
+
+
+
+
     const radius = initialPosition.distanceTo(circleCenter);
+    console.log('RADIUS', radius);
     /** This finds the angle (radians) between the camera's current position 
      *  and the positive x-axis. The positive x-axis is our end goal here (90 degrees).
      */
     let initialAngle = Math.atan2(initialPosition.z, initialPosition.x);
 
+    console.log('INITIAL ANGLE:', initialAngle);
+
 
     function getPositionAtT(t: number) {
       let easedT = easingFn(t);
-      let currentAngle = initialAngle + easedT * Math.PI / 2;
+
+      // Determine the direction of the curve based on initial Z value
+      let direction = initialPosition.z >= 0 ? 1 : -1;
+
+      // Adjust the current angle based on the direction
+      let currentAngle = initialAngle + ( direction * easedT * (Math.PI / 2) );
+      // let currentAngle = initialAngle + easedT * (Math.PI / 2);
+      console.log('CURRENT ANGLE', currentAngle);
+
       return new Vector3(
         circleCenter.x + radius * Math.cos(currentAngle),
         initialPosition.y,
-        circleCenter.z + radius * Math.sin(currentAngle)
+        circleCenter.z + radius * Math.sin(currentAngle * direction)
       );
+
     };
 
     // create n position and time values
@@ -76,6 +140,9 @@ export function TranslateCircle(config: config): AnimationClip {
       valuesArray,
     );
 
+    positionTrack.setInterpolation(InterpolateSmooth);
+
+
     return positionTrack
   }
 
@@ -87,3 +154,11 @@ export function TranslateCircle(config: config): AnimationClip {
     [ createPositionTrack() ]
   );
 };
+
+
+   // let currentAngle = initialAngle + easedT * Math.PI / 2;
+      // return new Vector3(
+      //   circleCenter.x + radius * Math.cos(currentAngle),
+      //   initialPosition.y,
+      //   circleCenter.z + radius * Math.sin(currentAngle)
+      // );

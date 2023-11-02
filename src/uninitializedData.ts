@@ -64,9 +64,6 @@ export const uninitializedData: UninitializedData = {
     // if( models[i].sameModelLocation ) camPos = cameraPositions[ i - 1 ];
 
 
-
-
-
     
     // rotate camera X-axis, need to re-position model on Y axis.
     if (rotationAxis === 'x') {
@@ -143,7 +140,8 @@ export const uninitializedData: UninitializedData = {
           TranslateRotate, // -1 --> 0
           TranslateRotate, //  0 --> 1
           TranslateRotate, //  1 --> 2
-          TranslateCircle, //  2 --> 3
+          TranslateRotate, //  2 --> 3 // DELETE THIS LINE AFTER TESTING 
+          // TranslateCircle, //  2 --> 3
           TranslateRotate, //  3 --> 4
           TranslateRotate, //  4 --> 5
         ],
@@ -475,7 +473,7 @@ export const uninitializedData: UninitializedData = {
           TranslateRotate, // -1 --> 0
           TranslateCircle, //  0 --> 1
           TranslateRotate, //  1 --> 2
-          TranslateCircle, //  2 --> 3
+          TranslateRotate, //  2 --> 3
           TranslateRotate, //  3 --> 4
           TranslateRotate, //  4 --> 5
         ],
@@ -486,7 +484,7 @@ export const uninitializedData: UninitializedData = {
           getFinalPositionAfter90DegreeTurn([0, 0, 1]), //  1 ..soccer ball pattern
           // [0.00, 0.00, 1.00], //  1 ..1985
           [0.75, 0.00,-2.00], //  2 ..most symmetrical form
-          getFinalPositionAfter90DegreeTurn([0.75, 0.00,-2.00]), //  3 ..soccer ball pattern
+          getFinalPositionAfter90DegreeTurn([0.75, 0.00, -2.00]), //  3 ..soccer ball pattern
           [0.75, 0.00, 1.00], //  4 ..doped
           [1.00, 2.00, 0.00], //  5 ..HIV-1-Protease
         ],

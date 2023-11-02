@@ -99,6 +99,9 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
       mixer.addEventListener('finished', function (event) {
         console.log('Animation finished!', event.action);  // event.action gives you the action that has just finished.
         dispatch( setCameraAnimating(false) );
+
+        const cameraFinalPosition = ref.current.position
+        console.log( "camera final position", cameraFinalPosition);
       });
     };
   }, [mixer]);
@@ -165,16 +168,17 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
   useFrame((_, delta) => {
     if (animations.length){
       if( sameModelPosition.current ) ref.current.lookAt( pos.current );
+      // console.log(ref.current.position);
       mixer.update(delta);
     };
   });
 
   // Setting the scene's camera. There are two. Perspective and Development.
   useHelper( ref, THREE.CameraHelper );
-  /** 
-   const set = useThree((state) => state.set);
-   useEffect(() => set({ camera: ref.current }));
-  */
+  // /** 
+  //  const set = useThree((state) => state.set);
+  //  useEffect(() => set({ camera: ref.current }));
+  // */
 
   return (
     <>
