@@ -480,11 +480,11 @@ export const uninitializedData: UninitializedData = {
 
         positions: [
           [0.00, 0.00, 5.00], // -1 
-          [0.00, 0.00, 1.00], //  0 Opening position, section 0 <-- Change z back to 0 after testing TranslateCircle
+          [0.00, 0.00, -2.00], //  0 Opening position, section 0 <-- Change z back to 0 after testing TranslateCircle
           getFinalPositionAfter90DegreeTurn([0, 0, 1]), //  1 ..soccer ball pattern
           // [0.00, 0.00, 1.00], //  1 ..1985
           [0.75, 0.00,-2.00], //  2 ..most symmetrical form
-          getFinalPositionAfter90DegreeTurn([0.75, 0.00, -2.00]), //  3 ..soccer ball pattern
+          getFinalPositionAfter90DegreeTurn([0.75, 0.00, 1.00]), //  3 ..soccer ball pattern
           [0.75, 0.00, 1.00], //  4 ..doped
           [1.00, 2.00, 0.00], //  5 ..HIV-1-Protease
         ],
