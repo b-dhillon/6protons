@@ -148,7 +148,9 @@ export const uninitializedData: UninitializedData = {
           [0.00, 0.00, 0.00], // Opening position, section 0 
           [0.66, 0.00, 0.00], // section 1 ..1985
           [0.00, 0.00, 0.00], // section 2 ..most symmetrical form
-          [0.00, 0.00, 0.00], // section 3 ..soccer ball pattern
+
+          [0.00, (Math.PI/2), 0.00], // section 3 ..soccer ball pattern
+          
           [0.00, 0.00, 0.00], // section 4 ..doped
           [0.00, 0.00, 0.00], // section 5 ..HIV-1-Protease
         ],

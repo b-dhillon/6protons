@@ -172,7 +172,7 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
   /** Update animation via mixer */
   useFrame((_, delta) => {
     if (animations.length){
-      if( sameModelPosition.current ) ref.current.lookAt( pos.current );
+      // if( sameModelPosition.current ) ref.current.lookAt( pos.current );
       // console.log(ref.current.position);
       mixer.update(delta);
     };

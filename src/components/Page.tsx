@@ -18,7 +18,7 @@ export function Page({
     <Suspense>
       <Scene initializedPage={initializedPage} section={section} isCameraAnimating={isCameraAnimating} />
       <Interface
-        devMode={false}
+        devMode={true}
         initializedPage={initializedPage}
         setCurrentPage={setCurrentPage}
         section={section}

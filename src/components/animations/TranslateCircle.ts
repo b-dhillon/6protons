@@ -26,15 +26,17 @@ interface config {
 
 /** Completing Implementation To-do: 
  * 
- * [DONE]-Fully understand the math, logic, and code.
+ * [DONE]-Understand math, logic, and code.
  * [DONE]-Clean and Re-factor
+ * [DONE]-Add proper modelPosition, we need to compute this again or grab the computed values somehow.
+ *        Because we need to take into account potential camera rotations
+ * [DONE]-Hook into the actual lesson, between section-2 and section-3
+ * [DONE]-Rewrite getFinalPositionAfter90DegreeTurn to take into account -z
  * 
- * Add proper modelPosition, we need to compute this again or grab the computed values somehow.
- *   Because we need to take into account potential camera rotations
  * 
- * Hook into the actual lesson, between section-2 and section-3
+ * Figure out how to deal with section after the quarter circle turn. 
+ * The camera will be rotated 90 degrees on its y-axis, and will also have moved Pi/2 radians away.
  * 
- * Rewrite getFinalPositionAfter90DegreeTurn to take into account -z
 */
 
 /** Fn description
@@ -72,58 +74,23 @@ export function TranslateCircle(config: config): AnimationClip {
    *    or
    *    We can compute this with our fn.
   */
-
-
   const modelPositionArray = uninitializedData.createModelPosition( 
     config.initialPosition,
     config.initialAngle,
     config.axis,
     0
   );
-
   const modelPosition = new Vector3( modelPositionArray[0], modelPositionArray[1], modelPositionArray[2] );
-  const modelPosition2 = new Vector3( initialPosition.x, initialPosition.y, initialPosition.z - 1 )
-
-  console.log( "COMPUTED", modelPosition );
-  console.log( "MANUAL", modelPosition2 );
-
-
-
-
-  // cameraPosition: number[], cameraRotation: number[], rotationAxis: string, yOffsetForText: number
-
-
-
-
-
-
-  const circleCenter = modelPosition2;
+  // const modelPosition = new Vector3( initialPosition.x, initialPosition.y, initialPosition.z - 1 )
+  const circleCenter = modelPosition;
   const radius = initialPosition.distanceTo(circleCenter);
-
-  /** atan2 finds angle (radians) between the camera's current position and the positive x-axis of origin */
-  // let initialAngle = Math.atan2(initialPosition.z, initialPosition.x);
-  // if( initialPosition.z < 0) initialAngle *= -1; // standardize for a positive angle 
-
-  let initialAngle = Math.PI / 2;
-
-  let i = 0;
+  const initialAngle = Math.PI / 2;
 
 
   /** 2. Define fn that returns vectors around a circle as a function of time */
-  function getVectorAtT(t: number): Vector3 {
+  function getVectorAtT(easedT: number): Vector3 {
 
-    let easedT = ease(t);
     let currentAngle = initialAngle - ( easedT * (Math.PI / 2) ); // (Math.PI / 2) is how much we want to rotate by
-
-    if(i < 1) {
-      console.log('circle.x', circleCenter.x); // initial.x --> 0.75
-      console.log('first currentAngle:', currentAngle); // 1.57
-      console.log('first add to x:', Math.cos(currentAngle) ); //
-      console.log('first new x', circleCenter.x + ( radius * Math.cos(currentAngle) )); // 0.75
-      i++;
-    };
-
-    console.log(currentAngle);
 
     return new Vector3(
       circleCenter.x + ( radius * Math.cos(currentAngle) ),
@@ -137,31 +104,61 @@ export function TranslateCircle(config: config): AnimationClip {
   // create n position and time values
   const n = 100;  // You can adjust this based on desired smoothness
   const times = new Float32Array(n);
-  const values = new Float32Array(n * 3);  // x, y, z for each keyframe
+  const posValues = new Float32Array(n * 3);  // x, y, z for each keyframe
+  const rotValues = new Float32Array(n);
 
   for (let i = 0; i < n; i++) {
     const t = i / (n - 1);
     times[i] = t;
-    const pos = getVectorAtT(t);
-    values[i * 3] = pos.x;
-    values[i * 3 + 1] = pos.y;
-    values[i * 3 + 2] = pos.z;
+    const easedT = ease(t);
+
+    /** Position Values */
+    const pos = getVectorAtT(easedT);
+    posValues[i * 3] = pos.x;
+    posValues[i * 3 + 1] = pos.y;
+    posValues[i * 3 + 2] = pos.z;
+
+
+    /** Rotation Values */
+    const initialAngle = config.initialAngle;
+    const finalAngle = config.finalAngle;
+    let iAngle = 0;
+
+    if (config.axis === 'x') {
+      iAngle = initialAngle[0] + (finalAngle[0] - initialAngle[0]) * easedT;
+    }
+    if (config.axis === 'y') {
+      iAngle = initialAngle[1] + (finalAngle[1] - initialAngle[1]) * easedT;
+    }
+    if (config.axis === 'z') {
+      iAngle = initialAngle[2] + (finalAngle[2] - initialAngle[2]) * easedT;
+    }
+
+    rotValues[ i ] = iAngle
   };
 
   const timesArray = Array.from(times);
-  const valuesArray = Array.from(values);
+  const posValuesArray = Array.from(posValues);
+  const rotValuesArray = Array.from(rotValues);
 
-  const positionTrack = new VectorKeyframeTrack(
+  const posTrack = new VectorKeyframeTrack(
     '.position',
     timesArray,
-    valuesArray,
+    posValuesArray,
     InterpolateSmooth
   );
+
+  const rotTrack = new NumberKeyframeTrack(
+    '.rotation[' + config.axis + ']',
+    timesArray,
+    rotValuesArray,
+  );
+
 
   return new AnimationClip(
     'TranslateCircle', 
     1, 
-    [ positionTrack ]
+    [ posTrack, rotTrack ]
   );
 };
 
@@ -178,15 +175,58 @@ export function TranslateCircle(config: config): AnimationClip {
 
 
 
+// function createRotationTrack(): NumberKeyframeTrack {
+//   // create n rotation values:
+//   const n = 100;
+//   const initialAngle = config.initialAngle;
+//   const finalAngle = config.finalAngle;
+
+//   const rotationValues = [];
+//   for (let i = 0; i < n; i++) {
+//     const t = i / n;  // Normalize i to 0 -> 1
+    
+//     let iAngle = 0;
+//     if (config.axis === 'x') {
+//       iAngle = initialAngle[0] + (finalAngle[0] - initialAngle[0]) * easedT;
+//     }
+//     if (config.axis === 'y') {
+//       iAngle = initialAngle[1] + (finalAngle[1] - initialAngle[1]) * easedT;
+//     }
+//     if (config.axis === 'z') {
+//       iAngle = initialAngle[2] + (finalAngle[2] - initialAngle[2]) * easedT;
+//     }
+//     rotationValues.push(iAngle);
+//   };
+
+//   // creates n times:
+//   const rotationTimes = Array.from({ length: n }, (_, i) => i/n );
+//   const rotationAxis = '.rotation[' + config.axis + ']';
+
+//   const rotationTrack = new NumberKeyframeTrack(
+//     rotationAxis,
+//     rotationTimes,
+//     rotationValues,
+//   );
+
+//   return rotationTrack;
+// }
 
 
 
 
+// if(i < 1) {
+//   console.log('circle.x', circleCenter.x); // initial.x --> 0.75
+//   console.log('first currentAngle:', currentAngle); // 1.57
+//   console.log('first add to x:', Math.cos(currentAngle) ); //
+//   console.log('first new x', circleCenter.x + ( radius * Math.cos(currentAngle) )); // 0.75
+//   i++;
+// };
 
 
 
-
-
+/** atan2 finds angle (radians) between the camera's current position and the positive x-axis of origin */
+// let initialAngle = Math.atan2(initialPosition.z, initialPosition.x);
+// if( initialPosition.z < 0) initialAngle *= -1; // standardize for a positive angle 
 
 
 

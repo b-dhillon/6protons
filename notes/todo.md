@@ -1,6 +1,22 @@
 # To-do:
 
   # Add quarter circle curve
+
+    New Model Animation Logic 
+      - Pause main animation
+      - start new camera animation 
+      - When camera animation finishes, make old model visible and start new animation 
+
+
+
+
+
+
+
+
+
+
+
     0. Compute proper model positions based on camera rotations
 
       Model positions are all computed inside initialize() in App() 
@@ -19,7 +35,6 @@
 
 
     1. Think about how to do next camera animation after quarter circle turn.
-    2. Smooth out camera.lookAt() rotation with a rotationTrack inside TranslateCircle
 
 
 
