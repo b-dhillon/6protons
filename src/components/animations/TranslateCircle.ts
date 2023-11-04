@@ -35,7 +35,7 @@ interface config {
  * 
  * 
  * Figure out how to deal with section after the quarter circle turn. 
- * The camera will be rotated 90 degrees on its y-axis, and will also have moved Pi/2 radians away.
+ *   The camera will be rotated 90 degrees on its y-axis, and will also have moved Pi/2 radians away.
  * 
 */
 

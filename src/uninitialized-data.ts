@@ -42,12 +42,7 @@ function getVectorOnCircle( initialPosition: number[], rotationAngle: number ): 
   ];
   
   return finalPosition;
-}
-
-// const testPos = getVectorOnCircle([0.75, 0.00,-2.00]);
-
-// console.log('test', testPos ); 
-
+};
 
 
 
@@ -133,25 +128,34 @@ export const uninitializedData: UninitializedData = {
 
         positions: [
           [0.00, 0.00, 5.00], // -1 
-          [0.00, 0.00, 0.00], //  0 Opening position, section 0 <-- Change z back to 0 after testing TranslateCircle
+
+          [0.00, 0.00, 0.00], //  0 Opening position, section 0
+
           [0.00, 0.00, 1.00], //  1 ..1985
+
           [0.75, 0.00,-2.00], //  2 ..most symmetrical form
 
           getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ), //  3 ..soccer ball pattern
           
-          [0.75, 0.00, 1.00], //  4 ..doped
+          // pullOut animation for camera after quarter circle turn: 
+          getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ).map( (pos, i) => i === 0 ? pos + 1 : pos ), // 4, doped buckyball
+
           [1.00, 2.00, 0.00], //  5 ..HIV-1-Protease
         ],
 
         rotations: [
-          [0.00, 0.00, 0.00], // Start
-          [0.00, 0.00, 0.00], // Opening position, section 0 
-          [0.66, 0.00, 0.00], // section 1 ..1985
-          [0.00, 0.00, 0.00], // section 2 ..most symmetrical form
+          [0.00, 0.00, 0.00], // -1
+
+          [0.00, 0.00, 0.00], // section 0 - Opening position
+
+          [0.66, 0.00, 0.00], // section 1 - 1985
+
+          [0.00, 0.00, 0.00], // section 2 - Most symmetrical form
 
           [0.00, (Math.PI/2), 0.00], // section 3 ..soccer ball pattern
           
           [0.00, 0.00, 0.00], // section 4 ..doped
+
           [0.00, 0.00, 0.00], // section 5 ..HIV-1-Protease
         ],
 
@@ -725,6 +729,10 @@ export const uninitializedData: UninitializedData = {
     },
   ],
 };
+
+
+// original position of camera for section-4 // [0.75, 0.00, 1.00], //  4 ..doped
+
 
 
 /* Original Positions before TranslateCircle

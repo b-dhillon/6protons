@@ -181,22 +181,23 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
           // 4.1) If camera-did-move, then we keep the prevModel visibility true so that the exit animation can play
 
           // 4.2) Always set current model visibility to true:
-          const currModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section}`);
-          state.scene.children[currModelIndex].visible = true;
+          if( !cameraDidntMove.current ) {
+            const currModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section}`);
+            state.scene.children[currModelIndex].visible = true;
+          }
     
 
-          // 4.3) If cameraDidntMove, we set prevModel visibility to false to make room for new model.
-
-          // 4.3--A) If forwards, section is greater than 0, and cameraDidntMove, then mutate LOWER ON STACK (section -1) model's visibility to false.
-          if(forwards && section > 0 && cameraDidntMove.current ) {
-            const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section - 1}`);
-            state.scene.children[prevModelIndex].visible = false;
-          }
-          // 4.3--B) If backwards, section is greater than 0, and cameraDidntMove.current, then mutate HIGHER ON STACK (section + 1) model's visibility to false.
-          else if (backwards && section > 0 && cameraDidntMove.current ) {
-            const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section + 1}`);
-            state.scene.children[prevModelIndex].visible = false;
-          }
+          // // 4.3) If cameraDidntMove, we set prevModel visibility to false to make room for new model.
+          // // 4.3--A) If forwards, section is greater than 0, and cameraDidntMove, then mutate LOWER ON STACK (section -1) model's visibility to false.
+          // if(forwards && section > 0 && cameraDidntMove.current ) {
+          //   const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section - 1}`);
+          //   state.scene.children[prevModelIndex].visible = false;
+          // }
+          // // 4.3--B) If backwards, section is greater than 0, and cameraDidntMove.current, then mutate HIGHER ON STACK (section + 1) model's visibility to false.
+          // else if (backwards && section > 0 && cameraDidntMove.current ) {
+          //   const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section + 1}`);
+          //   state.scene.children[prevModelIndex].visible = false;
+          // }
         });
 
       
@@ -214,21 +215,24 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
         /* 6. Handle animation playback: */
 
         /* 6.1--A) If camera didn't move location: */
-        if( cameraDidntMove.current ) {
-          /* A. Grab earlier model's animation time */
-          const oldT = animationActions[ forwards ? section - 1 : section + 1 ].mainAnimation.time;
-          /* B. Set current model's animation to this time.  */
-          currModelAnimations.current.mainAnimation.time = oldT;
-          /* C. Play current model's animation */
-          currModelAnimations.current.mainAnimation.play();
-        } 
+        // if( cameraDidntMove.current ) {
+        //   /* A. Grab earlier model's animation time */
+        //   const oldT = animationActions[ forwards ? section - 1 : section + 1 ].mainAnimation.time;
+        //   /* B. Set current model's animation to this time.  */
+        //   currModelAnimations.current.mainAnimation.time = oldT;
+        //   /* C. Play current model's animation */
+        //   currModelAnimations.current.mainAnimation.play();
+        // } 
         /* 6.1--B) If camera did move: */
-        else {
+        if( cameraDidntMove.current ) {
+          // pause prevModelAnimations.current.mainAnimation
+          prevModelAnimations.current!.mainAnimation.paused = true;
+          console.log('PAUSED PREV MODEL ANIMATION ');
+        }
+        if( !cameraDidntMove.current ) {
 
           /** Trigger prevModel exit animation as camera moves */
-          // if(isCameraAnimating) {
-            prevModelAnimations.current?.scaleAnimation.reset().setEffectiveTimeScale( 1.5 ).play();
-          // }
+          prevModelAnimations.current?.scaleAnimation.reset().setEffectiveTimeScale( 1.5 ).play();
           
           if (section === 0) {
             /* Getting first model to re-appear when going backwards, it is shrunk from going forwards */
@@ -246,7 +250,7 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
          *      Instead of setting a hard-coded timeout, 
          *      perhaps make it half the duration of the animation
         */
-        if ( section > 0 ) {
+        if ( section > 0 && !cameraDidntMove.current ) {
           setTimeout( () => {
             prevModelAnimations.current?.mainAnimation.stop();
           }, 2500 )
@@ -274,10 +278,54 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
         currModelAnimations.current.nestedAnimation.setLoop(LoopPingPong, Infinity);
         currModelAnimations.current.nestedAnimation.play();
       };
+
+
+      if( cameraDidntMove.current ) {
+        console.log("IN CAMERA DIDNT MOVE BLOCK");
+        const forwards: boolean = ( prevSection.current - section ) < 0; // if delta -, move up stack:  
+        const backwards: boolean = ( prevSection.current - section ) > 0; // if delta +, move down stack:
+
+
+
+        /** Passing animation time */
+        /* A. Grab earlier model's animation time */
+        const oldT = animationActions[ forwards ? section - 1 : section + 1 ].mainAnimation.time;
+        /* B. Set current model's animation to this time.  */
+        currModelAnimations.current.mainAnimation.time = oldT;
+        /* C. Play current model's animation */
+        currModelAnimations.current.mainAnimation.paused = false;
+        currModelAnimations.current.mainAnimation.play();
+
+
+
+
+        // Visibility controller for when camera doesn't move:
+        // And also likely need to handle mainAnimation of prevModel pausing here!
+        set((state) => {
+
+          // 4.3) If cameraDidntMove, set prevModel visibility to false to make room for new model.
+          // 4.3--A) If forwards, section is greater than 0, and cameraDidntMove, then mutate LOWER ON STACK (section -1) model's visibility to false.
+          if(forwards && section > 0 ) {
+            const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section - 1}`);
+            state.scene.children[prevModelIndex].visible = false;
+            console.log('SET VISIBILITY OF PREV MODEL TO FALSE');
+          }
+          // 4.3--B) If backwards, section is greater than 0, and cameraDidntMove.current, then mutate HIGHER ON STACK (section + 1) model's visibility to false.
+          else if (backwards && section > 0 ) {
+            const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section + 1}`);
+            state.scene.children[prevModelIndex].visible = false;
+          }
+
+          // Set currModel visibility to true 
+          const currModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section}`);
+          state.scene.children[currModelIndex].visible = true;
+
+        })
+      };
+      /* We are now done controlling, set prevSection to section to get ready for next navigation */
+      prevSection.current = section;
     };
 
-    /* We are now done controlling, set prevSection to section to get ready for next navigation */
-    prevSection.current = section;
 
   }, [ isCameraAnimating ] );
 

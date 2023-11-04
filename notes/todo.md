@@ -2,10 +2,46 @@
 
   # Add quarter circle curve
 
-    New Model Animation Logic 
-      - Pause main animation
-      - start new camera animation 
-      - When camera animation finishes, make old model visible and start new animation 
+
+
+    
+    Think about how to do next camera animation after quarter circle turn.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -34,7 +70,6 @@
 
 
 
-    1. Think about how to do next camera animation after quarter circle turn.
 
 
 
@@ -374,3 +409,13 @@ Need to understand Models, Camera and their Animation systems.
 
       Problem is, prevSection.current is stuck at -1 so it always thinks its a forwards movement.
         Why? Is LessonText being un-mounted and re-mounted when section mutates?
+
+
+# 11.04.23
+
+New Model Animation Logic 
+  - pause main animation
+  - start new camera animation 
+  - finish camera rotation 
+  - make prevModel invisible, currModel visible
+  - play currModel mainAnimation
