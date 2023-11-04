@@ -12,6 +12,8 @@ import {
   easeInOutCubic,
 } from '../../utility-functions/easing-functions';
 
+import { uninitializedData } from '../../uninitialized-data';
+
 interface config {
   duration: number;
   initialPosition: number[];
@@ -22,6 +24,18 @@ interface config {
   easingType: string;
 }
 
+/** Completing Implementation To-do: 
+ * 
+ * [DONE]-Fully understand the math, logic, and code.
+ * [DONE]-Clean and Re-factor
+ * 
+ * Add proper modelPosition, we need to compute this again or grab the computed values somehow.
+ *   Because we need to take into account potential camera rotations
+ * 
+ * Hook into the actual lesson, between section-2 and section-3
+ * 
+ * Rewrite getFinalPositionAfter90DegreeTurn to take into account -z
+*/
 
 /** Fn description
  * 
@@ -50,12 +64,7 @@ export function TranslateCircle(config: config): AnimationClip {
 
   const initialPosition = new Vector3(config.initialPosition[0], config.initialPosition[1], config.initialPosition[2]);
   /** Why is the circleCenter defined like this?
-   *    Because, we are moving in the x-z plane. Therefore the origin (center) is x=0 and z=0. 
-   *    But the y-position needs to be the same y-position as the camera or else 
-   *    the camera will move in a spiral and not purely in the x-z plane.
-   * 
-   *    BUT, if we move the camera past 0,0,1 like 0,0,-2, then the origin is not 0,0,0. We want the circle center
-   *    to just be the position of the model. 
+   *  We want the circle center to just be the position of the model. 
    *    Which is just: 
    *      const modelPosition = new Vector3(initialPosition.x, initialPosition.y, initialPosition.z - 1)
    *    
@@ -63,13 +72,41 @@ export function TranslateCircle(config: config): AnimationClip {
    *    or
    *    We can compute this with our fn.
   */
-  const modelPosition = new Vector3(initialPosition.x, initialPosition.y, initialPosition.z - 1);
-  const circleCenter = modelPosition;
+
+
+  const modelPositionArray = uninitializedData.createModelPosition( 
+    config.initialPosition,
+    config.initialAngle,
+    config.axis,
+    0
+  );
+
+  const modelPosition = new Vector3( modelPositionArray[0], modelPositionArray[1], modelPositionArray[2] );
+  const modelPosition2 = new Vector3( initialPosition.x, initialPosition.y, initialPosition.z - 1 )
+
+  console.log( "COMPUTED", modelPosition );
+  console.log( "MANUAL", modelPosition2 );
+
+
+
+
+  // cameraPosition: number[], cameraRotation: number[], rotationAxis: string, yOffsetForText: number
+
+
+
+
+
+
+  const circleCenter = modelPosition2;
   const radius = initialPosition.distanceTo(circleCenter);
 
   /** atan2 finds angle (radians) between the camera's current position and the positive x-axis of origin */
-  let initialAngle = Math.atan2(initialPosition.z, initialPosition.x);
-  if( initialPosition.z < 0) initialAngle *= -1; // standardize for a positive angle 
+  // let initialAngle = Math.atan2(initialPosition.z, initialPosition.x);
+  // if( initialPosition.z < 0) initialAngle *= -1; // standardize for a positive angle 
+
+  let initialAngle = Math.PI / 2;
+
+  let i = 0;
 
 
   /** 2. Define fn that returns vectors around a circle as a function of time */
@@ -77,6 +114,16 @@ export function TranslateCircle(config: config): AnimationClip {
 
     let easedT = ease(t);
     let currentAngle = initialAngle - ( easedT * (Math.PI / 2) ); // (Math.PI / 2) is how much we want to rotate by
+
+    if(i < 1) {
+      console.log('circle.x', circleCenter.x); // initial.x --> 0.75
+      console.log('first currentAngle:', currentAngle); // 1.57
+      console.log('first add to x:', Math.cos(currentAngle) ); //
+      console.log('first new x', circleCenter.x + ( radius * Math.cos(currentAngle) )); // 0.75
+      i++;
+    };
+
+    console.log(currentAngle);
 
     return new Vector3(
       circleCenter.x + ( radius * Math.cos(currentAngle) ),

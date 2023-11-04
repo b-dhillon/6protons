@@ -1,24 +1,40 @@
 # To-do:
 
-  # Add quarter circle curve between section2 and section3
+  # Add quarter circle curve
+    0. Compute proper model positions based on camera rotations
 
-    1. Implement first by hard-coding the section2-section3 transition. 
-    2. Debug and get it working as intended. 
-
-
-      initial section(2): [ 0.75, 0.00,-2.00 ]
-      final section(3): [ 2.00, 0.00, 0.75 ]
-
-      Plotting both initial and final positions proves they are a quarter circle apart.
-
-      Changing the first model's position and re-performing the animation shows that the finalPosition seems to be almost accurate.
-        - Just need to flip the x-axis! Camera currently on left-side of model instead of right-side after rotation.
+      Model positions are all computed inside initialize() in App() 
 
 
-      START: 
-        . Add camera.lookAt feature and test section0 to section1 with the perspective camera
-        . If everything works as intended --> flip x-axis?
-        . See why it isn't working for section2 --> section3 
+      However, we need them inside TranslateCircle(), which is called
+      in initialize too, but called indirectly. initialize calls data.createAnimationDS()
+      and then passes the animationDS into data.createAnimationClips()
+
+
+      My current approach re-computes the model position inside TranslateCircle.
+      This is a wasted computation, but might not be a big deal because it's cheap.
+
+
+
+
+
+    1. Think about how to do next camera animation after quarter circle turn.
+    2. Smooth out camera.lookAt() rotation with a rotationTrack inside TranslateCircle
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -48,9 +64,6 @@
 
 
 
-
-    - Figure out to get the vec3 thats a quarter circle away in the x-z plane
-    - Figure out how to interpolate the positions in a circle, with easing. 
 
 
 

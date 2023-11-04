@@ -18,22 +18,21 @@ import SuspendInSolution from './components/animations/SuspendInSolution';
 import { TranslateCircle } from './components/animations/TranslateCircle';
 
 
-function getFinalPositionAfter90DegreeTurn(initialPosition: number[]): number[] {
+function getVectorOnCircle( initialPosition: number[], rotationAngle: number ): number[] {
   // Step 1: Find the circle's center.
   // For this case, the circle's center is assumed to be on the y-axis at the same y-level as initialPosition.
   const initialPos = new Vector3( initialPosition[0], initialPosition[1], initialPosition[2] )
-
-  const circleCenter = new Vector3(0, initialPos.y, 0);
-
-  
-  // Calculate the radius of the circle based on the distance from initialPosition to the circleCenter.
+  const modelPosition = new Vector3(initialPos.x, initialPos.y, initialPos.z - 1);
+  const circleCenter = modelPosition;  
   const radius = initialPos.distanceTo(circleCenter);
   
   // Step 2: Calculate the initial angle with respect to the positive x-axis on the x-z plane.
+  /** atan2 finds angle (radians) between the camera's current position and the positive x-axis of origin */
   let initialAngle = Math.atan2(initialPos.z, initialPos.x);
+  if( initialPos.z < 0) initialAngle *= -1; // standardize for a positive angle 
   
   // Step 3: Add 90 degrees (π/2 radians) to get the final angle.
-  let finalAngle = initialAngle + (Math.PI / 2);
+  let finalAngle = initialAngle - rotationAngle;
   
   // Step 4: Calculate the finalPosition using polar to Cartesian conversion.
   const finalPosition = [
@@ -45,7 +44,7 @@ function getFinalPositionAfter90DegreeTurn(initialPosition: number[]): number[] 
   return finalPosition;
 }
 
-// const testPos = getFinalPositionAfter90DegreeTurn([0.75, 0.00,-2.00]);
+// const testPos = getVectorOnCircle([0.75, 0.00,-2.00]);
 
 // console.log('test', testPos ); 
 
@@ -53,18 +52,13 @@ function getFinalPositionAfter90DegreeTurn(initialPosition: number[]): number[] 
 
 
 export const uninitializedData: UninitializedData = {
-  createModelPosFromCamPos: function( cameraPosition: number[], cameraRotation: number[], rotationAxis: string, yOffsetForText: number ) {
+  createModelPosition: function( cameraPosition: number[], cameraRotation: number[], rotationAxis: string, yOffsetForText: number ): number[] {
     
     let yOffset = yOffsetForText;
-
-
-
 
     // let camPos = cameraPosition;
     // if( models[i].sameModelLocation ) camPos = cameraPositions[ i - 1 ];
 
-
-    
     // rotate camera X-axis, need to re-position model on Y axis.
     if (rotationAxis === 'x') {
       const rotationAngle = cameraRotation[0];
@@ -123,16 +117,8 @@ export const uninitializedData: UninitializedData = {
       },
 
       camera: {
-        // animationTypes: [
-        //   'TranslateRotate', // -1 --> 0
-        //   'TranslateRotate', //  0 --> 1
-        //   'TranslateRotate', //  1 --> 2
-        //   'TranslateCircle', //  2 --> 3
-        //   'TranslateRotate', //  3 --> 4
-        //   'TranslateRotate', //  4 --> 5
-        // ],
 
-        /** instead of hard-coded. This array could be generated
+        /** Instead of hard-coded, this array could be generated
          *  programatically by checking models[i].newModelLocation
          *  if true: TranslateRotate, else: TranslateCircle
         */
@@ -140,8 +126,7 @@ export const uninitializedData: UninitializedData = {
           TranslateRotate, // -1 --> 0
           TranslateRotate, //  0 --> 1
           TranslateRotate, //  1 --> 2
-          TranslateRotate, //  2 --> 3 // DELETE THIS LINE AFTER TESTING 
-          // TranslateCircle, //  2 --> 3
+          TranslateCircle, //  2 --> 3
           TranslateRotate, //  3 --> 4
           TranslateRotate, //  4 --> 5
         ],
@@ -152,7 +137,7 @@ export const uninitializedData: UninitializedData = {
           [0.00, 0.00, 1.00], //  1 ..1985
           [0.75, 0.00,-2.00], //  2 ..most symmetrical form
 
-          getFinalPositionAfter90DegreeTurn([0.75, 0.00,-2.00]), //  3 ..soccer ball pattern
+          getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ), //  3 ..soccer ball pattern
           
           [0.75, 0.00, 1.00], //  4 ..doped
           [1.00, 2.00, 0.00], //  5 ..HIV-1-Protease
@@ -161,7 +146,6 @@ export const uninitializedData: UninitializedData = {
         rotations: [
           [0.00, 0.00, 0.00], // Start
           [0.00, 0.00, 0.00], // Opening position, section 0 
-          // [0.00, 0.00, 0.00], // Opening position, section 0  <-- DELETE THIS LINE AFTER TESTING TranslateCircle
           [0.66, 0.00, 0.00], // section 1 ..1985
           [0.00, 0.00, 0.00], // section 2 ..most symmetrical form
           [0.00, 0.00, 0.00], // section 3 ..soccer ball pattern
@@ -189,36 +173,22 @@ export const uninitializedData: UninitializedData = {
         createAnimationClips: function( animationDS: any, page: UninitializedPage ): AnimationClip[][] {
           const animationClips = animationDS.map((animationData: [][], i: number) => {
 
+            // FindRotationAxis(animationData),
             let animationClipConstructor = this.animationTypes[i]
 
-            // if (i === 0) {
-              return [
-                animationClipConstructor({
-                  // duration: 4,
-                  duration: 1,
-                  initialPosition: animationData[0],
-                  finalPosition: animationData[1],
-                  initialAngle: animationData[2],
-                  finalAngle: animationData[3],
-                  // axis: 'x',
-                  axis: FindRotationAxis(animationData),
-                  easingType: i === 0 ? 'out' : 'inOut'
-                }),
-              ];
-            // }
-            // else return [
-            //   TranslateCircle({
-            //     // duration: 4,
-            //     duration: 1,
-            //     initialPosition: animationData[0],
-            //     finalPosition: animationData[1],
-            //     initialAngle: animationData[2],
-            //     finalAngle: animationData[3],
-            //     // axis: 'x',
-            //     axis: FindRotationAxis(animationData),
-            //     easingType: i === 0 ? 'out' : 'inOut'
-            //   }),
-            // ];
+            return [
+              animationClipConstructor({
+                // duration: 4,
+                duration: 1,
+                initialPosition: animationData[0],
+                finalPosition: animationData[1],
+                initialAngle: animationData[2],
+                finalAngle: animationData[3],
+                // axis: 'x',
+                axis: FindRotationAxis(animationData),
+                easingType: i === 0 ? 'out' : 'inOut'
+              }),
+            ];
           })
           return animationClips;
         },
@@ -471,7 +441,7 @@ export const uninitializedData: UninitializedData = {
         */
         animationTypes: [
           TranslateRotate, // -1 --> 0
-          TranslateCircle, //  0 --> 1
+          TranslateRotate, //  0 --> 1
           TranslateRotate, //  1 --> 2
           TranslateRotate, //  2 --> 3
           TranslateRotate, //  3 --> 4
@@ -480,11 +450,11 @@ export const uninitializedData: UninitializedData = {
 
         positions: [
           [0.00, 0.00, 5.00], // -1 
-          [0.00, 0.00, -2.00], //  0 Opening position, section 0 <-- Change z back to 0 after testing TranslateCircle
-          getFinalPositionAfter90DegreeTurn([0, 0, 1]), //  1 ..soccer ball pattern
+          [0.00, 0.00, 1.00], //  0 Opening position, section 0 <-- Change z back to 0 after testing TranslateCircle
+          getVectorOnCircle( [0, 0, 1], Math.PI/2 ), //  1 ..soccer ball pattern
           // [0.00, 0.00, 1.00], //  1 ..1985
           [0.75, 0.00,-2.00], //  2 ..most symmetrical form
-          getFinalPositionAfter90DegreeTurn([0.75, 0.00, 1.00]), //  3 ..soccer ball pattern
+          getVectorOnCircle( [0.75, 0.00, 1.00], Math.PI/2 ), //  3 ..soccer ball pattern
           [0.75, 0.00, 1.00], //  4 ..doped
           [1.00, 2.00, 0.00], //  5 ..HIV-1-Protease
         ],

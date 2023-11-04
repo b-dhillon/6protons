@@ -1,7 +1,7 @@
 import { AnimationClip, Audio, Mesh } from "three"
 
 export interface UninitializedData {
-    createModelPosFromCamPos: Function,
+    createModelPosition: Function,
     textChimePath: string,
     pages: UninitializedPage[]
 }
@@ -99,7 +99,7 @@ export interface UninitializedModel {
 
 export interface InititalizedModel extends UninitializedModel {
     loadedMeshes: Mesh[][],
-    initializedPositions: number[][],
+    initializedPositions: number[], // change property name to initializedPosition
 };
 
 export interface Universe {

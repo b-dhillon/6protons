@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { useState, useEffect } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
-import { uninitializedData } from './uninitializedData';
+import { uninitializedData } from './uninitialized-data';
 import { TranslateRotate } from './components/animations/TranslateRotate';
 import { Page } from './components/Page';
 import { FindRotationAxis } from './utility-functions/find-rotation-axis';
@@ -28,7 +28,7 @@ import { UninitializedData, UninitializedPage, InitializedPage } from './types/t
 export default function App() {
   const [initializedPages, setInitializedPages] = useState<InitializedPage[] | undefined>(undefined);
   const [dataInitialized, setDataInitialized] = useState(false);
-  const [currentPage, setCurrentPage] = useState('test-page-2');
+  const [currentPage, setCurrentPage] = useState('test-page');
 
   useEffect(() => {
     Init();
@@ -265,19 +265,18 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
       // add meshes and positions to each model
       models: page.models.map((model: any, j: number) => {
 
-        let newPos = model.newModelLocation
+        let inNewPos = model.newModelLocation
         
-
         return {
           ...model,
           loadedMeshes: allMeshesOfApp[i][j],
 
-          initializedPositions: data.createModelPosFromCamPos(
+          initializedPositions: data.createModelPosition(
             /** If model in new pos we do j+1 because first index in camera.positions is technichally -1 
-             *  if not, just j because we want position of previous model for camera.lookAt() for TranslateCircle
+             *  if not, if same position, just j because we want position of previous model for camera.lookAt() for TranslateCircle
             */
-            page.camera.positions[ newPos ? j + 1 : j ], // cameraPosition: number[]
-            page.camera.rotations[ newPos ? j + 1 : j ], // cameraRotation: number[]
+            page.camera.positions[ inNewPos ? j + 1 : j ], // cameraPosition: number[]
+            page.camera.rotations[ inNewPos ? j + 1 : j ], // cameraRotation: number[]
             FindRotationAxis(animationDS[j]),
             model.yOffsetForText
           ),

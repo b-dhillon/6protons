@@ -128,12 +128,17 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
 
         /* 3. Check if model is in same position as prev section */
         sameModelPosition.current = !initializedPage.models[ forwards ? section : section + 1].newModelLocation;
-        /* 4. if model is in same position, grab the pos of the prevModel (section - 1) to pipe into .lookAt() */
+        const yOffsetForText = initializedPage.models[ section ].yOffsetForText;
+
+        /* 4. If model is in same position, grab the pos of the prevModel (section - 1) to pipe into .lookAt() 
+         *    Now, it is just [section] because we changed the position of the currModel to match the position 
+         *    of the prevModel if sameModelPosition
+        */
         if(sameModelPosition.current) {
           // const p = initializedPage.models[ section > 0 ? section - 1 : section ].initializedPositions
-          const p = initializedPage.models[ section ].initializedPositions
-          pos.current = new THREE.Vector3(p[0], p[1], p[2]);
-          // console.log('model position when sameModelPosition', pos.current ); 
+          const p: number[] = initializedPage.models[ section ].initializedPositions;
+          const yOffsetForText = initializedPage.models[ section ].yOffsetForText;
+          pos.current = new THREE.Vector3(p[0], (p[1] - yOffsetForText), p[2]);
         };
 
         /* 5. Ensure all camera animations are stopped before playing the next one */
@@ -174,10 +179,10 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
   });
 
   // Setting the scene's camera. There are two. Perspective and Development.
-  useHelper( ref, THREE.CameraHelper );
+  // useHelper( ref, THREE.CameraHelper );
   // /** 
-  //  const set = useThree((state) => state.set);
-  //  useEffect(() => set({ camera: ref.current }));
+   const set = useThree((state) => state.set);
+   useEffect(() => set({ camera: ref.current }));
   // */
 
   return (
