@@ -60,26 +60,28 @@ export function TranslateRotate(config: config) {
     const initialAngle = config.initialAngle;
     const finalAngle = config.finalAngle;
 
+    const rotationTimes = []
     const rotationValues = [];
     for (let i = 0; i < n; i++) {
-      const t = i / n;  // Normalize i to 0 -> 1
+      const t = i / (n-1);  // Normalize i to 0 -> 1
       const easedT = easingFn(t);
       
-      let iAngle = 0;
+      let angle = 0;
       if (config.axis === 'x') {
-        iAngle = initialAngle[0] + (finalAngle[0] - initialAngle[0]) * easedT;
+        angle = initialAngle[0] + (finalAngle[0] - initialAngle[0]) * easedT;
       }
       if (config.axis === 'y') {
-        iAngle = initialAngle[1] + (finalAngle[1] - initialAngle[1]) * easedT;
+        angle = initialAngle[1] + (finalAngle[1] - initialAngle[1]) * easedT;
       }
       if (config.axis === 'z') {
-        iAngle = initialAngle[2] + (finalAngle[2] - initialAngle[2]) * easedT;
+        angle = initialAngle[2] + (finalAngle[2] - initialAngle[2]) * easedT;
       }
-      rotationValues.push(iAngle);
+
+      rotationValues[i] = angle;
+      rotationTimes[i] = t;
     };
 
     // creates n times:
-    const rotationTimes = Array.from({ length: n }, (_, i) => i/n );
     const rotationAxis = '.rotation[' + config.axis + ']';
 
     const rotationTrack = new NumberKeyframeTrack(

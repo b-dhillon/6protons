@@ -62,9 +62,12 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
   const camera = initializedPage.camera;
 
   const AnimationClips = camera.animationClips;
-  // AnimationClips[2][0]
-  // AnimationClips[3][0]
-  // console.log('Camera Animation Clips', AnimationClips );
+
+  const hardCodedCameraPositionSection3 = initializedPage.camera.positions[4]; // [ 1.6863291775690445, 0, -3.3511234415883915 ]
+  console.log( 'HARD CODED' ,hardCodedCameraPositionSection3);
+  const translateCircleCameraPositionSection3 = new THREE.Vector3(...AnimationClips[ 3 ][0].tracks[0].values.slice(-3)); // [ 1.75, 0, -3 ]
+
+
 
 
 
@@ -148,7 +151,7 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
         if ( forwards && section <= maxSection ) {
           dispatch( setCameraAnimating(true) );
           animations[section].reset();
-          animations[section].setEffectiveTimeScale(0.2);
+          animations[section].setEffectiveTimeScale( sameModelPosition.current ? 0.3 : 0.2 );
           animations[section].play();
           /* set prevSection to currSection for next navigation */
           prevSection.current = section;
@@ -159,9 +162,11 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
           const x = section + 1
           animations[x].reset();
           animations[x].time = camera.animationClips[section][0].duration
-          animations[x].setEffectiveTimeScale(-0.2);
+          animations[x].setEffectiveTimeScale( sameModelPosition.current ? -0.3 : -0.2 );
+
+          // animations[x].setEffectiveTimeScale(-0.2);
           animations[x].play();
-          /* sets prevSection to currSection for next navigation */
+          /* set prevSection to currSection for next navigation */
           prevSection.current = section;
         };
       };
@@ -177,10 +182,10 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
   });
 
   // Setting the scene's camera. There are two. Perspective and Development.
-  // useHelper( ref, THREE.CameraHelper );
+  useHelper( ref, THREE.CameraHelper );
   // /** 
-   const set = useThree((state) => state.set);
-   useEffect(() => set({ camera: ref.current }));
+  //  const set = useThree((state) => state.set);
+  //  useEffect(() => set({ camera: ref.current }));
   // */
 
   return (

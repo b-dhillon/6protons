@@ -1,138 +1,12 @@
 # To-do:
 
   # Add quarter circle curve
-
-
-
-    
     Think about how to do next camera animation after quarter circle turn.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    0. Compute proper model positions based on camera rotations
-
-      Model positions are all computed inside initialize() in App() 
-
-
-      However, we need them inside TranslateCircle(), which is called
-      in initialize too, but called indirectly. initialize calls data.createAnimationDS()
-      and then passes the animationDS into data.createAnimationClips()
-
-
-      My current approach re-computes the model position inside TranslateCircle.
-      This is a wasted computation, but might not be a big deal because it's cheap.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    3. Work out implementation details without hard-coding
-        - How are the camera positions set? Hard-coded? 
-        - How do we know when to create a TranslateCircle vs. a TranslateRotate animation clip?
-        - Figure out implementation details of lookAt() on the camera
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      - Need to fix the camera rotation
 
   # Redo styling of lessonText -- new font, new font-size, line-height and everything.
+
+
 
 
 
@@ -179,6 +53,120 @@
   # Add diamond lattice to diamond model -- essentially build section1 of the diamond lesson.
   # Add re-direct buttons to all lessons.
   # Create diagrams + update readme.md on GitHub.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ReFactor:
+
+  . Compute proper model positions based on camera rotations
+
+    Model positions are computed inside initialize() in App() 
+
+    However, we need them inside TranslateCircle(), which is called
+    in initialize too, but called indirectly. initialize() calls data.createAnimationDS()
+    and then passes the animationDS into data.createAnimationClips(), which then calls 
+    animationClipConstructor() which then calls TranslateCircle()
+
+    My current approach re-computes the model position inside TranslateCircle.
+    This is a wasted computation, but might not be a big deal because it's cheap.
+
+
+
+
+
+  . Work out implementation details without hard-coding
+    . How are the camera positions set? Hard-coded? 
+    . How do we know when to create a TranslateCircle vs. a TranslateRotate animation clip?
+    . Figure out implementation details of lookAt() on the camera
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

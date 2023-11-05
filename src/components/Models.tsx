@@ -110,29 +110,8 @@ interface ModelAnimations {
 export function Models( { initializedPage, section, isCameraAnimating } : any): JSX.Element {
 
   const [ animationActions, setAnimationActions ] = useState<ModelAnimations[]>([]); // [ { mainAnimation, scaleAnimation, nestedAnimation }, [ ], etc... ]
-  const [ doneControlling, setDoneControlling ] = useState<boolean>(() => false);
   const set = useThree((state) => state.set);
   const prevSection = useRef(-1);
-
-
-
-
-
-  const modelPositions: number[][] = initializedPage.models.map( (model: any) => model.initializedPositions) 
-  // console.log('model positions', modelPositions);
-  const passingTest = 
-    modelPositions[2][0] === modelPositions[3][0] &&
-    modelPositions[2][1] === modelPositions[3][1] &&
-    modelPositions[2][2] === modelPositions[3][2]
-  ;
-  // console.log( 'model positions passing?', passingTest);
-
-
-
-
-
-
-
 
   let currModelAnimations = useRef<ModelAnimations>(animationActions[0]);
   let prevModelAnimations = useRef<ModelAnimations>();
@@ -340,7 +319,6 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
       /* Nested animation */
       // @ts-ignore
       currModelAnimations.current.nestedAnimation?._mixer.update(delta);
-
       if (section > 0) {
         /* Scale In animation */
         // @ts-ignore
@@ -348,8 +326,6 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
         /* Scale Out animation */
         // @ts-ignore
         prevModelAnimations.current?.scaleAnimation?._mixer.update(delta);
-        // @ts-ignore
-        // animationActions[section + 1].scaleAnimation._mixer.update(delta);
       };
     };
   });
@@ -385,9 +361,14 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
 
 
 
-
-
-
+// const modelPositions: number[][] = initializedPage.models.map( (model: any) => model.initializedPositions) 
+// // console.log('model positions', modelPositions);
+// const passingTest = 
+//   modelPositions[2][0] === modelPositions[3][0] &&
+//   modelPositions[2][1] === modelPositions[3][1] &&
+//   modelPositions[2][2] === modelPositions[3][2]
+// ;
+// console.log( 'model positions passing?', passingTest);
 
 
 

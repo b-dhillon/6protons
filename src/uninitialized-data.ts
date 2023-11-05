@@ -28,17 +28,17 @@ function getVectorOnCircle( initialPosition: number[], rotationAngle: number ): 
   
   // Step 2: Calculate the initial angle with respect to the positive x-axis on the x-z plane.
   /** atan2 finds angle (radians) between the camera's current position and the positive x-axis of origin */
-  let initialAngle = Math.atan2(initialPos.z, initialPos.x);
-  if( initialPos.z < 0) initialAngle *= -1; // standardize for a positive angle 
+  const initialAngle = rotationAngle;
+  // if( initialPos.z < 0) initialAngle *= -1; // standardize for a positive angle 
   
   // Step 3: Add 90 degrees (π/2 radians) to get the final angle.
   let finalAngle = initialAngle - rotationAngle;
   
   // Step 4: Calculate the finalPosition using polar to Cartesian conversion.
   const finalPosition = [
-    circleCenter.x + radius * Math.cos(finalAngle),
+    circleCenter.x + ( radius * Math.cos(finalAngle) ),
     initialPos.y,
-    circleCenter.z + radius * Math.sin(finalAngle)
+    circleCenter.z + ( radius * Math.sin(finalAngle) )
   ];
   
   return finalPosition;
@@ -135,10 +135,23 @@ export const uninitializedData: UninitializedData = {
 
           [0.75, 0.00,-2.00], //  2 ..most symmetrical form
 
+
+          /** I think the camera positon bug is here.
+           *  Below is the final position for after TranslateCircle. 
+           *  It is used as the inital position for animation section3-->section4
+           *  However, we have to confirm that this lines up with the final position
+           *  that is computed inside TranslateCircle.
+           * 
+           * Confirmed: 
+           *    getVectorOnCircle: [ 1.6863291775690445, 0, -3.3511234415883915 ]
+           *    TranslateCircle: [ 1.75, 0, -3 ]
+           * 
+          */
           getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ), //  3 ..soccer ball pattern
           
           // pullOut animation for camera after quarter circle turn: 
-          getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ).map( (pos, i) => i === 0 ? pos + 1 : pos ), // 4, doped buckyball
+          // T
+          getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ).map( (pos, i) => i === 0 ? pos + 3 : pos ), // 4, doped buckyball
 
           [1.00, 2.00, 0.00], //  5 ..HIV-1-Protease
         ],
@@ -154,7 +167,7 @@ export const uninitializedData: UninitializedData = {
 
           [0.00, (Math.PI/2), 0.00], // section 3 ..soccer ball pattern
           
-          [0.00, 0.00, 0.00], // section 4 ..doped
+          [0.00, (Math.PI/2 + 0.01), 0.00], // section 4 ..doped
 
           [0.00, 0.00, 0.00], // section 5 ..HIV-1-Protease
         ],
