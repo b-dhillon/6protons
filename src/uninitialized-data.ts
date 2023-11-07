@@ -10,7 +10,7 @@
 import { useDispatch } from 'react-redux';
 import { UninitializedData, UninitializedPage } from './types/types';
 import { TranslateRotate } from './components/animations/TranslateRotate';
-import { FindRotationAxis } from './utility-functions/find-rotation-axis';
+import { findRotationAxis } from './utility-functions/find-rotation-axis';
 import { AnimationClip, Vector3 } from 'three';
 import ScaleXYZ from './components/animations/ScaleXYZ';
 import Rotate from './components/animations/Rotate';
@@ -47,34 +47,48 @@ function getVectorOnCircle( initialPosition: number[], rotationAngle: number ): 
 
 
 export const uninitializedData: UninitializedData = {
-  createModelPosition: function( cameraPosition: number[], cameraRotation: number[], rotationAxis: string, yOffsetForText: number ): number[] {
-    
-    let yOffset = yOffsetForText;
 
-    // let camPos = cameraPosition;
-    // if( models[i].sameModelLocation ) camPos = cameraPositions[ i - 1 ];
+  // This method needs to be re-written:
+  createModelPosition: function( cameraPosition: number[], cameraRotation: number[], rotationData: [string, boolean], yOffsetForText: number ): number[] {
+    
+    let rotationAxis = rotationData[0];
+
 
     // rotate camera X-axis, need to re-position model on Y axis.
     if (rotationAxis === 'x') {
       const rotationAngle = cameraRotation[0];
       const x = cameraPosition[0];
-      const y = cameraPosition[1] + rotationAngle + yOffset
+      const y = cameraPosition[1] + rotationAngle + yOffsetForText
       const z = cameraPosition[2] - 1;
       return [x, y, z];
     }
 
-    // rotate camera Y-axis, need to re-position model on X axis AND Z axis.
+    /**
+     * cameraPos at section4 = [ 4.75, 0, -3 ]
+     * cameraRot at section4 = 1.58 
+     * offset = -1.58 
+     * x = 4.75 - 1.58 = 3.17
+     * y = 0 + 0.15    = 0.15
+     * z = -3 - -1.58  = -4.58
+     * 
+     * observed: [ 3.17, 0.15, -4.58 ]
+     * expected: [ 3.75, 0, -3 ]
+     */
+
+    // rotate camera Y-axis, need to re-position model on X axis AND Z axis. --> Really, Z axis needed? Not just X axis??
     if (rotationAxis === 'y') {
-      const rotationAngle = cameraRotation[1];
-      const offset = rotationAngle * -1;
+      const rotationAngle = cameraRotation[1]; // 1.58
+      const offset = rotationAngle * -1;  // -1.58
       if (rotationAngle > 0) {
-        const x = cameraPosition[0] + offset;
-        const y = cameraPosition[1] + yOffset;
-        const z = cameraPosition[2] + offset;
+
+        const x = cameraPosition[0] - 1;
+        const y = cameraPosition[1] + yOffsetForText;
+        const z = cameraPosition[2] //+ offset;
         return [x, y, z];
+
       } else {
         const x = cameraPosition[0];
-        const y = cameraPosition[1] + yOffset;
+        const y = cameraPosition[1] + yOffsetForText;
         const z = cameraPosition[2] - 1;
         return [x, y, z];
       }
@@ -84,12 +98,12 @@ export const uninitializedData: UninitializedData = {
     if (rotationAxis === 'z') {
       const rotationAngle = cameraRotation[2];
       const x = cameraPosition[0];
-      const y = cameraPosition[1] + yOffset;
+      const y = cameraPosition[1] + yOffsetForText;
       const z = cameraPosition[2] - 1;
       return [x, y, z];
     } else {
       const x = cameraPosition[0];
-      const y = cameraPosition[1] + yOffset;
+      const y = cameraPosition[1] + yOffsetForText;
       const z = cameraPosition[2] - 1;
       return [x, y, z];
     }
@@ -147,13 +161,15 @@ export const uninitializedData: UninitializedData = {
            *    TranslateCircle: [ 1.75, 0, -3 ]
            * 
           */
-          getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ), //  3 ..soccer ball pattern
+          getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ), //  3 ..soccer ball pattern --> [ 1.75, 0, -3 ]
           
           // pullOut animation for camera after quarter circle turn: 
-          // T
-          getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ).map( (pos, i) => i === 0 ? pos + 3 : pos ), // 4, doped buckyball
+          getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ).map( (pos, i) => i === 0 ? pos + 3 : pos ), // 4, doped buckyball --> [ 4.75, 0, -3 ]
 
-          [1.00, 2.00, 0.00], //  5 ..HIV-1-Protease
+
+          // OLD 4 --> [ 0.75, 0.00, 1.00 ],  NEW 4 --> [ 4.75, 0.00, -3.00 ]
+          // OLD 5 --> [ 1.00, 2.00, 0.00 ],  NEW 5 --> [ 3.75, 2.00, -3.25 ]
+          [ 3.75, 2.00, -3.25 ], //  5 ..HIV-1-Protease
         ],
 
         rotations: [
@@ -167,7 +183,7 @@ export const uninitializedData: UninitializedData = {
 
           [0.00, (Math.PI/2), 0.00], // section 3 ..soccer ball pattern
           
-          [0.00, (Math.PI/2 + 0.01), 0.00], // section 4 ..doped
+          [0.00, (Math.PI/2), 0.00], // section 4 ..doped
 
           [0.00, 0.00, 0.00], // section 5 ..HIV-1-Protease
         ],
@@ -204,8 +220,10 @@ export const uninitializedData: UninitializedData = {
                 initialAngle: animationData[2],
                 finalAngle: animationData[3],
                 // axis: 'x',
-                axis: FindRotationAxis(animationData),
-                easingType: i === 0 ? 'out' : 'inOut'
+                axisData: findRotationAxis(animationData),
+                easingType: i === 0 ? 'out' : 'inOut',
+                _page: page,
+                _i: i
               }),
             ];
           })
@@ -357,7 +375,7 @@ export const uninitializedData: UninitializedData = {
           visible: false,
           newModelLocation: true,
           scale: 0,
-          yOffsetForText: 0.05,
+          yOffsetForText: 0.07,
           zoomInOnReverse: false,
           positions: [[0.0, -0.1, -3.0]],
           rotations: [[0.0, 0.0, 0.0]],
@@ -371,7 +389,7 @@ export const uninitializedData: UninitializedData = {
             //hiv protease
             ScaleXYZ({
               duration: 1,
-              initialScale: [0.060, 0.060, 0.060],
+              initialScale: [0.055, 0.055, 0.055],
               finalScale: [0.0, 0.0, 0.0],
             }),
             //buckyball
@@ -439,307 +457,307 @@ export const uninitializedData: UninitializedData = {
 
 
 
-    {
-      id: 'test-page-2',
-      title: 'testing arena',
-      section: 0,
-      maxSection: 5,
-      thumbnail: "url('./lessonThumbnails/fullereneTile.png')",
+    // {
+    //   id: 'test-page-2',
+    //   title: 'testing arena',
+    //   section: 0,
+    //   maxSection: 5,
+    //   thumbnail: "url('./lessonThumbnails/fullereneTile.png')",
 
-      universe: {
-        id: 'fullerene universe',
-        star_count: 25000,
-        radius: 5,
-      },
+    //   universe: {
+    //     id: 'fullerene universe',
+    //     star_count: 25000,
+    //     radius: 5,
+    //   },
 
-      camera: {
+    //   camera: {
     
-        /** instead of hard-coded. This array could be generated
-         *  programatically by checking models[i].newModelLocation
-         *  if true: TranslateRotate, else: TranslateCircle
-        */
-        animationTypes: [
-          TranslateRotate, // -1 --> 0
-          TranslateRotate, //  0 --> 1
-          TranslateRotate, //  1 --> 2
-          TranslateRotate, //  2 --> 3
-          TranslateRotate, //  3 --> 4
-          TranslateRotate, //  4 --> 5
-        ],
+    //     /** instead of hard-coded. This array could be generated
+    //      *  programatically by checking models[i].newModelLocation
+    //      *  if true: TranslateRotate, else: TranslateCircle
+    //     */
+    //     animationTypes: [
+    //       TranslateRotate, // -1 --> 0
+    //       TranslateRotate, //  0 --> 1
+    //       TranslateRotate, //  1 --> 2
+    //       TranslateRotate, //  2 --> 3
+    //       TranslateRotate, //  3 --> 4
+    //       TranslateRotate, //  4 --> 5
+    //     ],
 
-        positions: [
-          [0.00, 0.00, 5.00], // -1 
-          [0.00, 0.00, 1.00], //  0 Opening position, section 0 <-- Change z back to 0 after testing TranslateCircle
-          getVectorOnCircle( [0, 0, 1], Math.PI/2 ), //  1 ..soccer ball pattern
-          // [0.00, 0.00, 1.00], //  1 ..1985
-          [0.75, 0.00,-2.00], //  2 ..most symmetrical form
-          getVectorOnCircle( [0.75, 0.00, 1.00], Math.PI/2 ), //  3 ..soccer ball pattern
-          [0.75, 0.00, 1.00], //  4 ..doped
-          [1.00, 2.00, 0.00], //  5 ..HIV-1-Protease
-        ],
+    //     positions: [
+    //       [0.00, 0.00, 5.00], // -1 
+    //       [0.00, 0.00, 1.00], //  0 Opening position, section 0 <-- Change z back to 0 after testing TranslateCircle
+    //       getVectorOnCircle( [0, 0, 1], Math.PI/2 ), //  1 ..soccer ball pattern
+    //       // [0.00, 0.00, 1.00], //  1 ..1985
+    //       [0.75, 0.00,-2.00], //  2 ..most symmetrical form
+    //       getVectorOnCircle( [0.75, 0.00, 1.00], Math.PI/2 ), //  3 ..soccer ball pattern
+    //       [0.75, 0.00, 1.00], //  4 ..doped
+    //       [1.00, 2.00, 0.00], //  5 ..HIV-1-Protease
+    //     ],
         
-        rotations: [
-          [0.00, 0.00, 0.00], // Start
-          [0.00, 0.00, 0.00], // Opening position, section 0 
-          [0.00, 0.00, 0.00], // Opening position, section 1  <-- DELETE THIS LINE AFTER TESTING TranslateCircle
-          [0.66, 0.00, 0.00], // section 1 ..1985          [0.00, 0.00, 0.00], // section 2 ..most symmetrical form
-          [0.00, 0.00, 0.00], // section 3 ..soccer ball pattern
-          [0.00, 0.00, 0.00], // section 4 ..doped
-          [0.00, 0.00, 0.00], // section 5 ..HIV-1-Protease
-        ],
+    //     rotations: [
+    //       [0.00, 0.00, 0.00], // Start
+    //       [0.00, 0.00, 0.00], // Opening position, section 0 
+    //       [0.00, 0.00, 0.00], // Opening position, section 1  <-- DELETE THIS LINE AFTER TESTING TranslateCircle
+    //       [0.66, 0.00, 0.00], // section 1 ..1985          [0.00, 0.00, 0.00], // section 2 ..most symmetrical form
+    //       [0.00, 0.00, 0.00], // section 3 ..soccer ball pattern
+    //       [0.00, 0.00, 0.00], // section 4 ..doped
+    //       [0.00, 0.00, 0.00], // section 5 ..HIV-1-Protease
+    //     ],
 
-        createAnimationDS: function (): number[][][] {
-          const animationData: number[][][] = [];
-          for (let i = 0; i < this.positions.length - 1; i++) {
-            const initialPosition: number[] = this.positions[i];
-            const finalPosition: number[] = this.positions[i + 1];
-            const initialRotation: number[] = this.rotations[i];
-            const finalRotation: number[] = this.rotations[i + 1];
-            animationData.push([
-              initialPosition,
-              finalPosition,
-              initialRotation,
-              finalRotation,
-            ]);
-          }
-          return animationData;
-        },
+    //     createAnimationDS: function (): number[][][] {
+    //       const animationData: number[][][] = [];
+    //       for (let i = 0; i < this.positions.length - 1; i++) {
+    //         const initialPosition: number[] = this.positions[i];
+    //         const finalPosition: number[] = this.positions[i + 1];
+    //         const initialRotation: number[] = this.rotations[i];
+    //         const finalRotation: number[] = this.rotations[i + 1];
+    //         animationData.push([
+    //           initialPosition,
+    //           finalPosition,
+    //           initialRotation,
+    //           finalRotation,
+    //         ]);
+    //       }
+    //       return animationData;
+    //     },
 
-        createAnimationClips: function( animationDS: any, page: UninitializedPage ): AnimationClip[][] {
-          const animationClips = animationDS.map((animationData: [][], i: number) => {
-            let animationClipConstructor = this.animationTypes[i]
-            return [
-              animationClipConstructor({
-                duration: 1,
-                initialPosition: animationData[0],
-                finalPosition: animationData[1],
-                initialAngle: animationData[2],
-                finalAngle: animationData[3],
-                axis: FindRotationAxis(animationData),
-                easingType: i === 0 ? 'out' : 'inOut'
-              }),
-            ];
-          })
-          return animationClips;
-        },  
-      },
+    //     createAnimationClips: function( animationDS: any, page: UninitializedPage ): AnimationClip[][] {
+    //       const animationClips = animationDS.map((animationData: [][], i: number) => {
+    //         let animationClipConstructor = this.animationTypes[i]
+    //         return [
+    //           animationClipConstructor({
+    //             duration: 1,
+    //             initialPosition: animationData[0],
+    //             finalPosition: animationData[1],
+    //             initialAngle: animationData[2],
+    //             finalAngle: animationData[3],
+    //             axis: FindRotationAxis(animationData),
+    //             easingType: i === 0 ? 'out' : 'inOut'
+    //           }),
+    //         ];
+    //       })
+    //       return animationClips;
+    //     },  
+    //   },
 
-      models: [
-        {
-          id: '0',
-          name: 'model0',
-          path: '/fullerene/models/m0.glb',
-          visible: false,
-          newModelLocation: true,
-          scale: 0.18,
-          yOffsetForText: 0,
+    //   models: [
+    //     {
+    //       id: '0',
+    //       name: 'model0',
+    //       path: '/fullerene/models/m0.glb',
+    //       visible: false,
+    //       newModelLocation: true,
+    //       scale: 0.18,
+    //       yOffsetForText: 0,
 
-          zoomInOnReverse: false,
+    //       zoomInOnReverse: false,
 
-          positions: [[0.0, 0.0, -1.0]], // calculated in Init() based off of camera position at the current section
-          rotations: [[0.0, 0.0, 0.0]],
-          animationClips: [
-            SuspendInSolution(90),
-            ScaleXYZ({
-              duration: 1,
-              initialScale: [0.18, 0.18, 0.18],
-              finalScale: [0, 0, 0],
-            }),
-          ],
-        },
-        {
-          id: '1',
-          name: 'model1',
-          // path: '',
-          path: '/fullerene/models/m1.glb',
-          visible: false,
-          newModelLocation: false,
-          scale: 0.18,
-          yOffsetForText: 0,
-          zoomInOnReverse: false,
-          positions: [[0.75, 0.66, 0.0]],
-          rotations: [[0.0, 0.0, 0.0]],
-          animationClips: [
-            Rotate({
-              duration: 5000,
-              axis: 'y',
-              initialAngle: 0,
-              finalAngle: 360,
-            }),
-            ScaleXYZ({
-              duration: 1,
-              initialScale: [0.0, 0.0, 0.0],
-              finalScale: [0.0, 0.0, 0.0],
-            }),
-          ],
-        },
-        {
-          id: '2',
-          name: 'model2',
-          path: '/fullerene/models/m0.glb',
-          visible: false,
-          newModelLocation: true,
-          scale: 0,
-          yOffsetForText: 0.15,
-          zoomInOnReverse: false,
+    //       positions: [[0.0, 0.0, -1.0]], // calculated in Init() based off of camera position at the current section
+    //       rotations: [[0.0, 0.0, 0.0]],
+    //       animationClips: [
+    //         SuspendInSolution(90),
+    //         ScaleXYZ({
+    //           duration: 1,
+    //           initialScale: [0.18, 0.18, 0.18],
+    //           finalScale: [0, 0, 0],
+    //         }),
+    //       ],
+    //     },
+    //     {
+    //       id: '1',
+    //       name: 'model1',
+    //       // path: '',
+    //       path: '/fullerene/models/m1.glb',
+    //       visible: false,
+    //       newModelLocation: false,
+    //       scale: 0.18,
+    //       yOffsetForText: 0,
+    //       zoomInOnReverse: false,
+    //       positions: [[0.75, 0.66, 0.0]],
+    //       rotations: [[0.0, 0.0, 0.0]],
+    //       animationClips: [
+    //         Rotate({
+    //           duration: 5000,
+    //           axis: 'y',
+    //           initialAngle: 0,
+    //           finalAngle: 360,
+    //         }),
+    //         ScaleXYZ({
+    //           duration: 1,
+    //           initialScale: [0.0, 0.0, 0.0],
+    //           finalScale: [0.0, 0.0, 0.0],
+    //         }),
+    //       ],
+    //     },
+    //     {
+    //       id: '2',
+    //       name: 'model2',
+    //       path: '/fullerene/models/m0.glb',
+    //       visible: false,
+    //       newModelLocation: true,
+    //       scale: 0,
+    //       yOffsetForText: 0.15,
+    //       zoomInOnReverse: false,
 
-          positions: [[0.75, 0.0, -3.0]],
-          rotations: [[0.0, 0.0, 0.0]],
-          animationClips: [
-            Rotate({
-              duration: 5000,
-              axis: 'y',
-              initialAngle: 0,
-              finalAngle: 360,
-            }),
-            ScaleXYZ({
-              duration: 1,
-              initialScale: [0.18, 0.18, 0.18],
-              finalScale: [0.0, 0.0, 0.0],
-            }),
-          ],
-        },
-        {
-          id: '3',
-          name: 'model3',
-          path: '/fullerene/models/m2.glb',
-          visible: false,
-          newModelLocation: false,
-          scale: 0.18,
-          yOffsetForText: 0.15,
-          zoomInOnReverse: false,
+    //       positions: [[0.75, 0.0, -3.0]],
+    //       rotations: [[0.0, 0.0, 0.0]],
+    //       animationClips: [
+    //         Rotate({
+    //           duration: 5000,
+    //           axis: 'y',
+    //           initialAngle: 0,
+    //           finalAngle: 360,
+    //         }),
+    //         ScaleXYZ({
+    //           duration: 1,
+    //           initialScale: [0.18, 0.18, 0.18],
+    //           finalScale: [0.0, 0.0, 0.0],
+    //         }),
+    //       ],
+    //     },
+    //     {
+    //       id: '3',
+    //       name: 'model3',
+    //       path: '/fullerene/models/m2.glb',
+    //       visible: false,
+    //       newModelLocation: false,
+    //       scale: 0.18,
+    //       yOffsetForText: 0.15,
+    //       zoomInOnReverse: false,
 
-          positions: [[0.75, 0.0, -3.0]],
-          rotations: [[0.0, 0.0, 0.0]],
-          animationClips: [
-            Rotate({
-              duration: 5000,
-              axis: 'y',
-              initialAngle: 0,
-              finalAngle: 360,
-            }),
-            ScaleXYZ({
-              duration: 1,
-              initialScale: [0.18, 0.18, 0.18],
-              finalScale: [0.0, 0.0, 0.0],
-            })
-          ]
-        },
-        {
-          id: '4',
-          name: 'model4',
-          path: '/fullerene/models/m3.glb',
-          visible: false,
-          newModelLocation: true,
-          scale: 0,
-          yOffsetForText: 0.15,
-          zoomInOnReverse: true,
+    //       positions: [[0.75, 0.0, -3.0]],
+    //       rotations: [[0.0, 0.0, 0.0]],
+    //       animationClips: [
+    //         Rotate({
+    //           duration: 5000,
+    //           axis: 'y',
+    //           initialAngle: 0,
+    //           finalAngle: 360,
+    //         }),
+    //         ScaleXYZ({
+    //           duration: 1,
+    //           initialScale: [0.18, 0.18, 0.18],
+    //           finalScale: [0.0, 0.0, 0.0],
+    //         })
+    //       ]
+    //     },
+    //     {
+    //       id: '4',
+    //       name: 'model4',
+    //       path: '/fullerene/models/m3.glb',
+    //       visible: false,
+    //       newModelLocation: true,
+    //       scale: 0,
+    //       yOffsetForText: 0.15,
+    //       zoomInOnReverse: true,
 
-          positions: [[0.0, -0.66, -1.0]],
-          rotations: [[0.0, 0.0, 0.0]],
-          animationClips: [
-            Rotate({
-              duration: 5000,
-              axis: 'y',
-              initialAngle: 0,
-              finalAngle: 360,
-            }),
-            ScaleXYZ({
-              duration: 1,
-              initialScale: [0.18, 0.18, 0.18],
-              finalScale: [0.0, 0.0, 0.0],
-            }),
-            Rotate({
-              duration: 1500,
-              axis: 'x',
-              initialAngle: 0,
-              finalAngle: 360,
-            }),
-          ],
-        },
-        {
-          id: '5',
-          name: 'model5',
-          path: '/fullerene/models/m4.glb',
-          visible: false,
-          newModelLocation: true,
-          scale: 0,
-          yOffsetForText: 0.05,
-          zoomInOnReverse: false,
-          positions: [[0.0, -0.1, -3.0]],
-          rotations: [[0.0, 0.0, 0.0]],
-          animationClips: [
-            Rotate({
-              duration: 4000,
-              axis: 'y',
-              initialAngle: 0,
-              finalAngle: 180,
-            }),
-            //hiv protease
-            ScaleXYZ({
-              duration: 1,
-              initialScale: [0.060, 0.060, 0.060],
-              finalScale: [0.0, 0.0, 0.0],
-            }),
-            //buckyball
-            ScaleXYZ({
-              duration: 1.6, //higher number is slower
-              initialScale: [0.045, 0.045, 0.045],
-              finalScale: [0.070, 0.070, 0.070],
-            }),
-          ],
-        },
-      ],
+    //       positions: [[0.0, -0.66, -1.0]],
+    //       rotations: [[0.0, 0.0, 0.0]],
+    //       animationClips: [
+    //         Rotate({
+    //           duration: 5000,
+    //           axis: 'y',
+    //           initialAngle: 0,
+    //           finalAngle: 360,
+    //         }),
+    //         ScaleXYZ({
+    //           duration: 1,
+    //           initialScale: [0.18, 0.18, 0.18],
+    //           finalScale: [0.0, 0.0, 0.0],
+    //         }),
+    //         Rotate({
+    //           duration: 1500,
+    //           axis: 'x',
+    //           initialAngle: 0,
+    //           finalAngle: 360,
+    //         }),
+    //       ],
+    //     },
+    //     {
+    //       id: '5',
+    //       name: 'model5',
+    //       path: '/fullerene/models/m4.glb',
+    //       visible: false,
+    //       newModelLocation: true,
+    //       scale: 0,
+    //       yOffsetForText: 0.05,
+    //       zoomInOnReverse: false,
+    //       positions: [[0.0, -0.1, -3.0]],
+    //       rotations: [[0.0, 0.0, 0.0]],
+    //       animationClips: [
+    //         Rotate({
+    //           duration: 4000,
+    //           axis: 'y',
+    //           initialAngle: 0,
+    //           finalAngle: 180,
+    //         }),
+    //         //hiv protease
+    //         ScaleXYZ({
+    //           duration: 1,
+    //           initialScale: [0.060, 0.060, 0.060],
+    //           finalScale: [0.0, 0.0, 0.0],
+    //         }),
+    //         //buckyball
+    //         ScaleXYZ({
+    //           duration: 1.6, //higher number is slower
+    //           initialScale: [0.045, 0.045, 0.045],
+    //           finalScale: [0.070, 0.070, 0.070],
+    //         }),
+    //       ],
+    //     },
+    //   ],
 
-      text: [
-        [''],
-        [
-          'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas...'
-        ],
-        [
-          'Firing lazers at graphite rods in a supersonic helium beam, produced novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere.',
-          'The largest and most symmetrical form of pure carbon ever discovered.', 
-          'This molecule would go on to be named Buckminsterfullerene.'
-        ],
-        [
-          'The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball.', 
-          'Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space.', 
-          'And because they are essentially hollow cages, they can be manipulated to make materials never before known.'
-        ],
-        [
-          'For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known.', 
-          'These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems.',
-          'Scientists have even turned their attention to Buckminsterfullerene in their quest for a cure for AIDS.'
-        ],
-        [
-          'How can Buckminsterfullerene help cure AIDS?',
-          'An enzyme (HIV-1-Protease) that is required for HIV to replicate, exhibits a non-polar pocket in its three-dimensional structure.', 
-          "On the protein model in front of you, notice how the non-polar Fullerene fits the exact diameter of the enzyme's binding pocket.",
-          'If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible HIV-1-Protease inhibitors.'
-        ]
-      ],
+    //   text: [
+    //     [''],
+    //     [
+    //       'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas...'
+    //     ],
+    //     [
+    //       'Firing lazers at graphite rods in a supersonic helium beam, produced novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere.',
+    //       'The largest and most symmetrical form of pure carbon ever discovered.', 
+    //       'This molecule would go on to be named Buckminsterfullerene.'
+    //     ],
+    //     [
+    //       'The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball.', 
+    //       'Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space.', 
+    //       'And because they are essentially hollow cages, they can be manipulated to make materials never before known.'
+    //     ],
+    //     [
+    //       'For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known.', 
+    //       'These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems.',
+    //       'Scientists have even turned their attention to Buckminsterfullerene in their quest for a cure for AIDS.'
+    //     ],
+    //     [
+    //       'How can Buckminsterfullerene help cure AIDS?',
+    //       'An enzyme (HIV-1-Protease) that is required for HIV to replicate, exhibits a non-polar pocket in its three-dimensional structure.', 
+    //       "On the protein model in front of you, notice how the non-polar Fullerene fits the exact diameter of the enzyme's binding pocket.",
+    //       'If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible HIV-1-Protease inhibitors.'
+    //     ]
+    //   ],
       
-      textPlacement: [
-        '',
-        'center',
-        'bottom',
-        'bottom',
-        'bottom',
-        'bottom'
-      ],
+    //   textPlacement: [
+    //     '',
+    //     'center',
+    //     'bottom',
+    //     'bottom',
+    //     'bottom',
+    //     'bottom'
+    //   ],
 
-      music: ['/audio/music/fullerene3.mp3'],
+    //   music: ['/audio/music/fullerene3.mp3'],
 
-      voices: [
-        '/audio/voices/fiona/voice0.mp3', // 0
-        '/audio/voices/fiona/voice0.mp3', // 1
-        '/audio/voices/fiona/voice1.mp3', // 2
-        '/audio/voices/fiona/voice1.mp3', // 3
-        '/audio/voices/fiona/voice1.mp3', // 4
-      ],
+    //   voices: [
+    //     '/audio/voices/fiona/voice0.mp3', // 0
+    //     '/audio/voices/fiona/voice0.mp3', // 1
+    //     '/audio/voices/fiona/voice1.mp3', // 2
+    //     '/audio/voices/fiona/voice1.mp3', // 3
+    //     '/audio/voices/fiona/voice1.mp3', // 4
+    //   ],
 
-      dispatch: useDispatch,
-    },
+    //   dispatch: useDispatch,
+    // },
   ],
 };
 
@@ -809,11 +827,11 @@ positions: [
 // anaimation_data is built programatically w-/ Init() + this.CreateAnimationDataFromPositionsRotations()
 // camera.animationData: [
 //     //  initial position      final poisition        initial rotation       final rotation
-//     [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 0
-//     [ [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ] ], // 1
-//     [ [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ],  [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 2
-//     [ [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.00, 0.75, 0.00 ] ], // 3
-//     [ [ 0.00, 0.00, 0.00 ], [ 1.00, 2.00, 0.00 ],  [ 0.00, 0.75, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 4
+//     [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // section === 0
+//     [ [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ] ], // section === 1
+//     [ [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ],  [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // section === 2
+//     [ [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.00, 0.75, 0.00 ] ], // section === 3
+//     [ [ 0.00, 0.00, 0.00 ], [ 1.00, 2.00, 0.00 ],  [ 0.00, 0.75, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // section === 4
 //     //         0                      1                     2                       3
 // ],
 //                     0     1     2     3     4

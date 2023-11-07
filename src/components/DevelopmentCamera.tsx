@@ -23,7 +23,7 @@ function DevelopmentCamera(): JSX.Element {
     return (
         <>
             < PerspectiveCamera ref={ref} position={ [ 0, 0, 20 ] } rotation={ [0, 0, 0] } fov={45} aspect={1} />
-            {/* < CameraControls /> */}
+            < CameraControls />
         </>
     );
 };

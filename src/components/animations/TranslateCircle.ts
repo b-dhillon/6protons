@@ -20,7 +20,7 @@ interface config {
   finalPosition: number[];
   initialAngle: number[];
   finalAngle: number[];
-  axis: string;
+  axisData: [string, boolean];
   easingType: string;
 }
 
@@ -61,7 +61,8 @@ interface config {
  *
  */
 export function TranslateCircle(config: config): AnimationClip {
-
+  
+  let axis = config.axisData[0]
   let ease = config.easingType === 'out' ? easeOutCubic : easeInOutCubic;
 
   const initialPosition = new Vector3(config.initialPosition[0], config.initialPosition[1], config.initialPosition[2]);
@@ -77,7 +78,7 @@ export function TranslateCircle(config: config): AnimationClip {
   const modelPositionArray = uninitializedData.createModelPosition( 
     config.initialPosition,
     config.initialAngle,
-    config.axis,
+    axis,
     0
   );
   const modelPosition = new Vector3( modelPositionArray[0], modelPositionArray[1], modelPositionArray[2] );
@@ -112,29 +113,30 @@ export function TranslateCircle(config: config): AnimationClip {
     times[i] = t;
     const easedT = ease(t);
 
-    /** Position Values */
+    /** Create Position Values */
     const pos = getVectorAtT(easedT);
     posValues[i * 3] = pos.x;
     posValues[i * 3 + 1] = pos.y;
     posValues[i * 3 + 2] = pos.z;
 
 
-    /** Rotation Values */
+    /** Create Rotation Values */
     const initialAngle = config.initialAngle;
     const finalAngle = config.finalAngle;
-    let iAngle = 0;
 
-    if (config.axis === 'x') {
-      iAngle = initialAngle[0] + (finalAngle[0] - initialAngle[0]) * easedT;
+    let angle = 0;
+
+    if (axis === 'x') {
+      angle = initialAngle[0] + (finalAngle[0] - initialAngle[0]) * easedT;
     }
-    if (config.axis === 'y') {
-      iAngle = initialAngle[1] + (finalAngle[1] - initialAngle[1]) * easedT;
+    if (axis === 'y') {
+      angle = initialAngle[1] + (finalAngle[1] - initialAngle[1]) * easedT;
     }
-    if (config.axis === 'z') {
-      iAngle = initialAngle[2] + (finalAngle[2] - initialAngle[2]) * easedT;
+    if (axis === 'z') {
+      angle = initialAngle[2] + (finalAngle[2] - initialAngle[2]) * easedT;
     }
 
-    rotValues[ i ] = iAngle
+    rotValues[ i ] = angle
   };
 
   const timesArray = Array.from(times);
@@ -149,7 +151,7 @@ export function TranslateCircle(config: config): AnimationClip {
   );
 
   const rotTrack = new NumberKeyframeTrack(
-    '.rotation[' + config.axis + ']',
+    '.rotation[' + axis + ']',
     timesArray,
     rotValuesArray,
   );
@@ -185,17 +187,17 @@ export function TranslateCircle(config: config): AnimationClip {
 //   for (let i = 0; i < n; i++) {
 //     const t = i / n;  // Normalize i to 0 -> 1
     
-//     let iAngle = 0;
+//     let angle = 0;
 //     if (config.axis === 'x') {
-//       iAngle = initialAngle[0] + (finalAngle[0] - initialAngle[0]) * easedT;
+//       angle = initialAngle[0] + (finalAngle[0] - initialAngle[0]) * easedT;
 //     }
 //     if (config.axis === 'y') {
-//       iAngle = initialAngle[1] + (finalAngle[1] - initialAngle[1]) * easedT;
+//       angle = initialAngle[1] + (finalAngle[1] - initialAngle[1]) * easedT;
 //     }
 //     if (config.axis === 'z') {
-//       iAngle = initialAngle[2] + (finalAngle[2] - initialAngle[2]) * easedT;
+//       angle = initialAngle[2] + (finalAngle[2] - initialAngle[2]) * easedT;
 //     }
-//     rotationValues.push(iAngle);
+//     rotationValues.push(angle);
 //   };
 
 //   // creates n times:

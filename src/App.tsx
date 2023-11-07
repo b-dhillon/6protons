@@ -5,7 +5,7 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { uninitializedData } from './uninitialized-data';
 import { TranslateRotate } from './components/animations/TranslateRotate';
 import { Page } from './components/Page';
-import { FindRotationAxis } from './utility-functions/find-rotation-axis';
+import { findRotationAxis } from './utility-functions/find-rotation-axis';
 import { UninitializedData, UninitializedPage, InitializedPage } from './types/types';
 
 
@@ -41,7 +41,7 @@ export default function App() {
     setDataInitialized(true);
   }
 
-  // Once app is loaded and initialized --> find current page's data and render with PageRenderer
+  // Once app is loaded and initialized --> find current page data and render with Page()
   if (dataInitialized) {
 
     const [initializedPage] = initializedPages!.filter( (page: InitializedPage) => page.id === currentPage );
@@ -250,8 +250,8 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
   const initializedPages = data.pages.map((page: UninitializedPage, i: number): InitializedPage => {
 
     const animationDS = page.camera.createAnimationDS();
-    const animationTypes = page.models
 
+    let currPageBool = i === 0 ? true : false;
 
     return {
       ...page, // is this needed? 
@@ -259,13 +259,23 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
       camera: {
         ...page.camera, // is this needed --> renderer just needs initial position and animationClips?
         initialPosition: page.camera.positions[0],
-        animationClips: page.camera.createAnimationClips(animationDS),
+        animationClips: page.camera.createAnimationClips(animationDS, page),
       },
 
       // add meshes and positions to each model
       models: page.models.map((model: any, j: number) => {
 
-        let inNewPos = model.newModelLocation
+        let modelInNewPos = model.newModelLocation
+
+        // if previous model (j - 1) didn't have a newModelLocation,
+        // then previous animation mustve been TranslateCircle
+        // let wasPreviousAnimationTranslateCircle = !page.models[ j > 0 ? j - 1 : 0 ].newModelLocation
+
+        // let rotationAxis: string 
+        // if(wasPreviousAnimationTranslateCircle) rotationAxis = 'y'
+        // else rotationAxis = FindRotationAxis(animationDS[j])
+
+        let rotationData = findRotationAxis(animationDS[j]);
         
         return {
           ...model,
@@ -275,9 +285,9 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
             /** If model in new pos we do j+1 because first index in camera.positions is technichally -1 
              *  if not, if same position, just j because we want position of previous model for camera.lookAt() for TranslateCircle
             */
-            page.camera.positions[ inNewPos ? j + 1 : j ], // cameraPosition: number[]
-            page.camera.rotations[ inNewPos ? j + 1 : j ], // cameraRotation: number[]
-            FindRotationAxis(animationDS[j]),
+            page.camera.positions[ modelInNewPos ? ( j + 1 ) : j ], // cameraPosition: number[]
+            page.camera.rotations[ modelInNewPos ? ( j + 1 ) : j ], // cameraRotation: number[]
+            rotationData,
             model.yOffsetForText
           ),
         };
@@ -294,6 +304,60 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
 };
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Doing some checks with rotationAcis and modelPosition before sending to .createAnimationClip
+
+// if( currPageBool && j === 4  ) {
+//   let rotationAxis: string 
+//   if(wasPreviousAnimationTranslateCircle) rotationAxis = 'y'
+//   else rotationAxis = FindRotationAxis(animationDS[j])
+
+
+//   const computedPositionModel4 = data.createModelPosition(
+//     /** If model in new pos we do j+1 because first index in camera.positions is technichally -1 
+//      *  if not, if same position, just j because we want position of previous model for camera.lookAt() for TranslateCircle
+//     */
+//     page.camera.positions[ modelInNewPos ? j + 1 : j ], // cameraPosition: number[]
+//     page.camera.rotations[ modelInNewPos ? j + 1 : j ], // cameraRotation: number[]
+//     rotationAxis,
+//     model.yOffsetForText
+//   )
+
+//   console.log( 'rotationAxis of section4', rotationAxis );
+//   // console.log('computedPositionModel4', computedPositionModel4);
+//   // console.log( 'hard coded camera rotation 4', page.camera.rotations[ modelInNewPos ? j + 1 : j ]);
+// }
 
 
 

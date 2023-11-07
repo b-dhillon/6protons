@@ -117,6 +117,9 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
   let prevModelAnimations = useRef<ModelAnimations>();
   let cameraDidntMove = useRef<boolean>(false);
 
+
+  const dopedModelPosition = initializedPage.models[ 4 ].initializedPositions
+
   /** controllers --> handles AnimationActions based on state + handles model visibility
    * 
    * controller1:
@@ -156,31 +159,15 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
 
         /* 4. Handle visibility of models: */
         set((state) => {
-
-          // 4.1) If camera-did-move, then we keep the prevModel visibility true so that the exit animation can play
-
-          // 4.2) Always set current model visibility to true:
+          // 4.1) If camera did move, then we keep the prevModel visibility true so that the exit animation can play
           if( !cameraDidntMove.current ) {
             const currModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section}`);
             state.scene.children[currModelIndex].visible = true;
           }
-    
-
-          // // 4.3) If cameraDidntMove, we set prevModel visibility to false to make room for new model.
-          // // 4.3--A) If forwards, section is greater than 0, and cameraDidntMove, then mutate LOWER ON STACK (section -1) model's visibility to false.
-          // if(forwards && section > 0 && cameraDidntMove.current ) {
-          //   const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section - 1}`);
-          //   state.scene.children[prevModelIndex].visible = false;
-          // }
-          // // 4.3--B) If backwards, section is greater than 0, and cameraDidntMove.current, then mutate HIGHER ON STACK (section + 1) model's visibility to false.
-          // else if (backwards && section > 0 && cameraDidntMove.current ) {
-          //   const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section + 1}`);
-          //   state.scene.children[prevModelIndex].visible = false;
-          // }
         });
 
       
-        /* 5. Handle animation assignment */
+        /* 5. HANDLE ANIMATION ASSIGNMENT */
 
         /* 5.1 Mutate top-level currModelAnimations, and prevModelAnimations based on if forwards or backwards */
         currModelAnimations.current = animationActions[ section ];
@@ -191,37 +178,35 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
         if (backwards) prevModelAnimations.current = animationActions[ section + 1 ];
 
 
-        /* 6. Handle animation playback: */
+        /* 6. HANDLE ANIMATION PLAYBACK: */
 
         /* 6.1--A) If camera didn't move location: */
-        // if( cameraDidntMove.current ) {
-        //   /* A. Grab earlier model's animation time */
-        //   const oldT = animationActions[ forwards ? section - 1 : section + 1 ].mainAnimation.time;
-        //   /* B. Set current model's animation to this time.  */
-        //   currModelAnimations.current.mainAnimation.time = oldT;
-        //   /* C. Play current model's animation */
-        //   currModelAnimations.current.mainAnimation.play();
-        // } 
-        /* 6.1--B) If camera did move: */
         if( cameraDidntMove.current ) {
-          // pause prevModelAnimations.current.mainAnimation
+          // pause prev model main animation to ready for TranslateCircle
           prevModelAnimations.current!.mainAnimation.paused = true;
-          console.log('PAUSED PREV MODEL ANIMATION ');
-        }
-        if( !cameraDidntMove.current ) {
+        }  
+        /* 6.1--B) If camera did move: */
+        else {
 
           /** Trigger prevModel exit animation as camera moves */
-          prevModelAnimations.current?.scaleAnimation.reset().setEffectiveTimeScale( 1.5 ).play();
+          prevModelAnimations.current?.scaleAnimation.reset();
+          prevModelAnimations.current?.scaleAnimation.setEffectiveTimeScale( 1.66 );
+          prevModelAnimations.current?.scaleAnimation.play();
+
+          // Hacky way to trigger model0 scaleOut animation 
+          if( section === 1 ) {
+            // animationActions[0].scaleAnimation.paused = false;
+            animationActions[0].scaleAnimation.reset().setEffectiveTimeScale( 1.5 );
+            animationActions[0].scaleAnimation.play();
+          } 
           
           if (section === 0) {
             /* Getting first model to re-appear when going backwards, it is shrunk from going forwards */
-            animationActions[ 0 ].scaleAnimation.stop(); 
+            animationActions[0].scaleAnimation.stop()
 
             /* Triggering suspension animation on model0 */
             currModelAnimations.current.mainAnimation.play();
-
           } 
-
         };
 
         /* 7. Pause/Stop mainAnimation of previousModel: 
@@ -242,8 +227,6 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
   /** controller2 --> handles mainAnimation and entranceAnimation after camera completes animating */ 
   useEffect( () => {
 
-    // let cameraDidntMove = !initializedPage.models[ section ].newModelLocation;
-
     if( !isCameraAnimating && section ) {
 
       /** Trigger currModel entrance animation when camera stops animating and if camera did move */
@@ -259,11 +242,10 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
       };
 
 
+      /** Setting visibility of prevModel to false, currModel to true, and passing .mainAnimation time,  */
       if( cameraDidntMove.current ) {
-        console.log("IN CAMERA DIDNT MOVE BLOCK");
         const forwards: boolean = ( prevSection.current - section ) < 0; // if delta -, move up stack:  
         const backwards: boolean = ( prevSection.current - section ) > 0; // if delta +, move down stack:
-
 
 
         /** Passing animation time */
@@ -275,22 +257,18 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
         currModelAnimations.current.mainAnimation.paused = false;
         currModelAnimations.current.mainAnimation.play();
 
-
-
-
         // Visibility controller for when camera doesn't move:
         // And also likely need to handle mainAnimation of prevModel pausing here!
         set((state) => {
 
-          // 4.3) If cameraDidntMove, set prevModel visibility to false to make room for new model.
-          // 4.3--A) If forwards, section is greater than 0, and cameraDidntMove, then mutate LOWER ON STACK (section -1) model's visibility to false.
-          if(forwards && section > 0 ) {
+          // 4.3) set prevModel visibility to false to make room for new model.
+          // 4.3--A) If forwards, mutate LOWER ON STACK (section -1) model's visibility to false.
+          if(forwards) {
             const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section - 1}`);
             state.scene.children[prevModelIndex].visible = false;
-            console.log('SET VISIBILITY OF PREV MODEL TO FALSE');
           }
-          // 4.3--B) If backwards, section is greater than 0, and cameraDidntMove.current, then mutate HIGHER ON STACK (section + 1) model's visibility to false.
-          else if (backwards && section > 0 ) {
+          // 4.3--B) If backwards, mutate HIGHER ON STACK (section + 1) model's visibility to false.
+          else if (backwards) {
             const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section + 1}`);
             state.scene.children[prevModelIndex].visible = false;
           }
@@ -313,21 +291,34 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
   /* Update animation mixers on each frame. */
   useFrame((_, delta) => {
     if (animationActions.length ) {
+
+      // Hacky way to get model0's scaleOut animation to re-trigger after going backwards
+      // We just hard coded the mixer to update
+      if (section === 1) {
+        // @ts-ignore
+        animationActions[0].scaleAnimation._mixer.update(delta)
+      }
+
+
       /* Main animation */
       // @ts-ignore
       currModelAnimations.current.mainAnimation._mixer.update(delta);
       /* Nested animation */
       // @ts-ignore
       currModelAnimations.current.nestedAnimation?._mixer.update(delta);
+
+
       if (section > 0) {
         /* Scale In animation */
         // @ts-ignore
         currModelAnimations.current.scaleAnimation._mixer.update(delta);
+
         /* Scale Out animation */
         // @ts-ignore
-        prevModelAnimations.current?.scaleAnimation?._mixer.update(delta);
+        prevModelAnimations.current?.scaleAnimation._mixer.update(delta);
       };
     };
+
   });
 
   function CreateFiberModels( initializedModels: any ) {

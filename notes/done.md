@@ -1,248 +1,3 @@
-# To-do:
-
-  # Add quarter circle curve
-    Think about how to do next camera animation after quarter circle turn.
-      - Need to fix the camera rotation
-
-  # Redo styling of lessonText -- new font, new font-size, line-height and everything.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Next:
-  # Rebuild Home page.
-  # Add/rethink music.
-  # Find better chime.
-  # Clean and refactor.
-  # Get all other lessons working.
-  # Add diamond lattice to diamond model -- essentially build section1 of the diamond lesson.
-  # Add re-direct buttons to all lessons.
-  # Create diagrams + update readme.md on GitHub.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-ReFactor:
-
-  . Compute proper model positions based on camera rotations
-
-    Model positions are computed inside initialize() in App() 
-
-    However, we need them inside TranslateCircle(), which is called
-    in initialize too, but called indirectly. initialize() calls data.createAnimationDS()
-    and then passes the animationDS into data.createAnimationClips(), which then calls 
-    animationClipConstructor() which then calls TranslateCircle()
-
-    My current approach re-computes the model position inside TranslateCircle.
-    This is a wasted computation, but might not be a big deal because it's cheap.
-
-
-
-
-
-  . Work out implementation details without hard-coding
-    . How are the camera positions set? Hard-coded? 
-    . How do we know when to create a TranslateCircle vs. a TranslateRotate animation clip?
-    . Figure out implementation details of lookAt() on the camera
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 CAMERA REVERSAL:
 
 It looks we might to create animationClips for the backward animations. All we need to do for that is just
@@ -375,17 +130,7 @@ Need to understand Models, Camera and their Animation systems.
 
 
 
-
-
-
-
-
-
-
-
-
 # 10.27.23
-
 
   ## If backwards, display all text after camera stops animating.
     ## Encountering a weird bug with setting up prevSection. 
@@ -399,11 +144,25 @@ Need to understand Models, Camera and their Animation systems.
         Why? Is LessonText being un-mounted and re-mounted when section mutates?
 
 
+
 # 11.04.23
 
-New Model Animation Logic 
-  - pause main animation
-  - start new camera animation 
-  - finish camera rotation 
-  - make prevModel invisible, currModel visible
-  - play currModel mainAnimation
+New Model Animation Logic:
+- pause main animation
+- start new camera animation 
+- finish camera rotation 
+- make prevModel invisible, currModel visible
+- play currModel mainAnimation
+
+
+
+# 11.06.23
+
+- Need to fix find-rotation-axis. 
+
+  Solved with a hacky solution in App --> Init --> i think: if TranslateCircle, rotationAxis === y 
+
+  If camera was rotated, and you don't take the rotation back to zero in the next section,
+  the camera will just snap to 0. We need a way to clamp the camera rotation at the prevSection
+  if the currSection rotations are the same. We also need a way to figure out the proper rotationAxis
+  if the prevSection's rotations are the same as the currSection.

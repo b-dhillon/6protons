@@ -61,16 +61,7 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
   const sameModelPosition = useRef<boolean>(false);
   const camera = initializedPage.camera;
 
-  const AnimationClips = camera.animationClips;
-
-  const hardCodedCameraPositionSection3 = initializedPage.camera.positions[4]; // [ 1.6863291775690445, 0, -3.3511234415883915 ]
-  console.log( 'HARD CODED' ,hardCodedCameraPositionSection3);
-  const translateCircleCameraPositionSection3 = new THREE.Vector3(...AnimationClips[ 3 ][0].tracks[0].values.slice(-3)); // [ 1.75, 0, -3 ]
-
-
-
-
-
+  
   const maxSection = initializedPage.maxSection;
   const dispatch = useDispatch();
   let pos = useRef<THREE.Vector3>();
@@ -100,11 +91,11 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
 
       /* Add an eventListener for the "finished" event */
       mixer.addEventListener('finished', function (event) {
-        console.log('Animation finished!', event.action);  // event.action gives you the action that has just finished.
+        // console.log('Animation finished!', event.action);  // event.action gives you the action that has just finished.
         dispatch( setCameraAnimating(false) );
 
         const cameraFinalPosition = ref.current.position
-        console.log( "camera final position", cameraFinalPosition);
+        // console.log( "camera final position", cameraFinalPosition);
       });
     };
   }, [mixer]);
@@ -153,8 +144,7 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
           animations[section].reset();
           animations[section].setEffectiveTimeScale( sameModelPosition.current ? 0.3 : 0.2 );
           animations[section].play();
-          /* set prevSection to currSection for next navigation */
-          prevSection.current = section;
+          prevSection.current = section; /* set prevSection to section for next navigation */
         };
 
         if ( backwards && section >= 0 ) {
@@ -163,11 +153,8 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
           animations[x].reset();
           animations[x].time = camera.animationClips[section][0].duration
           animations[x].setEffectiveTimeScale( sameModelPosition.current ? -0.3 : -0.2 );
-
-          // animations[x].setEffectiveTimeScale(-0.2);
           animations[x].play();
-          /* set prevSection to currSection for next navigation */
-          prevSection.current = section;
+          prevSection.current = section;  /* set prevSection to section for next navigation */
         };
       };
     };
@@ -182,10 +169,10 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
   });
 
   // Setting the scene's camera. There are two. Perspective and Development.
-  useHelper( ref, THREE.CameraHelper );
+  // useHelper( ref, THREE.CameraHelper );
   // /** 
-  //  const set = useThree((state) => state.set);
-  //  useEffect(() => set({ camera: ref.current }));
+   const set = useThree((state) => state.set);
+   useEffect(() => set({ camera: ref.current }));
   // */
 
   return (

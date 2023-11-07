@@ -7,23 +7,24 @@ interface config {
   finalPosition: number[];
   initialAngle: number[];
   finalAngle: number[];
-  axis: string;
-  easingType: string
+  axisData: [string, boolean];
+  easingType: string;
+  _page: any;
+  _i: number
 };
 
+/** the for-loops in createPositionTrack and createRotationTrack can be combined into a single loop */
 export function TranslateRotate(config: config) {
 
-  /** Custom Interpolation:
-   * Here we are interpolating the positionValues our selves with our 
-   * custom easing function.
-   * 
-   * What is the expected return of the easeOutCubic function?
-   *  For each input of time, it will give us...
-  */
+  console.log( 'config.axisData: ' ,config.axisData);
+  let [ axis, rotationsEqual ] = config.axisData
+
+  let section = config._i
 
   let easingFn = config.easingType === 'out' ? easeOutCubic : easeInOutCubic;
 
-  function createIPositionTrack(): VectorKeyframeTrack {
+  /** Position Keyframes */
+  function createPositionTrack(): VectorKeyframeTrack {
     // create n position values:
     const n = 100;
     const startPosition = config.initialPosition;
@@ -52,37 +53,84 @@ export function TranslateRotate(config: config) {
   };
 
 
-  /** Rotation */
-
-  function createIRotationTrack(): NumberKeyframeTrack {
-    // create n rotation values:
+  /** Rotation Keyframes */
+  function createRotationTrack(): NumberKeyframeTrack {
+    // create n rotation values and times:
     const n = 100;
+    let rotationAxis = ''
+    if (axis) rotationAxis = '.rotation[' + axis + ']';
+    else throw new Error('axis is falsy inside TranslateRotate')
+
+    // Stuck here. How do we handle 0,0,0 to 0,0,0 ?
+    // Do we default the rotation axis to 'x' and just dont do anything?
+    // Or do we default the rotation axis to '' and check if it is falsy or truthy?
+      // What happens if we dont do a rotationTrack? Doesn't it just snap back to zero?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // const wasPreviousAnimationTranslateCircle = !config._page.models[ section < 1 ? 0 : section-1 ].newModelLocation
+    // if ( wasPreviousAnimationTranslateCircle ) rotationAxis = '.rotation[y]'
+
     const initialAngle = config.initialAngle;
     const finalAngle = config.finalAngle;
-
     const rotationTimes = []
     const rotationValues = [];
-    for (let i = 0; i < n; i++) {
-      const t = i / (n-1);  // Normalize i to 0 -> 1
-      const easedT = easingFn(t);
+
+
+    /** If inital and fianl angles the same, create rotation that doesn't change
+     *  else, create rotation values and times 
+    */
+    if( rotationsEqual ) {
+    // if(  ) {
+
+      for (let i = 0; i < n; i++) {
+        const t = i / (n-1);  // Normalize i to 0 -> 1
+        rotationValues[i] = initialAngle[1];
+        rotationTimes[i] = t;
+      };
+
+    } else {
+
+      for (let i = 0; i < n; i++) {
+        const t = i / (n-1);  // Normalize i to 0 -> 1
+        const easedT = easingFn(t);
+        
+        let angle = 0;
+        if (axis === 'x') {
+          angle = initialAngle[0] + (finalAngle[0] - initialAngle[0]) * easedT;
+        }
+        if (axis === 'y') {
+          angle = initialAngle[1] + (finalAngle[1] - initialAngle[1]) * easedT;
+        }
+        if (axis === 'z') {
+          angle = initialAngle[2] + (finalAngle[2] - initialAngle[2]) * easedT;
+        }
+  
+        rotationValues[i] = angle;
+        rotationTimes[i] = t;
+      };
       
-      let angle = 0;
-      if (config.axis === 'x') {
-        angle = initialAngle[0] + (finalAngle[0] - initialAngle[0]) * easedT;
-      }
-      if (config.axis === 'y') {
-        angle = initialAngle[1] + (finalAngle[1] - initialAngle[1]) * easedT;
-      }
-      if (config.axis === 'z') {
-        angle = initialAngle[2] + (finalAngle[2] - initialAngle[2]) * easedT;
-      }
-
-      rotationValues[i] = angle;
-      rotationTimes[i] = t;
     };
-
-    // creates n times:
-    const rotationAxis = '.rotation[' + config.axis + ']';
 
     const rotationTrack = new NumberKeyframeTrack(
       rotationAxis,
@@ -93,33 +141,25 @@ export function TranslateRotate(config: config) {
     return rotationTrack;
   }
 
-  function createRotationTrack(): NumberKeyframeTrack {
-    const rotationTimes = [0, config.duration];
-  
-    let rotationValues: number[] = [];
-    if (config.axis === 'x')
-      rotationValues = [config.initialAngle[0], config.finalAngle[0]];
-    if (config.axis === 'y')
-      rotationValues = [config.initialAngle[1], config.finalAngle[1]];
-    if (config.axis === 'z')
-      rotationValues = [config.initialAngle[2], config.finalAngle[2]];
-  
-    const rotationAxis = '.rotation[' + config.axis + ']';
-    const rotationTrack = new NumberKeyframeTrack(
-      rotationAxis,
-      rotationTimes,
-      rotationValues,
-      InterpolateSmooth
-    );
-
-    return rotationTrack
-  }
 
   return new AnimationClip(
     'TranslateRotate',
     1,
-    [ createIPositionTrack(), createIRotationTrack() ]
+    [ createPositionTrack(), createRotationTrack() ]
   );
+
+};
+
+
+function arraysEqual(a: any[], b: any[]) {
+  if (a === b) return true; // checks if both are the same instance
+  if (a == null || b == null) return false; // checks if either is null or undefined
+  if (a.length !== b.length) return false; // arrays with different lengths are not equal
+
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] !== b[i]) return false; // as soon as a non-equal element is found, return false
+  }
+  return true; // if all elements are equal, return true
 }
 
 
@@ -128,6 +168,40 @@ export function TranslateRotate(config: config) {
 
 
 
+
+
+
+
+
+
+
+
+// old rotation track method, with no easing:
+/**
+ 
+function createRotationTrack(): NumberKeyframeTrack {
+  const rotationTimes = [0, config.duration];
+
+  let rotationValues: number[] = [];
+  if (config.axis === 'x')
+    rotationValues = [config.initialAngle[0], config.finalAngle[0]];
+  if (config.axis === 'y')
+    rotationValues = [config.initialAngle[1], config.finalAngle[1]];
+  if (config.axis === 'z')
+    rotationValues = [config.initialAngle[2], config.finalAngle[2]];
+
+  const rotationAxis = '.rotation[' + config.axis + ']';
+  const rotationTrack = new NumberKeyframeTrack(
+    rotationAxis,
+    rotationTimes,
+    rotationValues,
+    InterpolateSmooth
+  );
+
+  return rotationTrack
+}
+
+ */
 
 
 
