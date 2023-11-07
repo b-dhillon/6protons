@@ -10,13 +10,13 @@ interface config {
   axisData: [string, boolean];
   easingType: string;
   _page: any;
-  _i: number
+  _i: number;
+  _modelInNewPos: boolean
 };
 
 /** the for-loops in createPositionTrack and createRotationTrack can be combined into a single loop */
 export function TranslateRotate(config: config) {
 
-  console.log( 'config.axisData: ' ,config.axisData);
   let [ axis, rotationsEqual ] = config.axisData
 
   let section = config._i

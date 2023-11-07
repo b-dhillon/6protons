@@ -253,6 +253,8 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
 
     let currPageBool = i === 0 ? true : false;
 
+
+
     return {
       ...page, // is this needed? 
 
@@ -275,7 +277,10 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
         // if(wasPreviousAnimationTranslateCircle) rotationAxis = 'y'
         // else rotationAxis = FindRotationAxis(animationDS[j])
 
-        let rotationData = findRotationAxis(animationDS[j]);
+        // let axisData = findRotationAxis(animationDS[ modelInNewPos ? j : j - 1]);
+
+        let axisData = findRotationAxis(animationDS[ modelInNewPos ? j : j - 1]);
+
         
         return {
           ...model,
@@ -284,11 +289,14 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
           initializedPositions: data.createModelPosition(
             /** If model in new pos we do j+1 because first index in camera.positions is technichally -1 
              *  if not, if same position, just j because we want position of previous model for camera.lookAt() for TranslateCircle
+             * 
+             *  We should re-factor this to use the animationDS. That way the sections will line up with the index of the array.
             */
             page.camera.positions[ modelInNewPos ? ( j + 1 ) : j ], // cameraPosition: number[]
             page.camera.rotations[ modelInNewPos ? ( j + 1 ) : j ], // cameraRotation: number[]
-            rotationData,
-            model.yOffsetForText
+            axisData,
+            model.yOffsetForText,
+            modelInNewPos
           ),
         };
       }),

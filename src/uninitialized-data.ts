@@ -22,17 +22,19 @@ function getVectorOnCircle( initialPosition: number[], rotationAngle: number ): 
   // Step 1: Find the circle's center.
   // For this case, the circle's center is assumed to be on the y-axis at the same y-level as initialPosition.
   const initialPos = new Vector3( initialPosition[0], initialPosition[1], initialPosition[2] )
+
+  // this needs to be the computed modelPosition from createModelPosition
   const modelPosition = new Vector3(initialPos.x, initialPos.y, initialPos.z - 1);
   const circleCenter = modelPosition;  
   const radius = initialPos.distanceTo(circleCenter);
   
   // Step 2: Calculate the initial angle with respect to the positive x-axis on the x-z plane.
-  /** atan2 finds angle (radians) between the camera's current position and the positive x-axis of origin */
   const initialAngle = rotationAngle;
   // if( initialPos.z < 0) initialAngle *= -1; // standardize for a positive angle 
   
-  // Step 3: Add 90 degrees (π/2 radians) to get the final angle.
-  let finalAngle = initialAngle - rotationAngle;
+  // Step 3: Add rotationAngle if you want to rotate clockwise, 
+  //         subtract rotationAngle if you want to rotate counter-clockwise
+  let finalAngle = initialAngle + rotationAngle;
   
   // Step 4: Calculate the finalPosition using polar to Cartesian conversion.
   const finalPosition = [
@@ -49,13 +51,16 @@ function getVectorOnCircle( initialPosition: number[], rotationAngle: number ): 
 export const uninitializedData: UninitializedData = {
 
   // This method needs to be re-written:
-  createModelPosition: function( cameraPosition: number[], cameraRotation: number[], rotationData: [string, boolean], yOffsetForText: number ): number[] {
+  createModelPosition: function( cameraPosition: number[], cameraRotation: number[], axisData: [string, boolean], yOffsetForText: number, modelInNewPos: boolean ): number[] {
     
-    let rotationAxis = rotationData[0];
+    console.log( 'axisData: ', axisData);
+    let rotationAxis = axisData[0];
+
 
 
     // rotate camera X-axis, need to re-position model on Y axis.
-    if (rotationAxis === 'x') {
+    // this "|| !modelInNewPos" is a hacky solution to get the same position computation
+    if ( rotationAxis === 'x' ) {
       const rotationAngle = cameraRotation[0];
       const x = cameraPosition[0];
       const y = cameraPosition[1] + rotationAngle + yOffsetForText
@@ -77,8 +82,8 @@ export const uninitializedData: UninitializedData = {
 
     // rotate camera Y-axis, need to re-position model on X axis AND Z axis. --> Really, Z axis needed? Not just X axis??
     if (rotationAxis === 'y') {
-      const rotationAngle = cameraRotation[1]; // 1.58
-      const offset = rotationAngle * -1;  // -1.58
+      const rotationAngle = cameraRotation[1]; // -1.58
+      const offset = rotationAngle * -1;  // 1.58
       if (rotationAngle > 0) {
 
         const x = cameraPosition[0] - 1;
@@ -87,10 +92,15 @@ export const uninitializedData: UninitializedData = {
         return [x, y, z];
 
       } else {
-        const x = cameraPosition[0];
+        const x = cameraPosition[0] + 1;
         const y = cameraPosition[1] + yOffsetForText;
-        const z = cameraPosition[2] - 1;
+        const z = cameraPosition[2];
         return [x, y, z];
+
+        // const x = cameraPosition[0] + 1;
+        // const y = cameraPosition[1] + yOffsetForText;
+        // const z = cameraPosition[2];
+        // return [x, y, z];
       }
     }
 
@@ -161,10 +171,10 @@ export const uninitializedData: UninitializedData = {
            *    TranslateCircle: [ 1.75, 0, -3 ]
            * 
           */
-          getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ), //  3 ..soccer ball pattern --> [ 1.75, 0, -3 ]
+          getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ), //  3 ..soccer ball pattern --> right side of circle [ 1.75, 0, -3 ] --> left side: [ -0.25, 0, -3 ]
           
           // pullOut animation for camera after quarter circle turn: 
-          getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ).map( (pos, i) => i === 0 ? pos + 3 : pos ), // 4, doped buckyball --> [ 4.75, 0, -3 ]
+          getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ).map( (pos, i) => i === 0 ? pos - 3 : pos ), // 4, doped buckyball --> right side of circle [ 4.75, 0, -3 ]
 
 
           // OLD 4 --> [ 0.75, 0.00, 1.00 ],  NEW 4 --> [ 4.75, 0.00, -3.00 ]
@@ -181,9 +191,9 @@ export const uninitializedData: UninitializedData = {
 
           [0.00, 0.00, 0.00], // section 2 - Most symmetrical form
 
-          [0.00, (Math.PI/2), 0.00], // section 3 ..soccer ball pattern
+          [0.00, -(Math.PI/2), 0.00], // section 3 ..soccer ball pattern
           
-          [0.00, (Math.PI/2), 0.00], // section 4 ..doped
+          [0.00, -(Math.PI/2), 0.00], // section 4 ..doped
 
           [0.00, 0.00, 0.00], // section 5 ..HIV-1-Protease
         ],
@@ -206,7 +216,14 @@ export const uninitializedData: UninitializedData = {
         },
 
         createAnimationClips: function( animationDS: any, page: UninitializedPage ): AnimationClip[][] {
+
+          const modelInNewPosArr = page.models.map( (model) => model.newModelLocation )
+
           const animationClips = animationDS.map((animationData: [][], i: number) => {
+
+            let modelInNewPos = modelInNewPosArr[i]
+            
+            let _axisData = modelInNewPos ? findRotationAxis( animationData ) : findRotationAxis( animationDS[ i-1 ] )
 
             // FindRotationAxis(animationData),
             let animationClipConstructor = this.animationTypes[i]
@@ -220,10 +237,11 @@ export const uninitializedData: UninitializedData = {
                 initialAngle: animationData[2],
                 finalAngle: animationData[3],
                 // axis: 'x',
-                axisData: findRotationAxis(animationData),
+                axisData: _axisData,
                 easingType: i === 0 ? 'out' : 'inOut',
                 _page: page,
-                _i: i
+                _i: i,
+                _modelInNewPos: modelInNewPos
               }),
             ];
           })
@@ -760,6 +778,18 @@ export const uninitializedData: UninitializedData = {
     // },
   ],
 };
+
+
+/*
+animationDS: [
+  //  initial position      final position        initial rotation       final rotation
+  [ [ 0.00, 0.00, 3.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 0 
+  [ [ 0.00, 0.00, 0.00 ], [ 0.75, 0.00, 1.00 ],  [ 0.00, 0.00, 0.00 ], [ 0.66, 0.00, 0.00 ] ], // 1
+  [ [ 0.75, 0.00, 1.00 ], [ 0.75, 0.00,-2.00 ],  [ 0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 2
+  [ [ 0.75, 0.00,-2.00 ], [ 0.00, 0.00, 0.00 ],  [ 0.00, 0.00, 0.00 ], [-0.66, 0.00, 0.00 ] ], // 3
+  [ [ 0.00, 0.00, 0.00 ], [ 0.00, 0.00,-2.00 ],  [-0.66, 0.00, 0.00 ], [ 0.00, 0.00, 0.00 ] ], // 4
+],
+*/
 
 
 // original position of camera for section-4 // [0.75, 0.00, 1.00], //  4 ..doped

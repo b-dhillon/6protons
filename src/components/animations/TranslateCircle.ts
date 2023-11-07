@@ -22,6 +22,7 @@ interface config {
   finalAngle: number[];
   axisData: [string, boolean];
   easingType: string;
+  _modelInNewPos: boolean
 }
 
 /** Completing Implementation To-do: 
@@ -62,7 +63,9 @@ interface config {
  */
 export function TranslateCircle(config: config): AnimationClip {
   
-  let axis = config.axisData[0]
+  let prevSectionAxis = config.axisData[0]
+  // TranslateCirlce always rotates on Y axis, if we are translating XZ plane.
+  let axis = 'y'
   let ease = config.easingType === 'out' ? easeOutCubic : easeInOutCubic;
 
   const initialPosition = new Vector3(config.initialPosition[0], config.initialPosition[1], config.initialPosition[2]);
@@ -74,15 +77,20 @@ export function TranslateCircle(config: config): AnimationClip {
    *    We can also grab this from initializedData 
    *    or
    *    We can compute this with our fn.
+   * 
+   *    When computing again, like below, we need to pass the prevSectionAxis
+   *    instead so that the prevSection model's position is computed. 
+   *    
+   *    We use the prevSection model position, because we want the new model 
+   *    to have the same position when we translate across it in a circle.
   */
   const modelPositionArray = uninitializedData.createModelPosition( 
     config.initialPosition,
     config.initialAngle,
-    axis,
+    prevSectionAxis,
     0
   );
   const modelPosition = new Vector3( modelPositionArray[0], modelPositionArray[1], modelPositionArray[2] );
-  // const modelPosition = new Vector3( initialPosition.x, initialPosition.y, initialPosition.z - 1 )
   const circleCenter = modelPosition;
   const radius = initialPosition.distanceTo(circleCenter);
   const initialAngle = Math.PI / 2;
@@ -90,9 +98,7 @@ export function TranslateCircle(config: config): AnimationClip {
 
   /** 2. Define fn that returns vectors around a circle as a function of time */
   function getVectorAtT(easedT: number): Vector3 {
-
-    let currentAngle = initialAngle - ( easedT * (Math.PI / 2) ); // (Math.PI / 2) is how much we want to rotate by
-
+    let currentAngle = initialAngle + ( easedT * (Math.PI / 2) ); // (Math.PI / 2) is how much we want to rotate by
     return new Vector3(
       circleCenter.x + ( radius * Math.cos(currentAngle) ),
       initialPosition.y,

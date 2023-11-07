@@ -5,6 +5,15 @@ didModelMove -- instead of newModelLocation --> also should be able to compute t
 
 
 
+# Fn's Called Too Many Times:
+
+createModelPosition() is called too many times. Only needs to be called once. Called in:
+- init()
+- TranslateRotate() AND TranslateCircle for circleCenter
+
+findRotationAxis() is called too many times. Only needs to be called once and the values stored. Called in:
+- initialize() to feed axisData to createModelPositions
+- uninitializedData.createAnimationClips() to pass axisData to createModelPositions inside the AnimationClip constructors.
 
 
 

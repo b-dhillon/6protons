@@ -169,11 +169,9 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
   });
 
   // Setting the scene's camera. There are two. Perspective and Development.
-  // useHelper( ref, THREE.CameraHelper );
-  // /** 
-   const set = useThree((state) => state.set);
-   useEffect(() => set({ camera: ref.current }));
-  // */
+  useHelper( ref, THREE.CameraHelper );
+  // const set = useThree((state) => state.set);
+  // useEffect(() => set({ camera: ref.current }));
 
   return (
     <>
