@@ -53,20 +53,27 @@ export const uninitializedData: UninitializedData = {
   // This method needs to be re-written:
   createModelPosition: function( cameraPosition: number[], cameraRotation: number[], axisData: [string, boolean], yOffsetForText: number, modelInNewPos: boolean ): number[] {
     
-    console.log( 'axisData: ', axisData);
+    // console.log( 'axisData: ', axisData);
     let rotationAxis = axisData[0];
-
-
+    console.log('camera rotation', cameraRotation);
 
     // rotate camera X-axis, need to re-position model on Y axis.
     // this "|| !modelInNewPos" is a hacky solution to get the same position computation
-    if ( rotationAxis === 'x' ) {
+    if ( rotationAxis === 'x' || rotationAxis === 'z' ) {
       const rotationAngle = cameraRotation[0];
       const x = cameraPosition[0];
       const y = cameraPosition[1] + rotationAngle + yOffsetForText
       const z = cameraPosition[2] - 1;
       return [x, y, z];
     }
+
+
+
+
+
+    // Its because we need to trigger x-block when we roate back to zero.
+    // The new find-rotation-axis logic --> triggers delta block, and delta is y, 
+    // therefore it triggers y-block not x-block here.
 
     /**
      * cameraPos at section4 = [ 4.75, 0, -3 ]
@@ -80,9 +87,17 @@ export const uninitializedData: UninitializedData = {
      * expected: [ 3.75, 0, -3 ]
      */
 
+
+
+    
+
+
+
+
     // rotate camera Y-axis, need to re-position model on X axis AND Z axis. --> Really, Z axis needed? Not just X axis??
-    if (rotationAxis === 'y') {
+    if (rotationAxis === 'y' && cameraRotation[1] !== 0) {
       const rotationAngle = cameraRotation[1]; // -1.58
+      console.log(rotationAngle);
       const offset = rotationAngle * -1;  // 1.58
       if (rotationAngle > 0) {
 
@@ -97,21 +112,32 @@ export const uninitializedData: UninitializedData = {
         const z = cameraPosition[2];
         return [x, y, z];
 
-        // const x = cameraPosition[0] + 1;
-        // const y = cameraPosition[1] + yOffsetForText;
-        // const z = cameraPosition[2];
-        // return [x, y, z];
+        // camera position: [ -3.25, 2.00, -3.00 ]
+        // model position from above: [ -2.25, 2.00, -3.00 ]  
       }
+    } // If there is a delta, because the prev section had a rotation, but the 
+      // new section rotates to zero. If the prev section rotation was on the y-axis
+      // then y-block is triggered, but since we are finishing at zero, we want the x-bloxk
+      // logic which is the default -- cameraPosition.z - 1.
+      else if( rotationAxis === 'y' && cameraRotation[1] === 0 ) {
+      // normal x-block here
+      const rotationAngle = cameraRotation[0];
+      const x = cameraPosition[0];
+      const y = cameraPosition[1] + rotationAngle + yOffsetForText;
+      const z = cameraPosition[2] - 1;
+      return [x, y, z]; 
     }
 
-    // rotate camera Z-axis, don't need to do anything to the model.
-    if (rotationAxis === 'z') {
-      const rotationAngle = cameraRotation[2];
-      const x = cameraPosition[0];
-      const y = cameraPosition[1] + yOffsetForText;
-      const z = cameraPosition[2] - 1;
-      return [x, y, z];
-    } else {
+    // // rotate on Z-axis, don't need to do anything to the model.
+    // // we can combine both blocks below. They are the same code.
+    // if (rotationAxis === 'z') {
+    //   const rotationAngle = cameraRotation[2];
+    //   const x = cameraPosition[0];
+    //   const y = cameraPosition[1] + yOffsetForText;
+    //   const z = cameraPosition[2] - 1;
+    //   return [x, y, z];
+    // } 
+    else {
       const x = cameraPosition[0];
       const y = cameraPosition[1] + yOffsetForText;
       const z = cameraPosition[2] - 1;
@@ -171,15 +197,15 @@ export const uninitializedData: UninitializedData = {
            *    TranslateCircle: [ 1.75, 0, -3 ]
            * 
           */
-          getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ), //  3 ..soccer ball pattern --> right side of circle [ 1.75, 0, -3 ] --> left side: [ -0.25, 0, -3 ]
+          getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ), //  3 soccer ball --> right side of circle [ 1.75, 0, -3 ] --> left side: [ -0.25, 0, -3 ]
           
           // pullOut animation for camera after quarter circle turn: 
-          getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ).map( (pos, i) => i === 0 ? pos - 3 : pos ), // 4, doped buckyball --> right side of circle [ 4.75, 0, -3 ]
+          getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ).map( (pos, i) => i === 0 ? pos - 4 : pos ), // 4 --> right side of circle [ 4.75, 0, -3 ] --> left side: [ -4.25, 0, -3 ]
 
 
-          // OLD 4 --> [ 0.75, 0.00, 1.00 ],  NEW 4 --> [ 4.75, 0.00, -3.00 ]
-          // OLD 5 --> [ 1.00, 2.00, 0.00 ],  NEW 5 --> [ 3.75, 2.00, -3.25 ]
-          [ 3.75, 2.00, -3.25 ], //  5 ..HIV-1-Protease
+          // OLD 4 --> [ 0.75, 0.00, 1.00 ],  NEW 4 --> [ 4.75, 0.00, -3.00 ] -- Left 4 --> [ -4.25, 0.00, -3.00 ]
+          // OLD 5 --> [ 1.00, 2.00, 0.00 ],  NEW 5 --> [ 3.75, 2.00, -3.25 ] -- Left 5 --> [ -3.25, 2.00, -3.00 ]
+          [ -3.25, 2.00, -3.00 ]
         ],
 
         rotations: [

@@ -61,10 +61,10 @@ export function TranslateRotate(config: config) {
     if (axis) rotationAxis = '.rotation[' + axis + ']';
     else throw new Error('axis is falsy inside TranslateRotate')
 
-    // Stuck here. How do we handle 0,0,0 to 0,0,0 ?
+    // Blocked here. How do we handle 0,0,0 to 0,0,0 ?
     // Do we default the rotation axis to 'x' and just dont do anything?
     // Or do we default the rotation axis to '' and check if it is falsy or truthy?
-      // What happens if we dont do a rotationTrack? Doesn't it just snap back to zero?
+      // What happens if we dont do a rotationTrack? Does it just snap back to zero?
 
 
 

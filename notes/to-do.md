@@ -1,5 +1,21 @@
 # To-do:
 
+  # Commit and Push
+
+  # Create new branch to re-factor createModelPosition 
+
+  # Brainstorm prompt for LLM
+
+
+
+
+
+
+
+
+
+
+
   # Fix new bug -- model0 doesnt shrink when going forwards, after having gone backwards
     . I have a suspicion that the bug is caused by prevSection not updating until after camera finishes animating
       --> Doesnt make sense at first, because then wouldn't all of the backwards to forwards scaleOut's be messed up?
@@ -16,8 +32,6 @@
 
 
 
-  # Add quarter circle curve
-    - Reverse direction of turn, so it is still facing light.
 
 
       
