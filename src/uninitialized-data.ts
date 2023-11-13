@@ -11,139 +11,15 @@ import { useDispatch } from 'react-redux';
 import { UninitializedData, UninitializedPage } from './types/types';
 import { TranslateRotate } from './components/animations/TranslateRotate';
 import { findRotationAxis } from './utility-functions/find-rotation-axis';
-import { AnimationClip, Vector3 } from 'three';
+import { AnimationClip } from 'three';
 import ScaleXYZ from './components/animations/ScaleXYZ';
 import Rotate from './components/animations/Rotate';
 import SuspendInSolution from './components/animations/SuspendInSolution';
 import { TranslateCircle } from './components/animations/TranslateCircle';
-
-
-function getVectorOnCircle( initialPosition: number[], rotationAngle: number ): number[] {
-  // Step 1: Find the circle's center.
-  // For this case, the circle's center is assumed to be on the y-axis at the same y-level as initialPosition.
-  const initialPos = new Vector3( initialPosition[0], initialPosition[1], initialPosition[2] )
-
-  // this needs to be the computed modelPosition from createModelPosition
-  const modelPosition = new Vector3(initialPos.x, initialPos.y, initialPos.z - 1);
-  const circleCenter = modelPosition;  
-  const radius = initialPos.distanceTo(circleCenter);
-  
-  // Step 2: Calculate the initial angle with respect to the positive x-axis on the x-z plane.
-  const initialAngle = rotationAngle;
-  // if( initialPos.z < 0) initialAngle *= -1; // standardize for a positive angle 
-  
-  // Step 3: Add rotationAngle if you want to rotate clockwise, 
-  //         subtract rotationAngle if you want to rotate counter-clockwise
-  let finalAngle = initialAngle + rotationAngle;
-  
-  // Step 4: Calculate the finalPosition using polar to Cartesian conversion.
-  const finalPosition = [
-    circleCenter.x + ( radius * Math.cos(finalAngle) ),
-    initialPos.y,
-    circleCenter.z + ( radius * Math.sin(finalAngle) )
-  ];
-  
-  return finalPosition;
-};
-
+import { getVectorOnCircle } from './utility-functions/get-vector-on-circle';
 
 
 export const uninitializedData: UninitializedData = {
-
-  // This method needs to be re-written:
-  createModelPosition: function( cameraPosition: number[], cameraRotation: number[], axisData: [string, boolean], yOffsetForText: number, modelInNewPos: boolean ): number[] {
-    
-    // console.log( 'axisData: ', axisData);
-    let rotationAxis = axisData[0];
-    console.log('camera rotation', cameraRotation);
-
-    // rotate camera X-axis, need to re-position model on Y axis.
-    // this "|| !modelInNewPos" is a hacky solution to get the same position computation
-    if ( rotationAxis === 'x' || rotationAxis === 'z' ) {
-      const rotationAngle = cameraRotation[0];
-      const x = cameraPosition[0];
-      const y = cameraPosition[1] + rotationAngle + yOffsetForText
-      const z = cameraPosition[2] - 1;
-      return [x, y, z];
-    }
-
-
-
-
-
-    // Its because we need to trigger x-block when we roate back to zero.
-    // The new find-rotation-axis logic --> triggers delta block, and delta is y, 
-    // therefore it triggers y-block not x-block here.
-
-    /**
-     * cameraPos at section4 = [ 4.75, 0, -3 ]
-     * cameraRot at section4 = 1.58 
-     * offset = -1.58 
-     * x = 4.75 - 1.58 = 3.17
-     * y = 0 + 0.15    = 0.15
-     * z = -3 - -1.58  = -4.58
-     * 
-     * observed: [ 3.17, 0.15, -4.58 ]
-     * expected: [ 3.75, 0, -3 ]
-     */
-
-
-
-    
-
-
-
-
-    // rotate camera Y-axis, need to re-position model on X axis AND Z axis. --> Really, Z axis needed? Not just X axis??
-    if (rotationAxis === 'y' && cameraRotation[1] !== 0) {
-      const rotationAngle = cameraRotation[1]; // -1.58
-      console.log(rotationAngle);
-      const offset = rotationAngle * -1;  // 1.58
-      if (rotationAngle > 0) {
-
-        const x = cameraPosition[0] - 1;
-        const y = cameraPosition[1] + yOffsetForText;
-        const z = cameraPosition[2] //+ offset;
-        return [x, y, z];
-
-      } else {
-        const x = cameraPosition[0] + 1;
-        const y = cameraPosition[1] + yOffsetForText;
-        const z = cameraPosition[2];
-        return [x, y, z];
-
-        // camera position: [ -3.25, 2.00, -3.00 ]
-        // model position from above: [ -2.25, 2.00, -3.00 ]  
-      }
-    } // If there is a delta, because the prev section had a rotation, but the 
-      // new section rotates to zero. If the prev section rotation was on the y-axis
-      // then y-block is triggered, but since we are finishing at zero, we want the x-bloxk
-      // logic which is the default -- cameraPosition.z - 1.
-      else if( rotationAxis === 'y' && cameraRotation[1] === 0 ) {
-      // normal x-block here
-      const rotationAngle = cameraRotation[0];
-      const x = cameraPosition[0];
-      const y = cameraPosition[1] + rotationAngle + yOffsetForText;
-      const z = cameraPosition[2] - 1;
-      return [x, y, z]; 
-    }
-
-    // // rotate on Z-axis, don't need to do anything to the model.
-    // // we can combine both blocks below. They are the same code.
-    // if (rotationAxis === 'z') {
-    //   const rotationAngle = cameraRotation[2];
-    //   const x = cameraPosition[0];
-    //   const y = cameraPosition[1] + yOffsetForText;
-    //   const z = cameraPosition[2] - 1;
-    //   return [x, y, z];
-    // } 
-    else {
-      const x = cameraPosition[0];
-      const y = cameraPosition[1] + yOffsetForText;
-      const z = cameraPosition[2] - 1;
-      return [x, y, z];
-    }
-  },
 
   textChimePath: '/audio/sound-effects/chime-0.mp3',
 
@@ -177,35 +53,28 @@ export const uninitializedData: UninitializedData = {
         ],
 
         positions: [
-          [0.00, 0.00, 5.00], // -1 
+          [0.00, 0.00, 5.00], 
+          // -1 
 
-          [0.00, 0.00, 0.00], //  0 Opening position, section 0
+          [0.00, 0.00, 0.00], 
+          // section0 final, section1 initial Opening position, section 0
 
-          [0.00, 0.00, 1.00], //  1 ..1985
+          [0.00, 0.00, 1.00], 
+          // section1 final, section2 initial ..1985
 
-          [0.75, 0.00,-2.00], //  2 ..most symmetrical form
+          [0.75, 0.00,-2.00], 
+          // section2 final, section3 initial ..most symmetrical form
 
-
-          /** I think the camera positon bug is here.
-           *  Below is the final position for after TranslateCircle. 
-           *  It is used as the inital position for animation section3-->section4
-           *  However, we have to confirm that this lines up with the final position
-           *  that is computed inside TranslateCircle.
-           * 
-           * Confirmed: 
-           *    getVectorOnCircle: [ 1.6863291775690445, 0, -3.3511234415883915 ]
-           *    TranslateCircle: [ 1.75, 0, -3 ]
-           * 
-          */
-          getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ), //  3 soccer ball --> right side of circle [ 1.75, 0, -3 ] --> left side: [ -0.25, 0, -3 ]
+          getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ), // left side of circle: [ -0.25, 0, -3 ]
+          // section3 final, section4 inital ...soccer ball 
           
           // pullOut animation for camera after quarter circle turn: 
-          getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ).map( (pos, i) => i === 0 ? pos - 4 : pos ), // 4 --> right side of circle [ 4.75, 0, -3 ] --> left side: [ -4.25, 0, -3 ]
+          getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ).map( (pos, i) => i === 0 ? pos - 4 : pos ), // [ -4.25, 0, -3 ]
+          // section4 final, section5 inital
 
-
-          // OLD 4 --> [ 0.75, 0.00, 1.00 ],  NEW 4 --> [ 4.75, 0.00, -3.00 ] -- Left 4 --> [ -4.25, 0.00, -3.00 ]
-          // OLD 5 --> [ 1.00, 2.00, 0.00 ],  NEW 5 --> [ 3.75, 2.00, -3.25 ] -- Left 5 --> [ -3.25, 2.00, -3.00 ]
-          [ -3.25, 2.00, -3.00 ]
+          // OLD 5 --> [ 1.00, 2.00, 0.00 ]
+          [ -3.25, 2.00, -3.00 ] 
+          // section5 final
         ],
 
         rotations: [
@@ -224,7 +93,7 @@ export const uninitializedData: UninitializedData = {
           [0.00, 0.00, 0.00], // section 5 ..HIV-1-Protease
         ],
 
-        createAnimationDS: function (): number[][][] {
+        createAnimationDS(): number[][][] {
           const animationData: number[][][] = [];
           for (let i = 0; i < this.positions.length - 1; i++) {
             const initialPosition: number[] = this.positions[i];
@@ -241,42 +110,38 @@ export const uninitializedData: UninitializedData = {
           return animationData;
         },
 
-        createAnimationClips: function( animationDS: any, page: UninitializedPage ): AnimationClip[][] {
+        createAnimationClips( animationDS: any, page: UninitializedPage, modelPositions: number[][] ): AnimationClip[][] {
 
           const modelInNewPosArr = page.models.map( (model) => model.newModelLocation )
 
-          const animationClips = animationDS.map((animationData: [][], i: number) => {
+          const AnimationClips = animationDS.map((animationData: [][], section: number) => {
 
-            let modelInNewPos = modelInNewPosArr[i]
+            let modelInNewPos = modelInNewPosArr[section]
             
-            let _axisData = modelInNewPos ? findRotationAxis( animationData ) : findRotationAxis( animationDS[ i-1 ] )
+            let _axisData = modelInNewPos ? findRotationAxis( animationData ) : findRotationAxis( animationDS[ section-1 ] )
 
             // FindRotationAxis(animationData),
-            let animationClipConstructor = this.animationTypes[i]
+            let ClipConstructor = this.animationTypes[section]
 
             return [
-              animationClipConstructor({
+              ClipConstructor({
                 // duration: 4,
                 duration: 1,
                 initialPosition: animationData[0],
                 finalPosition: animationData[1],
                 initialAngle: animationData[2],
                 finalAngle: animationData[3],
-                // axis: 'x',
                 axisData: _axisData,
-                easingType: i === 0 ? 'out' : 'inOut',
+                easingType: section === 0 ? 'out' : 'inOut',
+                modelPosition: modelPositions[section],
                 _page: page,
-                _i: i,
+                _i: section,
                 _modelInNewPos: modelInNewPos
               }),
             ];
           })
-          return animationClips;
-        },
-
-
-    
-      
+          return AnimationClips;
+        }
       },
 
       models: [
@@ -290,9 +155,6 @@ export const uninitializedData: UninitializedData = {
           yOffsetForText: 0,
 
           zoomInOnReverse: false,
-
-          positions: [[0.0, 0.0, -1.0]], // calculated in Init() based off of camera position at the current section
-          rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
             SuspendInSolution(90),
             ScaleXYZ({
@@ -305,25 +167,23 @@ export const uninitializedData: UninitializedData = {
         {
           id: '1',
           name: 'model1',
-          // path: '',
+          // path: '', //falsy path for future re-write
           path: '/fullerene/models/m1.glb',
           visible: false,
           newModelLocation: true,
-          scale: 0,
-          yOffsetForText: 0,
+          scale: 0.18,
+          yOffsetForText: 0.15,
           zoomInOnReverse: false,
-          positions: [[0.75, 0.66, 0.0]],
-          rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
             Rotate({
               duration: 5000,
               axis: 'y',
               initialAngle: 0,
-              finalAngle: 360,
+              finalAngle: 360, // this is supposed to be radians...?
             }),
             ScaleXYZ({
               duration: 1,
-              initialScale: [0.0, 0.0, 0.0],
+              initialScale: [0.18, 0.18, 0.18],
               finalScale: [0.0, 0.0, 0.0],
             }),
           ],
@@ -337,15 +197,12 @@ export const uninitializedData: UninitializedData = {
           scale: 0,
           yOffsetForText: 0.15,
           zoomInOnReverse: false,
-
-          positions: [[0.75, 0.0, -3.0]],
-          rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
             Rotate({
               duration: 5000,
               axis: 'y',
               initialAngle: 0,
-              finalAngle: 360,
+              finalAngle: 360, // this is supposed to be radians...?
             }),
             ScaleXYZ({
               duration: 1,
@@ -363,15 +220,12 @@ export const uninitializedData: UninitializedData = {
           scale: 0.18,
           yOffsetForText: 0.15,
           zoomInOnReverse: false,
-
-          positions: [[0.75, 0.0, -3.0]],
-          rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
             Rotate({
               duration: 5000,
               axis: 'y',
               initialAngle: 0,
-              finalAngle: 360,
+              finalAngle: 360, // this is supposed to be radians...?
             }),
             ScaleXYZ({
               duration: 1,
@@ -389,15 +243,12 @@ export const uninitializedData: UninitializedData = {
           scale: 0,
           yOffsetForText: 0.15,
           zoomInOnReverse: true,
-
-          positions: [[0.0, -0.66, -1.0]],
-          rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
             Rotate({
               duration: 5000,
               axis: 'y',
               initialAngle: 0,
-              finalAngle: 360,
+              finalAngle: 360, // this is supposed to be radians...?
             }),
             ScaleXYZ({
               duration: 1,
@@ -421,8 +272,6 @@ export const uninitializedData: UninitializedData = {
           scale: 0,
           yOffsetForText: 0.07,
           zoomInOnReverse: false,
-          positions: [[0.0, -0.1, -3.0]],
-          rotations: [[0.0, 0.0, 0.0]],
           animationClips: [
             Rotate({
               duration: 4000,
@@ -497,313 +346,80 @@ export const uninitializedData: UninitializedData = {
 
       dispatch: useDispatch,
     },
-
-
-
-
-    // {
-    //   id: 'test-page-2',
-    //   title: 'testing arena',
-    //   section: 0,
-    //   maxSection: 5,
-    //   thumbnail: "url('./lessonThumbnails/fullereneTile.png')",
-
-    //   universe: {
-    //     id: 'fullerene universe',
-    //     star_count: 25000,
-    //     radius: 5,
-    //   },
-
-    //   camera: {
-    
-    //     /** instead of hard-coded. This array could be generated
-    //      *  programatically by checking models[i].newModelLocation
-    //      *  if true: TranslateRotate, else: TranslateCircle
-    //     */
-    //     animationTypes: [
-    //       TranslateRotate, // -1 --> 0
-    //       TranslateRotate, //  0 --> 1
-    //       TranslateRotate, //  1 --> 2
-    //       TranslateRotate, //  2 --> 3
-    //       TranslateRotate, //  3 --> 4
-    //       TranslateRotate, //  4 --> 5
-    //     ],
-
-    //     positions: [
-    //       [0.00, 0.00, 5.00], // -1 
-    //       [0.00, 0.00, 1.00], //  0 Opening position, section 0 <-- Change z back to 0 after testing TranslateCircle
-    //       getVectorOnCircle( [0, 0, 1], Math.PI/2 ), //  1 ..soccer ball pattern
-    //       // [0.00, 0.00, 1.00], //  1 ..1985
-    //       [0.75, 0.00,-2.00], //  2 ..most symmetrical form
-    //       getVectorOnCircle( [0.75, 0.00, 1.00], Math.PI/2 ), //  3 ..soccer ball pattern
-    //       [0.75, 0.00, 1.00], //  4 ..doped
-    //       [1.00, 2.00, 0.00], //  5 ..HIV-1-Protease
-    //     ],
-        
-    //     rotations: [
-    //       [0.00, 0.00, 0.00], // Start
-    //       [0.00, 0.00, 0.00], // Opening position, section 0 
-    //       [0.00, 0.00, 0.00], // Opening position, section 1  <-- DELETE THIS LINE AFTER TESTING TranslateCircle
-    //       [0.66, 0.00, 0.00], // section 1 ..1985          [0.00, 0.00, 0.00], // section 2 ..most symmetrical form
-    //       [0.00, 0.00, 0.00], // section 3 ..soccer ball pattern
-    //       [0.00, 0.00, 0.00], // section 4 ..doped
-    //       [0.00, 0.00, 0.00], // section 5 ..HIV-1-Protease
-    //     ],
-
-    //     createAnimationDS: function (): number[][][] {
-    //       const animationData: number[][][] = [];
-    //       for (let i = 0; i < this.positions.length - 1; i++) {
-    //         const initialPosition: number[] = this.positions[i];
-    //         const finalPosition: number[] = this.positions[i + 1];
-    //         const initialRotation: number[] = this.rotations[i];
-    //         const finalRotation: number[] = this.rotations[i + 1];
-    //         animationData.push([
-    //           initialPosition,
-    //           finalPosition,
-    //           initialRotation,
-    //           finalRotation,
-    //         ]);
-    //       }
-    //       return animationData;
-    //     },
-
-    //     createAnimationClips: function( animationDS: any, page: UninitializedPage ): AnimationClip[][] {
-    //       const animationClips = animationDS.map((animationData: [][], i: number) => {
-    //         let animationClipConstructor = this.animationTypes[i]
-    //         return [
-    //           animationClipConstructor({
-    //             duration: 1,
-    //             initialPosition: animationData[0],
-    //             finalPosition: animationData[1],
-    //             initialAngle: animationData[2],
-    //             finalAngle: animationData[3],
-    //             axis: FindRotationAxis(animationData),
-    //             easingType: i === 0 ? 'out' : 'inOut'
-    //           }),
-    //         ];
-    //       })
-    //       return animationClips;
-    //     },  
-    //   },
-
-    //   models: [
-    //     {
-    //       id: '0',
-    //       name: 'model0',
-    //       path: '/fullerene/models/m0.glb',
-    //       visible: false,
-    //       newModelLocation: true,
-    //       scale: 0.18,
-    //       yOffsetForText: 0,
-
-    //       zoomInOnReverse: false,
-
-    //       positions: [[0.0, 0.0, -1.0]], // calculated in Init() based off of camera position at the current section
-    //       rotations: [[0.0, 0.0, 0.0]],
-    //       animationClips: [
-    //         SuspendInSolution(90),
-    //         ScaleXYZ({
-    //           duration: 1,
-    //           initialScale: [0.18, 0.18, 0.18],
-    //           finalScale: [0, 0, 0],
-    //         }),
-    //       ],
-    //     },
-    //     {
-    //       id: '1',
-    //       name: 'model1',
-    //       // path: '',
-    //       path: '/fullerene/models/m1.glb',
-    //       visible: false,
-    //       newModelLocation: false,
-    //       scale: 0.18,
-    //       yOffsetForText: 0,
-    //       zoomInOnReverse: false,
-    //       positions: [[0.75, 0.66, 0.0]],
-    //       rotations: [[0.0, 0.0, 0.0]],
-    //       animationClips: [
-    //         Rotate({
-    //           duration: 5000,
-    //           axis: 'y',
-    //           initialAngle: 0,
-    //           finalAngle: 360,
-    //         }),
-    //         ScaleXYZ({
-    //           duration: 1,
-    //           initialScale: [0.0, 0.0, 0.0],
-    //           finalScale: [0.0, 0.0, 0.0],
-    //         }),
-    //       ],
-    //     },
-    //     {
-    //       id: '2',
-    //       name: 'model2',
-    //       path: '/fullerene/models/m0.glb',
-    //       visible: false,
-    //       newModelLocation: true,
-    //       scale: 0,
-    //       yOffsetForText: 0.15,
-    //       zoomInOnReverse: false,
-
-    //       positions: [[0.75, 0.0, -3.0]],
-    //       rotations: [[0.0, 0.0, 0.0]],
-    //       animationClips: [
-    //         Rotate({
-    //           duration: 5000,
-    //           axis: 'y',
-    //           initialAngle: 0,
-    //           finalAngle: 360,
-    //         }),
-    //         ScaleXYZ({
-    //           duration: 1,
-    //           initialScale: [0.18, 0.18, 0.18],
-    //           finalScale: [0.0, 0.0, 0.0],
-    //         }),
-    //       ],
-    //     },
-    //     {
-    //       id: '3',
-    //       name: 'model3',
-    //       path: '/fullerene/models/m2.glb',
-    //       visible: false,
-    //       newModelLocation: false,
-    //       scale: 0.18,
-    //       yOffsetForText: 0.15,
-    //       zoomInOnReverse: false,
-
-    //       positions: [[0.75, 0.0, -3.0]],
-    //       rotations: [[0.0, 0.0, 0.0]],
-    //       animationClips: [
-    //         Rotate({
-    //           duration: 5000,
-    //           axis: 'y',
-    //           initialAngle: 0,
-    //           finalAngle: 360,
-    //         }),
-    //         ScaleXYZ({
-    //           duration: 1,
-    //           initialScale: [0.18, 0.18, 0.18],
-    //           finalScale: [0.0, 0.0, 0.0],
-    //         })
-    //       ]
-    //     },
-    //     {
-    //       id: '4',
-    //       name: 'model4',
-    //       path: '/fullerene/models/m3.glb',
-    //       visible: false,
-    //       newModelLocation: true,
-    //       scale: 0,
-    //       yOffsetForText: 0.15,
-    //       zoomInOnReverse: true,
-
-    //       positions: [[0.0, -0.66, -1.0]],
-    //       rotations: [[0.0, 0.0, 0.0]],
-    //       animationClips: [
-    //         Rotate({
-    //           duration: 5000,
-    //           axis: 'y',
-    //           initialAngle: 0,
-    //           finalAngle: 360,
-    //         }),
-    //         ScaleXYZ({
-    //           duration: 1,
-    //           initialScale: [0.18, 0.18, 0.18],
-    //           finalScale: [0.0, 0.0, 0.0],
-    //         }),
-    //         Rotate({
-    //           duration: 1500,
-    //           axis: 'x',
-    //           initialAngle: 0,
-    //           finalAngle: 360,
-    //         }),
-    //       ],
-    //     },
-    //     {
-    //       id: '5',
-    //       name: 'model5',
-    //       path: '/fullerene/models/m4.glb',
-    //       visible: false,
-    //       newModelLocation: true,
-    //       scale: 0,
-    //       yOffsetForText: 0.05,
-    //       zoomInOnReverse: false,
-    //       positions: [[0.0, -0.1, -3.0]],
-    //       rotations: [[0.0, 0.0, 0.0]],
-    //       animationClips: [
-    //         Rotate({
-    //           duration: 4000,
-    //           axis: 'y',
-    //           initialAngle: 0,
-    //           finalAngle: 180,
-    //         }),
-    //         //hiv protease
-    //         ScaleXYZ({
-    //           duration: 1,
-    //           initialScale: [0.060, 0.060, 0.060],
-    //           finalScale: [0.0, 0.0, 0.0],
-    //         }),
-    //         //buckyball
-    //         ScaleXYZ({
-    //           duration: 1.6, //higher number is slower
-    //           initialScale: [0.045, 0.045, 0.045],
-    //           finalScale: [0.070, 0.070, 0.070],
-    //         }),
-    //       ],
-    //     },
-    //   ],
-
-    //   text: [
-    //     [''],
-    //     [
-    //       'In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas...'
-    //     ],
-    //     [
-    //       'Firing lazers at graphite rods in a supersonic helium beam, produced novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere.',
-    //       'The largest and most symmetrical form of pure carbon ever discovered.', 
-    //       'This molecule would go on to be named Buckminsterfullerene.'
-    //     ],
-    //     [
-    //       'The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball.', 
-    //       'Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space.', 
-    //       'And because they are essentially hollow cages, they can be manipulated to make materials never before known.'
-    //     ],
-    //     [
-    //       'For example, when a buckyball is "doped" via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known.', 
-    //       'These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems.',
-    //       'Scientists have even turned their attention to Buckminsterfullerene in their quest for a cure for AIDS.'
-    //     ],
-    //     [
-    //       'How can Buckminsterfullerene help cure AIDS?',
-    //       'An enzyme (HIV-1-Protease) that is required for HIV to replicate, exhibits a non-polar pocket in its three-dimensional structure.', 
-    //       "On the protein model in front of you, notice how the non-polar Fullerene fits the exact diameter of the enzyme's binding pocket.",
-    //       'If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible HIV-1-Protease inhibitors.'
-    //     ]
-    //   ],
-      
-    //   textPlacement: [
-    //     '',
-    //     'center',
-    //     'bottom',
-    //     'bottom',
-    //     'bottom',
-    //     'bottom'
-    //   ],
-
-    //   music: ['/audio/music/fullerene3.mp3'],
-
-    //   voices: [
-    //     '/audio/voices/fiona/voice0.mp3', // 0
-    //     '/audio/voices/fiona/voice0.mp3', // 1
-    //     '/audio/voices/fiona/voice1.mp3', // 2
-    //     '/audio/voices/fiona/voice1.mp3', // 3
-    //     '/audio/voices/fiona/voice1.mp3', // 4
-    //   ],
-
-    //   dispatch: useDispatch,
-    // },
   ],
 };
+
+// old createModelPosition method:
+/*
+  createModelPosition( 
+    cameraPosition: number[],
+    cameraRotation: number[],
+    axisData: [string, boolean],
+    yOffsetForText: number ): number[] {
+    
+    let rotationAxis = axisData[0];
+    // console.log('camera rotation', cameraRotation);
+
+    // rotate X-axis, re-position model on Y axis.
+    if ( rotationAxis === 'x' || rotationAxis === 'z' ) {
+      const rotationAngle = cameraRotation[0];
+      const x = cameraPosition[0];
+      const y = cameraPosition[1] + rotationAngle + yOffsetForText
+      const z = cameraPosition[2] - 1;
+      return [x, y, z];
+    }
+
+
+    // rotate Y-axis, need to re-position model on X axis AND Z axis. --> Really, Z axis needed? Not just X axis??
+    if (rotationAxis === 'y' && cameraRotation[1] !== 0) {
+      const rotationAngle = cameraRotation[1]; // -1.58
+      // console.log(rotationAngle);
+      const offset = rotationAngle * -1;  // 1.58
+      if (rotationAngle > 0) {
+
+        const x = cameraPosition[0] - 1;
+        const y = cameraPosition[1] + yOffsetForText;
+        const z = cameraPosition[2] //+ offset;
+        return [x, y, z];
+
+      } else {
+
+        const x = cameraPosition[0] + 1;
+        const y = cameraPosition[1] + yOffsetForText;
+        const z = cameraPosition[2];
+        return [x, y, z];
+
+      }
+    } // If there is a delta, because the prev section had a rotation, but the 
+      // new section rotates to zero. If the prev section rotation was on the y-axis
+      // then y-block is triggered, but since we are finishing at zero, we want the x-bloxk
+      // logic which is the default --> cameraPosition.z - 1.
+      else if( rotationAxis === 'y' && cameraRotation[1] === 0 ) {
+      // normal x-block here:
+      const rotationAngle = cameraRotation[0];
+      const x = cameraPosition[0];
+      const y = cameraPosition[1] + rotationAngle + yOffsetForText;
+      const z = cameraPosition[2] - 1;
+      return [x, y, z]; 
+    }
+
+    // // rotate on Z-axis, don't need to do anything to the model.
+    // // we can combine both blocks below. They are the same code.
+    // if (rotationAxis === 'z') {
+    //   const rotationAngle = cameraRotation[2];
+    //   const x = cameraPosition[0];
+    //   const y = cameraPosition[1] + yOffsetForText;
+    //   const z = cameraPosition[2] - 1;
+    //   return [x, y, z];
+    // } 
+    else {
+      const x = cameraPosition[0];
+      const y = cameraPosition[1] + yOffsetForText;
+      const z = cameraPosition[2] - 1;
+      return [x, y, z];
+    }
+  },
+*/
 
 
 /*

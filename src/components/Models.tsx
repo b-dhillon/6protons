@@ -116,9 +116,7 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
   let currModelAnimations = useRef<ModelAnimations>(animationActions[0]);
   let prevModelAnimations = useRef<ModelAnimations>();
   let cameraDidntMove = useRef<boolean>(false);
-
-
-  const dopedModelPosition = initializedPage.models[ 4 ].initializedPositions
+  
 
   /** controllers --> handles AnimationActions based on state + handles model visibility
    * 
@@ -330,6 +328,7 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
             key={model.id}
             setAnimationActions={setAnimationActions}
             section={section}
+            _i={i}
           />
         );
       }
@@ -468,26 +467,26 @@ function CreateFiberModel(props: any): JSX.Element {
 
   // Create and store AnimationActions in Models() state
   useEffect( () => {
-  props.setAnimationActions((animationAction: any) => [
-    ...animationAction,
-    {
-      mainAnimation: createAnimationAction(ref.current, animationClips[0], {
-        clamped: false,
-        loop: true,
-        repetitions: 5,
-      }),
-      scaleAnimation: createAnimationAction(ref.current, animationClips[1], {
-        clamped: true,
-        loop: false,
-        repetitions: 1,
-      }),
-      nestedAnimation: createAnimationAction(nestedRef.current, animationClips[2], {
-        clamped: true,
-        loop: true,
-        repetitions: 1,
-      }),
-    }
-  ])
+    props.setAnimationActions((animationAction: any) => [
+      ...animationAction,
+      {
+        mainAnimation: createAnimationAction(ref.current, animationClips[0], {
+          clamped: false,
+          loop: true,
+          repetitions: 5,
+        }),
+        scaleAnimation: createAnimationAction(ref.current, animationClips[1], {
+          clamped: true,
+          loop: false,
+          repetitions: 1,
+        }),
+        nestedAnimation: createAnimationAction(nestedRef.current, animationClips[2], {
+          clamped: true,
+          loop: true,
+          repetitions: 1,
+        }),
+      }
+    ])
 
 
     function createAnimationAction(
@@ -506,9 +505,11 @@ function CreateFiberModel(props: any): JSX.Element {
   }, []
   );
 
+  // console.log( 'model position' , props.model.initializedPositions);
+
   return (
     <group
-      position={props.model.initializedPositions}
+      position={ props.model.initializedPosition }
       scale={props.model.scale}
       visible={props.model.visible}
       name={props.model.name}

@@ -9,7 +9,7 @@ didModelMove -- instead of newModelLocation --> also should be able to compute t
 
 createModelPosition() is called too many times. Only needs to be called once. Called in:
 - init()
-- TranslateRotate() AND TranslateCircle for circleCenter
+- TranslateCircle for circleCenter
 
 findRotationAxis() is called too many times. Only needs to be called once and the values stored. Called in:
 - initialize() to feed axisData to createModelPositions

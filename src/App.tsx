@@ -7,6 +7,7 @@ import { TranslateRotate } from './components/animations/TranslateRotate';
 import { Page } from './components/Page';
 import { findRotationAxis } from './utility-functions/find-rotation-axis';
 import { UninitializedData, UninitializedPage, InitializedPage } from './types/types';
+import { createModelPosition } from './utility-functions/createModelPosition';
 
 
 /** Fn Description
@@ -65,6 +66,15 @@ Init() is responsible for the following for each page:
   - Loading all voices of app.
   - Loading all glTF's and extracting all meshes from each glTF.
   - Creating all AnimationClips for the camera. 
+
+
+
+  Too much going on in one function, we need to split this up
+
+  1. Load and extract everything in 1 fn. 
+  2. .map and InitializePages in another fn
+  3. Create all AnimationClips in another fn.
+
 */
 async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
 
@@ -244,15 +254,36 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
   const allMeshesOfApp: any = await ExtractAllMeshesOfApp();
   // const allVoicesOfApp: any = await LoadAllVoicesOfApp();
   const allMusicOfApp: any = await LoadAllMusicOfApp();
-
   const textChime = await LoadVoice(uninitializedData.textChimePath)
 
   const initializedPages = data.pages.map((page: UninitializedPage, i: number): InitializedPage => {
 
     const animationDS = page.camera.createAnimationDS();
 
-    let currPageBool = i === 0 ? true : false;
+    let initializedModelPositions: number[][] = [];
 
+    // This should be its own fn: function initializeModelsOfPage( page ): initializedModel[]
+
+    const initializedModels = page.models.map((model: any, section: number) => {
+
+      // create model position from 
+      const initializedPosition = createModelPosition(
+        animationDS[section][1],
+        animationDS[section][3],
+        findRotationAxis(animationDS[section]),
+        model.yOffsetForText
+      );
+
+      // push position to positions array to store positons data
+      // for TranslateCircle
+      initializedModelPositions[section] = initializedPosition
+
+      return {
+        ...model,
+        loadedMeshes: allMeshesOfApp[i][section],
+        initializedPosition: initializedPosition
+      };
+    });
 
 
     return {
@@ -261,45 +292,12 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
       camera: {
         ...page.camera, // is this needed --> renderer just needs initial position and animationClips?
         initialPosition: page.camera.positions[0],
-        animationClips: page.camera.createAnimationClips(animationDS, page),
+        animationClips: page.camera.createAnimationClips( animationDS, page, initializedModelPositions ),
       },
 
       // add meshes and positions to each model
-      models: page.models.map((model: any, j: number) => {
-
-        let modelInNewPos = model.newModelLocation
-
-        // if previous model (j - 1) didn't have a newModelLocation,
-        // then previous animation mustve been TranslateCircle
-        // let wasPreviousAnimationTranslateCircle = !page.models[ j > 0 ? j - 1 : 0 ].newModelLocation
-
-        // let rotationAxis: string 
-        // if(wasPreviousAnimationTranslateCircle) rotationAxis = 'y'
-        // else rotationAxis = FindRotationAxis(animationDS[j])
-
-        // let axisData = findRotationAxis(animationDS[ modelInNewPos ? j : j - 1]);
-
-        let axisData = findRotationAxis(animationDS[ modelInNewPos ? j : j - 1]);
-
-        
-        return {
-          ...model,
-          loadedMeshes: allMeshesOfApp[i][j],
-
-          initializedPositions: data.createModelPosition(
-            /** If model in new pos we do j+1 because first index in camera.positions is technichally -1 
-             *  if not, if same position, just j because we want position of previous model for camera.lookAt() for TranslateCircle
-             * 
-             *  We should re-factor this to use the animationDS. That way the sections will line up with the index of the array.
-            */
-            page.camera.positions[ modelInNewPos ? ( j + 1 ) : j ], // cameraPosition: number[]
-            page.camera.rotations[ modelInNewPos ? ( j + 1 ) : j ], // cameraRotation: number[]
-            axisData,
-            model.yOffsetForText,
-            modelInNewPos
-          ),
-        };
-      }),
+      models: initializedModels,
+      modelPositions: initializedModelPositions, // needed?, its just being passed to createAnimationClips above
 
       loadedTextChime: textChime,
       // loadedVoices: allVoicesOfApp[i],
@@ -326,7 +324,15 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
 
 
 
-
+    // let initializedModelPositions = animationDS.map(( animationDataOfSection: any[][], i: number) => {
+    //   const modelPosition = createModelPosition(
+    //     animationDataOfSection[1], // camera final positon co-ordinates
+    //     animationDataOfSection[3], // camera final rotation co-ordinates
+    //     findRotationAxis( animationDataOfSection ),
+    //     yOffsets[i]
+    //   );
+    //   return modelPosition;
+    // });
 
 
 

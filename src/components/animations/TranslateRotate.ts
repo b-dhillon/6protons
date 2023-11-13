@@ -7,7 +7,7 @@ interface config {
   finalPosition: number[];
   initialAngle: number[];
   finalAngle: number[];
-  axisData: [string, boolean];
+  axisData: [ string, boolean ];
   easingType: string;
   _page: any;
   _i: number;
@@ -17,9 +17,7 @@ interface config {
 /** the for-loops in createPositionTrack and createRotationTrack can be combined into a single loop */
 export function TranslateRotate(config: config) {
 
-  let [ axis, rotationsEqual ] = config.axisData
-
-  let section = config._i
+  let [ axis, rotationsEqual ] = config.axisData;
 
   let easingFn = config.easingType === 'out' ? easeOutCubic : easeInOutCubic;
 
@@ -34,10 +32,10 @@ export function TranslateRotate(config: config) {
     for (let i = 0; i < n; i++) {
       const t = i / (n-1);  // Normalize i to 0 -> 1
       const easedT = easingFn(t);
-      const iX = startPosition[0] + (endPosition[0] - startPosition[0]) * easedT;
-      const iY = startPosition[1] + (endPosition[1] - startPosition[1]) * easedT;
-      const iZ = startPosition[2] + (endPosition[2] - startPosition[2]) * easedT;
-      positionValues.push(iX, iY, iZ);
+      const x = startPosition[0] + (endPosition[0] - startPosition[0]) * easedT;
+      const y = startPosition[1] + (endPosition[1] - startPosition[1]) * easedT;
+      const z = startPosition[2] + (endPosition[2] - startPosition[2]) * easedT;
+      positionValues.push(x, y, z);
     };
   
     // creates n times:
@@ -57,43 +55,13 @@ export function TranslateRotate(config: config) {
   function createRotationTrack(): NumberKeyframeTrack {
     // create n rotation values and times:
     const n = 100;
-    let rotationAxis = ''
+    let rotationAxis = '';
     if (axis) rotationAxis = '.rotation[' + axis + ']';
-    else throw new Error('axis is falsy inside TranslateRotate')
-
-    // Blocked here. How do we handle 0,0,0 to 0,0,0 ?
-    // Do we default the rotation axis to 'x' and just dont do anything?
-    // Or do we default the rotation axis to '' and check if it is falsy or truthy?
-      // What happens if we dont do a rotationTrack? Does it just snap back to zero?
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // const wasPreviousAnimationTranslateCircle = !config._page.models[ section < 1 ? 0 : section-1 ].newModelLocation
-    // if ( wasPreviousAnimationTranslateCircle ) rotationAxis = '.rotation[y]'
+    else throw new Error('axis is falsy inside TranslateRotate');
 
     const initialAngle = config.initialAngle;
     const finalAngle = config.finalAngle;
-    const rotationTimes = []
+    const rotationTimes = [];
     const rotationValues = [];
 
 
@@ -101,13 +69,18 @@ export function TranslateRotate(config: config) {
      *  else, create rotation values and times 
     */
     if( rotationsEqual ) {
-    // if(  ) {
 
-      for (let i = 0; i < n; i++) {
-        const t = i / (n-1);  // Normalize i to 0 -> 1
-        rotationValues[i] = initialAngle[1];
-        rotationTimes[i] = t;
-      };
+      rotationValues[0] = initialAngle[1];
+      rotationValues[1] = initialAngle[1];
+
+      rotationTimes[0] = 0;
+      rotationTimes[1] = 1;
+
+      // for (let i = 0; i < n; i++) {
+      //   const t = i / (n-1);  // Normalize i to 0 -> 1
+      //   rotationValues[i] = initialAngle[1];
+      //   rotationTimes[i] = t;
+      // };
 
     } else {
 
@@ -147,7 +120,6 @@ export function TranslateRotate(config: config) {
     1,
     [ createPositionTrack(), createRotationTrack() ]
   );
-
 };
 
 

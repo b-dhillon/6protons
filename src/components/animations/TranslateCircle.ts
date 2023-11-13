@@ -12,7 +12,6 @@ import {
   easeInOutCubic,
 } from '../../utility-functions/easing-functions';
 
-import { uninitializedData } from '../../uninitialized-data';
 
 interface config {
   duration: number;
@@ -22,23 +21,11 @@ interface config {
   finalAngle: number[];
   axisData: [string, boolean];
   easingType: string;
+  modelPosition: number[];
   _modelInNewPos: boolean
 }
 
-/** Completing Implementation To-do: 
- * 
- * [DONE]-Understand math, logic, and code.
- * [DONE]-Clean and Re-factor
- * [DONE]-Add proper modelPosition, we need to compute this again or grab the computed values somehow.
- *        Because we need to take into account potential camera rotations
- * [DONE]-Hook into the actual lesson, between section-2 and section-3
- * [DONE]-Rewrite getFinalPositionAfter90DegreeTurn to take into account -z
- * 
- * 
- * Figure out how to deal with section after the quarter circle turn. 
- *   The camera will be rotated 90 degrees on its y-axis, and will also have moved Pi/2 radians away.
- * 
-*/
+
 
 /** Fn description
  * 
@@ -63,38 +50,19 @@ interface config {
  */
 export function TranslateCircle(config: config): AnimationClip {
   
-  let prevSectionAxis = config.axisData[0]
-  // TranslateCirlce always rotates on Y axis, if we are translating XZ plane.
+  // TranslateCirlce always rotates on Y axis, if we translating XZ plane.
   let axis = 'y'
   let ease = config.easingType === 'out' ? easeOutCubic : easeInOutCubic;
 
   const initialPosition = new Vector3(config.initialPosition[0], config.initialPosition[1], config.initialPosition[2]);
+
   /** Why is the circleCenter defined like this?
-   *  We want the circle center to just be the position of the model. 
-   *    Which is just: 
-   *      const modelPosition = new Vector3(initialPosition.x, initialPosition.y, initialPosition.z - 1)
-   *    
-   *    We can also grab this from initializedData 
-   *    or
-   *    We can compute this with our fn.
-   * 
-   *    When computing again, like below, we need to pass the prevSectionAxis
-   *    instead so that the prevSection model's position is computed. 
-   *    
-   *    We use the prevSection model position, because we want the new model 
-   *    to have the same position when we translate across it in a circle.
+   *  We want the circle center to just be the position of the model 
+   *  that the camera is rotating around. 
   */
-  const modelPositionArray = uninitializedData.createModelPosition( 
-    config.initialPosition,
-    config.initialAngle,
-    prevSectionAxis,
-    0
-  );
-  const modelPosition = new Vector3( modelPositionArray[0], modelPositionArray[1], modelPositionArray[2] );
-  const circleCenter = modelPosition;
+  const circleCenter = new Vector3( ...config.modelPosition );;
   const radius = initialPosition.distanceTo(circleCenter);
   const initialAngle = Math.PI / 2;
-
 
   /** 2. Define fn that returns vectors around a circle as a function of time */
   function getVectorAtT(easedT: number): Vector3 {
@@ -105,7 +73,6 @@ export function TranslateCircle(config: config): AnimationClip {
       circleCenter.z + ( radius * Math.sin(currentAngle) )
     );
   };
-
 
   /** 3. Loop n times and call getVectorAtT n times */
   // create n position and time values
@@ -125,22 +92,23 @@ export function TranslateCircle(config: config): AnimationClip {
     posValues[i * 3 + 1] = pos.y;
     posValues[i * 3 + 2] = pos.z;
 
-
     /** Create Rotation Values */
     const initialAngle = config.initialAngle;
     const finalAngle = config.finalAngle;
 
     let angle = 0;
 
-    if (axis === 'x') {
-      angle = initialAngle[0] + (finalAngle[0] - initialAngle[0]) * easedT;
-    }
-    if (axis === 'y') {
-      angle = initialAngle[1] + (finalAngle[1] - initialAngle[1]) * easedT;
-    }
-    if (axis === 'z') {
-      angle = initialAngle[2] + (finalAngle[2] - initialAngle[2]) * easedT;
-    }
+    switch( axis ) {
+      case 'x':
+        angle = initialAngle[0] + (finalAngle[0] - initialAngle[0]) * easedT;
+        break;
+      case 'y':
+        angle = initialAngle[1] + (finalAngle[1] - initialAngle[1]) * easedT;
+        break;
+      case 'z':
+        angle = initialAngle[2] + (finalAngle[2] - initialAngle[2]) * easedT;
+        break;
+    };
 
     rotValues[ i ] = angle
   };
@@ -179,6 +147,40 @@ export function TranslateCircle(config: config): AnimationClip {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+// if (axis === 'x') {
+//   angle = initialAngle[0] + (finalAngle[0] - initialAngle[0]) * easedT;
+// }
+// if (axis === 'y') {
+//   angle = initialAngle[1] + (finalAngle[1] - initialAngle[1]) * easedT;
+// }
+// if (axis === 'z') {
+//   angle = initialAngle[2] + (finalAngle[2] - initialAngle[2]) * easedT;
+// }
+
+
+
+
+
+// const modelPositionArray = uninitializedData.createModelPosition( 
+//   config.initialPosition,
+//   config.initialAngle,
+//   prevSectionAxis,
+//   0
+//);
+// const modelPosition = new Vector3( modelPositionArray[0], modelPositionArray[1], modelPositionArray[2] );
 
 
 

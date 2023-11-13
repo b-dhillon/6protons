@@ -10,7 +10,6 @@ const root = createRoot(container!); // createRoot(container!) if you use TypeSc
 root.render(
   // <React.StrictMode>
     < Provider store={store}>
-      {/* <__App /> */}
       < App />
     </ Provider>
   // </React.StrictMode>
@@ -19,18 +18,17 @@ root.render(
 
 
 
-/* Old way of rendering:
+/* Old rendering:
 
-// ReactDOM.render(<MyComponent />, document.getElementById('root'));
+ReactDOM.render(<MyComponent />, document.getElementById('root'));
 
-// import ReactDOM from 'react-dom';
-// ReactDOM.render(
-//   // <React.StrictMode>
-//   <Provider store={store}>
-//     <App />
-//   </Provider>,
-//   // </React.StrictMode>,
-//   document.getElementById('root')
-// )
-
+import ReactDOM from 'react-dom';
+ReactDOM.render(
+  // <React.StrictMode>
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  // </React.StrictMode>,
+  document.getElementById('root')
+)
 */

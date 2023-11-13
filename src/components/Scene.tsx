@@ -23,7 +23,7 @@ export function Scene({ section, initializedPage, isCameraAnimating }: any): JSX
       <Canvas>
         <Universe initializedPage={initializedPage} />
         <Sound initializedPage={initializedPage} section={section} isCameraAnimating={isCameraAnimating} />
-        < DevelopmentCamera  />
+        {/* < DevelopmentCamera  /> */}
         <Camera initializedPage={initializedPage} section={section} isCameraAnimating={isCameraAnimating} />
         <Models initializedPage={initializedPage} section={section} isCameraAnimating={isCameraAnimating}/>
         <Lighting/>

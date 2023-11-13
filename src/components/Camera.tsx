@@ -85,6 +85,10 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
         /** Why is index hard-coded 0?? --> because theres only one animation per section
          *  I believe I initially built it to be explandable to multiple animations per section.
          *  But this should be re-factored to an object, like what we did with the model's multiple animations.
+         *  And, we will no longer need multiple animations per section. The camera will only need to animate once per section
+         *  Because the user controls the lesson through the forward and back buttons, the camera only moves when the section changes
+         *  HOWEVER, will we want the camera to have a main animation? Like an animation where the camera is continuously animating in a cirlce
+         *  around an object during that section? If so, we should re-factor to an object like the model animations.
         */
       };
       setAnimations( createAnimations(ref.current, camera.animationClips) );
@@ -130,7 +134,7 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
         */
         if(sameModelPosition.current) {
           // const p = initializedPage.models[ section > 0 ? section - 1 : section ].initializedPositions
-          const p: number[] = initializedPage.models[ section ].initializedPositions;
+          const p: number[] = initializedPage.models[ section ].initializedPosition;
           const yOffsetForText = initializedPage.models[ section ].yOffsetForText;
           pos.current = new THREE.Vector3(p[0], (p[1] - yOffsetForText), p[2]);
         };
@@ -169,9 +173,9 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
   });
 
   // Setting the scene's camera. There are two. Perspective and Development.
-  useHelper( ref, THREE.CameraHelper );
-  // const set = useThree((state) => state.set);
-  // useEffect(() => set({ camera: ref.current }));
+  // useHelper( ref, THREE.CameraHelper );
+  const set = useThree((state) => state.set);
+  useEffect(() => set({ camera: ref.current }));
 
   return (
     <>

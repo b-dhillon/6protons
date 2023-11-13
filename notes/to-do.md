@@ -1,12 +1,5 @@
 # To-do:
 
-  # Commit and Push
-
-  # Create new branch to re-factor createModelPosition 
-
-  # Brainstorm prompt for LLM
-
-
 
 
 
@@ -34,7 +27,6 @@
 
 
 
-      
 
 
 
@@ -50,54 +42,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      - Need to fix bug in createModelPosition that is making the model of section4 not appear in the proper location.
-        - Log current position
-        - Figure out what the real position is supposed to be 
-
-        cameraPos: [ 4.75, 0, -3 ]
-
-        expected: 
-          modelPos: [ 3.75, 0, -3 ]
-        
-        observed: 
-          modelPos: [ 3.17, 0.15, -4.58 ]
-
-    Explaining Observed:
-      cameraPos at section4 = [ 4.75, 0, -3 ]
-      cameraRot at section4 = 1.58 
-      offset = -1.58 
-      x = 4.75 - 1.58 = 3.17
-      y = 0 + 0.15    = 0.15
-      z = -3 - -1.58  = -4.58
-     
 
 
   # Redo styling of lessonText -- new font, new font-size, line-height and everything.

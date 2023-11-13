@@ -1,7 +1,6 @@
 import { AnimationClip, Audio, Mesh } from "three"
 
 export interface UninitializedData {
-    createModelPosition: Function,
     textChimePath: string,
     pages: UninitializedPage[]
 }
@@ -9,8 +8,7 @@ export interface UninitializedData {
 
 
 
-
-
+// PAGES:
 export interface UninitializedPage {
     id: string,
     title: string,
@@ -29,7 +27,6 @@ export interface UninitializedPage {
 };
 
 
-
 export interface InitializedPage {
     id: string,
     title: string,
@@ -45,6 +42,7 @@ export interface InitializedPage {
 
     camera: InitializedLessonCamera,
     models: InititalizedModel[],
+    modelPositions: number[][]
     loadedTextChime: any // should be Audio
     loadedVoices: Audio[] | null,
     loadedMusic: Audio[],
@@ -68,6 +66,8 @@ export interface InitializedPage {
 //     loadedMusic: Audio[],
 // };
 
+
+// CAMERA:
 export interface UninitializedLessonCamera {
     animationTypes: Function[],
     positions: number[][],
@@ -81,6 +81,8 @@ export interface InitializedLessonCamera {
     animationClips: AnimationClip[][],
 };
 
+
+// MODELS:
 export interface UninitializedModel {
     id: string,
     name: string,
@@ -90,16 +92,12 @@ export interface UninitializedModel {
     scale: number,
     yOffsetForText: number,
     zoomInOnReverse: boolean,
-
-
-    positions: number[][], //needed?
-    rotations: number[][], //needed?
     animationClips: THREE.AnimationClip[],
 };
 
 export interface InititalizedModel extends UninitializedModel {
     loadedMeshes: Mesh[][],
-    initializedPositions: number[], // change property name to initializedPosition
+    initializedPosition: number[],
 };
 
 export interface Universe {
