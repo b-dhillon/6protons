@@ -324,15 +324,15 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
 
 
 
-    // let initializedModelPositions = animationDS.map(( animationDataOfSection: any[][], i: number) => {
-    //   const modelPosition = createModelPosition(
-    //     animationDataOfSection[1], // camera final positon co-ordinates
-    //     animationDataOfSection[3], // camera final rotation co-ordinates
-    //     findRotationAxis( animationDataOfSection ),
-    //     yOffsets[i]
-    //   );
-    //   return modelPosition;
-    // });
+// let initializedModelPositions = animationDS.map(( animationDataOfSection: any[][], i: number) => {
+//   const modelPosition = createModelPosition(
+//     animationDataOfSection[1], // camera final positon co-ordinates
+//     animationDataOfSection[3], // camera final rotation co-ordinates
+//     findRotationAxis( animationDataOfSection ),
+//     yOffsets[i]
+//   );
+//   return modelPosition;
+// });
 
 
 
