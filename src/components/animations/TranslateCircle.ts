@@ -13,13 +13,20 @@ import {
 } from '../../utility-functions/easing-functions';
 
 
+interface RotationInfo {
+  axis: string, 
+  rotationsEqual: boolean
+}
+
 interface config {
   duration: number;
   initialPosition: number[];
   finalPosition: number[];
   initialAngle: number[];
   finalAngle: number[];
-  axisData: [string, boolean];
+
+  rotationInfo: RotationInfo;
+
   easingType: string;
   modelPosition: number[];
   _modelInNewPos: boolean

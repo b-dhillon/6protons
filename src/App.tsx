@@ -5,10 +5,14 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { uninitializedData } from './uninitialized-data';
 import { TranslateRotate } from './components/animations/TranslateRotate';
 import { Page } from './components/Page';
-import { findRotationAxis } from './utility-functions/find-rotation-axis';
+import { getRotationInfo } from './utility-functions/find-rotation-axis';
 import { UninitializedData, UninitializedPage, InitializedPage } from './types/types';
-import { createModelPosition } from './utility-functions/createModelPosition';
+import { createModelPosition } from './utility-functions/create-model-position';
 
+interface RotationInfo {
+  axis: string, 
+  rotationsEqual: boolean
+}
 
 /** Fn Description
  * 
@@ -62,10 +66,21 @@ export default function App() {
 
 /** Fn Description
 Init() is responsible for the following for each page:
-  - Initializing model positions based off of camera positions
-  - Loading all voices of app.
-  - Loading all glTF's and extracting all meshes from each glTF.
-  - Creating all AnimationClips for the camera. 
+  - Loading
+    - Load models
+      - Load all GLTFs and extract all meshes inside GLTF object.
+    - Load music
+    - Load voices
+
+  - Initializing
+    - Create camera animationDS
+    - Initalize Camera
+      - Create camera AnimationClips
+    
+    - Initalize Models
+      - Create model positions
+      - Add loaded meshes
+
 
 
 
@@ -147,94 +162,41 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
     });
 
     return Promise.all(allMusicOfApp);
-  }
 
-  function LoadMusic(path: string) {
-    return new Promise((resolve, reject) => {
-      const listener = new THREE.AudioListener();
-      const AudioObject = new THREE.Audio(listener);
-      const loader = new THREE.AudioLoader();
-      loader.load(
-        path,
-
-        // onLoad
-        (buffer: AudioBuffer) => {
-          // Set the audio object's buffer to the loaded object
-          AudioObject.setBuffer(buffer);
-          AudioObject.setLoop(false);
-          AudioObject.setVolume(1);
-          resolve(AudioObject);
-        },
-
-        // onProgress
-        (xhr) => {
-          // console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-        },
-
-        // onError
-        (err) => {
-          console.log('Error loading voices', err);
-        }
-      );
-    });
-  }
-
-  function LoadModel(path: any) {
-    return new Promise((resolve, reject) => {
-      const loader = new GLTFLoader();
-      const dracoLoader = new DRACOLoader();
-      dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
-
-      // dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/v1/decoders/draco_decoder.js' );
-      // dracoLoader.setDecoderPath('./draco/gltf');
-
-      // dracoLoader.setDecoderPath( 'examples/jsm/libs/draco/' );
-      // dracoLoader.setDecoderPath( './node_modules/three/examples/jsm/libs/draco/' );
-      // dracoLoader.setDecoderConfig( { type: 'js' } );
-      // loader.setDRACOLoader( dracoLoader );
-      // loader.preload();
-
-      // dracoLoader.setDecoderPath('./draco/gltf/darco_decorder.js');
-
-      // (Optional) Force non-WebAssembly JS decoder (without this line, WebAssembly
-      // is the default if supported).
-      dracoLoader.setDecoderConfig({ type: 'js' });
-
-      loader.setDRACOLoader(dracoLoader);
-
-      loader.load(
-        path,
-        (gltf: any) => {
-          // console.log('gltf', gltf);
-          resolve(gltf);
-        },
-        (xhr: any) => {
-          // console.log('loading glTF');
-          // console.log((xhr.loaded / xhr.total) + 'loaded');
-        },
-        (error: any) => {
-          console.error(error);
-          reject(error);
-        }
-      );
-    });
-  }
-
-  async function LoadAllGLTFSOfApp() {
-    const all_pages_models = data.pages.map(async (page: any) => {
-      const page_models: any = []; // [ model0, model1, model2 ]
-      for (let i = 0; i < page.models.length; i++) {
-        page_models[i] = LoadModel(page.models[i].path);
-        // console.log(`model loaded`);
-      }
-      return Promise.all(page_models);
-    });
-
-    return Promise.all(all_pages_models);
+    function LoadMusic(path: string) {
+      return new Promise((resolve, reject) => {
+        const listener = new THREE.AudioListener();
+        const AudioObject = new THREE.Audio(listener);
+        const loader = new THREE.AudioLoader();
+        loader.load(
+          path,
+  
+          // onLoad
+          (buffer: AudioBuffer) => {
+            // Set the audio object's buffer to the loaded object
+            AudioObject.setBuffer(buffer);
+            AudioObject.setLoop(false);
+            AudioObject.setVolume(1);
+            resolve(AudioObject);
+          },
+  
+          // onProgress
+          (xhr) => {
+            // console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+          },
+  
+          // onError
+          (err) => {
+            console.log('Error loading voices', err);
+          }
+        );
+      });
+    }
   }
 
   async function ExtractAllMeshesOfApp() {
-    const allGLTFSOfApp = await LoadAllGLTFSOfApp(); // [ [ gltf0, gltf1 ], [ gltf0 ], [ gltf0 ], [ gltf0 ] ]
+
+    const allGLTFSOfApp = await loadAllGLTFsOfApp(); // [ [ gltf0, gltf1 ], [ gltf0 ], [ gltf0 ], [ gltf0 ] ]
 
     const allMeshesOfApp = allGLTFSOfApp.map((arrayOfGltfs: any) => {
       return arrayOfGltfs.map((gltf: any) => {
@@ -249,34 +211,100 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
     // [ [ [ Mesh ], [ Mesh ], [ Mesh ] ] ]
 
     return allMeshesOfApp;
+
+    async function loadAllGLTFsOfApp() {
+      const allPagesGLTFs = data.pages.map(async (page: any) => {
+        const pageGLTFs: any = []; // [ model0, model1, model2 ]
+        for (let i = 0; i < page.models.length; i++) {
+          pageGLTFs[i] = loadGLTF(page.models[i].path);
+        }
+        return Promise.all(pageGLTFs);
+      });
+  
+      return Promise.all(allPagesGLTFs);
+
+      function loadGLTF(path: any) {
+        return new Promise((resolve, reject) => {
+          const loader = new GLTFLoader();
+          const dracoLoader = new DRACOLoader();
+          dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
+    
+          // (Optional) Force non-WebAssembly JS decoder (without this line, WebAssembly
+          // is the default if supported).
+          dracoLoader.setDecoderConfig({ type: 'js' });
+    
+          loader.setDRACOLoader(dracoLoader);
+    
+          loader.load(
+            path,
+            (gltf: any) => {
+              // console.log('gltf', gltf);
+              resolve(gltf);
+            },
+            (xhr: any) => {
+              // console.log('loading glTF');
+              // console.log((xhr.loaded / xhr.total) + 'loaded');
+            },
+            (error: any) => {
+              console.error(error);
+              reject(error);
+            }
+          );
+        });
+      }
+    };
   }
+
 
   const allMeshesOfApp: any = await ExtractAllMeshesOfApp();
   // const allVoicesOfApp: any = await LoadAllVoicesOfApp();
   const allMusicOfApp: any = await LoadAllMusicOfApp();
-  const textChime = await LoadVoice(uninitializedData.textChimePath)
+  const textChime = await LoadVoice(uninitializedData.textChimePath);
 
+
+  /** When initializing pages we: 
+   *  Create animationDS
+   * 
+   *  Initialize Models
+   *    getRotationInfo of the camera for each section to pass into createModelPositon
+   *    Create model position from animationDS
+   *    add loaded meshes to the new initializedModel object
+   * 
+   * Initialize Camera 
+   *    create animation clips by calling method page.camera.createAnimationClips
+   * 
+   * Add everything that has been loaded and initalized to 
+   * the new initalizedPage object at the bottom that is returned
+   * at the end the fn.
+   * 
+   */
   const initializedPages = data.pages.map((page: UninitializedPage, i: number): InitializedPage => {
 
     const animationDS = page.camera.createAnimationDS();
 
-    let initializedModelPositions: number[][] = [];
+    const initializedModelPositions: number[][] = [];
+    const rotationInfos: RotationInfo[] = [];
 
     // This should be its own fn: function initializeModelsOfPage( page ): initializedModel[]
 
     const initializedModels = page.models.map((model: any, section: number) => {
 
-      // create model position from 
+      const rotationInfo = getRotationInfo(animationDS[section])
+
+
+      // create model position from camera positions, 
+      // which are nicely stored in the animationDS
       const initializedPosition = createModelPosition(
         animationDS[section][1],
         animationDS[section][3],
-        findRotationAxis(animationDS[section]),
+        rotationInfo.axis,
         model.yOffsetForText
       );
 
-      // push position to positions array to store positons data
-      // for TranslateCircle
+      // push position and rotationAxis to array to store data
+      // for ClipConstructor
       initializedModelPositions[section] = initializedPosition
+      rotationInfos[section] = rotationInfo
 
       return {
         ...model,
@@ -292,10 +320,9 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
       camera: {
         ...page.camera, // is this needed --> renderer just needs initial position and animationClips?
         initialPosition: page.camera.positions[0],
-        animationClips: page.camera.createAnimationClips( animationDS, page, initializedModelPositions ),
+        animationClips: page.camera.createAnimationClips( animationDS, page, initializedModelPositions, rotationInfos ),
       },
 
-      // add meshes and positions to each model
       models: initializedModels,
       modelPositions: initializedModelPositions, // needed?, its just being passed to createAnimationClips above
 
@@ -306,7 +333,8 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
     };
   });
 
-  return initializedPages
+  return initializedPages;
+  
 };
 
 
@@ -324,15 +352,6 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
 
 
 
-// let initializedModelPositions = animationDS.map(( animationDataOfSection: any[][], i: number) => {
-//   const modelPosition = createModelPosition(
-//     animationDataOfSection[1], // camera final positon co-ordinates
-//     animationDataOfSection[3], // camera final rotation co-ordinates
-//     findRotationAxis( animationDataOfSection ),
-//     yOffsets[i]
-//   );
-//   return modelPosition;
-// });
 
 
 
@@ -345,33 +364,19 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
 
 
 
+// In case Draco breaks:
+/*
+dracoLoader.setDecoderPath( 'https://www.gstatic.com/draco/v1/decoders/draco_decoder.js' );
+dracoLoader.setDecoderPath('./draco/gltf');
 
+dracoLoader.setDecoderPath( 'examples/jsm/libs/draco/' );
+dracoLoader.setDecoderPath( './node_modules/three/examples/jsm/libs/draco/' );
+dracoLoader.setDecoderConfig( { type: 'js' } );
+loader.setDRACOLoader( dracoLoader );
+loader.preload();
 
-
-
-
-// Doing some checks with rotationAcis and modelPosition before sending to .createAnimationClip
-
-// if( currPageBool && j === 4  ) {
-//   let rotationAxis: string 
-//   if(wasPreviousAnimationTranslateCircle) rotationAxis = 'y'
-//   else rotationAxis = FindRotationAxis(animationDS[j])
-
-
-//   const computedPositionModel4 = data.createModelPosition(
-//     /** If model in new pos we do j+1 because first index in camera.positions is technichally -1 
-//      *  if not, if same position, just j because we want position of previous model for camera.lookAt() for TranslateCircle
-//     */
-//     page.camera.positions[ modelInNewPos ? j + 1 : j ], // cameraPosition: number[]
-//     page.camera.rotations[ modelInNewPos ? j + 1 : j ], // cameraRotation: number[]
-//     rotationAxis,
-//     model.yOffsetForText
-//   )
-
-//   console.log( 'rotationAxis of section4', rotationAxis );
-//   // console.log('computedPositionModel4', computedPositionModel4);
-//   // console.log( 'hard coded camera rotation 4', page.camera.rotations[ modelInNewPos ? j + 1 : j ]);
-// }
+dracoLoader.setDecoderPath('./draco/gltf/darco_decorder.js');
+*/
 
 
 
@@ -381,27 +386,5 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
 
 
 
-// Need to access AnimationData here which is just the [][] NOT the whole [][][]. 
-// Although you can use that too, but you'll need to loop through it.
-// initializedPositions: initializeModelPositionsFromCamera(
-//   page.camera.positions[j + 1],
-//   page.camera.rotations[j + 1],
-//   FindRotationAxis(animationDS[j])
-// ),
-
-// animationDataStructure: page.camera.createAnimationDS(), // needed for initial position assignment --> where is it being consumed? Can't initial position be consumed from the hard-coded positions array?
 
 
-// initializedAnimationClips: animationDataStructure.map((animationData: [][], i: number) => {
-//   return [
-//     TranslateRotate({
-//       duration: 4,
-//       initial_position: animationData[0],
-//       final_position: animationData[1],
-//       initial_angle: animationData[2],
-//       final_angle: animationData[3],
-//       // axis: 'x',
-//       axis: FindRotationAxis(animationData),
-//     }),
-//   ];
-// }),

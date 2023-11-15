@@ -1,13 +1,20 @@
 import { AnimationClip, InterpolateSmooth, NumberKeyframeTrack, VectorKeyframeTrack } from 'three';
 import { easeOutCubic, easeInOutCubic } from '../../utility-functions/easing-functions'
 
+interface RotationInfo {
+  axis: string, 
+  rotationsEqual: boolean
+}
+
 interface config {
   duration: number;
   initialPosition: number[];
   finalPosition: number[];
   initialAngle: number[];
   finalAngle: number[];
-  axisData: [ string, boolean ];
+  rotationInfo: RotationInfo;
+
+
   easingType: string;
   _page: any;
   _i: number;
@@ -17,7 +24,7 @@ interface config {
 /** the for-loops in createPositionTrack and createRotationTrack can be combined into a single loop */
 export function TranslateRotate(config: config) {
 
-  let [ axis, rotationsEqual ] = config.axisData;
+  let { axis, rotationsEqual } = config.rotationInfo;
 
   let easingFn = config.easingType === 'out' ? easeOutCubic : easeInOutCubic;
 

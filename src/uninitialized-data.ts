@@ -10,13 +10,17 @@
 import { useDispatch } from 'react-redux';
 import { UninitializedData, UninitializedPage } from './types/types';
 import { TranslateRotate } from './components/animations/TranslateRotate';
-import { findRotationAxis } from './utility-functions/find-rotation-axis';
 import { AnimationClip } from 'three';
 import ScaleXYZ from './components/animations/ScaleXYZ';
 import Rotate from './components/animations/Rotate';
 import SuspendInSolution from './components/animations/SuspendInSolution';
 import { TranslateCircle } from './components/animations/TranslateCircle';
 import { getVectorOnCircle } from './utility-functions/get-vector-on-circle';
+
+interface RotationInfo {
+  axis: string, 
+  rotationsEqual: boolean
+}
 
 
 export const uninitializedData: UninitializedData = {
@@ -40,7 +44,7 @@ export const uninitializedData: UninitializedData = {
       camera: {
 
         /** Instead of hard-coded, this array could be generated
-         *  programatically by checking models[i].newModelLocation
+         *  programatically by checking models[section].newModelLocation
          *  if true: TranslateRotate, else: TranslateCircle
         */
         animationTypes: [
@@ -72,7 +76,6 @@ export const uninitializedData: UninitializedData = {
           getVectorOnCircle( [0.75, 0.00,-2.00], Math.PI/2 ).map( (pos, i) => i === 0 ? pos - 4 : pos ), // [ -4.25, 0, -3 ]
           // section4 final, section5 inital
 
-          // OLD 5 --> [ 1.00, 2.00, 0.00 ]
           [ -3.25, 2.00, -3.00 ] 
           // section5 final
         ],
@@ -110,7 +113,7 @@ export const uninitializedData: UninitializedData = {
           return animationData;
         },
 
-        createAnimationClips( animationDS: any, page: UninitializedPage, modelPositions: number[][] ): AnimationClip[][] {
+        createAnimationClips( animationDS: any, page: UninitializedPage, modelPositions: number[][], rotationInfos: RotationInfo[] ): AnimationClip[][] {
 
           const modelInNewPosArr = page.models.map( (model) => model.newModelLocation )
 
@@ -118,7 +121,7 @@ export const uninitializedData: UninitializedData = {
 
             let modelInNewPos = modelInNewPosArr[section]
             
-            let _axisData = modelInNewPos ? findRotationAxis( animationData ) : findRotationAxis( animationDS[ section-1 ] )
+            // let _axisData = modelInNewPos ? findRotationAxis( animationData ) : findRotationAxis( animationDS[ section-1 ] )
 
             // FindRotationAxis(animationData),
             let ClipConstructor = this.animationTypes[section]
@@ -127,13 +130,16 @@ export const uninitializedData: UninitializedData = {
               ClipConstructor({
                 // duration: 4,
                 duration: 1,
-                initialPosition: animationData[0],
-                finalPosition: animationData[1],
-                initialAngle: animationData[2],
-                finalAngle: animationData[3],
-                axisData: _axisData,
+                initialPosition: animationData[ 0 ],
+                finalPosition: animationData[ 1 ],
+                initialAngle: animationData[ 2 ],
+                finalAngle: animationData[ 3 ],
+
+                rotationInfo: rotationInfos[ section ],
+
+                modelPosition: modelPositions[ section ],
+
                 easingType: section === 0 ? 'out' : 'inOut',
-                modelPosition: modelPositions[section],
                 _page: page,
                 _i: section,
                 _modelInNewPos: modelInNewPos
@@ -171,19 +177,19 @@ export const uninitializedData: UninitializedData = {
           path: '/fullerene/models/m1.glb',
           visible: false,
           newModelLocation: true,
-          scale: 0.18,
+          scale: 0,
           yOffsetForText: 0.15,
           zoomInOnReverse: false,
           animationClips: [
             Rotate({
-              duration: 5000,
+              duration: 50,
               axis: 'y',
               initialAngle: 0,
-              finalAngle: 360, // this is supposed to be radians...?
+              finalAngle: Math.PI * 2, // this is supposed to be radians...?
             }),
             ScaleXYZ({
               duration: 1,
-              initialScale: [0.18, 0.18, 0.18],
+              initialScale: [0, 0, 0],
               finalScale: [0.0, 0.0, 0.0],
             }),
           ],
@@ -199,10 +205,10 @@ export const uninitializedData: UninitializedData = {
           zoomInOnReverse: false,
           animationClips: [
             Rotate({
-              duration: 5000,
+              duration: 50,
               axis: 'y',
               initialAngle: 0,
-              finalAngle: 360, // this is supposed to be radians...?
+              finalAngle: Math.PI * 2, // this is supposed to be radians...?
             }),
             ScaleXYZ({
               duration: 1,
@@ -222,10 +228,10 @@ export const uninitializedData: UninitializedData = {
           zoomInOnReverse: false,
           animationClips: [
             Rotate({
-              duration: 5000,
+              duration: 50,
               axis: 'y',
               initialAngle: 0,
-              finalAngle: 360, // this is supposed to be radians...?
+              finalAngle: Math.PI * 2, // this is supposed to be radians...?
             }),
             ScaleXYZ({
               duration: 1,
@@ -245,10 +251,10 @@ export const uninitializedData: UninitializedData = {
           zoomInOnReverse: true,
           animationClips: [
             Rotate({
-              duration: 5000,
+              duration: 50,
               axis: 'y',
               initialAngle: 0,
-              finalAngle: 360, // this is supposed to be radians...?
+              finalAngle: Math.PI * 2
             }),
             ScaleXYZ({
               duration: 1,

@@ -8,50 +8,19 @@ import { setCameraAnimating } from '../redux/actions';
 
 /** FN Description
  * 
- * Creates Camera,
- * Creates all AnimationActions for 3d camera movements 
- * Creates + calls an AnimationController() that:
- *   Plays the correct Animation, based on section.
- *   Updates the animation mixer.
- * Renders cameraHelper when called.
+ * Reponsibilities:
+ *  Create Camera,
+ *
+ *  Create all AnimationActions for camera movement animations.
+ *
+ *  Create + call a controller() that:
+ *  Plays the correct Animation, based on section.
+ * 
+ *  Update the animation mixer in a render loop
+ *
+ *  Renders cameraHelper when called.
  * 
 */
-
-
-/**
-
-
-  Next, grab currModel's position when sameModelLocation
-
-  let pos: THREE.Vector3;
-  if(sameModelLocation) {
-    pos = new Vector3(initializedPage.models[section - 1].position)
-  }
-
-
-
-
-  // Grab object from scene
-  let currModel;
-  set((state) => {
-
-    const currModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section}`);
-
-    currModel = state.scene.children[ currModelIndex ];
-
-  });
-
-  /* Make camera lookAt that object
-
-  // this variable is set everytime section mutates and if section > 0
-  // the lookAt needs to be set before the AnimationAction is triggered.
-  if (cameraDidntMove) {
-    ref.current.lookAt( currModel.position )
-  }
- 
- 
- */
-
 export function Camera( { initializedPage, section, isCameraAnimating }: any ): JSX.Element {
   
   const [ animations, setAnimations ] = useState<AnimationAction[]|[]>([]);
@@ -60,11 +29,9 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
   const prevSection = useRef<number>(-1);
   const sameModelPosition = useRef<boolean>(false);
   const camera = initializedPage.camera;
-
-  
   const maxSection = initializedPage.maxSection;
   const dispatch = useDispatch();
-  let pos = useRef<THREE.Vector3>();
+  // let pos = useRef<THREE.Vector3>();
 
 
   /* Creates all AnimationActions via looping camera.animationClips[] */
@@ -84,33 +51,23 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
         return animationClips.map( (animationClip: []) => createAnimation(animationClip[0]) );
         /** Why is index hard-coded 0?? --> because theres only one animation per section
          *  I believe I initially built it to be explandable to multiple animations per section.
-         *  But this should be re-factored to an object, like what we did with the model's multiple animations.
-         *  And, we will no longer need multiple animations per section. The camera will only need to animate once per section
-         *  Because the user controls the lesson through the forward and back buttons, the camera only moves when the section changes
-         *  HOWEVER, will we want the camera to have a main animation? Like an animation where the camera is continuously animating in a cirlce
-         *  around an object during that section? If so, we should re-factor to an object like the model animations.
+         *  But this should be re-factored to an object.
         */
       };
       setAnimations( createAnimations(ref.current, camera.animationClips) );
 
       /* Add an eventListener for the "finished" event */
-      mixer.addEventListener('finished', function (event) {
-        // console.log('Animation finished!', event.action);  // event.action gives you the action that has just finished.
+      mixer.addEventListener('finished', function (e) {
         dispatch( setCameraAnimating(false) );
-
-        const cameraFinalPosition = ref.current.position
-        // console.log( "camera final position", cameraFinalPosition);
       });
     };
   }, [mixer]);
 
   /** controller --> Plays AnimationAction based on section 
-   * 1.  section mutates, controller is popped onto the call-stack
+   * 1.  section mutates, controller() is popped onto the call-stack
    * 2.  Check if mutation was forwards or backwards
-   * 3.  Check if model is in same position as prev section
-   * 4. If model is in same position, grab the pos of the prevModel (section - 1) to pipe into .lookAt()
-   * 5.  Ensure all camera animations are stopped before playing the next one
-   * 6.  Handle animation playback
+   * 3.  Ensure all camera animations are stopped before playing the next one
+   * 4.  Handle animation playback
   */
   useEffect(() => {
 
@@ -126,27 +83,15 @@ export function Camera( { initializedPage, section, isCameraAnimating }: any ): 
 
         /* 3. Check if model is in same position as prev section */
         sameModelPosition.current = !initializedPage.models[ forwards ? section : section + 1].newModelLocation;
-        const yOffsetForText = initializedPage.models[ section ].yOffsetForText;
 
-        /* 4. If model is in same position, grab the pos of the prevModel (section - 1) to pipe into .lookAt() 
-         *    Now, it is just [section] because we changed the position of the currModel to match the position 
-         *    of the prevModel if sameModelPosition
-        */
-        if(sameModelPosition.current) {
-          // const p = initializedPage.models[ section > 0 ? section - 1 : section ].initializedPositions
-          const p: number[] = initializedPage.models[ section ].initializedPosition;
-          const yOffsetForText = initializedPage.models[ section ].yOffsetForText;
-          pos.current = new THREE.Vector3(p[0], (p[1] - yOffsetForText), p[2]);
-        };
-
-        /* 5. Ensure all camera animations are stopped before playing the next one */
+        /* 4. Ensure all camera animations are stopped before playing the next one */
         mixer.stopAllAction();
 
-        /* 6. Handle animation playback */
+        /* 5. Handle animation playback */
         if ( forwards && section <= maxSection ) {
           dispatch( setCameraAnimating(true) );
           animations[section].reset();
-          animations[section].setEffectiveTimeScale( sameModelPosition.current ? 0.3 : 0.2 );
+          animations[section].setEffectiveTimeScale( sameModelPosition.current ? 0.3 : 0.2 ); // allows for a faster TranslateCircle animation
           animations[section].play();
           prevSection.current = section; /* set prevSection to section for next navigation */
         };

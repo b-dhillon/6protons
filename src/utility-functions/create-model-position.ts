@@ -1,5 +1,5 @@
 /*
-Function was tested. Seems to work nicely. However, 
+Function was tested. Works nicely. However, 
 when rotation on camera's x-axis, the yOffsetForText is
 not perfect. Perhaps we need to add offSet to the z-coordinate too if rotating
 camera on x-axis?
@@ -7,6 +7,26 @@ camera on x-axis?
 
 import { Vector3, Matrix4 } from 'three';
 
+// Fn Description:
+/**
+ * Model position is simply in front of the camera. 
+ * The tricky part to handle is the rotation.
+ * 
+ * For the rotation we use unit vectors and a rotation matrix
+ * 
+ * First we define untit vector that points out the front of the camera (modelLocalPosition)
+ *
+ * Then we define a rotation vector, also a unit vector that is our axis of rotation. (rotationVector)
+ * 
+ * Next, ceate a rotation matrix from the rotation vector and rotaion angle
+ * 
+ * Apply the rotaion matrix to modelLocalPosition
+ * 
+ * This gives us the position of our model in local space relative to the camera
+ * 
+ * To get into world space we just perform a vector addition uising the rotation matrix.
+ * 
+ */
 export function createModelPosition(
   cameraPosition: number[],
   rotationAngleCorodinates: number[],

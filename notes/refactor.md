@@ -1,3 +1,21 @@
+
+
+- Clean
+- Understand & Memorize controllers
+
+- Understand & Memorize init()
+  - Break up init? or wait for the complete re-factor?
+
+
+
+
+
+
+
+
+
+
+
 # Variables
 didCameraMove -- sometimes we want multiple sections without moving camera at all. not even in a circle. Just revealing more of the model slowly
 
@@ -5,15 +23,7 @@ didModelMove -- instead of newModelLocation --> also should be able to compute t
 
 
 
-# Fn's Called Too Many Times:
 
-createModelPosition() is called too many times. Only needs to be called once. Called in:
-- init()
-- TranslateCircle for circleCenter
-
-findRotationAxis() is called too many times. Only needs to be called once and the values stored. Called in:
-- initialize() to feed axisData to createModelPositions
-- uninitializedData.createAnimationClips() to pass axisData to createModelPositions inside the AnimationClip constructors.
 
 
 
@@ -24,7 +34,7 @@ findRotationAxis() is called too many times. Only needs to be called once and th
 
 # Work out implementation details without hard-coding
   
-. Goal: 
+- Goal: 
 create a new lesson with keyword new Lesson
 Lesson will extend Page. 
  Lesson will have section(s) that you move through as a stack

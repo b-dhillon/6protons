@@ -4,7 +4,12 @@
 // iPoistion, fPosition, iRotation, fRotation
 type AnimationDataOfSection = number[][]
 
-export function findRotationAxis( AnimationData: AnimationDataOfSection ): string {
+interface RotationInfo {
+  axis: string, 
+  rotationsEqual: boolean
+}
+
+export function getRotationInfo( AnimationData: AnimationDataOfSection ): RotationInfo {
   let axis = '';
 
   // First check if arrays are equal
@@ -22,12 +27,7 @@ export function findRotationAxis( AnimationData: AnimationDataOfSection ): strin
     else if (axisAsIndex === 1) axis = 'y';
     else if (axisAsIndex === 2) axis = 'z';
     else axis = 'x'; 
-    
-
-    // default if all the rotations are zero, we will rotate zero on x-axis
-    // ^ We should change the default so that if all rotations are equal,
-    // no rotation track is created at all.
-    // But the problem with that, is a rotation axis is needed for us to compute the model position
+  
 
   } else {
     const deltas = subtractEachIndexOf2Arrays(
@@ -40,8 +40,10 @@ export function findRotationAxis( AnimationData: AnimationDataOfSection ): strin
     else throw new Error('somehow arrays not equal, but no delta');
   }
 
-  return axis;
+  return { axis: axis, rotationsEqual: rotationsEqual  };
 }
+
+
 
 function arraysEqual(a: any[], b: any[]) {
   if (a === b) return true; // checks if both are the same instance

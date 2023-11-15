@@ -3,102 +3,26 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
 import { LoopPingPong } from 'three'; // you already imported all of THREE on line 1
 
-/** Reversing Navigation
- * 
- * Problems: 
- *  .startAt(8) is fucking up the backwards nav for some reason
- *    - When we navigate forwards to section2 it works. 
- *    - Then navigating backwards to section1 and then forwards to section2 leads to model2 being at time0 (full scale)
- *        - I think navigating backwards is doing something to that AnimationAction:
- *              It is messing up the following properties: 
- *                paused: 
- *                _effectiveTimeScale
- *                _startTime
- * 
- * 
- *    After logging the currModelAnimationAction to the console I discovered: 
- *    When NOT calling .stop()
- *      On the first run:   
- *          timeScale: -1
-
- *          time: 0
- *          paused: false
- *          _effectiveTimeScale = -1
- *          _startTime: 8
- * 
- *      
- *      On the second run: 
- *          timeScale: -1
- * 
- *          time: 1
- *          paused: true
- *          _effectiveTimeScale = 0
- *          _startTime: null
- * 
- * 
- *      When calling .stop()
- *        On the first run:   
- *          timeScale: -1
- *          time: 0
- * 
- *          paused: false
- *          _effectiveTimeScale = -1
- *          _startTime: 8
- *      
- *        On the second run: 
- *          timeScale: -1
- *          time: 0
- * 
- *          paused: true
- *          _effectiveTimeScale = 0
- *          _startTime: null
- * 
- * 
- * 
- * TO MUCH COMPLEXITY STICKING TO THIS ROUTE. JUST GO MAKE TWO SEPERATE ANIMATIONS FOR SCALE IN AND SCALE OUT
- * IT WILL MAKE THE WHOLE THING MORE READABLE TOO 
- * 
- *    - Test this with the mainAnimation. That one has a delay too, see if it works?
- * 
- * WORKED WITH setTimeout HACK!!!! But need to test on the entire lesson!
- * 
- * Only DownSide: 
- *  Perhaps less performant with more mixers?
- *          
- * 
- * 
- * 
- * 
- * I think I just need to re-factor the mixers now and get them updating properly.
- *    You only need one mixer for each model. The mixer can control animations for: mainAnimation and scaleAnimation but nested
- *    will need another mixer because it is a different Object3D
- * 
- *    We will likely need to copy a lot of code from Camera.tsx's animationController
- *  
- *
- * 
-*/
-
 
 
 /** Fn Description 
  * 
- * This Fn is responsible for:
- *  1. Creating React Three objects out of binary .glb model data 
- *  2. Handling the model's animations - creating/playing/updating the animationActions and animationAction._mixers
+ *  Responsibilities:
+ *   1. Creat React Three objects out of binary .glb model data.
+ *   2. Handling the model's animations - creating/playing/updating the animationActions and animationAction._mixers
  * 
- * All models are created and mounted to the scene as an array.
- * They live in state.scene.children as a list of objects. Alongside the lights and stars.
+ *  All models are created and mounted to the scene as an array.
+ *  They live in state.scene.children as a list of objects. Alongside the lights and stars.
  * 
  * 
- * Loops initializedPage.models[] --> calls CreateReactModel() for each model in lesson.
- * Returns array of {}'s with $$typeof: Symbol(react.element), one {} for each {} in initializedPage.models[]
- * These {}'s have a FiberNode{} inside them that holds the data for the model ( the group of meshes )
- * This array of {}'s are mounted to the scene graph when Models() is called by Scene()
+ *  Loops initializedPage.models[] --> calls CreateReactModel() for each model in lesson.
+ *  Returns array of {}'s with $$typeof: Symbol(react.element), one {} for each {} in initializedPage.models[]
+ *  These {}'s have a FiberNode{} inside them that holds the data for the model ( the group of meshes )
+ *  This array of {}'s are mounted to the scene graph when Models() is called by Scene()
  * 
- * This fn needs to be re-factored a bit. Currently there is as model created and mounted even if the section doesnt need a model. 
- * i.e. section 1, it is just the "vaporized graphite rods text" and yet 
- * there is still a model created and mounted. Wasteful. Bad code.
+ *  This fn needs to be re-factored. Currently there is as model created and mounted even if the section doesnt need a model. 
+ *  i.e. section1, it is just the "vaporized graphite rods text" and yet 
+ *  there is still a model created and mounted. Wasteful. Bad code.
  * 
 */
 interface ModelAnimations {
@@ -115,25 +39,37 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
 
   let currModelAnimations = useRef<ModelAnimations>(animationActions[0]);
   let prevModelAnimations = useRef<ModelAnimations>();
-  let cameraDidntMove = useRef<boolean>(false);
+  let nextModelInSamePosition = useRef<boolean>(false);
   
 
   /** controllers --> handles AnimationActions based on state + handles model visibility
    * 
    * controller1:
-   *   1. section mutates, controller1 is popped onto the call-stack:
+   *   1. section mutates, controller1() is popped onto the call-stack:
    *   2. Check if mutation forwards or backwards:
-   *   3. Check if cameraDidntMove.current
-   *   4. Handle visibility of models:
-   *   5. Handle animation assignment
+   *   3. Check if nextModelInSamePosition
+   *   4. Handle visibility of prevModel based on if nextModelInSamePosition
+   *        If it is, we set the visibility to false 
+   *        If not, we keep visibility true so exit animation can be seen. 
+   *   5. Handle animationAction assignment of prevModel's Animations based on if forwards or backwards 
+   *        If forwards, previous is down the stack --> section -1
+   *        If backwards, previous is up the stack --> section + 1
    *   6. Handle exitAnimation of prevModel:
    *   7. Pause/Stop animation of previousModel:
    * 
+   *  Summary: 
+   *    Control visibility and play exit animation of prevModel
+   *    Also, responsible for re-setting model0's animations in a hacky way.
+   * 
+   *   
+   * 
    * controller2:
-   *   1. isCameraAnimating mutates, controller2 is popped onto the call-stack:
+   *   1. isCameraAnimating mutates, controller2() is popped onto the call-stack:
    *   2. Trigger entranceAnimation, mainAnimation, and nestedAnimation of currModel 
    *   3. set prevSection to currSection to get ready for next navigation
    * 
+   * 
+   *  We can re-name these controllers to beforeCameraMoves controller and afterCameraMoves controller!!
   */  
   useEffect(() => {
 
@@ -145,20 +81,21 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
 
       if ( animationActions.length && section >= 0 ) {
 
-        // console.log('top of controller prevSection:', prevSection.current, 'currSection:', section);
-
         /* 2. Check if mutation was forwards or backwards: */
         const forwards: boolean = ( prevSection.current - section ) < 0; // if delta -, move up stack:  
         const backwards: boolean = ( prevSection.current - section ) > 0; // if delta +, move down stack:
         
-        /* 3 Check if cameraDidntMove.current */
-        cameraDidntMove.current = !initializedPage.models[ forwards ? section : section + 1].newModelLocation;
+        /* 3 Check if nextModelInSamePosition */
+        nextModelInSamePosition.current = !initializedPage.models[ forwards ? section : section + 1].newModelLocation;
 
 
-        /* 4. Handle visibility of models: */
+        /* 4. Handle visibility of prevModel: */
         set((state) => {
-          // 4.1) If camera did move, then we keep the prevModel visibility true so that the exit animation can play
-          if( !cameraDidntMove.current ) {
+          // If next model is in a different position, we handle the visibility 
+          // before the camera starts animating
+          // we keep the prevModel visibility true so that the exit animation can play
+          // It is never set back to false though?
+          if( !nextModelInSamePosition.current ) {
             const currModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section}`);
             state.scene.children[currModelIndex].visible = true;
           }
@@ -167,25 +104,27 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
       
         /* 5. HANDLE ANIMATION ASSIGNMENT */
 
-        /* 5.1 Mutate top-level currModelAnimations, and prevModelAnimations based on if forwards or backwards */
+        /* 5.1 Mutate prevModelAnimations based on if forwards or backwards.  currModelAnimations is always the same.
+           This is unecessary we can just use ternaries -- prev --> forwards ? section - 1 : section + 1
+            But this will add a conditional check every time. Better to just check once and assign?
+        
+        */
         currModelAnimations.current = animationActions[ section ];
         if (forwards) {
           prevModelAnimations.current = animationActions[ section - 1 ];
-          // console.log("Forwards!");
         };
         if (backwards) prevModelAnimations.current = animationActions[ section + 1 ];
 
 
         /* 6. HANDLE ANIMATION PLAYBACK: */
 
-        /* 6.1--A) If camera didn't move location: */
-        if( cameraDidntMove.current ) {
+        /* 6.1--A) If next model in same position: */
+        if( nextModelInSamePosition.current ) {
           // pause prev model main animation to ready for TranslateCircle
           prevModelAnimations.current!.mainAnimation.paused = true;
         }  
-        /* 6.1--B) If camera did move: */
+        /* 6.1--B) */
         else {
-
           /** Trigger prevModel exit animation as camera moves */
           prevModelAnimations.current?.scaleAnimation.reset();
           prevModelAnimations.current?.scaleAnimation.setEffectiveTimeScale( 1.66 );
@@ -210,9 +149,10 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
         /* 7. Pause/Stop mainAnimation of previousModel: 
          *      This is hacky and should be re-thought
          *      Instead of setting a hard-coded timeout, 
-         *      perhaps make it half the duration of the animation
+         *      perhaps make it half the duration of the camera 
+         *      animation
         */
-        if ( section > 0 && !cameraDidntMove.current ) {
+        if ( section > 0 && !nextModelInSamePosition.current ) {
           setTimeout( () => {
             prevModelAnimations.current?.mainAnimation.stop();
           }, 2500 )
@@ -222,26 +162,45 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
   }, [ animationActions, section ]);
 
 
-  /** controller2 --> handles mainAnimation and entranceAnimation after camera completes animating */ 
+  /** controller2 --> handles mainAnimation and entranceAnimation after camera completes animating 
+   * 
+   * Play mainAnimation, scaleUp animation, and nest animation for curr model after camera finishes animating.
+   * 
+   * if nextModelInSamePosition
+   * 
+   *   Check if mutation was forwards or backwards --> REDUNDANT --> Check was already performed by controller1
+   * 
+   *   Pass animation time from prevModel's animation to currModel's animation
+   * 
+   *   Handle visibility of prevModel and currModel
+   *    First, assign prevModel animations based on if forwards or backwards 
+   * 
+   * 
+   * Set prevSection to section after all controlling is finished.
+   * 
+   * */ 
   useEffect( () => {
 
     if( !isCameraAnimating && section ) {
 
-      /** Trigger currModel entrance animation when camera stops animating and if camera did move */
-      if( !cameraDidntMove.current ) animationActions[ section ].scaleAnimation.stop().setEffectiveTimeScale(-1).play();
+      /** Play currModel entrance (scaleUp) animation when camera stops animating and if model in a different position */
+      if( !nextModelInSamePosition.current ) animationActions[ section ].scaleAnimation.stop().setEffectiveTimeScale(-1).play();
 
-      /** Trigger currModel mainAnimation when camera stops animating */
+      /** Play currModel mainAnimation when camera stops animating */
       currModelAnimations.current.mainAnimation.play();
 
-      /** Trigger nested animation, if exists: */ 
+      /** Play nested animation, if exists: */ 
       if (currModelAnimations.current.nestedAnimation) {
         currModelAnimations.current.nestedAnimation.setLoop(LoopPingPong, Infinity);
         currModelAnimations.current.nestedAnimation.play();
       };
 
-
-      /** Setting visibility of prevModel to false, currModel to true, and passing .mainAnimation time,  */
-      if( cameraDidntMove.current ) {
+      /** If model in same position, we handle the visibility after the camera completes animating
+       * 
+       * Set visibility of prevModel to false, currModel to true, and pass .mainAnimation time,
+       * from prevModel
+      */
+      if( nextModelInSamePosition.current ) {
         const forwards: boolean = ( prevSection.current - section ) < 0; // if delta -, move up stack:  
         const backwards: boolean = ( prevSection.current - section ) > 0; // if delta +, move down stack:
 
@@ -255,8 +214,7 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
         currModelAnimations.current.mainAnimation.paused = false;
         currModelAnimations.current.mainAnimation.play();
 
-        // Visibility controller for when camera doesn't move:
-        // And also likely need to handle mainAnimation of prevModel pausing here!
+        // Handle visibility of prevModel and currModel
         set((state) => {
 
           // 4.3) set prevModel visibility to false to make room for new model.
