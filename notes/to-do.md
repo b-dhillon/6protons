@@ -1,5 +1,5 @@
 # To-do:
-
+  Generate unitialized-data programatically with classes and constructors
 
 ## Next:
   # Clean, refactor, understand everything.

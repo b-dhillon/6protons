@@ -1,9 +1,6 @@
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
-import { LoopPingPong } from 'three'; // you already imported all of THREE on line 1
-
-
 
 /** Fn Description 
  * 
@@ -40,6 +37,7 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
   let currModelAnimations = useRef<ModelAnimations>(animationActions[0]);
   let prevModelAnimations = useRef<ModelAnimations>();
   let nextModelInSamePosition = useRef<boolean>(false);
+
   
 
   /** controllers --> handles AnimationActions based on state + handles model visibility
@@ -73,6 +71,8 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
   */  
   useEffect(() => {
 
+    let timer: NodeJS.Timeout;
+
     // if(doneControlling) setDoneControlling( false );
     controller1(animationActions, section);
 
@@ -89,11 +89,11 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
         nextModelInSamePosition.current = !initializedPage.models[ forwards ? section : section + 1].newModelLocation;
 
 
-        /* 4. Handle visibility of prevModel: */
+        /* 4. Handle visibility of currModel: */
         set((state) => {
           // If next model is in a different position, we handle the visibility 
           // before the camera starts animating
-          // we keep the prevModel visibility true so that the exit animation can play
+          // we set the currModel visibility to true.
           // It is never set back to false though?
           if( !nextModelInSamePosition.current ) {
             const currModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section}`);
@@ -110,10 +110,7 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
         
         */
         currModelAnimations.current = animationActions[ section ];
-        if (forwards) {
-          prevModelAnimations.current = animationActions[ section - 1 ];
-        };
-        if (backwards) prevModelAnimations.current = animationActions[ section + 1 ];
+        prevModelAnimations.current = animationActions[ forwards ? section - 1 : section + 1];
 
 
         /* 6. HANDLE ANIMATION PLAYBACK: */
@@ -153,12 +150,15 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
          *      animation
         */
         if ( section > 0 && !nextModelInSamePosition.current ) {
-          setTimeout( () => {
+          timer = setTimeout( () => {
             prevModelAnimations.current?.mainAnimation.stop();
           }, 2500 )
         } /* What about stopping the nestedAnimation and scaleAnimation?? */
       }
     } 
+
+    return () => clearTimeout(timer);
+
   }, [ animationActions, section ]);
 
 
@@ -191,7 +191,7 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
 
       /** Play nested animation, if exists: */ 
       if (currModelAnimations.current.nestedAnimation) {
-        currModelAnimations.current.nestedAnimation.setLoop(LoopPingPong, Infinity);
+        currModelAnimations.current.nestedAnimation.setLoop(THREE.LoopPingPong, Infinity);
         currModelAnimations.current.nestedAnimation.play();
       };
 
@@ -309,57 +309,6 @@ export function Models( { initializedPage, section, isCameraAnimating } : any): 
 
 
 
-// const modelPositions: number[][] = initializedPage.models.map( (model: any) => model.initializedPositions) 
-// // console.log('model positions', modelPositions);
-// const passingTest = 
-//   modelPositions[2][0] === modelPositions[3][0] &&
-//   modelPositions[2][1] === modelPositions[3][1] &&
-//   modelPositions[2][2] === modelPositions[3][2]
-// ;
-// console.log( 'model positions passing?', passingTest);
-
-
-
-// useEffect( () => {
-//   /* 7. set prevSection to currSection to get ready for next navigation */
-//   if(doneControlling && !isCameraAnimating) {
-//     console.log('setting prevSection');
-//     prevSection.current = section;
-//     setDoneControlling( false );
-//   }
-// }, [ doneControlling, isCameraAnimating ] ) 
-
-
-
-
-
-/** Hacky startAt trigger of mainAnimation */
-// else currModelAnimations.current.mainAnimation.startAt(9).play(); //every other model needs a delay to wait for camera transition to finish
-
-
-
-/** Visibility Controller for making prevModel invisible if zoomIn */
-// ZoomIn conditional. If camera transition is a zoom-in, then the shrink animation 
-// looks too janky, so instead we just set the visibility to zero.
-// REFACTOR THIS TOO MANY UN-NECESSARY CHECKS:
-// else if (backwards) {
-//   const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section + 1}`);
-//   if (initializedPage.models[section + 1].zoomInOnReverse)
-//     state.scene.children[prevModelIndex].visible = false
-// }
-
-
-
-/** Hacky useEffect trigger of entranceAnimation */
-// II. Play current model's entrance animation:
-// DO WE NEED TO CLEAN UP THIS TIME OUT? --> Pretty sure we do?
-// if (section !== 0) {
-//   setTimeout( () => {
-//     animationActions[ section ].scaleAnimation.stop().setEffectiveTimeScale(-1).play(); // currModelAnimations.current.scaleAnimation.startAt(8).setEffectiveTimeScale(-1).play();
-//   }, 8000 )
-// }
-// }
-
 
 
 
@@ -460,10 +409,7 @@ function CreateFiberModel(props: any): JSX.Element {
       else animationAction.setLoop(THREE.LoopRepeat, Infinity); //THREE.LoopPingPong
       return animationAction;
     }
-  }, []
-  );
-
-  // console.log( 'model position' , props.model.initializedPositions);
+  }, [] );
 
   return (
     <group
@@ -483,81 +429,6 @@ function CreateFiberModel(props: any): JSX.Element {
 
 
 
-  // position={ model.newModelLocation ? model : initializedModels[i - 1] } 
-
-
-
-  // animationActions[ forwards ? section - 1 : section + 1 ].scaleAnimation.reset().setEffectiveTimeScale( 0.9 ).play();
-
-
-  // currModelAnimations.current.scaleAnimation.stop()
-  // animationActions[ section ].scaleAnimation.stop();
-  // console.log(animationActions[ section ].scaleAnimation.paused);
-  // @ts-ignore
-  // animationActions[ section ].scaleAnimation._mixer.stopAllAction()
-  // animationActions[ section ].scaleAnimation.paused = false;
-
-
-
-
-  // @ts-ignore
-  // animationActions[ forwards ? section - 1 : section + 1 ].scaleAnimation._mixer.addEventListener( 'finished', ( e: any) => {
-  //   console.log("Shrinking exitAnimation completed");
-  //   animationActions[ forwards ? section - 1 : section + 1 ].scaleAnimation.stop()
-      // })
-
-
-
-
-  // animationActions.forEach( ( animations: ModelAnimations ) => {
-  //   animations.mainAnimation.reset();
-  //   //@ts-ignore
-  //   animations.scaleAnimation.reset();
-  //   animations?.nestedAnimation?.reset();
-  // } );
-
-
-
-
-
-
-
-
-
-
-
-  /* VisibilityController --> Mutates the visibility of models. 
-   * Sets current model's visibility to true.
-   * Sets the previousModel visibility to false if no newModelLocation
-  */
-  // useEffect(() => {
-
-  //   set((state) => {
-
-  //     const currModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section}`);
-  //     state.scene.children[currModelIndex].visible = true;
-
-  //     // If section is greater than 0 and there is NOT a newModelLocation, then mutate the previous model's visibility to false.
-  //     // If there is a newModelLocation, then we keep the visibility true so that the exit animation can play
-  //     if(section > 0 && !initializedPage.models[section].newModelLocation) {
-  //       const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section - 1}`);
-  //       state.scene.children[prevModelIndex].visible = false;
-  //     };
-  //   });
-
-  // }, [section])
-
-
-
-
-
-
-
-              // }
-              // if(backwards){
-              //   prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section + 1}`);
-              //   state.scene.children[prevModelIndex].visible = false;
-              // }
 
 
 
@@ -570,62 +441,6 @@ function CreateFiberModel(props: any): JSX.Element {
 
 
 
-
-
-// STOPPING ANIMATIONS:
-// animationActions[section].forEach( ( animation: AnimationAction ) => {
-//  animation.stop();
-// });
-
-
-
-// useEffect( () => {
-//   props.setAnimationActions((animationAction: any) => [
-//     ...animationAction,
-//     [
-//       createAnimationAction(ref.current, animationClips[0], {
-//         clamped: false,
-//         loop: true,
-//         repetitions: 5,
-//       }),
-//       createAnimationAction(ref.current, animationClips[1], {
-//         clamped: true,
-//         loop: false,
-//         repetitions: 1,
-//       }),
-//       createAnimationAction(nestedRef.current, animationClips[2], {
-//         clamped: true,
-//         loop: true,
-//         repetitions: 1,
-//       }),
-//     ],
-//   ])
-
-// Section++ event
-
-  // Pause/Stop main animation:
-  //    animationActions[section-1].mainAnimation.stop();
-
-  // if( !initializedPage.models[section].newModelLocation ):
-  //   1. Grab old model's animation time
-  //      const oldT = animationActions[section-1].mainAnimation.time;
-  //    
-  //   2. Set new model's animation to this time. 
-  //        animationActions[section].mainAnimation.time = oldT
-  //
-  //   3. Play new model's animation
-  //      animationActions[section].mainAnimation.play();
-
-
-  // else:
-  //  1. Trigger old model's exit animation:
-  //      animationActions[section - 1].exitAnimation.play();
-
-  //  2. Play new model's entrance animation:
-  //      animationActions[section].entranceAnimation.play();
-
-  //  3. Play new model's main animation:
-  //      animationActions[section].mainAnimation.play();
 
 
 
@@ -637,101 +452,29 @@ function CreateFiberModel(props: any): JSX.Element {
 // GRAVEYARD: ☠️☠️☠️☠️☠️
 
 
+//Visibility Controller for making prevModel invisible if zoomIn 
+/** 
+ZoomIn conditional. If camera transition is a zoom-in, then the shrink animation 
+looks too janky, so instead we just set the visibility to zero.
+REFACTOR THIS TOO MANY UN-NECESSARY CHECKS:
 
-// // SCALE UP ANIMATION:
-// currentModelAnimations[1].startAt(8).setEffectiveTimeScale(-1).play();
+else if (backwards) {
+  const prevModelIndex = state.scene.children.findIndex( (obj3D) => obj3D.name === `model${section + 1}`);
+  if (initializedPage.models[section + 1].zoomInOnReverse)
+    state.scene.children[prevModelIndex].visible = false
+}
 
-// // MAIN ANIMATION:
-// if (section === 0) currentModelAnimations[0].play()
-// else currentModelAnimations[0].startAt(9).play(); //delay to wait for camera transition to finish
-
-// // SCALE DOWN ANIMATION: -- i think these scale ups and down are the same every model so do we really need to make it based on the section?
-// // Also, we need a way to not play the exit animation conditionally.
-// if (section > 0) {
-//   animationActions[ (section - 1) ][ 1 ].reset().setEffectiveTimeScale( 0.9 ).play(); //1.2 was original
-//   //                    ^section-1 because section will increase and we want to access the previous sections model's exit animation, not the current model.
-// }
-// // NESTED ANIMATION:
-// if (currentModelAnimations[2]) {
-//   currentModelAnimations[2].setLoop(LoopPingPong, Infinity);
-//   currentModelAnimations[2].play();
-// }
+*/
 
 
+// STOPPING ANIMATIONS:
+/*
+animationActions[section].forEach( ( animation: AnimationAction ) => {
+ animation.stop();
+});
+*/
 
-
-
-
-
-
-
-
-
-// const ReactModels = props.page.models.map((_model: any, i: number) => {
-//   if (_model.path) {
-//     return (
-//       <CreateFiberModel
-//         _model={_model}
-//         key={_model.id}
-//         setAnimationActions={setAnimationActions}
-//         section={props.section}
-//       />
-//     );
-//   }
-//   else {
-//     return <></>;
-//   };
-// }); // [ $$typeof: Symbol(react.element), $$typeof:Symbol(react.element) ]
-
-
-
-
-
-        /* animationActions[ section ][ 1 ].startAt( 4 ).setEffectiveTimeScale( -1 ).play(); */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// New Animation Set Up: Sets the animations property on <group> to an array of AnimationActions instead of storing the AnimationActions in the state of Models()
+// Alternate Animation Set Up: Sets the animations property on <group> to an array of AnimationActions instead of storing the AnimationActions in the state of Models()
 /*
 useEffect( () => {
     //@ts-ignore
@@ -761,12 +504,4 @@ return (
         { mesh } 
     </group>
 );
-*/
-
-// Old CreateModel props
-/*
-modelNumber={ model.modelNumber }
-modelData={ model }
-position={ model._positions }
-name={ model.name }
 */

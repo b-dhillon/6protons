@@ -1,10 +1,12 @@
 
+Write classes for:
+  Page 
+  Lesson
+  Camera
+  Model
 
-- Clean
-- Understand & Memorize controllers
-
-- Understand & Memorize init()
-  - Break up init? or wait for the complete re-factor?
+  Animations? So we can define a camera animation like: 
+    new TranslateRotate( iP, fP, iR, fR )
 
 
 
@@ -19,7 +21,7 @@
 # Variables
 didCameraMove -- sometimes we want multiple sections without moving camera at all. not even in a circle. Just revealing more of the model slowly
 
-didModelMove -- instead of newModelLocation --> also should be able to compute this after computing modelPositions
+didModelMove -- instead of newModelLocation --> also should be able to compute newModelLocation after computing modelPositions
 
 
 
