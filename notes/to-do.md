@@ -1,5 +1,50 @@
-# To-do:
-  Generate unitialized-data programatically with classes and constructors
+
+# OOP REFACTOR:
+## To-do:
+
+- Commit
+- Compile list of all methods that need to be written. We have two below, but I think there are more:
+
+
+
+# METHODS NEEDING TO BE WRITTEN:
+- Write a method that can turn animation strings into AnimationClips
+  - Brainstorm method for strings --> AnimationClips
+
+- Create an init method for Model
+  - Need to programatically set: 
+    id: 
+    position: 
+    rotation:
+    inNewPosition:
+    yOffsetForText:
+    zoomInOnReverse:
+
+
+- Write tests
+- Look into Builder Pattern, Factory Pattern, and Strategy Pattern
+
+- Re-factor the animation controllers for Models and Camera
+- Get mixers of models down from 4 to 2 --> should increase performance if they are all different mixers
+- Compile all types and interfaces.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
 
 ## Next:
   # Clean, refactor, understand everything.

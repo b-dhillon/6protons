@@ -102,7 +102,7 @@ export interface InititalizedModel extends UninitializedModel {
 
 export interface Universe {
     id: string,
-    star_count: number, 
+    starCount: number, 
     radius: number
 }
 

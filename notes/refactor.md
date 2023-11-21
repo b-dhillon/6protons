@@ -1,96 +1,138 @@
-
-Write classes for:
-  Page 
-  Lesson
-  Camera
-  Model
-
-  Animations? So we can define a camera animation like: 
-    new TranslateRotate( iP, fP, iR, fR )
-
-
-
-
-
-
-
-
-
-
-
-# Variables
-didCameraMove -- sometimes we want multiple sections without moving camera at all. not even in a circle. Just revealing more of the model slowly
-
-didModelMove -- instead of newModelLocation --> also should be able to compute newModelLocation after computing modelPositions
-
-
-
-
-
-
-
-
-
-
-
-
-# Work out implementation details without hard-coding
-  
-- Goal: 
-create a new lesson with keyword new Lesson
+# Goal: 
+Create a new lesson with keyword new Lesson
 Lesson will extend Page. 
- Lesson will have section(s) that you move through as a stack
- Lesson will have multiple models and multiple camera animations
+- Lesson will have section(s) that you move through as a stack
+- Lesson will have multiple models and multiple camera animations
 
 I want to think up a lesson in my head. Break it up into sections in my head.
 Have an LLM generate the text for each section. 
 Create the models myself. 
 Then just put the assets into a folder with a specific directory structure:
-  . model.glb's
-  . text
-  . camera animation names, or camera path
-  . model animation names
-  . etc...
+- model.glb's
+- text
+- camera animation names, or camera path
+- model animation names
+- etc...
+
+# Lesson Construction - Step by Step 
+- instantiate new Lesson
+- instantiate all Sections
+- instantiate new Camera
+- create all camPosRots
+- instantiate all Models
+- create all model positions
+- create Camera AnimationClips
+- create Model AnimationClips
+- extract all GLTF Meshes
 
 
 
-. How are the camera positions set? Hard-coded? 
-. How do we know when to create a TranslateCircle vs. a TranslateRotate animation clip?
-. Which fn's are methods? Which are utilities?
-. Can we create a class for Page and a constructor, therefore we only have to 
-      
-      pages = Page[]
-      pages.push( new Page( ...DataFromServer ) )
+# Brainstorm -- camera.createPosRots():
+pullOut( pMag, rMag )
+- We likely just need to reverse the vector that looks out the camera frustrum
+- In other words, a vector 180 degrees away. Then scale the vector by the magnitude.
+
+# Brainstorm -- Back-End:      
+pages = Page[]
+pages.push( new Page( ...DataFromServer ) )
+
+
+
+
+# Implementation Questions: 
+
+Q: How are the camera positions set? Hard-coded? 
+  # A: by camera.createPosRots() method that uses the animation strings defined in Lesson.sections[ section ].camAnimation
+
+Q: How do we know when to create a TranslateCircle vs. a TranslateRotate animation clip?
+  # A: Based on the animation strings defined in Lesson.createSection() in the config property camAnimation: 
+
+Q: Which fn's are methods? Which are utilities?
+
+
+
+
+# Dependant Varaibles of a Lesson:
+
+- model.inNewPosition:
+  Initalizing Logic:
+    if ( camera.animations[section] === 'circle-model' ) models[section][0].inNewPosition = false;
+
+
+- model.yOffsetForText:
+  Initalizing Logic:
+    sectionParagraphs = lesson.paragraphs[section]
+    sectionHasText = sectionParagraphs.length // boolean, no paragraphs should be an empty array NOT an empty string in the first index. 
+    if (sectionHasText) model.yOffsetForText = 0.15
+    else model.yOffsetForText = 0;
+
+
+- model.zoomInOnReverse -- depends on if previous cameraAnimationName was 'zoomOut' or 'pullOut'
+  Initalizing Logic:
+    const prevCamAnimation = lesson.camera.animations[ section - 1 ];
+    prevCamAnimation === 'zoom-out' ? true : false;
 
 
 
 
 
-# Re-factor the animation controllers for Models and Camera
-
-
-
-# Get mixers of models down from 4 to 2 --> should increase performance if they are all different mixers
 
 
 
 
-# Compute model positions based on camera rotations only once
-  . Model positions are computed inside initialize() in App() 
 
-    However, we need them inside TranslateCircle(), which is called
-    in initialize too, but called indirectly. initialize() calls data.createAnimationDS()
-    and then passes the animationDS into data.createAnimationClips(), which then calls 
-    animationClipConstructor() which then calls TranslateCircle()
-    
-    My current approach re-computes the model position inside TranslateCircle.
-    This is a wasted computation, but might not be a big deal because it's cheap
-.
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 ## Functions to rewrite
 
+// DONE:  ?
 # createModelPosition() rotation logic
  . Use what you learned from TranslateCircle
     . If y-axis: 
@@ -100,7 +142,3 @@ Then just put the assets into a folder with a specific directory structure:
     . If z-axis
       use sin/cos in x/y plane?? Or is nothing needed here since spinning a camera in the z-axis would turn it upside down?
 .
-
-# findRotationAxis()
-
-
