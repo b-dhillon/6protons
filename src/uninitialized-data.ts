@@ -36,8 +36,8 @@ export const uninitializedData: UninitializedData = {
       thumbnail: "url('./lessonThumbnails/fullereneTile.png')",
 
       universe: {
-        id: 'fullerene universe',
-        star_count: 25000,
+        id: 'fullereneUniverse',
+        starCount: 25000,
         radius: 5,
       },
 
@@ -165,8 +165,8 @@ export const uninitializedData: UninitializedData = {
             SuspendInSolution(90),
             ScaleXYZ({
               duration: 1,
-              initialScale: [0.18, 0.18, 0.18],
-              finalScale: [0, 0, 0],
+              iScale: [0.18, 0.18, 0.18],
+              fScale: [0, 0, 0],
             }),
           ],
         },
@@ -184,13 +184,13 @@ export const uninitializedData: UninitializedData = {
             Rotate({
               duration: 50,
               axis: 'y',
-              initialAngle: 0,
-              finalAngle: Math.PI * 2, // this is supposed to be radians...?
+              iAngle: 0,
+              fAngle: Math.PI * 2, // this is supposed to be radians...?
             }),
             ScaleXYZ({
               duration: 1,
-              initialScale: [0, 0, 0],
-              finalScale: [0.0, 0.0, 0.0],
+              iScale: [0, 0, 0],
+              fScale: [0.0, 0.0, 0.0],
             }),
           ],
         },
@@ -207,13 +207,13 @@ export const uninitializedData: UninitializedData = {
             Rotate({
               duration: 50,
               axis: 'y',
-              initialAngle: 0,
-              finalAngle: Math.PI * 2, // this is supposed to be radians...?
+              iAngle: 0,
+              fAngle: Math.PI * 2, // this is supposed to be radians...?
             }),
             ScaleXYZ({
               duration: 1,
-              initialScale: [0.18, 0.18, 0.18],
-              finalScale: [0.0, 0.0, 0.0],
+              iScale: [0.18, 0.18, 0.18],
+              fScale: [0.0, 0.0, 0.0],
             }),
           ],
         },
@@ -230,13 +230,13 @@ export const uninitializedData: UninitializedData = {
             Rotate({
               duration: 50,
               axis: 'y',
-              initialAngle: 0,
-              finalAngle: Math.PI * 2, // this is supposed to be radians...?
+              iAngle: 0,
+              fAngle: Math.PI * 2, // this is supposed to be radians...?
             }),
             ScaleXYZ({
               duration: 1,
-              initialScale: [0.18, 0.18, 0.18],
-              finalScale: [0.0, 0.0, 0.0],
+              iScale: [0.18, 0.18, 0.18],
+              fScale: [0.0, 0.0, 0.0],
             })
           ]
         },
@@ -253,19 +253,19 @@ export const uninitializedData: UninitializedData = {
             Rotate({
               duration: 50,
               axis: 'y',
-              initialAngle: 0,
-              finalAngle: Math.PI * 2
+              iAngle: 0,
+              fAngle: Math.PI * 2
             }),
             ScaleXYZ({
               duration: 1,
-              initialScale: [0.18, 0.18, 0.18],
-              finalScale: [0.0, 0.0, 0.0],
+              iScale: [0.18, 0.18, 0.18],
+              fScale: [0.0, 0.0, 0.0],
             }),
             Rotate({
               duration: 1500,
               axis: 'x',
-              initialAngle: 0,
-              finalAngle: 360,
+              iAngle: 0,
+              fAngle: 360,
             }),
           ],
         },
@@ -282,20 +282,20 @@ export const uninitializedData: UninitializedData = {
             Rotate({
               duration: 4000,
               axis: 'y',
-              initialAngle: 0,
-              finalAngle: 180,
+              iAngle: 0,
+              fAngle: 180,
             }),
             //hiv protease
             ScaleXYZ({
               duration: 1,
-              initialScale: [0.055, 0.055, 0.055],
-              finalScale: [0.0, 0.0, 0.0],
+              iScale: [0.055, 0.055, 0.055],
+              fScale: [0.0, 0.0, 0.0],
             }),
             //buckyball
             ScaleXYZ({
               duration: 1.6, //higher number is slower
-              initialScale: [0.045, 0.045, 0.045],
-              finalScale: [0.070, 0.070, 0.070],
+              iScale: [0.045, 0.045, 0.045],
+              fScale: [0.070, 0.070, 0.070],
             }),
           ],
         },
@@ -580,7 +580,7 @@ positions: [
                 ],
                 animationClips: [ 
                     SuspendInSolution( 90 ), 
-                    ScaleXYZ( { duration: 1, initialScale: [ 0.18, 0.18, 0.18 ], finalScale: [ 0, 0, 0 ] } )
+                    ScaleXYZ( { duration: 1, initialScale: [ 0.18, 0.18, 0.18 ], fScale: [ 0, 0, 0 ] } )
                 ],
             },
             {
@@ -598,8 +598,8 @@ positions: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animationClips: [
-                    Rotate( { duration: 5000, axis: 'y', initialAngle: 0, finalAngle: 360 } ),
-                    ScaleXYZ( { duration: 1, initialScale: [ 0.18, 0.18, 0.18 ], finalScale: [ 0, 0, 0 ] } )
+                    Rotate( { duration: 5000, axis: 'y', initialAngle: 0, fAngle: 360 } ),
+                    ScaleXYZ( { duration: 1, initialScale: [ 0.18, 0.18, 0.18 ], fScale: [ 0, 0, 0 ] } )
                 ]
             },
             {
@@ -617,8 +617,8 @@ positions: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animationClips: [
-                    Rotate( { duration: 5000, axis: 'y', initialAngle: 0, finalAngle: 360 } ),
-                    ScaleXYZ( { duration: 1, initialScale: [ 0.18, 0.18, 0.18 ], finalScale: [ 0, 0, 0 ] } )
+                    Rotate( { duration: 5000, axis: 'y', initialAngle: 0, fAngle: 360 } ),
+                    ScaleXYZ( { duration: 1, initialScale: [ 0.18, 0.18, 0.18 ], fScale: [ 0, 0, 0 ] } )
                 ]
             },
             {
@@ -636,9 +636,9 @@ positions: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animationClips: [
-                    Rotate( { duration: 5000, axis: 'y', initialAngle: 0, finalAngle: 360 } ),
-                    ScaleXYZ( { duration: 1, initialScale: [ 0.18, 0.18, 0.18 ], finalScale: [ 0, 0, 0 ] } ),
-                    Rotate( { duration: 1500, axis: 'x', initialAngle: 0, finalAngle: 360 } ),
+                    Rotate( { duration: 5000, axis: 'y', initialAngle: 0, fAngle: 360 } ),
+                    ScaleXYZ( { duration: 1, initialScale: [ 0.18, 0.18, 0.18 ], fScale: [ 0, 0, 0 ] } ),
+                    Rotate( { duration: 1500, axis: 'x', initialAngle: 0, fAngle: 360 } ),
                 ]
             },
             {
@@ -656,9 +656,9 @@ positions: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animationClips: [
-                    Rotate( { duration: 5000, axis: 'y', initialAngle: 0, finalAngle: 360 } ),
-                    ScaleXYZ( { duration: 1, initialScale: [ 0.10, 0.10, 0.10 ], finalScale: [ 0, 0, 0 ] } ),
-                    ScaleXYZ( { duration: 3, initialScale: [ 0.01, 0.01, 0.01 ], finalScale: [ 0.075, 0.075, 0.075 ] } )
+                    Rotate( { duration: 5000, axis: 'y', initialAngle: 0, fAngle: 360 } ),
+                    ScaleXYZ( { duration: 1, initialScale: [ 0.10, 0.10, 0.10 ], fScale: [ 0, 0, 0 ] } ),
+                    ScaleXYZ( { duration: 3, initialScale: [ 0.01, 0.01, 0.01 ], fScale: [ 0.075, 0.075, 0.075 ] } )
                 ]
             }
             
@@ -765,7 +765,7 @@ positions: [
 
 // Old TranslateRotate_x
 /*
-TranslateRotate_x: function ( duration: number, initial_position: number[], final_position: number[], axis: string, initialAngle: number[], finalAngle: number[] ) {
+TranslateRotate_x: function ( duration: number, initial_position: number[], final_position: number[], axis: string, initialAngle: number[], fAngle: number[] ) {
     // console.log( 'positions', this.positions );
 
     const times_Position = [ 0, duration ];
@@ -776,20 +776,20 @@ TranslateRotate_x: function ( duration: number, initial_position: number[], fina
     const times_Rotation = [ 0, duration ];
 
     let values_Rotation: number[];
-    values_Rotation = [ initialAngle[ 0 ], finalAngle[ 0 ] ];
+    values_Rotation = [ initialAngle[ 0 ], fAngle[ 0 ] ];
 
     // Control flow for rotation axis assignment
     
     if( axis === 'x' ) {
         console.log('break before values asignment');
-        values_Rotation = [ initialAngle[ 0 ], finalAngle[ 0 ] ];
+        values_Rotation = [ initialAngle[ 0 ], fAngle[ 0 ] ];
         console.log('break after values asignment, X');
     };
     if( axis === 'y' ) {
-        values_Rotation = [ initialAngle[ 1 ], finalAngle[ 1 ] ];
+        values_Rotation = [ initialAngle[ 1 ], fAngle[ 1 ] ];
         console.log('break after values asignment, Y');
     };
-    if( axis === 'z' ) values_Rotation = [ initialAngle[ 2 ], finalAngle[ 2 ] ];
+    if( axis === 'z' ) values_Rotation = [ initialAngle[ 2 ], fAngle[ 2 ] ];
     
     
     const trackName_Rotation = '.rotation[' + axis + ']';
