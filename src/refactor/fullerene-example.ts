@@ -4,22 +4,33 @@
 
 // Lesson Construction - Step by Step 
 /*
-- instantiate new Lesson
-- instantiate all Sections
-- instantiate new Camera
-- create all camPosRots
-- instantiate all Models
-- create all model positions
-- create Camera AnimationClips
-- create Model AnimationClips
-- extract all GLTF Meshes
-*/
 
+0. List out assets or import them as lists
+1. Instantiate new Lesson
+2. Loop and instantiate all Sections
+3. Instantiate new Camera
+
+// Initializing Camera:
+4. Create all camPosRots
+5. Create Camera AnimationClips
+
+// Initializing Models:
+6. Create all model positions
+7. Create Model AnimationClips
+8. Load + Extract all GLTF Meshes
+9. Set uninitialized properties: 
+    id:
+    yOffsetForText:
+    zoomInOnReverse:
+    inNewPosition:
+
+*/
 
 import { Lesson } from './classes/Lesson';
 import { Section } from './classes/Section';
 import { Model } from './classes/Model';
 import { Camera } from './classes/Camera';
+import { Vector3 } from 'three';
 
 interface SectionConfig {
   id: number;
@@ -27,20 +38,30 @@ interface SectionConfig {
   models?: Model[];
   text?: string[];
   voicePath?: string;
-}
+};
 
 
 // 0. List out everything -- optional, allows for looping of Lesson.createSection();
-const camAnimations = [
+const camAnimationNames = [
   'zoom-in',
   'zoom-out-rotate-up',
   'zoom-in-rotate-down',
   'circle-model',
   'none', // example of the camera not moving between sections
   'corkscrew-up',
-]; 
+];
 
 
+
+
+const lessonModels = [
+  ['path1', 'path2'], // section 0
+  [ 'path3' ], // section 1
+  [ 'path4', 'path5' ],
+  [],
+  [],
+  [],
+];
 
 
 // 1. Instantiate a new lesson
@@ -50,76 +71,42 @@ const buckminsterfullerene = new Lesson({
   thumbnail: "url('./lessonThumbnails/fullereneTile.png')",
 });
 
-// 2. Start building your sections
-buckminsterfullerene.createSection({
-  id: 0,
-  camAnimation: 'zoom-in',
-  models: [
-    new Model({
-      path: '/fullerene/models/m0.glb',
-    }),
-  ],
-});
 
-buckminsterfullerene.createSection({
-  id: 1,
-  camAnimation: 'zoom-out-rotate-up',
-  models: [
-    new Model({
-      path: '/fullerene/models/m1.glb',
-    }),
-  ],
-});
+// 2. Loop and instantiate all Sections:
+for( let i = 0; i < camAnimationNames.length; i++ ) {
 
-buckminsterfullerene.createSection({
-  id: 2,
-  camAnimation: 'zoom-in-rotate-down',
-  models: [
-    new Model({
-      path: '/fullerene/models/m0.glb',
-    }),
-  ],
-});
+  const section = new Section({
+    id: i,
+    camAnimation: camAnimationNames[i],
+    models: [
+      new Model({
+        path: `/fullerene/models/m${i}.glb`,
+      }),
+    ],
+  });
 
-buckminsterfullerene.createSection({
-  id: 3,
-  camAnimation: 'circle-model-clockwise',
-  models: [
-    new Model({
-      path: '/fullerene/models/m2.glb',
-    }),
-  ],
-});
+  buckminsterfullerene.setSections(section);
+};
 
-buckminsterfullerene.createSection({
-  id: 4,
-  camAnimation: 'zoom-out',
-  models: [
-    new Model({
-      path: '/fullerene/models/m3.glb',
-    }),
-  ],
-});
 
-buckminsterfullerene.createSection({
-  id: 5,
-  camAnimation: 'corkscrew-up',
-  models: [
-    new Model({
-      path: '/fullerene/models/m4.glb',
-    }),
-  ],
-});
+// 3. Set Camera startPositon, startRotation(if not 0,0,0), and animationNames
+buckminsterfullerene.camera.setStartPosition( new Vector3( 0, 0, 5 ) ); 
+buckminsterfullerene.camera.setStartRotation( new Vector3( 0, 0, 0 ) ); 
+buckminsterfullerene.camera.setAnimationNames( camAnimationNames ); 
 
-// 3. Create camera positions and rotations
+
+// 4. Create camera positions and rotations
 // This method should also set camPosition and
-// camRotation forEach Section.
+// camRotation forEach Section and for the Lesson 
+// in Lesson.camPositions and Lesson.camRotations
 buckminsterfullerene.camera.createPosRots(); // This method needs to be written
 
-// 4. Create camera AnimationClips
+
+// 5. Create camera AnimationClips
 buckminsterfullerene.camera.createAnimationClips();
 
-// 5. Create model positions, now that we have camera positions
+
+// 6. Create model positions, now that we have camera positions
 // This is a side-effect. Are we sure the models on the lesson will
 // be changed? We will have to make sure they are in the .createPosition method.
 // using the this keyword.
@@ -144,6 +131,31 @@ buckminsterfullerene.sections.forEach((section, i) => {
   // We need to figure out camera.createCamPosRots() method first.
   // Here we .push, because the array will contain 1 item already,
   // the startPosition and startRotation
+  // AND I dont think we will need to set this because 
+  // these should aready be set with the original method call 
+  // camera.createPosRots();
   buckminsterfullerene.camPositions.push(section.camPosition);
   buckminsterfullerene.camRotations.push(section.camRotation);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

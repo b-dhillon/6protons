@@ -10,7 +10,7 @@ import { Vector3, Matrix4 } from 'three';
 // Fn Description:
 /**
  * Model position is simply in front of the camera. 
- * The tricky part to handle is the rotation.
+ * The tricky part is the rotation.
  * 
  * For the rotation we use unit vectors and a rotation matrix
  * 

@@ -16,8 +16,8 @@ import { Model } from './Model';
 
 interface SectionConfig {
   id: number;
-  camAnimation?: string;
   models: Model[];
+  camAnimation?: string;
   text?: string[];
   voicePath?: string;
 }
@@ -35,7 +35,7 @@ export class Section {
 
   constructor({
     id,
-    camAnimation,
+    camAnimation = '',
     models = [],
     text = [],
     voicePath,
@@ -46,6 +46,59 @@ export class Section {
     this.text = text;
     this.voicePath = voicePath;
   };
+
 }
 
-// id: number, camAnimation = '', models = [], text = [], voicePath = ''
+
+// Section Factory Notes:
+// This factory would be called in the fullerene-example.ts
+  /*
+    To make this more extendable, we can turn this into a 
+    SectionFactory that can create different types of sections
+    For now, we will just have a factory with one section, DefaultSection
+    but in the future we can have different kinds of section like 
+    InteractiveSection or etc... 
+  */
+/*
+
+class SectionFactory {
+  createDefaultSection( self: any, config: DefaultSectionConfig ) {
+    const section = new Section( config );
+    return section;
+  }
+
+  createInteractiveSection( self: any, config: InteractiveSectionConfig ) {
+    const section = new Section( config );
+    return section;
+  }
+}
+const s0 = SectionFactory.createDefaultSection({ }: SectionConfig)
+buckminsterfullerene.sections.push( s0 )
+
+// or use a Factory Function instead of a class:
+
+interface Section {
+  // section variables and methods
+}
+
+class InteractiveSection implements Section {
+  // must have same variables and methods 
+  // but the variables can have different values 
+  // and the methods can have different definitions
+}
+
+createSection( config: SectionConfig ) {
+  let section;
+
+  switch (config.sectionType) {
+    case'interactive-section': 
+      section = new InteractiveSection(config)
+
+    default: 'default-section'
+      section = new DefaultSection(config)
+  }
+
+  this.sections.push(section)
+};
+
+*/

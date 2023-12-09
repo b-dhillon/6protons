@@ -2,27 +2,40 @@
 # OOP REFACTOR:
 ## To-do:
 
-- Commit
-- Compile list of all methods that need to be written. We have two below, but I think there are more:
+## Finish implementing Camera.createAnimationClips();
+- Should this be in a AnimationClipFactory?
+
+  - implement translate-circle-oo.ts
+
+## Finish writing all methods for Model
+
+- Write out all the design patterns that will be used.
+  - Builder Pattern?
+  - Factory Pattern for AnimationClips
 
 
 
-# METHODS NEEDING TO BE WRITTEN:
-- Write a method that can turn animation strings into AnimationClips
-  - Brainstorm method for strings --> AnimationClips
 
-- Create an init method for Model
-  - Need to programatically set: 
-    id: 
-    position: 
-    rotation:
-    inNewPosition:
-    yOffsetForText:
-    zoomInOnReverse:
+- Learn proper best-practices error handling --> Best practices for Try/Catch and when to throw errors.
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# More To-do:
 - Write tests
-- Look into Builder Pattern, Factory Pattern, and Strategy Pattern
 
 - Re-factor the animation controllers for Models and Camera
 - Get mixers of models down from 4 to 2 --> should increase performance if they are all different mixers
@@ -31,12 +44,9 @@
 
 
 
-
-
-
-
-
-
+# Cleaning 
+- Remove unnecessary comments
+- Make functions hold to SRP
 
 
 
