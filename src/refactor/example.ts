@@ -100,17 +100,6 @@ diamond.sections.forEach( (section, i) => {
 ///////////////////////
 diamond.camera = new Camera({
   startPosition: new Vector3(0, 0, 5),
-
-  // animation names are now going to be set
-  // when we create sections
-  // camAnimations: [
-  //   'zoom-in',
-  //   'zoom-out-rotate-up',
-  //   'zoom-in-rotate-down',
-  //   'circle-model',
-  //   'zoom-out', // for fullerenes, this should be zoomOut 
-  //   'corkscrew-up',
-  // ],
 });
 // Do animationNames have to be strings? They can just be functions that take arguments and return AnimationClips 
 
@@ -123,37 +112,14 @@ diamond.camera.createAnimationClips(); // STILL NEED TO WRITE THIS METHOD
 
 
 
-
-
-
-
-
-
-
-
-
-
-///////////////////////
-// MODELS:
-///////////////////////
-
-const models = [
-  new Model({
-    name: 'm0',
-    path: '/my/path',
-    animationNames: {
-      enter: 'scaleUp',
-      main: 'rotate',
-      exit: 'scaleDown',
-    },
-  }),
-];
-
 // initializing models
-// 1. Create positions
-// 2. Create animation clips
-const initializedModels = models.map( (model, i) => {
-  model.createPosition( sections[ i ].cameraPosition ) // STILL NEED TO WRITE THIS METHOD
+// 1. Load and Extract Meshes
+// 2. Create positions
+// 3. Create animation clips
+const initializedModels = models.map( (model, section) => {
+  const meshes = model.extractMeshes();
+  model.addMeshes( meshes  )
+  model.createPosition( sections[ section ].cameraPosition ) // STILL NEED TO WRITE THIS METHOD
   model.createAnimationClips();
 });
 
@@ -162,18 +128,4 @@ const initializedModels = models.map( (model, i) => {
 
 
 
-
-
-
-
-// Now we need to:
-// define the Camera animationNames
-
-// define the Models
-
-// define the text
-
-// initialize everything:
-
-// export the final lesson object
  

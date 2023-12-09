@@ -74,6 +74,7 @@ export class Model {
 
   // properties we still need to initalize programatically:
   // logic is in refactor.md
+  // the default initalizations here should be removed?
   inNewPosition: boolean | undefined = true;
   yOffsetForText: number | undefined = 0;
   zoomInOnReverse: boolean | undefined = false;

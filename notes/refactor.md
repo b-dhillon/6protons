@@ -14,29 +14,74 @@ Then just put the assets into a folder with a specific directory structure:
 - model animation names
 - etc...
 
+/////////////////////////////////////
+/////////////////////////////////////
+/////////////////////////////////////
+
+
 # Lesson Construction - Step by Step 
 - instantiate new Lesson
 - instantiate all Sections
-- instantiate new Camera
+- set camera startPosition, startRotation, and animationNames
 - create all camPosRots
-- instantiate all Models
-- create all model positions
+- create camera animationClipConfigs
 - create Camera AnimationClips
+- create all model positions
 - create Model AnimationClips
 - extract all GLTF Meshes
 
+
+/////////////////////////////////////
+/////////////////////////////////////
+/////////////////////////////////////
+
+
+# METHODS NEEDING TO BE WRITTEN:
+- Camera.init()
+  # Camera.createPosRots();
+  # Camera.createAnimationClips();
+
+- Model.init()
+  # Model.createPosition();
+  # Model.createAnimationClips();
+  # Model.initDependantProperties();
+  
+  set the rest of the properties that need to be set computationally
+    id: 
+    inNewPosition: boolean | undefined = true;
+    yOffsetForText: number | undefined = 0;
+    zoomInOnReverse: boolean | undefined = false;
+    position: Vector3 | undefined;
+    rotation: Vector3 | undefined;
+
+- Lesson.init()
+  Extract everything from the sections and store them as lists
+
+- Lesson.set();
+- Lesson.get();
+
+- Section.init()
+  Set camPosition and camRotation after Camera.createCamPosRots()
+
+
+/////////////////////////////////////
+/////////////////////////////////////
+/////////////////////////////////////
 
 
 # Brainstorm -- camera.createPosRots():
 pullOut( pMag, rMag )
 - We likely just need to reverse the vector that looks out the camera frustrum
-- In other words, a vector 180 degrees away. Then scale the vector by the magnitude.
+- In other words, a vector 180 degrees away. Then scale the vector by the tMag.
 
 # Brainstorm -- Back-End:      
 pages = Page[]
 pages.push( new Page( ...DataFromServer ) )
 
 
+/////////////////////////////////////
+/////////////////////////////////////
+/////////////////////////////////////
 
 
 # Implementation Questions: 
@@ -50,6 +95,9 @@ Q: How do we know when to create a TranslateCircle vs. a TranslateRotate animati
 Q: Which fn's are methods? Which are utilities?
 
 
+/////////////////////////////////////
+/////////////////////////////////////
+/////////////////////////////////////
 
 
 # Dependant Varaibles of a Lesson:
@@ -73,7 +121,9 @@ Q: Which fn's are methods? Which are utilities?
     prevCamAnimation === 'zoom-out' ? true : false;
 
 
-
+/////////////////////////////////////
+/////////////////////////////////////
+/////////////////////////////////////
 
 
 

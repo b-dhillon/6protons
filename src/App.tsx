@@ -5,7 +5,7 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { uninitializedData } from './uninitialized-data';
 import { TranslateRotate } from './components/animations/TranslateRotate';
 import { Page } from './components/Page';
-import { getRotationInfo } from './utility-functions/find-rotation-axis';
+import { getRotationInfo } from './utility-functions/get-rotation-info';
 import { UninitializedData, UninitializedPage, InitializedPage } from './types/types';
 import { createModelPosition } from './utility-functions/create-model-position';
 
