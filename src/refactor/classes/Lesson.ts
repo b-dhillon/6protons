@@ -30,7 +30,7 @@ export class Lesson extends ThreePage {
     this.thumbnail = thumbnail;
   };
 
-  setSections( section: Section ) {
+  addSection( section: Section ) {
     this.sections.push(section);
   };
   

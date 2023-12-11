@@ -37,9 +37,6 @@ Then just put the assets into a folder with a specific directory structure:
 
 
 # METHODS NEEDING TO BE WRITTEN:
-- Camera.init()
-  # Camera.createPosRots();
-  # Camera.createAnimationClips();
 
 - Model.init()
   # Model.createPosition();
@@ -48,9 +45,11 @@ Then just put the assets into a folder with a specific directory structure:
   
   set the rest of the properties that need to be set computationally
     id: 
+    
     inNewPosition: boolean | undefined = true;
     yOffsetForText: number | undefined = 0;
     zoomInOnReverse: boolean | undefined = false;
+
     position: Vector3 | undefined;
     rotation: Vector3 | undefined;
 

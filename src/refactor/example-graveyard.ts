@@ -1,4 +1,17 @@
 
+
+/*
+const camAnimationNames = [
+  'zoom-in',
+  'zoom-out-rotate-up',
+  'zoom-in-rotate-down',
+  'circle-model',
+  'zoom-out',
+  'corkscrew-up',
+];
+*/
+
+
 // 2. Start building your sections
 /*
 

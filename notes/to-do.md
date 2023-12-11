@@ -2,21 +2,28 @@
 # OOP REFACTOR:
 ## To-do:
 
-## Finish implementing Camera.createAnimationClips();
-- Should this be in a AnimationClipFactory?
+# Camera: 
+- implement translate-circle-oo.ts
 
-  - implement translate-circle-oo.ts
+# Model: 
+- implement addMeshes on the ModelBuilder
+- decide on if you want client to use a director or just method chaining?
+
+# Lesson: 
+- Create a lesson builder...or even a page builder
+
 
 ## Finish writing all methods for Model
 
 - Write out all the design patterns that will be used.
-  - Builder Pattern?
-  - Factory Pattern for AnimationClips
+  - Builder Pattern
+  - Factory Pattern for AnimationClips?
 
 
 
 
 - Learn proper best-practices error handling --> Best practices for Try/Catch and when to throw errors.
+- When to throw an error vs. when to throw an exception
 
 
 
@@ -29,8 +36,8 @@
 
 
 
-
-
+- think about deploying the full on Factory Method pattern as an AnimationFactory 
+  - that could support both model animations and camera animations?
 
 
 

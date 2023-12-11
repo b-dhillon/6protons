@@ -1,8 +1,8 @@
-/*
-Function was tested. Works nicely. However, 
-when rotation on camera's x-axis, the yOffsetForText is
-not perfect. Perhaps we need to add offSet to the z-coordinate too if rotating
-camera on x-axis?
+/**
+ * Function was tested. Works nicely. However, 
+ * when rotation on camera's x-axis, the yOffsetForText is
+ * not perfect. Perhaps we need to add offSet to the z-coordinate too if rotating
+ * cam on x-axis?
 */
 
 import { Vector3, Matrix4 } from 'three';
@@ -10,7 +10,8 @@ import { Vector3, Matrix4 } from 'three';
 // Fn Description:
 /**
  * Model position is simply in front of the camera. 
- * The tricky part is the rotation.
+ * 
+ * Tricky part is handling rotation.
  * 
  * For the rotation we use unit vectors and a rotation matrix
  * 
@@ -35,7 +36,7 @@ export function createModelPosition(
 ) {
   let rotationAngle: number;
 
-  // Define the vector that points out the front of the camera in its local space
+  // Define the vector that points out the front of the camera in local space
   // Since the camera looks down the negative z-axis, the front is the negative z-direction
   let modelLocalPosition = new Vector3(0, 0, -1);
 
