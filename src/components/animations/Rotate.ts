@@ -1,6 +1,6 @@
 import { AnimationClip, NumberKeyframeTrack } from 'three';
 
-function Rotate({
+function rotate({
   duration = 1,
   axis = 'y',
   iAngle = 0,
@@ -21,4 +21,4 @@ interface config {
   fAngle: number;
 };
 
-export default Rotate;
+export default rotate;

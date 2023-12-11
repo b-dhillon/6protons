@@ -14,10 +14,17 @@
 import { Vector3 } from 'three';
 import { Model } from './Model';
 
+
+type CamAnimation = {
+  name: string;
+  tMag: number;
+  rMag: number;
+};
+
 interface SectionConfig {
   id: number;
-  models: Model[];
-  camAnimation?: string;
+  models?: Model[];
+  camAnimation?: CamAnimation;
   text?: string[];
   voicePath?: string;
 }
@@ -28,20 +35,18 @@ export class Section {
   id: number;
   camPosition: Vector3 | undefined;
   camRotation: Vector3 | undefined;
-  camAnimation: string | undefined;
+  camAnimation: CamAnimation | undefined;
   models: Model[];
   text: string[];
   voicePath: string | undefined;
 
   constructor({
     id,
-    camAnimation = '',
     models = [],
     text = [],
     voicePath,
   }: SectionConfig) {
     this.id = id;
-    this.camAnimation = camAnimation;
     this.models = models;
     this.text = text;
     this.voicePath = voicePath;
