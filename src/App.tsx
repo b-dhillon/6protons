@@ -213,7 +213,7 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
     return allMeshesOfApp;
 
     async function loadAllGLTFsOfApp() {
-      
+
       const allPagesGLTFs = data.pages.map(async (page: any) => {
         const pageGLTFs: any = []; // [ model0, model1, model2 ]
         for (let i = 0; i < page.models.length; i++) {
@@ -254,7 +254,7 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
         });
       }
     };
-  }
+  } 
 
 
   const allMeshesOfApp: any = await ExtractAllMeshesOfApp();

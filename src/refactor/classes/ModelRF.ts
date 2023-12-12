@@ -16,7 +16,7 @@ type PosRot = {
   axis: string | null;
 };
 
-class Model {
+export class Model {
   id: number | undefined; // will be initialized in init, with a loop: id = i --> model0, model1, model2
   section!: number;
   name: string | undefined; // will be initialized in init, with a loop model${i} --> model0, model1, model2
@@ -120,7 +120,7 @@ export class ModelBuilder implements Builder {
     this.model.yOffsetForText = sectionHasText ? 0.15 : 0;
 
     // inNewPosition
-    this.model.inNewPosition = sectionCamAnimation.name === 'circle-model' ? false : true;
+    this.model.inNewPosition = sectionCamAnimation.name === 'circle-model' || null ? false : true;
 
     // zoomInOnReverse
     this.model.zoomInOnReverse = prevCamAnimation.name === 'zoom-out' ? true : false;
@@ -201,36 +201,32 @@ type ModelDirectorConfig = {
   assignedSection: number, 
   name: string,
   animNames: AnimNames__Model,
-  sections: Section[],
   posRot: PosRot
 };
 
 export class ModelDirector {
 
   builder: ModelBuilder;
+  sections: Section[];
 
-  constructor( builder: ModelBuilder  ) {
+  constructor( builder: ModelBuilder, sections: Section[] ) {
     this.builder = builder;
+    this.sections = sections;
   }
 
   resetBuilder( builder: ModelBuilder ) {
     this.builder = builder; 
   }
 
-  constructModel( { path, assignedSection, name, animNames, sections, posRot }: ModelDirectorConfig ) {
-
+  constructModel( { path, assignedSection, name, animNames, posRot }: ModelDirectorConfig ) {
     this.builder.addPath(path);
     this.builder.assignSection(assignedSection);
     this.builder.addName(name);
     this.builder.addAnimNames(animNames); // only over-rides the nested animation, the rest (enter, main, exit) are set to their defaults
-    this.builder.addDependantProperties( sections );
+    this.builder.addDependantProperties( this.sections );
     this.builder.computePosition( posRot );
-
-
-    this.builder.extractMeshes(); // need to implement
+    this.builder.extractMeshes();
   }
-
-
 }
 
 

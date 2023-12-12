@@ -1,0 +1,184 @@
+import { Lesson, LessonBuilder } from './classes/Lesson';
+import { Section } from './classes/Section';
+import { Camera, CamAnimation } from './classes/Camera';
+import { Euler, Vector3 } from 'three';
+import { Model, ModelBuilder, ModelDirector } from './classes/ModelRF';
+import { Universe } from './classes/Universe';
+
+// Step by Step Lesson Construction:
+/*
+
+0. List out assets or import them as lists
+1. Define all camAnimations: 
+2. Instantiate new LessonBuilder
+3. Instantiate and Initialize Universe
+3. Loop and instantiate all Sections --> several properties on Section will still not be initialized
+4. Instantiate and initialize Camera
+
+
+// Initializing Models:
+6. Create all model positions
+7. Create Model AnimationClips
+8. Load + Extract all GLTF Meshes
+9. Set uninitialized properties: 
+    id:
+    yOffsetForText:
+    zoomInOnReverse:
+    inNewPosition:
+
+*/
+
+
+
+// 0. List out assets or import them as lists
+const modelPaths = [
+  ['path1'], // section 0
+  ['path2'], // section 1
+  ['path3', 'path4'],
+  [],
+  [],
+  [],
+];
+const textOfEntireLesson = [['', '', ''], ['', ''], [''], ['', ''], [''], ['']]; // each index is textOfSection
+const musicPaths = ['', ''];
+const voicePaths = ['', '', '', ''];
+
+// 1. Define all camAnimations: 
+const camAnimations = [
+  new CamAnimation('zoom-in', 4),
+  new CamAnimation('zoom-out-rotate-up', 2, Math.PI / 4),
+  new CamAnimation('zoom-in-rotate-down', 2, Math.PI / 4),
+  new CamAnimation('circle-model', Math.PI / 2, -Math.PI / 2),
+  new CamAnimation('zoom-out', 3),
+  new CamAnimation('corkscrew-up', 2, Math.PI / 2),
+];
+
+// 2. Instantiate new Lesson Builder
+const lessonBuilder = new LessonBuilder();
+
+// 3. Instantiate a universe:
+const universe = new Universe('fullerene-universe', 25000, 5);
+
+// 4. Loop, instantiate all Sections, and add them to the lesson
+const sections: Section[] = [];
+for( let i = 0; i < camAnimations.length; i++ ) {
+  const section = new Section({
+    id: i,
+    camAnimation: camAnimations[i], // why is this done here?
+  });
+  sections[i] = section;
+};
+
+// 5. Instantiate and initialize camera: 
+const camera = new Camera({});
+camera.setStartPosition( 0, 0, 5 ); 
+camera.setCamAnimations( camAnimations );
+camera.init();
+
+// 6. Build models
+/**
+ * This can be looped 
+ * 
+ * We will need to remove the posRot property in the config: 
+ * This can be done if Section has camPosition && camRotation || posRot initialized: 
+ *   const posRots = sections.map((section: Section) => section.getPosRot(); 
+ * 
+ * We will need a hasModel property on the sections to determine assignedSection
+ * loop fn can take in:
+ *  list of paths
+ *  list of names
+ *  
+ */
+const models: Model[] = [];
+const modelBuilder = new ModelBuilder();
+const modelDirector = new ModelDirector( modelBuilder, sections );
+
+modelDirector.constructModel({
+  assignedSection: 0,
+  path: '/fullerene/models/m0.glb',
+  name: 'floating-cage',
+  animNames: {nested: 'suspend-in-solution'},
+  posRot: camera.posRots[modelBuilder.model.section] // can be removed from constructModel config
+});
+const m0 = modelBuilder.getProduct();
+
+modelDirector.constructModel({
+  assignedSection: 2,
+  path: '/fullerene/models/m0.glb',
+  name: 'no-soccer-pattern',
+  animNames: {},
+  posRot: camera.posRots[modelBuilder.model.section]
+});
+const m2 = modelBuilder.getProduct();
+
+modelDirector.constructModel({
+  assignedSection: 3,
+  path: '/fullerene/models/m2.glb',
+  name: 'soccer-pattern',
+  animNames: {},
+  posRot: camera.posRots[modelBuilder.model.section]
+});
+const m3 = modelBuilder.getProduct();
+
+modelDirector.constructModel({
+  assignedSection: 4,
+  path: '/fullerene/models/m3.glb',
+  name: 'doped-cage',
+  animNames: {},
+  posRot: camera.posRots[modelBuilder.model.section]
+});
+const m4 = modelBuilder.getProduct();
+
+modelDirector.constructModel({
+  assignedSection: 5,
+  path: '/fullerene/models/m3.glb',
+  name: 'doped-cage',
+  animNames: {},
+  posRot: camera.posRots[modelBuilder.model.section]
+});
+const m5 = modelBuilder.getProduct();
+
+models.push(m0, m2, m3, m4, m5);
+
+// 7. Use lesson builder: 
+lessonBuilder.addTitle('Buckminsterfullerene')
+             .addThumbnail("url('./lesson-thumbnails/fullerene.png')")
+             .addUniverse(universe)
+             .addCamera(camera)
+             .setModels(models)
+             .setTexts(textOfEntireLesson)
+             .addMusics(musicPaths)
+             .addVoices(voicePaths)
+             .setSections(sections)
+;
+const buckminsterfullerene = lessonBuilder.getProduct();
+buckminsterfullerene.extractSections();
+
+export default buckminsterfullerene;
+
+
+
+
+/**
+ * What are we missing? What is not initialized?
+ * 
+ * Model animation clips? When are they being constructured and set?
+ * 
+ * id's of some objects!!!
+ *  
+ * Section --> uninitialized properties:
+ *   posRot: PosRot
+ *   models: Model[];
+ *   text: string[]; --> needs to be set before modelBuilder.addDependantProperties
+ *   voicePath: string | undefined;
+ * 
+ * When should we instantiate and initialize sections? At the beginning or end?
+ * 
+ * What about data validation for your setters/adders on your builders?
+ * What about error-handling 
+ * 
+ * 
+ * After all that, time to write tests and finish this back-end re-factor.
+ * 
+ * Construct lessons and push to server.
+ */
