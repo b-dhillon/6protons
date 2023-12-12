@@ -12,7 +12,8 @@
  */
 
 import { Vector3 } from 'three';
-import { Model } from './Model';
+import { Model } from './ModelRF';
+import { PosRot } from './Camera';
 
 
 type CamAnimation = {
@@ -21,7 +22,7 @@ type CamAnimation = {
   rMag: number;
 };
 
-interface SectionConfig {
+type SectionConfig = {
   id: number;
   models?: Model[];
   camAnimation?: CamAnimation;
@@ -33,9 +34,8 @@ interface SectionConfig {
 
 export class Section {
   id: number;
-  camPosition: Vector3 | undefined;
-  camRotation: Vector3 | undefined;
   camAnimation: CamAnimation | undefined;
+  posRot: PosRot;
   models: Model[];
   text: string[];
   voicePath: string | undefined;

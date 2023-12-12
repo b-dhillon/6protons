@@ -22,7 +22,7 @@ type AnimConfig__Camera = {
   axis: string | null;
 }
 
-class CamAnimation {
+export class CamAnimation {
   name: string;
   tMag: number;
   rMag: number;
@@ -44,10 +44,9 @@ export class Camera {
   // needs to be an array indexed by section, or needs to be set everytime section mutates
   // ^ sometimes we want multiple sections without moving camera. so user can click next
   //   and see something else happen on screen.
-  animationNames: string[];
   camAnimations: CamAnimation[];
-  animationClipConfigs: AnimConfig__Camera[]; // animationDS
-  animationClips: AnimationClip[];
+  animConfigs: AnimConfig__Camera[]; // animationDS
+  animClips: AnimationClip[];
 
   constructor({
     startPosition = new Vector3(0, 0, 0),
@@ -57,21 +56,40 @@ export class Camera {
   }: CameraConfig) {
     this.startPosition = startPosition;
     this.startRotation = startRotation;
-    this.animationNames = animationNames;
     this.camAnimations = camAnimations;
     this.positions = [];
     this.rotations = [];
     this.posRots = [];
-    this.animationClipConfigs = [];
-    this.animationClips = [];
+    this.animConfigs = [];
+    this.animClips = [];
   }
 
   // methods:
-  setCamAnimations(camAnimations: CamAnimation[]): void {
+
+  public setStartPosition(x: number = 0, y: number = 0, z: number = 0): void {
+    const startPos = new Vector3(x, y, z);
+    this.startPosition = startPos;
+    this.positions[0] = startPos;
+  };
+
+  public setStartRotation(x: number = 0, y: number = 0, z: number = 0): void {
+    const startRot = new Euler(x, y, z);
+    this.startRotation = startRot;
+    this.rotations[0] = startRot;
+  };
+
+  public setCamAnimations(camAnimations: CamAnimation[]): void {
     this.camAnimations = camAnimations;
   }
+
+  public init(): void {
+    this.createPosRots();
+    this.createAnimClips();
+  }
+
+
   
-  public createPosRots(): void {
+  private createPosRots(): void {
     if (!this.camAnimations.length) {
       throw new Error('No camAnimations have been created');
     };
@@ -86,12 +104,12 @@ export class Camera {
     }
   }
 
-  public createAnimationClips() {
-    if (!this.animationClipConfigs.length) {
-      this.createAnimationClipConfigs();
+  private createAnimClips() {
+    if (!this.animConfigs.length) {
+      this.createAnimConfigs();
     }
 
-    this.animationClipConfigs.forEach(
+    this.animConfigs.forEach(
       (config: AnimConfig__Camera, i: number) => {
         let clip: AnimationClip;
 
@@ -101,28 +119,15 @@ export class Camera {
           clip = translateRotate(config);
         };
 
-        this.animationClips.push(clip);
+        this.animClips.push(clip);
       }
     );
   }
 
-  public setStartPosition(startPosition: Vector3): void {
-    this.startPosition = startPosition;
-    this.positions[0] = startPosition;
-  }
-
-  public setStartRotation(startRotation: Euler): void {
-    this.startRotation = startRotation;
-    this.rotations[0] = startRotation;
-  }
-
-  setAnimationNames(animationNames: string[]): void {
-    this.animationNames = animationNames;
-  }
 
 
 
-  private createAnimationClipConfigs(): void {
+  private createAnimConfigs(): void {
     // if positions and rotations haven't been extracted from PosRots
     // and set, then set them:
     if (this.positions.length < 2 && this.rotations.length < 2) {
@@ -131,14 +136,14 @@ export class Camera {
     }
     if (this.positions.length > 2 && this.rotations.length > 2) {
       for (let i = 0; i < this.positions.length - 1; i++) {
-        const animationClipConfig: AnimationClipConfig__Camera = {
+        const animConfig: AnimConfig__Camera = {
           iPos: this.positions[i],
           fPos: this.positions[i + 1],
           iRot: this.rotations[i],
           fRot: this.rotations[i + 1],
           axis: this.posRots[i].axis,
         };
-        this.animationClipConfigs[i] = animationClipConfig;
+        this.animConfigs[i] = animConfig;
       }
     } else {
       throw new Error(

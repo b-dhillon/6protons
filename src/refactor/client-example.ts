@@ -26,24 +26,15 @@
 
 */
 
-import { Lesson } from './classes/Lesson';
+import { Lesson, LessonBuilder } from './classes/Lesson';
 import { Section } from './classes/Section';
 import { Model } from './classes/Model';
-import { Camera } from './classes/Camera';
+import { Camera, CamAnimation } from './classes/Camera';
 import { Euler, Vector3 } from 'three';
 import { ModelBuilder, ModelDirector } from './classes/ModelRF';
 
 
-class CamAnimation {
-  name: string;
-  tMag: number;
-  rMag: number;
-  constructor( name: string, tMag: number, rMag: number = 0 ){
-    this.name = name;
-    this.tMag = tMag; 
-    this.rMag = rMag;
-  }
-};
+
 
 
 // 0. List out assets -- optional, allows for looping of Lesson.createSection();
@@ -108,6 +99,23 @@ const lesson = new Lesson({
   thumbnail: "url('./lesson-thumbnails/fullerene.png')",
 });
 
+////////////////////////////
+////// Lesson Builder //////
+////////////////////////////
+
+const lessonBuilder = new LessonBuilder();
+
+lessonBuilder.addTitle('')
+             .addThumbnail('')
+             .addUniverse()
+             .addCamera()
+             .addModels()
+             .addText()
+             .addMusic()
+             .addVoices()
+
+             
+      
 
 // 2. Loop and instantiate all Sections:
 /////////////////////// 
@@ -136,8 +144,8 @@ for( let i = 0; i < camAnimations.length; i++ ) {
 
 
 // 3. Set Camera startPositon, startRotation(if not 0,0,0).
-lesson.camera.setStartPosition( new Vector3( 0, 0, 5 ) ); 
-lesson.camera.setStartRotation( new Euler( 0, 0, 0 ) ); 
+lesson.camera.setStartPosition( 0, 0, 5 ); 
+lesson.camera.setStartRotation( 0, 0, 0 ); 
 
 
 // 4. Initialize camera:
