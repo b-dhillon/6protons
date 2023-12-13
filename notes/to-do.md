@@ -2,50 +2,44 @@
 # OOP REFACTOR:
 ## To-do:
 
-Make final classes code look more like Three.JS core code. Very clean.
-
-
 # Camera: 
 - implement translate-circle-oo.ts
 
-# Model:
-- Handle animation clip construction
+# Make final classes code look more like Three.JS core code. Very clean.
+# Test, test, test, test.
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 - Learn proper best-practices error handling --> Best practices for Try/Catch and when to throw errors.
-- When to throw an error vs. when to throw an exception
-
-
-
-
-
-
-
-
-
-
-
+  - Also: when to throw an error vs. when to throw an exception
 
 - think about deploying the full on Factory Method pattern as an AnimationFactory 
   - that could support both model animations and camera animations?
 
 
 
-# More To-do:
-- Write tests
 
+
+# Front-end to-do:
 - Re-factor the animation controllers for Models and Camera
 - Get mixers of models down from 4 to 2 --> should increase performance if they are all different mixers
-- Compile all types and interfaces.
-
-
 
 
 # Cleaning 
 - Remove unnecessary comments
 - Make functions hold to SRP
+- Compile all types and interfaces.
 
 
 

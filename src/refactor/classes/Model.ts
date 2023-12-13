@@ -128,8 +128,8 @@ export class Model {
 
 
 
-  // Creates AnimationClips based on animations that are set when the
-  // class is instantiated
+  // Creates AnimationClips based on animaNames that are set when
+  // Model is instantiated
   createAnimationClips(): void {
     // grabbing the names (strings) of the animations
     const enterName: string = this.animNames.enter;

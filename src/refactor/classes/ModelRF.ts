@@ -4,12 +4,49 @@ import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { CamAnimation } from './Camera';
 
-type AnimNames__Model = {
+import { scaleUp, scaleDown } from '../../components/animations/ScaleXYZ';
+import rotate from '../../components/animations/Rotate';
+
+
+
+
+type AnimNamesConfig__Model = {
   enter?: string;
   main?: string;
   exit?: string;
   nested?: string;
 };
+
+type AnimNames__Model = {
+  enter: string;
+  main: string;
+  exit: string;
+  nested?: string;
+};
+
+
+// This clipConstructors seems like an anti-pattern:
+type ClipConstructors__Model = {
+  'scale-up': (config?: any) => AnimationClip;
+  'rotate': (config?: any) => AnimationClip;
+  'scale-down': (config?: any) => AnimationClip;
+  [key: string]: (config?: any) => AnimationClip; // Index signature
+  // index signature defines the object's key types and value types
+  // key is of type string, values are all functions.
+};
+
+const clipConstructors__Model: ClipConstructors__Model = {
+  'scale-up': scaleUp,
+  'rotate': rotate,
+  'scale-down': scaleDown,
+};
+
+
+
+
+
+
+
 
 type AnimClips__Model = {
   enter: AnimationClip | undefined;
@@ -39,32 +76,39 @@ type PosRot = {
 
 
 export class Model {
+
   constructor() {}
 
-  // will be initialized in init, with a loop: id = i --> model0, model1, model2
+  // where is this initialized?
   id: number | undefined;
+
   section!: number;
 
-  // will be initialized in init, with a loop model${i} --> model0, model1, model2
   name: string | undefined;
-  path!: string; // initialized with constructor
+
+  path!: string;
 
   visible: boolean = false;
-  scale: number = 1; // initialized with constructor, defaulted to 1
+
+  scale: number = 1;
 
   animNames: AnimNames__Model | undefined;
-  animClips: AnimClips__Model | undefined; // will be initialized in init with model.createAnimationClips() method
+  
+  animClips: AnimClips__Model | undefined;
   
   meshes: Object3D[] | undefined;
 
   position: Vector3 | undefined;
+  
   rotation: Euler = new Euler(0, 0, 0);
 
   inNewPosition: boolean | undefined;
+  
   yOffsetForText: number = 0;
+
   zoomInOnReverse: boolean | undefined;
 
-}
+};
 
 
 
@@ -82,24 +126,25 @@ export class Model {
 
 
 
-interface Builder {
+interface IModelBuilder {
   addPath(path: string): void;
   assignSection(section: number): void;
   addName(name: string): void;
-  addAnimNames(animNames: AnimNames__Model): void;
+  addAnimNames(animNames: AnimNamesConfig__Model): void;
+  createAnimClips(): void;
   addDependantProperties(camAnimations: CamAnimation[], textOfEntireLesson: string[][]): void;
   computePosition(posRot: PosRot): void;
   extractMeshes(): void;
 }
 
-export class ModelBuilder implements Builder {
+export class ModelBuilder implements IModelBuilder {
   model!: Model;
 
   constructor() {
     this.reset();
   }
 
-  reset(): void {
+  public reset(): void {
     this.model = new Model();
   }
 
@@ -116,7 +161,7 @@ export class ModelBuilder implements Builder {
     this.model.name = name;
   };
 
-  public addAnimNames(animNames: AnimNames__Model = {}): void {
+  public addAnimNames(animNames: AnimNamesConfig__Model = {}): void {
     const defaultAnimNames = {
       enter: 'scale-up',
       main: 'rotate',
@@ -126,7 +171,35 @@ export class ModelBuilder implements Builder {
     };
 
     this.model.animNames = defaultAnimNames;
-  }
+  };
+
+  // Creates AnimationClips based on animaNames that are set when Model is instantiated
+  public createAnimClips(): void {
+    if(!this.model.animNames) throw new Error('no animNames have been set');
+
+    // grabbing the names (strings) of the animations
+    const enterName = this.model.animNames.enter;
+    const mainName = this.model.animNames.main;
+    const exitName = this.model.animNames.exit;
+    const nestedName = this.model.animNames?.nested;
+
+    // string indexing an object that stores all of the constructor functions
+    const enterAnimationConstructor = clipConstructors__Model[ enterName ];
+    const mainAnimationConstructor = clipConstructors__Model[ mainName ];
+    const exitAnimationConstructor = clipConstructors__Model[ exitName ];
+    let nestedAnimationConstructor; 
+    if(nestedName) nestedAnimationConstructor = clipConstructors__Model[ nestedName ];
+
+    // set the animationClips object to hold the AnimationClips
+    // that will be returned from these functions
+    this.model.animClips = {
+      enter: enterAnimationConstructor(),
+      main: mainAnimationConstructor({ duration: 50 }), 
+      // ^changing the default duration from 1 to 50
+      exit: exitAnimationConstructor(),
+      nested: nestedName ? nestedAnimationConstructor!() : undefined 
+    };
+  };
 
   public addDependantProperties( camAnimations: CamAnimation[], textOfEntireLesson: string[][]): void {
     const section = this.model.section;
@@ -154,7 +227,6 @@ export class ModelBuilder implements Builder {
     // zoomInOnReverse
     this.model.zoomInOnReverse = prevCamAnimation.name === 'zoom-out' ? true : false;
   };
-
 
 
   // When an animation that doesn't exist is asked for, the PosRot is just all undefined
@@ -200,7 +272,9 @@ export class ModelBuilder implements Builder {
     );
 
     this.model.meshes = meshes;
-  }
+  };
+
+
 
 
 
@@ -208,7 +282,7 @@ export class ModelBuilder implements Builder {
     const result = this.model;
     this.reset();
     return result;
-  }
+  };
 }
 
 
@@ -229,7 +303,7 @@ type ModelDirectorConfig = {
   path: string, 
   assignedSection: number, 
   name: string,
-  animNames: AnimNames__Model,
+  animNames: AnimNamesConfig__Model,
   posRot: PosRot
 };
 
@@ -241,16 +315,16 @@ export class ModelDirector {
 
   constructor( builder: ModelBuilder) {
     this.builder = builder;
-  }
+  };
 
   resetBuilder( builder: ModelBuilder ) {
     this.builder = builder; 
-  }
+  };
 
   addDependencies( camAnimations: CamAnimation[], textOfEntireLesson: string[][] ) {
     this.camAnimations = camAnimations; 
     this.textOfEntireLesson = textOfEntireLesson;
-  }
+  };
 
   constructModel( { path, assignedSection, name, animNames, posRot }: ModelDirectorConfig ) {
     if(!this.textOfEntireLesson || !this.camAnimations) {
@@ -259,12 +333,14 @@ export class ModelDirector {
     this.builder.addPath(path);
     this.builder.assignSection(assignedSection);
     this.builder.addName(name);
-    this.builder.addAnimNames(animNames); // only over-rides the nested animation, the rest (enter, main, exit) are set to their defaults
+    this.builder.addAnimNames(animNames); 
+    // ^ only over-rides the nested animation, the rest (enter, main, exit) are set to their defaults
+    this.builder.createAnimClips();
     this.builder.addDependantProperties( this.camAnimations, this.textOfEntireLesson );
     this.builder.computePosition( posRot );
     this.builder.extractMeshes();
-  }
-}
+  };
+};
 
 
 
