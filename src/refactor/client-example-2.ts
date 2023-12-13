@@ -183,21 +183,15 @@ export default buckminsterfullerene;
 /**
  * What are we missing? What is not initialized?
  * 
- * Model animation clips? When are they being constructured and set?
+ * .extractSections() method on lesson
+ * .groupModelsBySection() method
  * 
  * id's of some objects!!!
- *  
- * Section --> uninitialized properties:
- *   posRot: PosRot
- *   models: Model[];
- *   text: string[]; --> needs to be set before modelBuilder.addDependantProperties
- *   voicePath: string | undefined;
  * 
- * When should we instantiate and initialize sections? At the beginning or end?
+ * potentially re-think model animation clip construction anti-pattern
  * 
  * What about data validation for your setters/adders on your builders?
  * What about error-handling 
- * 
  * 
  * After all that, time to write tests and finish this back-end re-factor.
  * 
