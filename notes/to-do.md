@@ -2,22 +2,14 @@
 # OOP REFACTOR:
 ## To-do:
 
+Make final classes code look more like Three.JS core code. Very clean.
+
+
 # Camera: 
 - implement translate-circle-oo.ts
 
-# Model: 
-- implement addMeshes on the ModelBuilder
-- decide on if you want client to use a director or just method chaining?
-
-# Lesson: 
-- Create a lesson builder...or even a page builder
-
-
-## Finish writing all methods for Model
-
-- Write out all the design patterns that will be used.
-  - Builder Pattern
-  - Factory Pattern for AnimationClips?
+# Model:
+- Handle animation clip construction
 
 
 

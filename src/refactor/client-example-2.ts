@@ -6,26 +6,16 @@ import { Model, ModelBuilder, ModelDirector } from './classes/ModelRF';
 import { Universe } from './classes/Universe';
 
 // Step by Step Lesson Construction:
-/*
-
-0. List out assets or import them as lists
-1. Define all camAnimations: 
-2. Instantiate new LessonBuilder
-3. Instantiate and Initialize Universe
-3. Loop and instantiate all Sections --> several properties on Section will still not be initialized
-4. Instantiate and initialize Camera
-
-
-// Initializing Models:
-6. Create all model positions
-7. Create Model AnimationClips
-8. Load + Extract all GLTF Meshes
-9. Set uninitialized properties: 
-    id:
-    yOffsetForText:
-    zoomInOnReverse:
-    inNewPosition:
-
+/**
+ *
+ * 0. List out assets or import them as lists
+ * 1. Define all camAnimations: 
+ * 2. Instantiate new LessonBuilder
+ * 3. Instantiate and Initialize Universe
+ * 4. Instantiate and initialize Camera
+ * 5. Build models -- still need to create model AnimationClips
+ * 6. Loop, instantiate, and initialize all Sections
+ *
 */
 
 
@@ -39,9 +29,10 @@ const modelPaths = [
   [],
   [],
 ];
-const textOfEntireLesson = [['', '', ''], ['', ''], [''], ['', ''], [''], ['']]; // each index is textOfSection
-const musicPaths = ['', ''];
-const voicePaths = ['', '', '', ''];
+const textsOfEntireLesson = [[], ['', ''], [''], ['', ''], [''], ['']]; // each index is textOfSection
+const musicPathsOfEntireLesson = ['', ''];
+const voicePathsOfEntireLesson = ['', '', '', ''];
+
 
 // 1. Define all camAnimations: 
 const camAnimations = [
@@ -53,29 +44,23 @@ const camAnimations = [
   new CamAnimation('corkscrew-up', 2, Math.PI / 2),
 ];
 
+
 // 2. Instantiate new Lesson Builder
 const lessonBuilder = new LessonBuilder();
+
 
 // 3. Instantiate a universe:
 const universe = new Universe('fullerene-universe', 25000, 5);
 
-// 4. Loop, instantiate all Sections, and add them to the lesson
-const sections: Section[] = [];
-for( let i = 0; i < camAnimations.length; i++ ) {
-  const section = new Section({
-    id: i,
-    camAnimation: camAnimations[i], // why is this done here?
-  });
-  sections[i] = section;
-};
 
-// 5. Instantiate and initialize camera: 
+// 4. Instantiate and initialize camera: 
 const camera = new Camera({});
 camera.setStartPosition( 0, 0, 5 ); 
 camera.setCamAnimations( camAnimations );
 camera.init();
 
-// 6. Build models
+
+// 5. Build models
 /**
  * This can be looped 
  * 
@@ -91,7 +76,8 @@ camera.init();
  */
 const models: Model[] = [];
 const modelBuilder = new ModelBuilder();
-const modelDirector = new ModelDirector( modelBuilder, sections );
+const modelDirector = new ModelDirector( modelBuilder );
+modelDirector.addDependencies( camAnimations, textsOfEntireLesson );
 
 modelDirector.constructModel({
   assignedSection: 0,
@@ -140,18 +126,53 @@ const m5 = modelBuilder.getProduct();
 
 models.push(m0, m2, m3, m4, m5);
 
+
+
+
+// Group models by section, in case some sections have multiple assigned models:
+// We can move this into a method somewhere
+// A section with no models will have an empty array. 
+const numberOfSectionsInLesson = camAnimations.length;
+const modelsBySection: Model[][] = [];
+for (let i = 0; i < numberOfSectionsInLesson; i++) {
+  modelsBySection.push([]);
+};
+for( let i = 0; i < models.length; i++ ) {
+  let section = models[i].section
+  modelsBySection[section].push(models[i]); 
+};
+
+
+// Loop and instantiate sections:
+const sections: Section[] = [];
+const posRots = camera.getPosRots();
+
+for( let i = 0; i < camAnimations.length; i++ ) {
+  const section = new Section({
+    id: i,
+    camAnimation: camAnimations[i],
+    posRot: posRots[i],
+    models: modelsBySection[i],
+    text: textsOfEntireLesson[i],
+    voicePath: voicePathsOfEntireLesson[i],
+  });
+  sections[i] = section;
+};
+
+
 // 7. Use lesson builder: 
 lessonBuilder.addTitle('Buckminsterfullerene')
              .addThumbnail("url('./lesson-thumbnails/fullerene.png')")
              .addUniverse(universe)
              .addCamera(camera)
              .setModels(models)
-             .setTexts(textOfEntireLesson)
-             .addMusics(musicPaths)
-             .addVoices(voicePaths)
+             .setTexts(textsOfEntireLesson)
+             .addMusics(musicPathsOfEntireLesson)
+             .addVoices(voicePathsOfEntireLesson)
              .setSections(sections)
 ;
 const buckminsterfullerene = lessonBuilder.getProduct();
+
 buckminsterfullerene.extractSections();
 
 export default buckminsterfullerene;

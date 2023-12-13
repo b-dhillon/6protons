@@ -24,8 +24,9 @@ type CamAnimation = {
 
 type SectionConfig = {
   id: number;
-  models?: Model[];
   camAnimation?: CamAnimation;
+  posRot: PosRot;
+  models?: Model[];
   text?: string[];
   voicePath?: string;
 }
@@ -42,11 +43,15 @@ export class Section {
 
   constructor({
     id,
+    camAnimation,
+    posRot,
     models = [],
     text = [],
     voicePath,
   }: SectionConfig) {
     this.id = id;
+    this.camAnimation = camAnimation; 
+    this.posRot = posRot;
     this.models = models;
     this.text = text;
     this.voicePath = voicePath;

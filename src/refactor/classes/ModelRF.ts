@@ -1,7 +1,8 @@
-import { Euler, Matrix4, Mesh, Vector3 } from 'three';
+import { AnimationClip, Euler, Group, Matrix4, Mesh, Object3D, Vector3 } from 'three';
 import { Section } from './Section';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+import { CamAnimation } from './Camera';
 
 type AnimNames__Model = {
   enter?: string;
@@ -10,22 +11,51 @@ type AnimNames__Model = {
   nested?: string;
 };
 
+type AnimClips__Model = {
+  enter: AnimationClip | undefined;
+  main: AnimationClip | undefined; 
+  exit: AnimationClip | undefined; 
+  nested: AnimationClip | undefined;
+};
+
 type PosRot = {
   pos: Vector3;
   rot: Euler;
   axis: string | null;
 };
 
+
+// Initializing Models:
+/**
+ * Create all model positions
+ * Create Model AnimationClips
+ * Load + Extract all GLTF Meshes
+ * Set dependant properties:
+ *  id?
+ *  yOffsetForText:
+ *  zoomInOnReverse:
+ *  inNewPosition:
+ */
+
+
 export class Model {
-  id: number | undefined; // will be initialized in init, with a loop: id = i --> model0, model1, model2
+  constructor() {}
+
+  // will be initialized in init, with a loop: id = i --> model0, model1, model2
+  id: number | undefined;
   section!: number;
-  name: string | undefined; // will be initialized in init, with a loop model${i} --> model0, model1, model2
+
+  // will be initialized in init, with a loop model${i} --> model0, model1, model2
+  name: string | undefined;
   path!: string; // initialized with constructor
 
   visible: boolean = false;
   scale: number = 1; // initialized with constructor, defaulted to 1
 
   animNames: AnimNames__Model | undefined;
+  animClips: AnimClips__Model | undefined; // will be initialized in init with model.createAnimationClips() method
+  
+  meshes: Object3D[] | undefined;
 
   position: Vector3 | undefined;
   rotation: Euler = new Euler(0, 0, 0);
@@ -34,7 +64,6 @@ export class Model {
   yOffsetForText: number = 0;
   zoomInOnReverse: boolean | undefined;
 
-  constructor() {}
 }
 
 
@@ -58,7 +87,7 @@ interface Builder {
   assignSection(section: number): void;
   addName(name: string): void;
   addAnimNames(animNames: AnimNames__Model): void;
-  addDependantProperties(section: Section[]): void;
+  addDependantProperties(camAnimations: CamAnimation[], textOfEntireLesson: string[][]): void;
   computePosition(posRot: PosRot): void;
   extractMeshes(): void;
 }
@@ -99,21 +128,21 @@ export class ModelBuilder implements Builder {
     this.model.animNames = defaultAnimNames;
   }
 
-  public addDependantProperties(sections: Section[]): void {
+  public addDependantProperties( camAnimations: CamAnimation[], textOfEntireLesson: string[][]): void {
     const section = this.model.section;
     if (!section) {
       throw new Error(
         'model has not been assigned to a section, dependant properties depend on the section.'
       );
     }
-    const sectionCamAnimation = sections[section].camAnimation;
-    const prevCamAnimation = sections[section - 1].camAnimation;
+    const sectionCamAnimation = camAnimations[section]
+    const prevCamAnimation = camAnimations[section - 1];
     if (!sectionCamAnimation || !prevCamAnimation) {
       throw new Error(
         "camAnimation or prevCamAnimation is falsy for this model's assigned section, dependant properties depend on camAnimation."
       );
     }
-    const sectionText = sections[section].text;
+    const sectionText = textOfEntireLesson[section];
     const sectionHasText = sectionText.length; // boolean, no paragraphs should be an empty array NOT an empty string in the first index.
 
     // yOffsetForText
@@ -161,16 +190,16 @@ export class ModelBuilder implements Builder {
   // this will be better because not each section will have a Model. 
   // when we do everything all at once it is based on a tripple loop gltf --> pageGLTFs --> allPageGLTF's
   // that assumes all sections have models
-  public async extractMeshes(): Promise<Mesh[]> {
+  public async extractMeshes(): Promise<void> {
     const path = this.model.path;
     const gltf = await loadGLTF(path);
 
-    const meshes: Mesh[] = gltf.scene.children.filter(
+    const meshes = gltf.scene.children.filter(
       (child: any) =>
         child.isMesh || (child.isGroup && child.__removed === undefined)
     );
 
-    return meshes;
+    this.model.meshes = meshes;
   }
 
 
@@ -207,23 +236,31 @@ type ModelDirectorConfig = {
 export class ModelDirector {
 
   builder: ModelBuilder;
-  sections: Section[];
+  textOfEntireLesson: string[][] | undefined;
+  camAnimations: CamAnimation[] | undefined;
 
-  constructor( builder: ModelBuilder, sections: Section[] ) {
+  constructor( builder: ModelBuilder) {
     this.builder = builder;
-    this.sections = sections;
   }
 
   resetBuilder( builder: ModelBuilder ) {
     this.builder = builder; 
   }
 
+  addDependencies( camAnimations: CamAnimation[], textOfEntireLesson: string[][] ) {
+    this.camAnimations = camAnimations; 
+    this.textOfEntireLesson = textOfEntireLesson;
+  }
+
   constructModel( { path, assignedSection, name, animNames, posRot }: ModelDirectorConfig ) {
+    if(!this.textOfEntireLesson || !this.camAnimations) {
+      throw new Error('dependencies have not been added. Call Director.addDependencies first')
+    };
     this.builder.addPath(path);
     this.builder.assignSection(assignedSection);
     this.builder.addName(name);
     this.builder.addAnimNames(animNames); // only over-rides the nested animation, the rest (enter, main, exit) are set to their defaults
-    this.builder.addDependantProperties( this.sections );
+    this.builder.addDependantProperties( this.camAnimations, this.textOfEntireLesson );
     this.builder.computePosition( posRot );
     this.builder.extractMeshes();
   }
@@ -283,7 +320,7 @@ function applyCamRotation( modelLocalPosition: Vector3, camRotAngle: number, cam
 }
 
 
-function loadGLTF(path: string) {
+function loadGLTF(path: string): Promise<GLTF> {
   return new Promise((resolve, reject) => {
     const loader = new GLTFLoader();
     const dracoLoader = new DRACOLoader();
