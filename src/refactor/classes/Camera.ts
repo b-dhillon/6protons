@@ -165,7 +165,8 @@ export class Camera {
   };
 
   public getPosRots(): PosRot[] {
-    return this.posRots;
+    if (!this.posRots.length) throw new Error('posRot array is empty')
+    else return this.posRots;
   };
 }
 
@@ -185,7 +186,7 @@ export class Camera {
 
 
 
-class PosRot {
+export class PosRot {
   pos: Vector3;
   rot: Euler;
   axis: string | null;
