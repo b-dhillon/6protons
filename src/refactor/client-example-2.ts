@@ -10,7 +10,6 @@ import { Universe } from './classes/Universe';
  *
  * 0. List out assets or import them as lists
  * 1. Define all camAnimations: 
- * 2. Instantiate new LessonBuilder
  * 3. Instantiate and Initialize Universe
  * 4. Instantiate and initialize Camera
  * 5. Build models -- still need to create model AnimationClips
@@ -34,7 +33,7 @@ const musicPathsOfEntireLesson = ['', ''];
 const voicePathsOfEntireLesson = ['', '', '', ''];
 
 
-// 1. Define all camAnimations: 
+// Step-1. Define all camAnimations: 
 const camAnimations = [
   new CamAnimation('zoom-in', 4),
   new CamAnimation('zoom-out-rotate-up', 2, Math.PI / 4),
@@ -44,29 +43,22 @@ const camAnimations = [
   new CamAnimation('corkscrew-up', 2, Math.PI / 2),
 ];
 
-
-// 2. Instantiate new Lesson Builder
-const lessonBuilder = new LessonBuilder();
-
-
-// 3. Instantiate a universe:
+// Step-2. Instantiate a universe:
 const universe = new Universe('fullerene-universe', 25000, 5);
 
 
-// 4. Instantiate and initialize camera: 
+// Step-3. Instantiate and initialize camera: 
 const camera = new Camera({});
 camera.setStartPosition( 0, 0, 5 ); 
 camera.setCamAnimations( camAnimations );
 camera.init();
+const posRots = camera.getPosRots();
 
 
-// 5. Build models
+
+// Step-4. Build models
 /**
  * This can be looped 
- * 
- * We will need to remove the posRot property in the config: 
- * This can be done if Section has camPosition && camRotation || posRot initialized: 
- *   const posRots = sections.map((section: Section) => section.getPosRot(); 
  * 
  * We will need a hasModel property on the sections to determine assignedSection
  * loop fn can take in:
@@ -77,14 +69,13 @@ camera.init();
 const models: Model[] = [];
 const modelBuilder = new ModelBuilder();
 const modelDirector = new ModelDirector( modelBuilder );
-modelDirector.addDependencies( camAnimations, textsOfEntireLesson );
+modelDirector.addDependencies( camAnimations, textsOfEntireLesson, posRots );
 
 modelDirector.constructModel({
   assignedSection: 0,
   path: '/fullerene/models/m0.glb',
   name: 'floating-cage',
   animNames: {nested: 'suspend-in-solution'},
-  posRot: camera.posRots[modelBuilder.model.section] // can be removed from constructModel config
 });
 const m0 = modelBuilder.getProduct();
 
@@ -93,7 +84,6 @@ modelDirector.constructModel({
   path: '/fullerene/models/m0.glb',
   name: 'no-soccer-pattern',
   animNames: {},
-  posRot: camera.posRots[modelBuilder.model.section]
 });
 const m2 = modelBuilder.getProduct();
 
@@ -102,7 +92,6 @@ modelDirector.constructModel({
   path: '/fullerene/models/m2.glb',
   name: 'soccer-pattern',
   animNames: {},
-  posRot: camera.posRots[modelBuilder.model.section]
 });
 const m3 = modelBuilder.getProduct();
 
@@ -111,7 +100,6 @@ modelDirector.constructModel({
   path: '/fullerene/models/m3.glb',
   name: 'doped-cage',
   animNames: {},
-  posRot: camera.posRots[modelBuilder.model.section]
 });
 const m4 = modelBuilder.getProduct();
 
@@ -120,7 +108,6 @@ modelDirector.constructModel({
   path: '/fullerene/models/m3.glb',
   name: 'doped-cage',
   animNames: {},
-  posRot: camera.posRots[modelBuilder.model.section]
 });
 const m5 = modelBuilder.getProduct();
 
@@ -143,10 +130,8 @@ for( let i = 0; i < models.length; i++ ) {
 };
 
 
-// Loop and instantiate sections:
+// Step-6: Loop and instantiate sections:
 const sections: Section[] = [];
-const posRots = camera.getPosRots();
-
 for( let i = 0; i < camAnimations.length; i++ ) {
   const section = new Section({
     id: i,
@@ -160,7 +145,8 @@ for( let i = 0; i < camAnimations.length; i++ ) {
 };
 
 
-// 7. Use lesson builder: 
+// Step-7: Build lesson with builder: 
+const lessonBuilder = new LessonBuilder();
 lessonBuilder.addTitle('Buckminsterfullerene')
              .addThumbnail("url('./lesson-thumbnails/fullerene.png')")
              .addUniverse(universe)

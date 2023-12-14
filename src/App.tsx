@@ -7,7 +7,7 @@ import { TranslateRotate } from './components/animations/TranslateRotate';
 import { Page } from './components/Page';
 import { getRotationInfo } from './utility-functions/get-rotation-info';
 import { UninitializedData, UninitializedPage, InitializedPage } from './types/types';
-import { createModelPosition } from './utility-functions/create-model-position';
+import { createModelPosition } from './utility-functions/compute-model-position';
 
 interface RotationInfo {
   axis: string, 
