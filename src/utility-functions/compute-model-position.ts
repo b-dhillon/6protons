@@ -5,7 +5,87 @@
  * cam on x-axis?
 */
 
-import { Vector3, Matrix4 } from 'three';
+import { Vector3, Matrix4, Euler } from 'three';
+
+export function computeModelPosition( fPos: Vector3, fRot: Euler, rotAxis: string | null): Vector3 {
+
+  const camPos = fPos;
+  const camRot = fRot; 
+  
+  // Define the vector that points out the front of the camera in local space
+  let modelLocalPosition = new Vector3(0, 0, -1);
+
+  // Define a rotation vector for the rotation around the specified axis
+  const { camRotAngle, camRotVector } = getCamRotAngleAndRotVector(rotAxis, camRot);
+
+  if (camRotAngle) {
+    modelLocalPosition = applyCamRotation( modelLocalPosition, camRotAngle, camRotVector );
+  };
+
+  // Add model local pos to camPos to get world pos of model:
+  const modelWorldPos = camPos.add(modelLocalPosition);
+
+
+  return modelWorldPos
+};
+
+// Utility functions
+
+type RotAngleAndRotVector = {
+  camRotAngle: number;
+  camRotVector: Vector3;
+};
+function getCamRotAngleAndRotVector(
+  rotAxis: string | null,
+  camRot: Euler
+): RotAngleAndRotVector {
+  let rotVector = new Vector3();
+  let rotAngle = 0;
+
+  switch (rotAxis) {
+    case 'x':
+      rotVector.setX(1);
+      rotAngle = camRot.x;
+      break;
+    case 'y':
+      rotVector.setY(1);
+      rotAngle = camRot.y;
+      break;
+    case 'z':
+      rotVector.setZ(1);
+      rotAngle = camRot.z;
+      break;
+  }
+
+  return { camRotAngle: rotAngle, camRotVector: rotVector };
+}
+
+
+function applyCamRotation( modelLocalPosition: Vector3, camRotAngle: number, camRotVector: Vector3 ): Vector3 {
+  // Create a new rotation matrix for the additional rotation
+  const rotMatrix = new Matrix4();
+
+  // Initialize the rotation matrix to rotate around the specified axis by the given angle
+  rotMatrix.makeRotationAxis(camRotVector.normalize(), camRotAngle); // <-- need to test if this works if rotVector = 0,0,0 and rotAngle = 0
+
+  // Apply the additional rotation to the model's position vector
+  // This rotates the model around the camera based on the specified axis and angle of the camera's rotation
+  modelLocalPosition.applyMatrix4(rotMatrix);
+
+  return modelLocalPosition;
+}
+
+
+
+
+
+
+
+
+
+
+
+// Old before oo re-factor implementation:
 
 // Fn Description:
 /**
@@ -28,6 +108,9 @@ import { Vector3, Matrix4 } from 'three';
  * To get into world space we just perform a vector addition uising the rotation matrix.
  * 
  */
+
+
+/*
 export function createModelPosition(
   cameraPosition: number[],
   rotationAngleCorodinates: number[],
@@ -87,7 +170,7 @@ export function createModelPosition(
 
 
 
-
+*/
 
 
 

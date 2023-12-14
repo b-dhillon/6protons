@@ -23,7 +23,7 @@ type AnimConfig__Camera = {
 export function translateRotate(
   config: AnimConfig__Camera,
   easingType: string = 'in-out'
-) {
+): AnimationClip {
 
   const { iPos, fPos, iRot, fRot, axis } = config;
   const rotsEqual = iRot.x === fRot.x && iRot.y === fRot.y && iRot.z === fRot.z;
@@ -89,13 +89,13 @@ export function translateRotate(
       }
     }
 
-    const rotationTrack = new NumberKeyframeTrack(
+    const rotTrack = new NumberKeyframeTrack(
       rotName,
       rotTimes,
       rotVals
     );
 
-    return rotationTrack;
+    return rotTrack;
   }
 
   return new AnimationClip('TranslateRotate', 1, [

@@ -1,12 +1,17 @@
 
 # OOP REFACTOR:
-## To-do:
+## Wednesday To-Do:
 
-# Camera: 
-- implement translate-circle-oo.ts
+- write lesson.extractSections 
+- handle id's of objects with uuid 
+- clean clean clean
+  - Make final classes code look more like Three.JS core code. Very clean.
 
-# Make final classes code look more like Three.JS core code. Very clean.
-# Test, test, test, test.
+
+
+# Thursday-Sunday To-Do:
+- Animation Factory Method?
+- Test, test, test, test.
 
 
 

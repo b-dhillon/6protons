@@ -304,7 +304,6 @@ type ModelDirectorConfig = {
   assignedSection: number, 
   name: string,
   animNames: AnimNamesConfig__Model,
-  posRot: PosRot
 };
 
 export class ModelDirector {
@@ -312,6 +311,7 @@ export class ModelDirector {
   builder: ModelBuilder;
   textOfEntireLesson: string[][] | undefined;
   camAnimations: CamAnimation[] | undefined;
+  posRots: PosRot[] | undefined;
 
   constructor( builder: ModelBuilder) {
     this.builder = builder;
@@ -321,13 +321,14 @@ export class ModelDirector {
     this.builder = builder; 
   };
 
-  addDependencies( camAnimations: CamAnimation[], textOfEntireLesson: string[][] ) {
+  addDependencies( camAnimations: CamAnimation[], textOfEntireLesson: string[][], posRots: PosRot[] ) {
     this.camAnimations = camAnimations; 
     this.textOfEntireLesson = textOfEntireLesson;
+    this.posRots = posRots;
   };
 
-  constructModel( { path, assignedSection, name, animNames, posRot }: ModelDirectorConfig ) {
-    if(!this.textOfEntireLesson || !this.camAnimations) {
+  constructModel( { path, assignedSection, name, animNames }: ModelDirectorConfig ) {
+    if(!this.textOfEntireLesson || !this.camAnimations || !this.posRots) {
       throw new Error('dependencies have not been added. Call Director.addDependencies first')
     };
     this.builder.addPath(path);
@@ -337,7 +338,7 @@ export class ModelDirector {
     // ^ only over-rides the nested animation, the rest (enter, main, exit) are set to their defaults
     this.builder.createAnimClips();
     this.builder.addDependantProperties( this.camAnimations, this.textOfEntireLesson );
-    this.builder.computePosition( posRot );
+    this.builder.computePosition( this.posRots[assignedSection] );
     this.builder.extractMeshes();
   };
 };

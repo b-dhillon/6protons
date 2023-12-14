@@ -16,7 +16,7 @@ import {
 interface RotationInfo {
   axis: string, 
   rotationsEqual: boolean
-}
+};
 
 interface config {
   duration: number;
@@ -30,7 +30,7 @@ interface config {
   easingType: string;
   modelPosition: number[];
   _modelInNewPos: boolean
-}
+};
 
 
 
@@ -57,7 +57,7 @@ interface config {
  */
 export function TranslateCircle(config: config): AnimationClip {
   
-  // TranslateCirlce always rotates on Y axis, if we translating XZ plane.
+  // TranslateCirlce always rotates on Y axis, if translating XZ plane.
   let axis = 'y'
   let ease = config.easingType === 'out' ? easeOutCubic : easeInOutCubic;
 
@@ -69,11 +69,14 @@ export function TranslateCircle(config: config): AnimationClip {
   */
   const circleCenter = new Vector3( ...config.modelPosition );;
   const radius = initialPosition.distanceTo(circleCenter);
+  // initialAngle is how far we are from +x-axis
+  // I feel like this should be negative since we are clock-wise pi/2 radians away from the +x-axis
   const initialAngle = Math.PI / 2;
+  const tMag = Math.PI / 2
 
   /** 2. Define fn that returns vectors around a circle as a function of time */
   function getVectorAtT(easedT: number): Vector3 {
-    let currentAngle = initialAngle + ( easedT * (Math.PI / 2) ); // (Math.PI / 2) is how much we want to rotate by
+    let currentAngle = initialAngle + ( easedT * tMag ); // (Math.PI / 2) is how much we want to rotate by
     return new Vector3(
       circleCenter.x + ( radius * Math.cos(currentAngle) ),
       initialPosition.y,
@@ -89,6 +92,7 @@ export function TranslateCircle(config: config): AnimationClip {
   const rotValues = new Float32Array(n);
 
   for (let i = 0; i < n; i++) {
+
     const t = i / (n - 1);
     times[i] = t;
     const easedT = ease(t);
@@ -104,7 +108,6 @@ export function TranslateCircle(config: config): AnimationClip {
     const finalAngle = config.finalAngle;
 
     let angle = 0;
-
     switch( axis ) {
       case 'x':
         angle = initialAngle[0] + (finalAngle[0] - initialAngle[0]) * easedT;

@@ -353,8 +353,8 @@ class PosRotFactory {
 
     const fPos = getVecOnCircle(iPos, iRot, tMag);
 
-    // fRot is just iRot +- Math.PI/2
     const axis = 'y';
+    // fRot is just iRot.y +- Math.PI/2
     const fRot = new Euler(iRot.x, iRot.y - rMag, iRot.z);
     //                                          ^ is this - or + ? clock-wise should be negative.
 
