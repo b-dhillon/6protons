@@ -39,7 +39,7 @@ export class Section {
   posRot: PosRot;
   models: Model[];
   text: string[];
-  voicePath: string | undefined;
+  voicePath: string;
 
   constructor({
     id,
@@ -47,7 +47,7 @@ export class Section {
     posRot,
     models = [],
     text = [],
-    voicePath,
+    voicePath = '',
   }: SectionConfig) {
     this.id = id;
     this.camAnimation = camAnimation; 
