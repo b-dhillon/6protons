@@ -17,7 +17,7 @@ export class ThreePage {
   title: string | undefined;
   camera: Camera | undefined;
   universe: Universe | undefined;
-  models: Model[] = [];
+  modelsOfEntirePage: Model[][] = [];
 
 
   // constructor( { id, title = '', camera = new Camera({}) }: ThreePageConfig ) {

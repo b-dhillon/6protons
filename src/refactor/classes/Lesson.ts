@@ -35,17 +35,23 @@ type TextOfSection = string[];
 
 
 export class Lesson extends ThreePage {
+  constructor(){ super(); };
 
   thumbnail: string | undefined;
   sections: Section[] = [];
   textOfEntireLesson: TextOfSection[] = [];
   musics: string[] = [];
-  voices: string[] = [];
+  voicesOfEntireLesson: string[] = [];
   
-  constructor(){
-    super();
+  public extractSections(): void {
+    this.sections.forEach( (section: Section) => {
+
+      this.textOfEntireLesson.push(section.text);
+      this.voicesOfEntireLesson.push(section.voicePath);
+      this.modelsOfEntirePage.push(section.models)
+
+    });
   };
-  
 };
 
 interface ILessonBuilder {

@@ -2,7 +2,6 @@
 # OOP REFACTOR:
 ## Wednesday To-Do:
 
-- write lesson.extractSections 
 - handle id's of objects with uuid 
 - clean clean clean
   - Make final classes code look more like Three.JS core code. Very clean.
@@ -10,9 +9,9 @@
 
 
 # Thursday-Sunday To-Do:
+- Figure out textPlacement and music initialization
 - Animation Factory Method?
 - Test, test, test, test.
-
 
 
 
