@@ -6,11 +6,6 @@ import { Camera } from './Camera'
 import { Universe } from './Universe'
 
 
-interface LessonConfig {
-  id: string;
-  title: string;
-  thumbnail?: string;
-};
 
 /**
   perhaps we should change this from a string to an object:
@@ -30,7 +25,6 @@ interface LessonConfig {
   } 
  */
 
-
 type TextOfSection = string[];
 
 
@@ -40,16 +34,14 @@ export class Lesson extends ThreePage {
   thumbnail: string | undefined;
   sections: Section[] = [];
   textOfEntireLesson: TextOfSection[] = [];
-  musics: string[] = [];
-  voicesOfEntireLesson: string[] = [];
+  musicPathsOfEntireLesson: string[] = [];
+  voicePathsOfEntireLesson: string[] = [];
   
   public extractSections(): void {
     this.sections.forEach( (section: Section) => {
-
       this.textOfEntireLesson.push(section.text);
-      this.voicesOfEntireLesson.push(section.voicePath);
+      this.voicePathsOfEntireLesson.push(section.voicePath);
       this.modelsOfEntirePage.push(section.models)
-
     });
   };
 };
@@ -60,12 +52,12 @@ interface ILessonBuilder {
   addUniverse(universe: Universe): void;
   addSection(section: Section): void;
   addCamera(camera: Camera): void;
-  addModel(model: Model): void;
-  setModels(models: Model[]): void;
+  addModel(model: Model[]): void;
+  setModels(models: Model[][]): void;
   addText(textOfSection: string[]): void;
   setTexts(textsOfLesson: string[][]): void;
-  addMusics(music: string[]): void;
-  addVoices(voices: string[]): void;
+  addMusics(musicPathsOfEntireLesson: string[]): void;
+  addVoices(voicePathsOfEntireLesson: string[]): void;
 };
 
 export class LessonBuilder implements ILessonBuilder {
@@ -77,7 +69,7 @@ export class LessonBuilder implements ILessonBuilder {
 
   reset(): void {
     this.lesson = new Lesson();
-  }
+  };
 
   addTitle(title: string): LessonBuilder {
     this.lesson.title = title;
@@ -109,13 +101,13 @@ export class LessonBuilder implements ILessonBuilder {
     return this; 
   };
 
-  addModel(model: Model): LessonBuilder {
-    this.lesson.models.push(model)
+  addModel(model: Model[] ): LessonBuilder {
+    this.lesson.modelsOfEntirePage.push(model)
     return this; 
   };
 
-  setModels(models: Model[]): LessonBuilder {
-    this.lesson.models = models;
+  setModels(models: Model[][]): LessonBuilder {
+    this.lesson.modelsOfEntirePage = models;
     return this; 
   }
 
@@ -132,12 +124,13 @@ export class LessonBuilder implements ILessonBuilder {
     return this;
   };
 
-  addMusics(musics: string[]): LessonBuilder {
-    this.lesson.musics = musics; 
+  addMusics(musicPathsOfEntireLesson: string[]): LessonBuilder {
+    this.lesson.musicPathsOfEntireLesson = musicPathsOfEntireLesson; 
     return this;
   };
-  addVoices(voices: string[]): LessonBuilder {
-    this.lesson.voices = voices;
+
+  addVoices(voicePathsOfEntireLesson: string[]): LessonBuilder {
+    this.lesson.voicePathsOfEntireLesson = voicePathsOfEntireLesson;
     return this;
   };
 

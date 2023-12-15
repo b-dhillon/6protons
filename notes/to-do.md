@@ -1,10 +1,19 @@
 
 # OOP REFACTOR:
-## Wednesday To-Do:
 
-- handle id's of objects with uuid 
+- Where should the .groupBySection() method be encapsulated?
+
+
 - clean clean clean
   - Make final classes code look more like Three.JS core code. Very clean.
+  - Come back to translate-circle-xz.ts and make it adhere more to SRP
+
+
+
+
+
+
+
 
 
 

@@ -13,21 +13,18 @@ type SectionModels = Model[];
 
 export class ThreePage {
 
-  id: string | undefined;
+  constructor() {
+    this.id = ThreePage._lastId++;
+  };
+  
+  private static _lastId = 0;
+  readonly id: number;
+
   title: string | undefined;
   camera: Camera | undefined;
   universe: Universe | undefined;
   modelsOfEntirePage: Model[][] = [];
 
-
-  // constructor( { id, title = '', camera = new Camera({}) }: ThreePageConfig ) {
-  //   this.id = id;
-  //   this.title = title;
-  //   this.camera = camera;
-  //   this.models = [];
-  // }
-
-  constructor(){}
 
   bigBang(id: string, starCount: number, radius: number): void {
     this.universe = {

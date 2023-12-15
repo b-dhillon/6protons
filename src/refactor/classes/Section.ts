@@ -23,7 +23,7 @@ type CamAnimation = {
 };
 
 type SectionConfig = {
-  id: number;
+  section: number;
   camAnimation?: CamAnimation;
   posRot: PosRot;
   models?: Model[];
@@ -34,7 +34,11 @@ type SectionConfig = {
 
 
 export class Section {
-  id: number;
+
+  private static _lastId = 0;
+
+  readonly id: number;
+  section: number;
   camAnimation: CamAnimation | undefined;
   posRot: PosRot;
   models: Model[];
@@ -42,14 +46,15 @@ export class Section {
   voicePath: string;
 
   constructor({
-    id,
+    section,
     camAnimation,
     posRot,
     models = [],
     text = [],
     voicePath = '',
   }: SectionConfig) {
-    this.id = id;
+    this.id = Section._lastId++;
+    this.section = section;
     this.camAnimation = camAnimation; 
     this.posRot = posRot;
     this.models = models;
