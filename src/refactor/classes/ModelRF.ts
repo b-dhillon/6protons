@@ -77,10 +77,14 @@ type PosRot = {
 
 export class Model {
 
-  constructor() {}
+  private static _lastId = 0;
+  
+  constructor() {
+    this.id = Model._lastId++;
+  }
 
-  // where is this initialized?
-  id: number | undefined;
+
+  readonly id: number;
 
   section!: number;
 

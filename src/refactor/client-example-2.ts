@@ -111,7 +111,7 @@ modelDirector.constructModel({
 });
 const m5 = modelBuilder.getProduct();
 
-models.push(m0, m2, m3, m4, m5);
+
 
 
 
@@ -134,7 +134,7 @@ for( let i = 0; i < models.length; i++ ) {
 const sections: Section[] = [];
 for( let i = 0; i < camAnimations.length; i++ ) {
   const section = new Section({
-    id: i,
+    section: i,
     camAnimation: camAnimations[i],
     posRot: posRots[i],
     models: modelsBySection[i],
@@ -151,7 +151,7 @@ lessonBuilder.addTitle('Buckminsterfullerene')
              .addThumbnail("url('./lesson-thumbnails/fullerene.png')")
              .addUniverse(universe)
              .addCamera(camera)
-             .setModels(models)
+             .setModels(modelsBySection)
              .setTexts(textsOfEntireLesson)
              .addMusics(musicPathsOfEntireLesson)
              .addVoices(voicePathsOfEntireLesson)
