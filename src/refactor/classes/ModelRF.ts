@@ -10,14 +10,14 @@ import rotate from '../../components/animations/Rotate';
 
 
 
-type AnimNamesConfig__Model = {
+type ModelAnimNamesConfig = {
   enter?: string;
   main?: string;
   exit?: string;
   nested?: string;
 };
 
-type AnimNames__Model = {
+type ModelAnimNames = {
   enter: string;
   main: string;
   exit: string;
@@ -26,7 +26,7 @@ type AnimNames__Model = {
 
 
 // This clipConstructors seems like an anti-pattern:
-type ClipConstructors__Model = {
+type ModelClipConstructors = {
   'scale-up': (config?: any) => AnimationClip;
   'rotate': (config?: any) => AnimationClip;
   'scale-down': (config?: any) => AnimationClip;
@@ -35,7 +35,7 @@ type ClipConstructors__Model = {
   // key is of type string, values are all functions.
 };
 
-const clipConstructors__Model: ClipConstructors__Model = {
+const modelClipConstructors: ModelClipConstructors = {
   'scale-up': scaleUp,
   'rotate': rotate,
   'scale-down': scaleDown,
@@ -96,7 +96,7 @@ export class Model {
 
   scale: number = 1;
 
-  animNames: AnimNames__Model | undefined;
+  animNames: ModelAnimNames | undefined;
   
   animClips: AnimClips__Model | undefined;
   
@@ -117,7 +117,34 @@ export class Model {
 
 
 
+export class Models {
 
+  constructor( models: Model[] ) {
+    this.models = models
+  }
+
+  models: Model[];
+
+  groupedBySection: Model[][] = [];
+
+  public groupBySection(numberOfSectionsInLesson: number): void {
+
+    const modelsBySection: Model[][] = [];
+
+    for (let i = 0; i < numberOfSectionsInLesson; i++) {
+      modelsBySection.push([]);
+    };
+
+    for( let i = 0; i < this.models.length; i++ ) {
+      let section = this.models[i].section
+      modelsBySection[section].push(this.models[i]); 
+    };
+    
+    this.groupedBySection = modelsBySection;
+
+  };
+  
+};
 
 
 
@@ -131,17 +158,27 @@ export class Model {
 
 
 interface IModelBuilder {
+
   addPath(path: string): void;
+
   assignSection(section: number): void;
+
   addName(name: string): void;
-  addAnimNames(animNames: AnimNamesConfig__Model): void;
+
+  addAnimNames(animNames: ModelAnimNamesConfig): void;
+
   createAnimClips(): void;
+
   addDependantProperties(camAnimations: CamAnimation[], textOfEntireLesson: string[][]): void;
+
   computePosition(posRot: PosRot): void;
+
   extractMeshes(): void;
-}
+
+};
 
 export class ModelBuilder implements IModelBuilder {
+
   model!: Model;
 
   constructor() {
@@ -165,7 +202,7 @@ export class ModelBuilder implements IModelBuilder {
     this.model.name = name;
   };
 
-  public addAnimNames(animNames: AnimNamesConfig__Model = {}): void {
+  public addAnimNames(animNames: ModelAnimNamesConfig = {}): void {
     const defaultAnimNames = {
       enter: 'scale-up',
       main: 'rotate',
@@ -179,6 +216,7 @@ export class ModelBuilder implements IModelBuilder {
 
   // Creates AnimationClips based on animaNames that are set when Model is instantiated
   public createAnimClips(): void {
+
     if(!this.model.animNames) throw new Error('no animNames have been set');
 
     // grabbing the names (strings) of the animations
@@ -188,11 +226,11 @@ export class ModelBuilder implements IModelBuilder {
     const nestedName = this.model.animNames?.nested;
 
     // string indexing an object that stores all of the constructor functions
-    const enterAnimationConstructor = clipConstructors__Model[ enterName ];
-    const mainAnimationConstructor = clipConstructors__Model[ mainName ];
-    const exitAnimationConstructor = clipConstructors__Model[ exitName ];
+    const enterAnimationConstructor = modelClipConstructors[ enterName ];
+    const mainAnimationConstructor = modelClipConstructors[ mainName ];
+    const exitAnimationConstructor = modelClipConstructors[ exitName ];
     let nestedAnimationConstructor; 
-    if(nestedName) nestedAnimationConstructor = clipConstructors__Model[ nestedName ];
+    if(nestedName) nestedAnimationConstructor = modelClipConstructors[ nestedName ];
 
     // set the animationClips object to hold the AnimationClips
     // that will be returned from these functions
@@ -203,22 +241,26 @@ export class ModelBuilder implements IModelBuilder {
       exit: exitAnimationConstructor(),
       nested: nestedName ? nestedAnimationConstructor!() : undefined 
     };
+
   };
 
   public addDependantProperties( camAnimations: CamAnimation[], textOfEntireLesson: string[][]): void {
+
     const section = this.model.section;
     if (!section) {
       throw new Error(
         'model has not been assigned to a section, dependant properties depend on the section.'
       );
-    }
+    };
+
     const sectionCamAnimation = camAnimations[section]
     const prevCamAnimation = camAnimations[section - 1];
     if (!sectionCamAnimation || !prevCamAnimation) {
       throw new Error(
         "camAnimation or prevCamAnimation is falsy for this model's assigned section, dependant properties depend on camAnimation."
       );
-    }
+    };
+
     const sectionText = textOfEntireLesson[section];
     const sectionHasText = sectionText.length; // boolean, no paragraphs should be an empty array NOT an empty string in the first index.
 
@@ -233,7 +275,7 @@ export class ModelBuilder implements IModelBuilder {
   };
 
 
-  // When an animation that doesn't exist is asked for, the PosRot is just all undefined
+  // When an animation that doesn't exist is called for, the PosRot is just all undefined
   // do we need to control for this?
   public computePosition(posRot: PosRot): void {
 
@@ -259,15 +301,10 @@ export class ModelBuilder implements IModelBuilder {
     this.model.position = modelWorldPos;
   };
 
-
-
-  // better to extract meshes for each gltf as the models get created
-  // instead of doing it all at once 
-  // this will be better because not each section will have a Model. 
-  // when we do everything all at once it is based on a tripple loop gltf --> pageGLTFs --> allPageGLTF's
-  // that assumes all sections have models
   public async extractMeshes(): Promise<void> {
+
     const path = this.model.path;
+
     const gltf = await loadGLTF(path);
 
     const meshes = gltf.scene.children.filter(
@@ -276,16 +313,15 @@ export class ModelBuilder implements IModelBuilder {
     );
 
     this.model.meshes = meshes;
+
   };
 
-
-
-
-
   public getProduct(): Model {
+
     const result = this.model;
     this.reset();
     return result;
+
   };
 }
 
@@ -307,7 +343,7 @@ type ModelDirectorConfig = {
   path: string, 
   assignedSection: number, 
   name: string,
-  animNames: AnimNamesConfig__Model,
+  animNames: ModelAnimNamesConfig,
 };
 
 export class ModelDirector {

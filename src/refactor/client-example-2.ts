@@ -2,7 +2,7 @@ import { Lesson, LessonBuilder } from './classes/Lesson';
 import { Section } from './classes/Section';
 import { Camera, CamAnimation } from './classes/Camera';
 import { Euler, Vector3 } from 'three';
-import { Model, ModelBuilder, ModelDirector } from './classes/ModelRF';
+import { Models, ModelBuilder, ModelDirector } from './classes/ModelRF';
 import { Universe } from './classes/Universe';
 
 // Step by Step Lesson Construction:
@@ -42,7 +42,7 @@ const camAnimations = [
   new CamAnimation('zoom-out', 3),
   new CamAnimation('corkscrew-up', 2, Math.PI / 2),
 ];
-
+const numberOfSections = camAnimations.length
 // Step-2. Instantiate a universe:
 const universe = new Universe('fullerene-universe', 25000, 5);
 
@@ -66,7 +66,7 @@ const posRots = camera.getPosRots();
  *  list of names
  *  
  */
-const models: Model[] = [];
+// const models: Model[] = [];
 const modelBuilder = new ModelBuilder();
 const modelDirector = new ModelDirector( modelBuilder );
 modelDirector.addDependencies( camAnimations, textsOfEntireLesson, posRots );
@@ -114,30 +114,19 @@ const m5 = modelBuilder.getProduct();
 
 
 
+const models = new Models([m0, m2, m3, m4, m5]);
+models.groupBySection(numberOfSections);
 
-
-// Group models by section, in case some sections have multiple assigned models:
-// We can move this into a method somewhere
-// A section with no models will have an empty array. 
-const numberOfSectionsInLesson = camAnimations.length;
-const modelsBySection: Model[][] = [];
-for (let i = 0; i < numberOfSectionsInLesson; i++) {
-  modelsBySection.push([]);
-};
-for( let i = 0; i < models.length; i++ ) {
-  let section = models[i].section
-  modelsBySection[section].push(models[i]); 
-};
 
 
 // Step-6: Loop and instantiate sections:
 const sections: Section[] = [];
-for( let i = 0; i < camAnimations.length; i++ ) {
+for( let i = 0; i < numberOfSections; i++ ) {
   const section = new Section({
     section: i,
     camAnimation: camAnimations[i],
     posRot: posRots[i],
-    models: modelsBySection[i],
+    models: models.groupedBySection[i],
     text: textsOfEntireLesson[i],
     voicePath: voicePathsOfEntireLesson[i],
   });
@@ -151,7 +140,7 @@ lessonBuilder.addTitle('Buckminsterfullerene')
              .addThumbnail("url('./lesson-thumbnails/fullerene.png')")
              .addUniverse(universe)
              .addCamera(camera)
-             .setModels(modelsBySection)
+             .setModels(models.groupedBySection)
              .setTexts(textsOfEntireLesson)
              .addMusics(musicPathsOfEntireLesson)
              .addVoices(voicePathsOfEntireLesson)

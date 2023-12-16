@@ -1,7 +1,6 @@
 import { ThreePage } from './ThreePage';
 import { Section } from './Section';
 import { Model } from './ModelRF';
-import { Vector3 } from 'three';
 import { Camera } from './Camera'
 import { Universe } from './Universe'
 
