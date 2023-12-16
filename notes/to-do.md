@@ -1,26 +1,25 @@
 
 # OOP REFACTOR:
 
-- Where should the .groupBySection() method be encapsulated?
 
-
-- clean clean clean
+- Clean Clean Clean:
   - Make final classes code look more like Three.JS core code. Very clean.
   - Come back to translate-circle-xz.ts and make it adhere more to SRP
 
 
-
-
-
-
-
-
-
-
-# Thursday-Sunday To-Do:
+# Fridya-Sunday To-Do:
 - Figure out textPlacement and music initialization
 - Animation Factory Method?
 - Test, test, test, test.
+
+
+
+
+
+
+
+
+
 
 
 
