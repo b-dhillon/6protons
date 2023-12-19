@@ -31,7 +31,7 @@ import { Section } from './classes/Section';
 import { Model } from './classes/Model';
 import { Camera, CamAnimation } from './classes/Camera';
 import { Euler, Vector3 } from 'three';
-import { ModelBuilder, ModelDirector } from './classes/ModelRF';
+import { ModelBuilder, ModelDirector } from './classes/Model';
 
 
 

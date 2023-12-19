@@ -5,22 +5,210 @@ import {
 } from '../../utility-functions/get-vector';
 import { getVecOnCircle } from '../../utility-functions/get-vector-on-circle';
 import { translateRotate } from '../../components/animations/translate-rotate-oo';
-import { translateCircle } from '../../components/animations/translate-circle-oo ';
+import { circleModel } from '../../components/animations/circle-model-xz';
+import { CamConfig, CamAnimConfig } from "../types"
 
-interface CameraConfig {
-  startPosition?: Vector3;
-  startRotation?: Euler;
-  animationNames?: string[];
-  camAnimations?: CamAnimation[];
+
+
+export class Camera {
+
+  startPosition: Vector3;
+
+  startRotation: Euler;
+
+  positions: Vector3[];
+
+  rotations: Euler[];
+
+  posRots: PosRot[];
+
+  inNewPosition: boolean | undefined;
+
+  camAnimations: CamAnimation[];
+
+  animConfigs: CamAnimConfig[]; // animationDS
+
+  animClips: AnimationClip[];
+
+  constructor({
+    startPosition = new Vector3(0, 0, 0),
+    startRotation = new Euler(0, 0, 0),
+    camAnimations = [],
+  }: CamConfig) {
+    this.startPosition = startPosition;
+    this.startRotation = startRotation;
+    this.camAnimations = camAnimations;
+    this.positions = [];
+    this.rotations = [];
+    this.posRots = [];
+    this.animConfigs = [];
+    this.animClips = [];
+  };
+
+  // public methods:
+  public setStartPosition(x: number = 0, y: number = 0, z: number = 0): void {
+
+    const startPos = new Vector3(x, y, z);
+
+    this.startPosition = startPos;
+    this.positions[0] = startPos;
+
+  };
+
+  public setStartRotation(x: number = 0, y: number = 0, z: number = 0): void {
+
+    const startRot = new Euler(x, y, z);
+
+    this.startRotation = startRot;
+    this.rotations[0] = startRot;
+
+  };
+
+  public setCamAnimations(camAnimations: CamAnimation[]): void {
+
+    this.camAnimations = camAnimations;
+
+  };
+
+  public init(): void {
+
+    this.createPosRots();
+    this.createAnimClips();
+
+  };
+
+  // private methods:
+  private createPosRots(): void {
+
+    if (!this.camAnimations.length) {
+
+      throw new Error('No camAnimations have been created');
+
+    };
+
+    if (!this.positions.length || this.rotations.length) {
+
+      throw new Error('Initial position or initial rotation have not been set');
+
+    };
+
+    for (let i = 0; i < this.camAnimations.length; i++) {
+
+      const posRot = PosRotFactory.create( this.camAnimations[i], this.positions[i], this.rotations[i] );
+
+      this.posRots.push( posRot );
+
+    };
+
+  };
+
+
+  private createAnimClips() {
+
+    if (!this.animConfigs.length) {
+
+      this.createAnimConfigs();
+
+    };
+
+    this.animConfigs.forEach( (config: CamAnimConfig, i: number) => {
+
+      let clip: AnimationClip;
+
+      if (this.camAnimations[i].name === 'circle-model') {
+
+        clip = circleModel(config);
+
+      } else {
+
+        clip = translateRotate(config);
+
+      };
+
+      this.animClips.push(clip);
+
+    });
+
+  };
+
+
+  private createAnimConfigs(): void {
+
+    // if positions and rotations haven't been extracted from PosRots
+    // and set, then set them:
+    const arePosRotsExtracted = this.positions.length > 2 && this.rotations.length > 2;
+
+    if ( !arePosRotsExtracted ) {
+
+      this.setPositions(this.posRots);
+      this.setRotations(this.posRots);
+
+    };
+
+    if ( arePosRotsExtracted ) {
+
+      for (let i = 0; i < this.positions.length - 1; i++) {
+
+        const animConfig: CamAnimConfig = {
+
+          iPos: this.positions[i],
+          fPos: this.positions[i + 1],
+          iRot: this.rotations[i],
+          fRot: this.rotations[i + 1],
+          axis: this.posRots[i].axis,
+          easing: i === 0 ? 'out' : 'in-out'
+
+        };
+
+        this.animConfigs[i] = animConfig;
+
+      };
+
+    } else {
+
+      throw new Error(
+        'not enough positions and rotations to create AnimationClips'
+      );
+
+    };
+
+  };
+
+  private setPositions(posRots: PosRot[]): void {
+
+    for (let i = 0; i < posRots.length; i++) {
+
+      this.positions.push(posRots[i].pos);
+
+    };
+
+  };
+
+  private setRotations(posRots: PosRot[]): void {
+
+    for (let i = 0; i < posRots.length; i++) {
+
+      this.rotations.push(posRots[i].rot);
+
+    };
+
+  };
+
+  public getPosRots(): PosRot[] {
+
+    if (!this.posRots.length) throw new Error('posRot array is empty')
+
+    else return this.posRots;
+
+  };
+
 }
 
-type AnimConfig__Camera = {
-  iPos: Vector3;
-  fPos: Vector3;
-  iRot: Euler;
-  fRot: Euler;
-  axis: string | null;
-}
+
+
+
+
+
 
 export class CamAnimation {
   name: string;
@@ -33,150 +221,6 @@ export class CamAnimation {
     this.rMag = rMag;
   };
 }
-
-export class Camera {
-  startPosition: Vector3;
-  startRotation: Euler;
-  positions: Vector3[];
-  rotations: Euler[];
-  posRots: PosRot[];
-  inNewPosition: boolean | undefined;
-  // needs to be an array indexed by section, or needs to be set everytime section mutates
-  // ^ sometimes we want multiple sections without moving camera. so user can click next
-  //   and see something else happen on screen.
-  camAnimations: CamAnimation[];
-  animConfigs: AnimConfig__Camera[]; // animationDS
-  animClips: AnimationClip[];
-
-  constructor({
-    startPosition = new Vector3(0, 0, 0),
-    startRotation = new Euler(0, 0, 0),
-    animationNames = [],
-    camAnimations = [],
-  }: CameraConfig) {
-    this.startPosition = startPosition;
-    this.startRotation = startRotation;
-    this.camAnimations = camAnimations;
-    this.positions = [];
-    this.rotations = [];
-    this.posRots = [];
-    this.animConfigs = [];
-    this.animClips = [];
-  }
-
-  // methods:
-
-  public setStartPosition(x: number = 0, y: number = 0, z: number = 0): void {
-    const startPos = new Vector3(x, y, z);
-    this.startPosition = startPos;
-    this.positions[0] = startPos;
-  };
-
-  public setStartRotation(x: number = 0, y: number = 0, z: number = 0): void {
-    const startRot = new Euler(x, y, z);
-    this.startRotation = startRot;
-    this.rotations[0] = startRot;
-  };
-
-  public setCamAnimations(camAnimations: CamAnimation[]): void {
-    this.camAnimations = camAnimations;
-  }
-
-  public init(): void {
-    this.createPosRots();
-    this.createAnimClips();
-  }
-
-
-  
-  private createPosRots(): void {
-    if (!this.camAnimations.length) {
-      throw new Error('No camAnimations have been created');
-    };
-    if (!this.positions.length || this.rotations.length) {
-      throw new Error('Initial position or initial rotation have not been set');
-    }
-
-    for (let i = 0; i < this.camAnimations.length; i++) {
-      // const posRot = this.createPosRot(this.camAnimations[i], i);
-      const posRot = PosRotFactory.create( this.camAnimations[i], this.positions[i], this.rotations[i] );
-      this.posRots.push(posRot);
-    }
-  }
-
-  private createAnimClips() {
-    if (!this.animConfigs.length) {
-      this.createAnimConfigs();
-    }
-
-    this.animConfigs.forEach(
-      (config: AnimConfig__Camera, i: number) => {
-        let clip: AnimationClip;
-
-        if (this.camAnimations[i].name === 'circle-model') {
-          clip = translateCircle(config);
-        } else {
-          clip = translateRotate(config);
-        };
-
-        this.animClips.push(clip);
-      }
-    );
-  }
-
-
-
-
-  private createAnimConfigs(): void {
-    // if positions and rotations haven't been extracted from PosRots
-    // and set, then set them:
-    if (this.positions.length < 2 && this.rotations.length < 2) {
-      this.setPositions(this.posRots);
-      this.setRotations(this.posRots);
-    }
-    if (this.positions.length > 2 && this.rotations.length > 2) {
-      for (let i = 0; i < this.positions.length - 1; i++) {
-        const animConfig: AnimConfig__Camera = {
-          iPos: this.positions[i],
-          fPos: this.positions[i + 1],
-          iRot: this.rotations[i],
-          fRot: this.rotations[i + 1],
-          axis: this.posRots[i].axis,
-        };
-        this.animConfigs[i] = animConfig;
-      }
-    } else {
-      throw new Error(
-        'not enough positions and rotations to create AnimationClips'
-      );
-    }
-  };
-
-  private setPositions(posRots: PosRot[]): void {
-    for (let i = 0; i < posRots.length; i++) {
-      this.positions.push(posRots[i].pos);
-    }
-  };
-
-  private setRotations(posRots: PosRot[]): void {
-    for (let i = 0; i < posRots.length; i++) {
-      this.rotations.push(posRots[i].rot);
-    }
-  };
-
-  public getPosRots(): PosRot[] {
-    if (!this.posRots.length) throw new Error('posRot array is empty')
-    else return this.posRots;
-  };
-}
-
-
-
-
-
-
-
-
 
 
 
@@ -367,18 +411,20 @@ class PosRotFactory {
 
 
 
-/** 
- * Camera client example: 
+
+
+
+
+
+/**
+ * Notes: 
  * 
- * camera object created when lesson is instantiated. 
- * camAnimations are created when the Sections are created. 
+ * Camera.inNewPosition: boolean | undefined;
  * 
+ * this field needs to be an array indexed by section, or needs to be set everytime section mutates
+ * sometimes we want multiple sections without moving camera. so user can click next
+ * and see something else happen on screen.
  */
-
-
-
-
-
 
 
 

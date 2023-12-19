@@ -1,5 +1,5 @@
 import { Camera } from "./Camera";
-import { Model } from "./ModelRF";
+import { Model } from "./Model";
 import { Universe } from "./Universe";
 
 interface ThreePageConfig {
