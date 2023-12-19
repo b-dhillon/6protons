@@ -180,19 +180,3 @@ lessonBuilder.addTitle('Buckminsterfullerene')
 const buckminsterfullerene = lessonBuilder.build();
 
 export default buckminsterfullerene;
-
-
-
-
-/**
- * What are we missing? What is not initialized?
- *  
- * Re-think model animation clip construction anti-pattern
- * 
- * What about data validation for your setters/adders on your builders?
- * What about error-handling?
- * 
- * After all that, time to write tests and finish this "pro" back-end re-factor.
- * 
- * Construct lessons and push to server.
-*/

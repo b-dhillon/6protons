@@ -10,7 +10,7 @@ import {
   easeOutCubic,
 } from '../../utility-functions/easing-functions';
 
-type AnimConfig__Camera = {
+type CameraAnimConfig = {
   iPos: Vector3;
   fPos: Vector3;
   iRot: Euler;
@@ -21,7 +21,7 @@ type AnimConfig__Camera = {
 // need to figure out how rotationInfo object will look
 // in OO
 export function translateRotate(
-  config: AnimConfig__Camera,
+  config: CameraAnimConfig,
   easingType: string = 'in-out'
 ): AnimationClip {
 

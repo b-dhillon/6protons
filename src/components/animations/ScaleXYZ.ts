@@ -1,36 +1,39 @@
 import { AnimationClip, VectorKeyframeTrack } from 'three';
 
-function ScaleXYZ({ duration = 1, iScale, fScale }: config) {
+function ScaleXYZ({ duration = 1, iScale, fScale }: ModelAnimConfig) {
+  
   const times = [0, duration];
   const values = [...iScale, ...fScale];
-  const trackName = '.scale';
-  const track = new VectorKeyframeTrack(trackName, times, values);
+  const name = '.scale';
+  const track = new VectorKeyframeTrack(name, times, values);
 
-  return new AnimationClip(trackName, duration, [track]);
+  return new AnimationClip(name, duration, [track]);
 };
 
-export function scaleUp({ duration = 1, iScale = [0,0,0], fScale = [1,1,1] }: config) {
+export function scaleUp({ duration = 1, iScale = [0,0,0], fScale = [1,1,1] }: ModelAnimConfig) {
+  
   const times = [0, duration];
   const values = [...iScale, ...fScale];
-  const trackName = '.scaleUp';
-  const track = new VectorKeyframeTrack(trackName, times, values);
+  const name = '.scaleUp';
+  const track = new VectorKeyframeTrack(name, times, values);
 
-  return new AnimationClip(trackName, duration, [track]);
+  return new AnimationClip(name, duration, [track]);
 };
 
-export function scaleDown({ duration = 1, iScale = [1,1,1],  fScale = [0,0,0] }: config) {
+export function scaleDown({ duration = 1, iScale = [1,1,1],  fScale = [0,0,0] }: ModelAnimConfig) {
+  
   const times = [0, duration];
   const values = [...iScale, ...fScale];
-  const trackName = '.scaleDown';
-  const track = new VectorKeyframeTrack(trackName, times, values);
+  const name = '.scaleDown';
+  const track = new VectorKeyframeTrack(name, times, values);
 
-  return new AnimationClip(trackName, duration, [track]);
+  return new AnimationClip(name, duration, [track]);
 };
 
-interface config {
-  duration: number;
+interface ModelAnimConfig {
   iScale: number[];
   fScale: number[];
+  duration: number;
 };
 
 export default ScaleXYZ;

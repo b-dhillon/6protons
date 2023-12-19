@@ -12,7 +12,7 @@
  */
 
 import { Vector3 } from 'three';
-import { Model } from './ModelRF';
+import { Model } from './Model';
 import { PosRot } from './Camera';
 
 

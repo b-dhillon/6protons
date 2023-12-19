@@ -37,7 +37,7 @@ function SuspendInSolution( duration: number ) {
     };
     const trackRotationX = new NumberKeyframeTrack( trackNameRotationX, timesRotationX, valuesRotationX );
 
-    return new AnimationClip( 'Levitate', duration, [ trackPositionY, trackRotationY, trackRotationX, trackPositionX ] );
+    return new AnimationClip( 'suspend', duration, [ trackPositionY, trackRotationY, trackRotationX, trackPositionX ] );
 }
 
 export default SuspendInSolution;

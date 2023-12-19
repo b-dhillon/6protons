@@ -1,15 +1,88 @@
 
 # OOP REFACTOR:
 
+- Animation Factory
+
+  - Unify the creation of all animations. Camera animations and model animations. 
+
+    # Create client-example-3.ts using the client example at the bottom of animation-factory.ts
+
+    1. Look into Abstract Factory to handle PosRots 
+
+    2. Re-familiarize yourself with what is needed for all the different animations, such as TranslateRotate
+       configs and TranslateCircle and Model animations too
+
+       At its core, each clip needs: times[], values[], name, --> KeyframeTrack --> + duration --> AnimationClip
+
+       # Translate Rotate:
+        Config Variables:
+          iPos: Vector3
+          fPos: Vector3
+          iRot: Euler
+          fRot: Euler
+          axis: string
+          easing: string
+
+        Anims:
+          ZoomOut 
+          ZoomIn
+          CorkscrewUp
+          ZoomOutRotateDown
+          ZoomInRotateUp
+
+
+
+       # Translate Circle:
+        Config Variables:
+          iPos: Vector3
+          fPos: Vector3
+          iRot: Euler
+          fRot: Euler
+          axis: string
+          easing: string
+
+          tMag
+
+        Anims: 
+          CircleModelCCW
+
+
+       # Model Animations
+        Rotate: 
+          iRot 
+          fRot
+          axis
+          duration
+
+        ScaleUp | ScaleDown | ScaleXYZ: 
+          iScale
+          fScale
+          duration
+
+        SuspendInSolution
+          duration
+
+    
+
 
 - Clean Clean Clean:
-  - Make final classes code look more like Three.JS core code. Very clean.
+
   - Come back to translate-circle-xz.ts and make it adhere more to SRP
 
+  - Make final classes code look more like Three.JS core code. Very clean.
+    - double spaced
+    - /** */ comments 
 
-# Fridya-Sunday To-Do:
+
+
+
+
+
+# Next To-Do:
+
 - Figure out textPlacement and music initialization
-- Animation Factory Method?
+
+
 - Test, test, test, test.
 
 

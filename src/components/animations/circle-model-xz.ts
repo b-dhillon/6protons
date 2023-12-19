@@ -38,12 +38,13 @@ import { computeModelPosition } from '../../utility-functions/compute-model-posi
  * 
  */
 
-type AnimConfig__Camera = {
+type CameraAnimConfig = {
   iPos: Vector3;
   fPos: Vector3;
   iRot: Euler;
   fRot: Euler;
   axis: string | null;
+  easing: string;
 };
 type TimesAndValues = {
   times: number[],
@@ -58,13 +59,20 @@ type TimesAndValues = {
  *  with the help of getVecOnCircle
  */
 
-export function translateCircle(
-  config: AnimConfig__Camera, 
-  easingType: string = 'in-out'
-): AnimationClip {
+// Should we turn this into a class, with the config variables being fields that are 
+// assigned in the constructor?
+// And each part of the function being methods?
+    // getCircleCenter();
+    // getVecOnCircleAtT()
+    // createNTimesAndValues()
+    // createKeyframeTracks()
+    // createAnimationClip() 
+export function circleModel( config: CameraAnimConfig ): AnimationClip {
 
-  const { iPos, iRot, fRot, axis } = config;
-  const easingFn = easingType === 'out' ? easeOutCubic : easeInOutCubic;
+  const { iPos, iRot, fRot, axis, easing } = config;
+
+  const easingFn = easing === 'out' ? easeOutCubic : easeInOutCubic;
+
   // Variables needed for function, but scoped outside
   // because fn is looped and we don't need to re-compute 
   // these variables on each iteration of the loop
@@ -75,6 +83,7 @@ export function translateCircle(
   function getVecOnCirclerAtT(easedT: number): Vector3 {
 
     let currentAngle = initialAngle + ( easedT * tMag );
+
     return new Vector3(
       circleCenter.x + ( radius * Math.cos(currentAngle) ),
       iPos.y,
@@ -86,7 +95,7 @@ export function translateCircle(
 
 
 
-  /** 3. Loop n times and call getVectorAtT n times */
+  /** 3. Loop n times and call getVecOnCirclerAtT n times */
   function createNTimesAndValues(n: number): TimesAndValues {
 
     // const n = 100;  // You can adjust this based on desired smoothness
@@ -166,7 +175,7 @@ export function translateCircle(
 
   const tracks = createKeyframeTracks(timesAndValues)
   return new AnimationClip(
-    'TranslateCircle', 
+    'circle-model', 
     1, 
     [ tracks.posTrack, tracks.rotTrack ]
   );
