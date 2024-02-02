@@ -14,8 +14,6 @@ import {
 
 import { computeModelPosition } from '../../utility-functions/compute-model-position';
 
-
-
 /** 
  * Fn description:
  * 
@@ -46,6 +44,7 @@ type CameraAnimConfig = {
   axis: string | null;
   easing: string;
 };
+
 type TimesAndValues = {
   times: number[],
   values: {
@@ -92,30 +91,27 @@ export function circleModel( config: CameraAnimConfig ): AnimationClip {
 
   };
 
-
-
-
   /** 3. Loop n times and call getVecOnCirclerAtT n times */
   function createNTimesAndValues(n: number): TimesAndValues {
 
     // const n = 100;  // You can adjust this based on desired smoothness
-    const times = new Float32Array(n);
-    const posValues = new Float32Array(n * 3);  // x, y, z for each keyframe
-    const rotValues = new Float32Array(n);
-
-
+    const times = []
+    const posValues = []
+    const rotValues = []
+  
+  
     for (let i = 0; i < n; i++) {
-
+  
       const t = i / (n - 1);
       times[i] = t;
       const easedT = easingFn(t);
-
+  
       /** Create Position Values */
       const pos = getVecOnCirclerAtT(easedT);
       posValues[i * 3] = pos.x;
       posValues[i * 3 + 1] = pos.y;
       posValues[i * 3 + 2] = pos.z;
-
+  
       /** Create Rotation Values */
       let angle = 0;
       switch( axis ) {
@@ -129,22 +125,20 @@ export function circleModel( config: CameraAnimConfig ): AnimationClip {
           angle = iRot.z + (fRot.z - iRot.z) * easedT;
           break;
       };
-
+  
       rotValues[ i ] = angle;
+      
     };
-
-    const timesArray = Array.from(times);
-    const posArray = Array.from(posValues);
-    const rotArray = Array.from(rotValues);
-
+  
     return { 
-      times: timesArray,
+      times: times,
       values: {
-        pos: posArray,
-        rot: rotArray
+        pos: posValues,
+        rot: rotValues
       } 
     };
   };
+
 
 
 

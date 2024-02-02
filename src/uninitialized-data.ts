@@ -12,8 +12,8 @@ import { UninitializedData, UninitializedPage } from './types/types';
 import { TranslateRotate } from './components/animations/TranslateRotate';
 import { AnimationClip } from 'three';
 import ScaleXYZ from './components/animations/ScaleXYZ';
-import Rotate from './components/animations/Rotate';
-import SuspendInSolution from './components/animations/SuspendInSolution';
+import { spinY } from './components/animations/spin-y';
+import { suspend } from './components/animations/suspend';
 import { TranslateCircle } from './components/animations/TranslateCircle';
 import { getVectorOnCircle } from './utility-functions/get-vector-on-circle';
 

@@ -1,13 +1,15 @@
 import { AnimationClip, NumberKeyframeTrack } from 'three';
 
 type AnimConfig = {
+  
   iRot: number;
   fRot: number;
   axis: string;
   duration: number;
+
 };
 
-function rotate({
+function spinY({
   duration = 1,
   axis = 'y',
   iRot = 0,
@@ -16,6 +18,7 @@ function rotate({
 
   const times = [ 0, duration ];
   const values = [ iRot, fRot ];
+  
   const trackName = '.rotation[' + axis + ']';
   const track = new NumberKeyframeTrack(trackName, times, values);
 
@@ -24,4 +27,4 @@ function rotate({
 
 
 
-export default rotate;
+export { spinY };

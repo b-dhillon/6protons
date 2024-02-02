@@ -4,17 +4,7 @@ import { Camera, CamAnimation } from './classes/Camera';
 import { Models, ModelBuilder, ModelDirector } from './classes/Model';
 import { Universe } from './classes/Universe';
 
-/**
- * Lesson Build Steps: 
- * 
- * 0. List out all assets or import them as lists
- * 1. Initialize a Universe
- * 2. Define all the camera animations you want to use. How you want to move through the universe.
- * 3. Instantiate and initialize Camera
- * 4. Build 3D models -- still need to create model AnimationClips
- * 5. Loop, instantiate, and initialize all Sections
- *
-*/
+
 
 
 
@@ -37,7 +27,7 @@ const modelPaths = [
 
 ];
 
-const textsOfEntireLesson = [[], ['', ''], [''], ['', ''], [''], ['']]; // each index is textOfSection
+const textsOfEntireLesson = [ [], ['', ''], [''], ['', ''], [''], [''] ]; // each index is textOfSection
 
 const musicPathsOfEntireLesson = ['', ''];
 
@@ -56,17 +46,17 @@ const universe = new Universe('fullerene-universe', 25000, 5);
 */ 
 const camAnimations = [
 
-  new CamAnimation('zoom-in', 4),
+  new CamAnimation( 'zoom-in', 4 ),
 
-  new CamAnimation('zoom-out-rotate-up', 2, Math.PI / 4),
+  new CamAnimation( 'zoom-out-rotate-up', 2, Math.PI / 4 ),
 
-  new CamAnimation('zoom-in-rotate-down', 2, Math.PI / 4),
+  new CamAnimation( 'zoom-in-rotate-down', 2, Math.PI / 4 ),
 
-  new CamAnimation('circle-model', Math.PI / 2, -Math.PI / 2),
+  new CamAnimation( 'circle-model', Math.PI / 2, -Math.PI / 2 ),
 
-  new CamAnimation('zoom-out', 3),
+  new CamAnimation( 'zoom-out', 3 ),
 
-  new CamAnimation('corkscrew-up', 2, Math.PI / 2),
+  new CamAnimation( 'corkscrew-up', 2, Math.PI / 2 ),
 
 ];
 
@@ -104,35 +94,37 @@ const modelDirector = new ModelDirector( modelBuilder );
 modelDirector.addDependencies( camAnimations, textsOfEntireLesson, posRots );
 
 modelDirector.constructModel({
-  assignedSection: 0,
+  section: 0,
   path: '/fullerene/models/m0.glb',
   name: 'floating-cage',
   animNames: { nested: 'suspend-in-solution' },
-}); const m0 = modelBuilder.getProduct();
+}); 
+
+const m0 = modelBuilder.getProduct();
 
 modelDirector.constructModel({
-  assignedSection: 2,
+  section: 2,
   path: '/fullerene/models/m0.glb',
   name: 'no-soccer-pattern',
   animNames: {},
 }); const m2 = modelBuilder.getProduct();
 
 modelDirector.constructModel({
-  assignedSection: 3,
+  section: 3,
   path: '/fullerene/models/m2.glb',
   name: 'soccer-pattern',
   animNames: {},
 }); const m3 = modelBuilder.getProduct();
 
 modelDirector.constructModel({
-  assignedSection: 4,
+  section: 4,
   path: '/fullerene/models/m3.glb',
   name: 'doped-cage',
   animNames: {},
 }); const m4 = modelBuilder.getProduct();
 
 modelDirector.constructModel({
-  assignedSection: 5,
+  section: 5,
   path: '/fullerene/models/m3.glb',
   name: 'doped-cage',
   animNames: {},
@@ -180,3 +172,32 @@ lessonBuilder.addTitle('Buckminsterfullerene')
 const buckminsterfullerene = lessonBuilder.build();
 
 export default buckminsterfullerene;
+
+
+
+
+
+/**
+ * Lesson Build Steps: 
+ * 
+ * 0. List out all assets or import them as lists
+ * 1. Initialize a Universe
+ * 2. Define all the camera animations you want to use. How you want to move through the universe.
+ * 3. Instantiate and initialize Camera
+ * 4. Build 3D models -- still need to create model AnimationClips
+ * 5. Loop, instantiate, and initialize all Sections
+ *
+*/
+
+/**
+ * What are we missing? What is not initialized?
+ *  
+ * Re-think model animation clip construction anti-pattern
+ * 
+ * What about data validation for your setters/adders on your builders?
+ * What about error-handling?
+ * 
+ * After all that, time to write tests and finish this "pro" back-end re-factor.
+ * 
+ * Construct lessons and push to server.
+*/

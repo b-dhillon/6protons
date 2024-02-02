@@ -6,8 +6,8 @@
   - Unify the creation of all animations. Camera animations and model animations. 
 
     # Create client-example-3.ts using the client example at the bottom of animation-factory.ts
-
-    1. Look into Abstract Factory to handle PosRots 
+    # Create example of Model and Camera using the Factory Method or Abstract Factory
+    # Think about the Three.AnimationClipCreator name-space and the Strategy Pattern for createKeyframes
 
     2. Re-familiarize yourself with what is needed for all the different animations, such as TranslateRotate
        configs and TranslateCircle and Model animations too
@@ -44,7 +44,7 @@
           tMag
 
         Anims: 
-          CircleModelCCW
+          CircleModelCW
 
 
        # Model Animations
@@ -70,7 +70,7 @@
   - Come back to translate-circle-xz.ts and make it adhere more to SRP
 
   - Make final classes code look more like Three.JS core code. Very clean.
-    - double spaced
+    - double space
     - /** */ comments 
 
 
