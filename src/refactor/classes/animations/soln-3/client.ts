@@ -1,20 +1,22 @@
-import { LessonBuilder } from './classes/Lesson';
-import { Section } from './classes/Section';
-import { Camera, CamAnimation } from './classes/Camera';
-import { Models, ModelBuilder, ModelDirector } from './classes/Model';
-import { Universe } from './classes/Universe';
+import { LessonBuilder } from '../../../classes/Lesson';
+import { Section } from '../../../classes/Section';
+import { Camera, CamAnimation } from './Camera';
+import { Models, ModelBuilder, ModelDirector } from './Model';
+import { Universe } from '../../../classes/Universe';
+import { AnimationClipCreator } from './animation-clip-creator';
 
 /**
- * Lesson Build Steps: 
+ * There isn't any change in the client for soln-3. The change is in 
+ * Camera.createAnimClips 
+ *  Instead of calling translateCircle or translateRotate, we call an instance of the name-space 
+ *  and create a CircleStrategy() or a TRStrategy() based on the animName configured by the client here. 
  * 
- * 0. List out all assets or import them as lists
- * 1. Initialize a Universe
- * 2. Define all the camera animations you want to use. How you want to move through the universe.
- * 3. Instantiate and initialize Camera
- * 4. Build 3D models -- still need to create model AnimationClips
- * 5. Loop, instantiate, and initialize all Sections
- *
-*/
+ *  In the future, if I have a new type of camera animation I will need to:
+ *    - create a new strategy
+ *    - a new way to assign that strategy 
+ *    - a new PosRot
+ *    - a new  CamAnimConfig??
+ */
 
 
 
@@ -37,7 +39,7 @@ const modelPaths = [
 
 ];
 
-const textsOfEntireLesson = [[], ['', ''], [''], ['', ''], [''], ['']]; // each index is textOfSection
+const textsOfEntireLesson = [ [], ['', ''], [''], ['', ''], [''], [''] ]; // each index is textOfSection
 
 const musicPathsOfEntireLesson = ['', ''];
 
@@ -47,7 +49,7 @@ const voicePathsOfEntireLesson = ['', '', '', ''];
 /** 
  * Step-1: Initialize a universe:
 */ 
-const universe = new Universe('fullerene-universe', 25000, 5);
+const universe = new Universe( 'fullerene-universe', 25000, 5);
 
 
 /** 
@@ -56,17 +58,17 @@ const universe = new Universe('fullerene-universe', 25000, 5);
 */ 
 const camAnimations = [
 
-  new CamAnimation('zoom-in', 4),
+  new CamAnimation( 'zoom-in', 4 ),
 
-  new CamAnimation('zoom-out-rotate-up', 2, Math.PI / 4),
+  new CamAnimation( 'zoom-out-rotate-up', 2, Math.PI / 4 ),
 
-  new CamAnimation('zoom-in-rotate-down', 2, Math.PI / 4),
+  new CamAnimation( 'zoom-in-rotate-down', 2, Math.PI / 4 ),
 
-  new CamAnimation('circle-model', Math.PI / 2, -Math.PI / 2),
+  new CamAnimation( 'circle-model', Math.PI / 2, -Math.PI / 2 ),
 
-  new CamAnimation('zoom-out', 3),
+  new CamAnimation( 'zoom-out', 3 ),
 
-  new CamAnimation('corkscrew-up', 2, Math.PI / 2),
+  new CamAnimation( 'corkscrew-up', 2, Math.PI / 2 ),
 
 ];
 
@@ -81,7 +83,12 @@ const numberOfSections = camAnimations.length
 const camera = new Camera({});
 camera.setStartPosition( 0, 0, 5 ); 
 camera.setCamAnimations( camAnimations );
+
 camera.init();
+
+
+
+
 const posRots = camera.getPosRots();
 
 
@@ -104,39 +111,44 @@ const modelDirector = new ModelDirector( modelBuilder );
 modelDirector.addDependencies( camAnimations, textsOfEntireLesson, posRots );
 
 modelDirector.constructModel({
-  assignedSection: 0,
+  section: 0,
   path: '/fullerene/models/m0.glb',
   name: 'floating-cage',
   animNames: { nested: 'suspend-in-solution' },
-}); const m0 = modelBuilder.getProduct();
+}); 
+const m0 = modelBuilder.getProduct();
 
 modelDirector.constructModel({
-  assignedSection: 2,
+  section: 2,
   path: '/fullerene/models/m0.glb',
   name: 'no-soccer-pattern',
   animNames: {},
-}); const m2 = modelBuilder.getProduct();
+}); 
+const m2 = modelBuilder.getProduct();
 
 modelDirector.constructModel({
-  assignedSection: 3,
+  section: 3,
   path: '/fullerene/models/m2.glb',
   name: 'soccer-pattern',
   animNames: {},
-}); const m3 = modelBuilder.getProduct();
+}); 
+const m3 = modelBuilder.getProduct();
 
 modelDirector.constructModel({
-  assignedSection: 4,
+  section: 4,
   path: '/fullerene/models/m3.glb',
   name: 'doped-cage',
   animNames: {},
-}); const m4 = modelBuilder.getProduct();
+}); 
+const m4 = modelBuilder.getProduct();
 
 modelDirector.constructModel({
-  assignedSection: 5,
+  section: 5,
   path: '/fullerene/models/m3.glb',
   name: 'doped-cage',
   animNames: {},
-}); const m5 = modelBuilder.getProduct();
+}); 
+const m5 = modelBuilder.getProduct();
 
 const models = new Models( [ m0, m2, m3, m4, m5 ] );
 
@@ -157,7 +169,9 @@ for( let i = 0; i < numberOfSections; i++ ) {
     models: models.groupedBySection[i],
     text: textsOfEntireLesson[i],
     voicePath: voicePathsOfEntireLesson[i],
-  }); sections[i] = section;
+  }); 
+  
+  sections[ i ] = section;
 
 };
 
@@ -183,6 +197,19 @@ export default buckminsterfullerene;
 
 
 
+
+
+/**
+ * Lesson Build Steps: 
+ * 
+ * 0. List out all assets or import them as lists
+ * 1. Initialize a Universe
+ * 2. Define all the camera animations you want to use. How you want to move through the universe.
+ * 3. Instantiate and initialize Camera
+ * 4. Build 3D models -- still need to create model AnimationClips
+ * 5. Loop, instantiate, and initialize all Sections
+ *
+*/
 
 /**
  * What are we missing? What is not initialized?

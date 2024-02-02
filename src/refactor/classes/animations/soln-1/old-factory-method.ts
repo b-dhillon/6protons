@@ -63,7 +63,7 @@ type AnimConfig = {
 abstract class Anim {
 
   // factory method:
-  abstract createAnimClip( config: AnimConfig ): AnimClip;
+  abstract createClip( config: AnimConfig ): AnimClip;
 
 };
 
@@ -75,8 +75,10 @@ abstract class Anim {
 //  us -  ZoomOutAnim
 class ZoomOutAnim extends Anim {
 
-  createAnimClip(): AnimClip {
+  createClip(): AnimClip {
+
     return new ZoomOutClip();
+    
   };
 
 };
@@ -84,8 +86,10 @@ class ZoomOutAnim extends Anim {
 
 class CircleModelAnim extends Anim {
 
-  createAnimClip(): AnimClip {
+  createClip(): AnimClip {
+
     return new CircleModelClip();
+
   };
     
 };

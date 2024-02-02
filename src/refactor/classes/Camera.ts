@@ -7,6 +7,7 @@ import { getVecOnCircle } from '../../utility-functions/get-vector-on-circle';
 import { translateRotate } from '../../components/animations/translate-rotate-oo';
 import { circleModel } from '../../components/animations/circle-model-xz';
 import { CamConfig, CamAnimConfig } from "../types"
+import { easeInOutCubic, easeOutCubic } from '../../utility-functions/easing-functions';
 
 
 
@@ -31,10 +32,11 @@ export class Camera {
   animClips: AnimationClip[];
 
   constructor({
-    startPosition = new Vector3(0, 0, 0),
-    startRotation = new Euler(0, 0, 0),
+    startPosition = new Vector3( 0, 0, 0 ),
+    startRotation = new Euler( 0, 0, 0 ),
     camAnimations = [],
-  }: CamConfig) {
+  }: CamConfig = {} ) {
+
     this.startPosition = startPosition;
     this.startRotation = startRotation;
     this.camAnimations = camAnimations;
@@ -43,8 +45,10 @@ export class Camera {
     this.posRots = [];
     this.animConfigs = [];
     this.animClips = [];
+    
   };
 
+  
   // public methods:
   public setStartPosition(x: number = 0, y: number = 0, z: number = 0): void {
 
@@ -55,6 +59,7 @@ export class Camera {
 
   };
 
+
   public setStartRotation(x: number = 0, y: number = 0, z: number = 0): void {
 
     const startRot = new Euler(x, y, z);
@@ -64,11 +69,13 @@ export class Camera {
 
   };
 
-  public setCamAnimations(camAnimations: CamAnimation[]): void {
+
+  public setCamAnimations( camAnimations: CamAnimation[] ): void {
 
     this.camAnimations = camAnimations;
 
   };
+
 
   public init(): void {
 
@@ -76,6 +83,7 @@ export class Camera {
     this.createAnimClips();
 
   };
+
 
   // private methods:
   private createPosRots(): void {
@@ -103,35 +111,6 @@ export class Camera {
   };
 
 
-  private createAnimClips() {
-
-    if (!this.animConfigs.length) {
-
-      this.createAnimConfigs();
-
-    };
-
-    this.animConfigs.forEach( (config: CamAnimConfig, i: number) => {
-
-      let clip: AnimationClip;
-
-      if (this.camAnimations[i].name === 'circle-model') {
-
-        clip = circleModel(config);
-
-      } else {
-
-        clip = translateRotate(config);
-
-      };
-
-      this.animClips.push(clip);
-
-    });
-
-  };
-
-
   private createAnimConfigs(): void {
 
     // if positions and rotations haven't been extracted from PosRots
@@ -151,12 +130,15 @@ export class Camera {
 
         const animConfig: CamAnimConfig = {
 
+          animName: this.camAnimations[i].name,
+
           iPos: this.positions[i],
           fPos: this.positions[i + 1],
           iRot: this.rotations[i],
           fRot: this.rotations[i + 1],
-          axis: this.posRots[i].axis,
-          easing: i === 0 ? 'out' : 'in-out'
+          rotAxis: this.posRots[i].axis,
+          
+          easingFn: i === 0 ? easeOutCubic : easeInOutCubic
 
         };
 
@@ -167,12 +149,44 @@ export class Camera {
     } else {
 
       throw new Error(
-        'not enough positions and rotations to create AnimationClips'
+        'not enough positions and rotations to create AnimationConfigs'
       );
 
     };
 
   };
+
+
+  private createAnimClips() {
+
+    if (!this.animConfigs.length) {
+
+      this.createAnimConfigs();
+
+    };
+
+    this.animConfigs.forEach( (config: CamAnimConfig, i: number) => {
+
+      let clip: AnimationClip;
+
+      if ( this.camAnimations[i].name === 'circle-model' ) {
+
+        clip = circleModel( config );
+
+      }
+      
+      else {
+
+        clip = translateRotate( config );
+
+      };
+
+      this.animClips.push( clip );
+
+    });
+
+  };
+
 
   private setPositions(posRots: PosRot[]): void {
 
@@ -184,6 +198,7 @@ export class Camera {
 
   };
 
+
   private setRotations(posRots: PosRot[]): void {
 
     for (let i = 0; i < posRots.length; i++) {
@@ -193,6 +208,7 @@ export class Camera {
     };
 
   };
+
 
   public getPosRots(): PosRot[] {
 

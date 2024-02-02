@@ -93,56 +93,56 @@ export class LessonBuilder implements ILessonBuilder {
 
   };
 
-  addTitle(title: string): LessonBuilder {
+  addTitle( title: string ): LessonBuilder {
 
     this.lesson.title = title;
     return this; 
 
   };
 
-  addThumbnail(thumbnail: string): LessonBuilder {
+  addThumbnail( thumbnail: string ): LessonBuilder {
 
     this.lesson.thumbnail = thumbnail;
     return this; 
 
   };
 
-  addUniverse(universe: Universe): LessonBuilder {
+  addUniverse( universe: Universe ): LessonBuilder {
 
     this.lesson.universe = universe;
     return this; 
 
   };
 
-  addSection( section: Section): LessonBuilder {
+  addSection( section: Section ): LessonBuilder {
 
     this.lesson.sections.push(section);
     return this; 
 
   };
 
-  setSections( sections: Section[]): LessonBuilder {
+  setSections( sections: Section[] ): LessonBuilder {
 
     this.lesson.sections = sections;
     return this; 
 
   };
 
-  addCamera(camera: Camera): LessonBuilder {
+  addCamera( camera: Camera ): LessonBuilder {
 
     this.lesson.camera = camera;
     return this; 
 
   };
 
-  addModel(model: Model[] ): LessonBuilder {
+  addModel( model: Model[] ): LessonBuilder {
 
-    this.lesson.modelsOfEntirePage.push(model)
+    this.lesson.modelsOfEntirePage.push( model )
     return this; 
 
   };
 
-  setModels(models: Model[][]): LessonBuilder {
+  setModels( models: Model[][] ): LessonBuilder {
 
     this.lesson.modelsOfEntirePage = models;
     return this; 
@@ -151,7 +151,7 @@ export class LessonBuilder implements ILessonBuilder {
 
   // text and texts should be re-named to: 
   // textOfSection and textOfEntireLesson
-  addText(textOfSection: string[]): LessonBuilder {
+  addText( textOfSection: string[] ): LessonBuilder {
 
     this.lesson.textOfEntireLesson.push(textOfSection);
     return this;
@@ -165,14 +165,14 @@ export class LessonBuilder implements ILessonBuilder {
 
   };
 
-  addMusics(musicPathsOfEntireLesson: string[]): LessonBuilder {
+  addMusics( musicPathsOfEntireLesson: string[] ): LessonBuilder {
 
     this.lesson.musicPathsOfEntireLesson = musicPathsOfEntireLesson; 
     return this;
 
   };
 
-  addVoices(voicePathsOfEntireLesson: string[]): LessonBuilder {
+  addVoices( voicePathsOfEntireLesson: string[] ): LessonBuilder {
 
     this.lesson.voicePathsOfEntireLesson = voicePathsOfEntireLesson;
     return this;

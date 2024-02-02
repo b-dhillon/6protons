@@ -1,13 +1,13 @@
 import { AnimationClip, Euler, Group, Matrix4, Mesh, Object3D, Vector3 } from 'three';
-import { Section } from './Section';
+import { Section } from '../../Section';
 import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { CamAnimation } from './Camera';
-import { scaleUp, scaleDown } from '../../components/animations/ScaleXYZ';
-import { spinY } from '../../components/animations/spin-y';
-import { ModelAnimNamesConfig, ModelAnimNames, ModelAnimConfig, ModelClipConstructors, ModelAnimClips, RotAngleAndRotVector, ModelDirectorConfig, PosRot } from "../types"
-import { suspend } from '../../components/animations/suspend';
-
+import { scaleUp, scaleDown } from '../../../../components/animations/ScaleXYZ';
+import { spinY } from '../../../../components/animations/spin-y';
+import { ModelAnimNamesConfig, ModelAnimNames, ModelAnimConfig, ModelClipConstructors, ModelAnimClips, RotAngleAndRotVector, ModelDirectorConfig, PosRot } from "../../../types"
+import { suspend } from '../../../../components/animations/suspend';
+import { AnimationClipCreator } from './animation-clip-creator';
 
 const modelClipConstructors: ModelClipConstructors = {
   'scale-up': scaleUp,
@@ -16,48 +16,112 @@ const modelClipConstructors: ModelClipConstructors = {
   'suspend': suspend
 };
 
+/**
+ * Here we changed a few different things:
+ * 
+ * added proeprty on Model: animConfigs
+ * 
+ * added method on builder: createAnimConfigs()
+ * 
+ */
 
-export class Model {
+class ModelAnimConfigs {
 
-  private static _lastId = 0;
-  
-  constructor() {
+  enter: ModelAnimConfig | undefined;
+  main: ModelAnimConfig | undefined;
+  exit: ModelAnimConfig | undefined;
+  nested: ModelAnimConfig | undefined;
 
-    this.id = Model._lastId++;
+  [ key: string ]: ModelAnimConfig | undefined // index signature
 
-  }
+}
 
-  readonly id: number;
+class BlankModelAnimConfig {
 
-  section!: number;
+  animName: string | undefined;
 
-  name: string | undefined;
+  iPos: Vector3 | undefined;
+  fPos: Vector3 | undefined;
+  iRot: Euler | undefined;
+  fRot: Euler | undefined; 
+  rotAxis: string | undefined;
+  easingFn: Function | undefined;
+  smoothness: number | undefined;
+  duration: number = 1;
 
-  path!: string;
+  iScale: Vector3 | undefined; 
+  fScale: Vector3 | undefined;
 
-  visible: boolean = false;
-
-  scale: number = 1;
-
-  animNames!: ModelAnimNames;
-  
-  animClips: ModelAnimClips | undefined;
-  
-  meshes: Object3D[] | undefined;
-
-  position: Vector3 | undefined;
-  
-  rotation: Euler = new Euler(0, 0, 0);
-
-  inNewPosition: boolean | undefined;
-  
-  yOffsetForText: number = 0;
-
-  zoomInOnReverse: boolean | undefined;
+  constructor() {};
 
 };
 
+class Anims {
 
+  enter: { name?: string, config?: ModelAnimConfig, clip?: AnimationClip } = {};
+  exit: { name?: string, config?: ModelAnimConfig, clip?: AnimationClip } = {};
+  main: { name?: string, config?: ModelAnimConfig, clip?: AnimationClip } = {};
+  nested: { name?: string, config?: ModelAnimConfig, clip?: AnimationClip } = {};
+
+  constructor() {}
+
+};
+
+export class Model {
+
+    private static _lastId = 0;
+    
+    constructor() {
+  
+      this.id = Model._lastId++;
+      this.anims = new Anims();
+
+    }
+  
+    readonly id: number;
+  
+    section!: number;
+  
+    name: string | undefined;
+  
+    path!: string;
+  
+    visible: boolean = false;
+  
+    scale: number = 1;
+  
+    /**
+     * All three of the objects below have the same keys: 
+     *   enter: { name: string, config: AnimConfig, clip: }
+     *   main: 
+     *   exit:
+     *   nested: 
+     */
+    animNames!: ModelAnimNames;
+
+    animConfigs!: ModelAnimConfigs
+    
+    animClips: ModelAnimClips | undefined;
+
+    /**
+     * Experimental:
+     */
+    anims: Anims;
+
+    
+    meshes: Object3D[] | undefined;
+  
+    position: Vector3 | undefined;
+    
+    rotation: Euler = new Euler(0, 0, 0);
+  
+    inNewPosition: boolean | undefined;
+    
+    yOffsetForText: number = 0;
+  
+    zoomInOnReverse: boolean | undefined;
+  
+};
 
 
 export class Models {
@@ -99,9 +163,6 @@ export class Models {
 
 
 
-
-
-
 interface IModelBuilder {
 
   addPath(path: string): void;
@@ -110,7 +171,9 @@ interface IModelBuilder {
 
   addName(name: string): void;
 
-  addAnimNames(animNames: ModelAnimNamesConfig): void;
+  addAnimNames( animNames: ModelAnimNamesConfig ): void;
+
+  createAnimConfigs(): void;
 
   createAnimClips(): void;
 
@@ -158,9 +221,9 @@ export class ModelBuilder implements IModelBuilder {
 
   };
 
-  public addAnimNames(animNames: ModelAnimNamesConfig = {}): void {
+  public addAnimNames( animNames: ModelAnimNamesConfig = {} ): void {
 
-    const defaultAnimNames = {
+    const names = {
       enter: 'scale-up',
       main: 'spin-y',
       exit: 'scale-down',
@@ -168,14 +231,101 @@ export class ModelBuilder implements IModelBuilder {
       ...animNames, // over-rides any defaults
     };
 
-    this.model.animNames = defaultAnimNames;
+    this.model.animNames = names;
+
+    /**
+     * Experimental:
+     */
+    this.model.anims.enter.name = names.enter;
+    this.model.anims.main.name  = names.main; 
+    this.model.anims.exit.name  = names.exit;
+    this.model.anims.nested.name = names.nested;
 
   };
 
-  // Creates AnimationClips based on animaNames that are set when Model is instantiated
+  public createAnimConfigs() {
+
+    // this.model.animConfigs = new ModelAnimConfigs(); 
+
+    // const animNameKeys = Object.keys( this.model.animNames );
+
+    // const animNameValues = Object.values( this.model.animNames );
+
+    // const numberOfAnimationsOnModel = animNameValues.length;
+    
+    // for ( let i = 0; i < numberOfAnimationsOnModel; i++ ) {
+
+    //   const modelAnimConfig = new BlankModelAnimConfig();
+
+    //   switch( animNameValues[ i ] ) {
+
+    //     case 'scale-up':
+    //       modelAnimConfig.iScale = new Vector3( 0, 0, 0 );
+    //       modelAnimConfig.fScale = new Vector3( 1, 1, 1 );
+    //       break;
+
+    //     case 'scale-down':
+    //       modelAnimConfig.iScale = new Vector3( 1, 1, 1 );
+    //       modelAnimConfig.fScale = new Vector3( 0, 0, 0 );
+    //       break; 
+
+    //     case 'spin-y': 
+    //       modelAnimConfig.iRot = new Euler( 0, 1, 0 );
+    //       modelAnimConfig.fRot = new Euler( 0, Math.PI * 2, 0);
+    //       modelAnimConfig.rotAxis = 'y';
+    //       break;
+
+    //     case 'suspend':
+    //       modelAnimConfig.duration = 90;
+    //       break;
+
+    //     default:
+    //       throw new Error( "Invalid animation name. no model animation with that name found." )
+  
+    //   };
+
+    //   this.model.animConfigs[ animNameKeys[ i ] ] = modelAnimConfig;
+
+    // };
+
+
+    // Experimental: 
+    this.model.anims.enter.config = createConfig( this.model.anims.enter.name )
+    this.model.anims.main.config = createConfig( this.model.anims.main.name )
+    this.model.anims.exit.config = createConfig( this.model.anims.exit.name )
+    this.model.anims.nested.config = createConfig( this.model.anims.nested.name )
+
+
+  };
+
+  // Creates AnimationClips based on animNames that are set when Model is instantiated
   public createAnimClips(): void {
 
-    if(!this.model.animNames) this.addAnimNames();
+    if( !this.model.animNames ) this.addAnimNames();
+    if( !this.model.animConfigs ) this.createAnimConfigs();
+
+    
+    /**
+     * Here is where I dont think this pattern is going to work out. 
+     * This looks bad
+     */
+    AnimationClipCreator.CreateScaleUpAnimation()
+
+    AnimationClipCreator.CreateSpinYAnimation()
+
+    AnimationClipCreator.CreateScaleDownAnimation()
+
+    AnimationClipCreator.CreateSuspendAnimation()
+
+    /**
+     * What I actually want at this point
+     */
+
+    this.model.createClip( anims.enter )
+    this.model.createClip( anims.main )
+    this.model.createClip( anims.exit )
+    this.model.createClip( anims.enter )
+
     
 
     // grabbing the names (strings) of the animations
@@ -294,7 +444,6 @@ export class ModelBuilder implements IModelBuilder {
 }
 
 
-
 export class ModelDirector {
 
   builder: ModelBuilder;
@@ -389,6 +538,7 @@ function getCamRotAngleAndRotVector( rotAxis: string | null, camRot: Euler ): Ro
   }
 
   return { camRotAngle: rotAngle, camRotVector: rotVector };
+
 }
 
 
@@ -404,10 +554,12 @@ function applyCamRotation( modelLocalPosition: Vector3, camRotAngle: number, cam
   modelLocalPosition.applyMatrix4(rotMatrix);
 
   return modelLocalPosition;
+
 }
 
 
 function loadGLTF(path: string): Promise<GLTF> {
+
   return new Promise((resolve, reject) => {
     const loader = new GLTFLoader();
     const dracoLoader = new DRACOLoader();
@@ -435,8 +587,43 @@ function loadGLTF(path: string): Promise<GLTF> {
       }
     );
   });
+
 }
 
+function createConfig( name: string | undefined ) {
+
+  const modelAnimConfig = new BlankModelAnimConfig();
+
+  switch( name ) {
+
+    case 'scale-up':
+      modelAnimConfig.iScale = new Vector3( 0, 0, 0 );
+      modelAnimConfig.fScale = new Vector3( 1, 1, 1 );
+      break;
+
+    case 'scale-down':
+      modelAnimConfig.iScale = new Vector3( 1, 1, 1 );
+      modelAnimConfig.fScale = new Vector3( 0, 0, 0 );
+      break; 
+
+    case 'spin-y': 
+      modelAnimConfig.iRot = new Euler( 0, 1, 0 );
+      modelAnimConfig.fRot = new Euler( 0, Math.PI * 2, 0);
+      modelAnimConfig.rotAxis = 'y';
+      break;
+
+    case 'suspend':
+      modelAnimConfig.duration = 90;
+      break;
+
+    default:
+      throw new Error( `Invalid animation name. no model animation with that name found. NAME: ${name}` )
+
+  };
+
+  return modelAnimConfig;
+
+};
 
 
 /** 

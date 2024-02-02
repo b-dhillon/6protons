@@ -15,12 +15,38 @@ export type CamConfig = {
   
 export type CamAnimConfig = {
 
+  animName: string;
+  tMag: number;
+  rMag: number;
+
+
   iPos: Vector3;
   fPos: Vector3;
   iRot: Euler;
   fRot: Euler;
-  axis: string | null;
-  easing: string;
+  rotAxis: string | null;
+  easingFn: Function;
+  smoothness: number;
+  duration: number;
+
+};
+
+
+export type ModelAnimConfig = {
+
+  animName: string | undefined;
+
+  iPos: Vector3 | undefined;
+  fPos: Vector3 | undefined;
+  iRot: Euler | undefined;
+  fRot: Euler | undefined; 
+  rotAxis: string | undefined;
+  easingFn: Function | undefined;
+  smoothness: number | undefined;
+  duration: number;
+
+  iScale: Vector3 | undefined; 
+  fScale: Vector3 | undefined;
 
 };
 
@@ -56,17 +82,6 @@ export type ModelAnimNames = {
 
 };
 
-export type ModelAnimConfig = {
-
-  iPos: Vector3;
-  fPos: Vector3;
-  iRot: Euler; 
-  fRot: Euler;
-  iScale: Vector3;
-  fScale: Vector3;
-  duration: number;
-
-};
 
 
 export type ModelClipConstructors = {
@@ -74,8 +89,9 @@ export type ModelClipConstructors = {
   [key: string]: (config?: any) => AnimationClip; // Index signature
 
   'scale-up': (config?: any) => AnimationClip;
-  'rotate': (config?: any) => AnimationClip;
+  'spin-y': (config?: any) => AnimationClip;
   'scale-down': (config?: any) => AnimationClip;
+  'suspend': (config?: any) => AnimationClip;
   
 };
 
@@ -99,8 +115,8 @@ export type RotAngleAndRotVector = {
 export type ModelDirectorConfig = {
 
   path: string, 
-  assignedSection: number, 
+  section: number, 
   name: string,
-  animNames: ModelAnimNamesConfig,
+  anims: ModelAnimNamesConfig,
 
 };

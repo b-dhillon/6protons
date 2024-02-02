@@ -4,10 +4,12 @@ import { AnimationClip, Euler, Interpolant, KeyframeTrack, Vector3 } from "three
 
 // abstract product 1
 interface AnimConfig {
+
   iPos: Vector3 | undefined;
   fPos: Vector3 | undefined;
   iRot: Euler | undefined;
   fRot: Euler | undefined; 
+  
 }
 
 // concrete product 1A
@@ -38,7 +40,7 @@ type Conf = {
   fPos?: Vector3 | undefined;
   iRot?: Euler | undefined;
   fRot?: Euler | undefined; 
-  axis?: string | undefined;
+  rotAxis?: string | undefined;
 
   iScale?: Vector3 | undefined; 
   fScale?: Vector3 | undefined;
@@ -52,7 +54,7 @@ class ModelAnimConfig implements AnimConfig {
   fPos: Vector3 | undefined;
   iRot: Euler | undefined;
   fRot: Euler | undefined; 
-  axis: string | undefined;
+  rotAxis: string | undefined;
 
   iScale: Vector3 | undefined; 
   fScale: Vector3 | undefined;
@@ -64,14 +66,14 @@ class ModelAnimConfig implements AnimConfig {
     this.fPos = conf.fPos;
     this.iRot = conf.iRot;
     this.fRot = conf.fRot;
-    this.axis = conf.axis;
+    this.rotAxis = conf.rotAxis;
     this.iScale = conf.iScale;
     this.fScale = conf.fScale;
     this.duration = conf.duration ? conf.duration : 1;
 
-  }
+  };
 
-}
+};
 
 
 // abstract product 2 ? --> maybe this is a strategy pattern use case?
@@ -95,7 +97,7 @@ abstract class AnimFactory {
 
   abstract createAnimConfig( clientSettings: any ): AnimConfig; 
 
-  abstract createAnimKeyframes( times: number[], values: any[], name: string ): KeyframeTrack;
+  abstract createKeyframes( times: number[], values: any[], name: string ): KeyframeTrack;
 
   abstract createClip( name: string, duration: number, keyframes: KeyframeTrack, interp: Interpolant ): AnimationClip;
 
@@ -116,7 +118,7 @@ class CamAnimFactory extends AnimFactory {
 
   }; 
 
-  createAnimKeyframes( times: number[], values: any[], name: string ): KeyframeTrack {};
+  createKeyframes( times: number[], values: any[], name: string ): KeyframeTrack {};
 
   createClip( name: string, duration: number, keyframes: KeyframeTrack, interp: Interpolant ): AnimationClip {};
 
@@ -130,43 +132,40 @@ class ModelAnimFactory extends AnimFactory {
 
     const name = clientSettings.name
 
-    let iPos: Vector3;
-    let fPos: Vector3;
-    let iRot: Euler;
-    let fRot: Euler;
-    let axis: string;
-    let iScale: Vector3;
-    let fScale: Vector3;
+    const modelAnimConfig = new ModelAnimConfig();
 
     switch(name) {
 
       case 'scale-up':
-        iScale = new Vector3(0,0,0);
-        fScale = new Vector3(1,1,1);
-        return new ModelAnimConfig( { iScale, fScale } );
+        modelAnimConfig.iScale = new Vector3( 0, 0, 0 );
+        modelAnimConfig.fScale = new Vector3( 1, 1, 1 );
+        break;
 
       case 'scale-down':
-        iScale = new Vector3(1,1,1);
-        fScale = new Vector3(0,0,0);
-        return new ModelAnimConfig( { iScale, fScale } );
+        modelAnimConfig.iScale = new Vector3( 1, 1, 1 );
+        modelAnimConfig.fScale = new Vector3( 0, 0, 0 );
+        break; 
 
       case 'spin-y': 
-        iRot = new Euler( 0, 1, 0 ),
-        fRot = new Euler( 0, Math.PI * 2, 0),
-        axis = 'y'
-        return new ModelAnimConfig( { iRot, fRot, axis } );
+        modelAnimConfig.iRot = new Euler( 0, 1, 0 );
+        modelAnimConfig.fRot = new Euler( 0, Math.PI * 2, 0);
+        modelAnimConfig.rotAxis = 'y';
+        break;
 
       case 'suspend':
-        return new ModelAnimConfig({ duration: 90 });
+        modelAnimConfig.duration = 1;
+        break;
 
       default:
         throw new Error( "Invalid animation name. no model animation with that name found." )
 
     };
 
+    return modelAnimConfig;
+
   }; 
 
-  createAnimKeyframes( times: number[], values: any[], name: string ): KeyframeTrack {};
+  createKeyframes( times: number[], values: any[], name: string ): KeyframeTrack {};
 
   createClip( name: string, duration: number, keyframes: KeyframeTrack, interp: Interpolant ): AnimationClip {};
 
@@ -183,8 +182,10 @@ AnimFactory.createClip( 'suspend-in-soln' )
 // or
 
 this.model.animClips = {
+
   enter: this.createClip( 'scale-up' ),
   main: this.createClip( 'spin' ),
   exit: this.createClip( 'scale-down' ),
   nested: nestedName ? this.createClip( 'suspend-in-soln' ) : undefined 
+  
 };
