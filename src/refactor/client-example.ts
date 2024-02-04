@@ -93,41 +93,71 @@ const modelDirector = new ModelDirector( modelBuilder );
 
 modelDirector.addDependencies( camAnimations, textsOfEntireLesson, posRots );
 
+
+
+
+/**
+ * 
+ * Wait, currently I now want this anims approach in the dream client. 
+ * I like defining model animations as a list of objects, key is the type, 
+ * and value is the kind of animation.
+ * 
+ * In an init function the strings can be converted into Keyframes.
+ * 
+ * Think of it like that. Write functions that do this conversion functionally, 
+ * place them in a file.
+ * 
+ * Then call these functions in the init function. 
+ * 
+ * No more need for design patterns beyond that i believe. I like this combo'ed with 
+ * strategy pattern for getting the times and values.
+ * 
+ */
 modelDirector.constructModel({
   section: 0,
-  path: '/fullerene/models/m0.glb',
-  name: 'floating-cage',
-  animNames: { nested: 'suspend-in-solution' },
+  path: "/fullerene/models/m0.glb",
+  name: "floating-cage",
+  anims: [ 
+    { enter: "scale-in" }, 
+    { main: "spin-y" }, 
+    { exit: "scale-out" }, 
+    { nested: "suspend-in-solution" }, // what if we have an animation that requires configuration?
+  ]
 }); 
 
 const m0 = modelBuilder.getProduct();
+
+
+
+
+
 
 modelDirector.constructModel({
   section: 2,
   path: '/fullerene/models/m0.glb',
   name: 'no-soccer-pattern',
-  animNames: {},
+  anims: {},
 }); const m2 = modelBuilder.getProduct();
 
 modelDirector.constructModel({
   section: 3,
   path: '/fullerene/models/m2.glb',
   name: 'soccer-pattern',
-  animNames: {},
+  anims: {},
 }); const m3 = modelBuilder.getProduct();
 
 modelDirector.constructModel({
   section: 4,
   path: '/fullerene/models/m3.glb',
   name: 'doped-cage',
-  animNames: {},
+  anims: {},
 }); const m4 = modelBuilder.getProduct();
 
 modelDirector.constructModel({
   section: 5,
   path: '/fullerene/models/m3.glb',
   name: 'doped-cage',
-  animNames: {},
+  anims: {},
 }); const m5 = modelBuilder.getProduct();
 
 const models = new Models( [ m0, m2, m3, m4, m5 ] );

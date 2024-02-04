@@ -208,6 +208,7 @@ export class ModelBuilder implements IModelBuilder {
   public addDependantProperties( camAnimations: CamAnimation[], textOfEntireLesson: string[][] ): void {
 
     const section = this.model.section;
+
     if (!section) {
 
       throw new Error(
@@ -218,6 +219,7 @@ export class ModelBuilder implements IModelBuilder {
 
     const sectionCamAnimation = camAnimations[ section ]
     const prevCamAnimation = camAnimations[ section - 1 ];
+    
     if (!sectionCamAnimation || !prevCamAnimation) {
 
       throw new Error(

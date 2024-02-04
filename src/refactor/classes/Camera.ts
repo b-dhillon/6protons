@@ -227,15 +227,21 @@ export class Camera {
 
 
 export class CamAnimation {
+
   name: string;
   tMag: number;
   rMag: number;
+  duration: number;
 
-  constructor(name: string, tMag: number, rMag: number = 0) {
+  constructor( name: string, tMag: number, rMag: number = 0, duration: number = 1 ) {
+
     this.name = name;
     this.tMag = tMag;
     this.rMag = rMag;
+    this.duration = duration
+
   };
+
 }
 
 
