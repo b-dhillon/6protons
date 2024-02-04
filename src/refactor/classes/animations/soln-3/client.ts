@@ -1,6 +1,6 @@
 import { LessonBuilder } from '../../../classes/Lesson';
 import { Section } from '../../../classes/Section';
-import { Camera, CamAnimation } from './Camera';
+import { Cam, CamAnimation } from './Cam';
 import { Models, ModelBuilder, ModelDirector } from './Model';
 import { Universe } from '../../../classes/Universe';
 import { AnimationClipCreator } from './animation-clip-creator';
@@ -12,10 +12,10 @@ import { AnimationClipCreator } from './animation-clip-creator';
  *  and create a CircleStrategy() or a TRStrategy() based on the animName configured by the client here. 
  * 
  *  In the future, if I have a new type of camera animation I will need to:
- *    - create a new strategy
+ *    - potentially create a new strategy
  *    - a new way to assign that strategy 
- *    - a new PosRot
- *    - a new  CamAnimConfig??
+ *    - a new PosRot case
+ *    - a new CamAnimConfig??
  */
 
 
@@ -80,13 +80,15 @@ const numberOfSections = camAnimations.length
 /** 
  * Step-3: Instantiate and initialize camera: 
 */ 
-const camera = new Camera({});
+const camera = new Cam();
+
 camera.setStartPosition( 0, 0, 5 ); 
+
 camera.setCamAnimations( camAnimations );
 
-camera.init();
+camera.createPosRots();
 
-
+camera.createAnimClips();
 
 
 const posRots = camera.getPosRots();
@@ -110,45 +112,55 @@ const modelDirector = new ModelDirector( modelBuilder );
 
 modelDirector.addDependencies( camAnimations, textsOfEntireLesson, posRots );
 
-modelDirector.constructModel({
+modelDirector.constructProduct({
   section: 0,
   path: '/fullerene/models/m0.glb',
   name: 'floating-cage',
-  animNames: { nested: 'suspend-in-solution' },
+  anims: { 
+    enter: "",
+    main: "suspend",
+    exit: "scale-down",
+    nested: "",
+  },
 }); 
 const m0 = modelBuilder.getProduct();
 
-modelDirector.constructModel({
+
+modelDirector.constructProduct({
   section: 2,
   path: '/fullerene/models/m0.glb',
   name: 'no-soccer-pattern',
-  animNames: {},
+  anims: {},
 }); 
 const m2 = modelBuilder.getProduct();
 
-modelDirector.constructModel({
+
+modelDirector.constructProduct({
   section: 3,
   path: '/fullerene/models/m2.glb',
   name: 'soccer-pattern',
-  animNames: {},
+  anims: {},
 }); 
 const m3 = modelBuilder.getProduct();
 
-modelDirector.constructModel({
+
+modelDirector.constructProduct({
   section: 4,
   path: '/fullerene/models/m3.glb',
   name: 'doped-cage',
-  animNames: {},
+  anims: {},
 }); 
 const m4 = modelBuilder.getProduct();
 
-modelDirector.constructModel({
+
+modelDirector.constructProduct({
   section: 5,
   path: '/fullerene/models/m3.glb',
   name: 'doped-cage',
-  animNames: {},
+  anims: {},
 }); 
 const m5 = modelBuilder.getProduct();
+
 
 const models = new Models( [ m0, m2, m3, m4, m5 ] );
 
@@ -179,15 +191,15 @@ for( let i = 0; i < numberOfSections; i++ ) {
  * Step-7: Build lesson with builder: 
 */ 
 const lessonBuilder = new LessonBuilder();
-lessonBuilder.addTitle('Buckminsterfullerene')
-             .addThumbnail("url('./lesson-thumbnails/fullerene.png')")
-             .addUniverse(universe)
-             .addCamera(camera)
-             .setModels(models.groupedBySection)
-             .setTexts(textsOfEntireLesson)
-             .addMusics(musicPathsOfEntireLesson)
-             .addVoices(voicePathsOfEntireLesson)
-             .setSections(sections)
+lessonBuilder.addTitle( 'Buckminsterfullerene' )
+             .addThumbnail( "url('./lesson-thumbnails/fullerene.png')" )
+             .addUniverse( universe )
+             .addCamera( camera )
+             .setModels( models.groupedBySection )
+             .setTexts( textsOfEntireLesson )
+             .addMusics( musicPathsOfEntireLesson )
+             .addVoices( voicePathsOfEntireLesson )
+             .setSections( sections )
              .extractSections() // need to move implmentation from Lesson to LessonBuilder
 ;
 

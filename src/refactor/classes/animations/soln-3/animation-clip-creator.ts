@@ -13,7 +13,7 @@ import {
     TimesAndValues, 
     CircleStrategy, 
     TRStrategy,
-    ModelStrategy,
+    SuspendStrategy,
 	TimesAndValuesStrategy
 } from './strategy'
 
@@ -43,7 +43,7 @@ class AnimationClipCreator {
 	// model animations:
 	static CreateSuspendAnimation( config: ModelAnimConfig ) {
 
-		this.timesAndValues.setStrategy( new ModelStrategy() );
+		this.timesAndValues.setStrategy( new SuspendStrategy() );
 
 		const { times, values } = this.timesAndValues.create( config );
 	
@@ -51,41 +51,55 @@ class AnimationClipCreator {
 
 		const rotTrack = new VectorKeyframeTrack( '.rotation', times, values.rot as number[], InterpolateSmooth )
 	
-		return new AnimationClip( config.animName, config.duration, [ posTrack, rotTrack ] );
+		return new AnimationClip( "suspend", config.duration, [ posTrack, rotTrack ] );
 		
 	};
 
 
-	static CreateScaleAnimation( config: ModelAnimConfig ) {
+	static CreateScaleUpAnimation() {
 
-		const times = [ 0, config.duration ];
+		const times = [ 0, 1 ];
 
-		const values = [ ...config.iScale.toArray(), ...config.fScale.toArray() ];
+		const values = [ [ 0, 0, 0 ] , [ 1, 1, 1 ] ]; // are these arrays flattened automatically?
 
 		const track = new VectorKeyframeTrack( '.scale', times, values );
 	  
-		return new AnimationClip( config.animName, config.duration, [ track ] );
+		return new AnimationClip( "scale-up", 1, [ track ] );
 
 	};
 
 
-	static CreateSpinYAnimation( config: ModelAnimConfig ) {
+	static CreateScaleDownAnimation() {
 
-		const times = [ 0, config.duration ];
+		const times = [ 0, 1 ];
 
-		const values = [ config.iRot, config.fRot ];
+		const values = [ [ 1, 1, 1 ] , [ 0, 0, 0 ] ];
+
+		const track = new VectorKeyframeTrack( '.scale', times, values );
+	  
+		return new AnimationClip( "scale-down", 1, [ track ] );
+
+	};
+
+
+	static CreateSpinYAnimation() {
+
+		const times = [ 0, 1 ];
+
+		const values = [ 0, Math.PI * 2 ];
 		
-		const trackName = '.rotation[' + config.rotAxis + ']';
+		const trackName = ".rotation['y']";
 
 		const track = new NumberKeyframeTrack( trackName, times, values );
 	  
-		return new AnimationClip( config.animName, config.duration, [ track ]);
+		return new AnimationClip( "spin-y", 1, [ track ]);
 		
 	};
 
 
-
 }
+
+
 
 function assignCamStrategy( animName: string ): TimesAndValuesStrategy {
 

@@ -10,7 +10,7 @@
  *  3. Potentially creating a new config?
  */
 
-import { Vector3 } from "three";
+import { Euler, Vector3 } from "three";
 import { computeModelPosition } from "../../../../utility-functions/compute-model-position";
 import { easeInOutCubic, easeOutCubic } from "../../../../utility-functions/easing-functions";
 import { CamAnimConfig, ModelAnimConfig } from "../../../types";
@@ -183,13 +183,15 @@ export class TRStrategy implements TimesAndValuesStrategy {
  */
 
 // Change name? This is just the Suspend animation here with the sin's?
-export class ModelStrategy implements TimesAndValuesStrategy {
+export class SuspendStrategy implements TimesAndValuesStrategy {
 
-    execute( config: ModelAnimConfig ) {
+    execute( config: any ) {
 
 		let times: number[] = [], posValues: number[] = [], rotValues: number[] = []
 
-        const { iPos, fPos, iRot, fRot, rotAxis, iScale, fScale, easingFn, smoothness: n, duration } = config;
+        const { iPos, iRot } = config;
+
+        const fRot = new Euler( 0, Math.PI * 2, 0)
 
         function createPos( t: number ): Vector3 {
 
@@ -200,6 +202,7 @@ export class ModelStrategy implements TimesAndValuesStrategy {
 			const z = iPos.z
 
             return new Vector3( x, y, z );
+
         };
 
 		function createRot( t: number ): Vector3 {
@@ -211,7 +214,11 @@ export class ModelStrategy implements TimesAndValuesStrategy {
 			const z = iRot.z
 
             return new Vector3( x, y, z );
+
         };
+
+
+        const n = 100;
 
         for( let i = 0; i < n; i++ ) {
 	
@@ -221,6 +228,7 @@ export class ModelStrategy implements TimesAndValuesStrategy {
 
 			/** Create Position Values */
 			const pos = createPos( t );
+
 			posValues[ i * 3 ] = pos.x;
             posValues[ i * 3 + 1 ] = pos.y;
             posValues[ i * 3 + 2 ] = pos.z;

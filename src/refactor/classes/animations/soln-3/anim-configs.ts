@@ -84,6 +84,7 @@ class ModelAnimConfigs implements AnimConfigs {
     animConfigs: ModelAnimConfig[] = []
 
     create( a: any ): void {
+
         for (let i = 0; i < a.models.length; i++) {
 
             const modelAnimConfig = new BlankModelAnimConfig();
@@ -91,15 +92,15 @@ class ModelAnimConfigs implements AnimConfigs {
             switch( a.name ) {
 
                 case 'scale-up':
-                modelAnimConfig.iScale = new Vector3( 0, 0, 0 );
-                modelAnimConfig.fScale = new Vector3( 1, 1, 1 );
-                break;
-        
+                    modelAnimConfig.iScale = new Vector3( 0, 0, 0 );
+                    modelAnimConfig.fScale = new Vector3( 1, 1, 1 );
+                    break;
+            
                 case 'scale-down':
-                modelAnimConfig.iScale = new Vector3( 1, 1, 1 );
-                modelAnimConfig.fScale = new Vector3( 0, 0, 0 );
-                break; 
-        
+                    modelAnimConfig.iScale = new Vector3( 1, 1, 1 );
+                    modelAnimConfig.fScale = new Vector3( 0, 0, 0 );
+                    break; 
+            
                 case 'spin-y': 
                 modelAnimConfig.iRot = new Euler( 0, 1, 0 );
                 modelAnimConfig.fRot = new Euler( 0, Math.PI * 2, 0);

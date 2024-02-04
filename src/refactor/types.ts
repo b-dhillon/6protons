@@ -86,12 +86,17 @@ export type ModelAnimNames = {
 
 export type ModelClipConstructors = {
   
-  [key: string]: (config?: any) => AnimationClip; // Index signature
+  [key: string]: AnimationClip; // Index signature
 
-  'scale-up': (config?: any) => AnimationClip;
-  'spin-y': (config?: any) => AnimationClip;
-  'scale-down': (config?: any) => AnimationClip;
-  'suspend': (config?: any) => AnimationClip;
+  // 'scale-up': (config?: any) => AnimationClip;
+  // 'spin-y': (config?: any) => AnimationClip;
+  // 'scale-down': (config?: any) => AnimationClip;
+  // 'suspend': (config?: any) => AnimationClip;
+
+  'scale-up': AnimationClip;
+  'spin-y': AnimationClip;
+  'scale-down': AnimationClip;
+  'suspend': AnimationClip;
   
 };
 
