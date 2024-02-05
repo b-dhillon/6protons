@@ -1,11 +1,11 @@
-import { Camera } from "./Camera";
 import { Model } from "./Model";
 import { Universe } from "./Universe";
+import { Cam } from "./Cam";
 
 interface ThreePageConfig {
   id: string,
   title?: string,
-  camera?: Camera
+  camera?: Cam
 }
 
 type SectionModels = Model[];
@@ -21,7 +21,7 @@ export class ThreePage {
   readonly id: number;
 
   title: string | undefined;
-  camera: Camera | undefined;
+  camera: Cam | undefined;
   universe: Universe | undefined;
   modelsOfEntirePage: Model[][] = [];
 

@@ -1,14 +1,42 @@
-import { LessonBuilder } from '../../../classes/Lesson';
-import { Section } from '../../../classes/Section';
-import { Cam, CamAnimation } from './Cam';
-import { Models, ModelBuilder, ModelDirector } from './Model';
-import { Universe } from '../../../classes/Universe';
-import { AnimationClipCreator } from './animation-clip-creator';
+import { Lesson, LessonBuilder } from './classes/Lesson';
+import { Section } from './classes/Section';
+import { Cam, CamAnimation } from './classes/Cam';
+import { Models, ModelBuilder, ModelDirector } from './classes/Model';
+import { Universe } from './classes/Universe';
+import { writeFileSync } from "fs"
+
+
+
+/**
+ * To Do
+ * 
+ * 1. Get a lesson printing and saving. Check to see if the shape of the data looks correct. 
+ * 2. Write tests to confirm that the data is indeed correct.
+ * 3. If all data correct, incorporate new re-factored architecture back into project.
+ * 4. Get home screen working again. 
+ * 5. Build out Diamond lesson. 
+ * 6. Write up a back-end ?
+ * 
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * There isn't any change in the client for soln-3. The change is in 
  * Camera.createAnimClips 
- *  Instead of calling translateCircle or translateRotate, we call an instance of the name-space 
+ *  Instead of calling translateCircle or translateRotate, we call a static method in the name-space 
  *  and create a CircleStrategy() or a TRStrategy() based on the animName configured by the client here. 
  * 
  *  In the future, if I have a new type of camera animation I will need to:
@@ -45,11 +73,13 @@ const musicPathsOfEntireLesson = ['', ''];
 
 const voicePathsOfEntireLesson = ['', '', '', ''];
 
+// This should be turned into a get method on Lesson
+const numberOfSections = 6
 
 /** 
  * Step-1: Initialize a universe:
 */ 
-const universe = new Universe( 'fullerene-universe', 25000, 5);
+const universe = new Universe( "fullerene-universe", 25000, 5 );
 
 
 /** 
@@ -72,8 +102,7 @@ const camAnimations = [
 
 ];
 
-// This should be turned into a get method on Lesson
-const numberOfSections = camAnimations.length
+
 
 
 
@@ -91,7 +120,6 @@ camera.createPosRots();
 camera.createAnimClips();
 
 
-const posRots = camera.getPosRots();
 
 
 
@@ -109,6 +137,8 @@ const posRots = camera.getPosRots();
 */
 const modelBuilder = new ModelBuilder();
 const modelDirector = new ModelDirector( modelBuilder );
+
+const posRots = camera.getPosRots();
 
 modelDirector.addDependencies( camAnimations, textsOfEntireLesson, posRots );
 
@@ -187,6 +217,7 @@ for( let i = 0; i < numberOfSections; i++ ) {
 
 };
 
+
 /** 
  * Step-7: Build lesson with builder: 
 */ 
@@ -205,10 +236,21 @@ lessonBuilder.addTitle( 'Buckminsterfullerene' )
 
 const buckminsterfullerene = lessonBuilder.build();
 
-export default buckminsterfullerene;
+saveLesson( buckminsterfullerene );
 
+// Change this to a print:
 
+function saveLesson( lesson: Lesson ) {
 
+  console.log('Saving lesson...');
+
+  const jsonData = JSON.stringify( lesson, null, 2 );
+
+  writeFileSync( 'LESSON.json', jsonData, 'utf-8' );
+
+  console.log('Record saved.');
+
+};
 
 
 /**
@@ -223,10 +265,9 @@ export default buckminsterfullerene;
  *
 */
 
+
 /**
  * What are we missing? What is not initialized?
- *  
- * Re-think model animation clip construction anti-pattern
  * 
  * What about data validation for your setters/adders on your builders?
  * What about error-handling?

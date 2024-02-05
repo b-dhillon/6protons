@@ -1,6 +1,6 @@
 import { LessonBuilder } from './classes/Lesson';
 import { Section } from './classes/Section';
-import { Camera, CamAnimation } from './classes/Camera';
+import { Cam, CamAnimation } from './classes/Cam';
 import { Models, ModelBuilder, ModelDirector } from './classes/Model';
 import { Universe } from './classes/Universe';
 
@@ -68,7 +68,7 @@ const numberOfSections = camAnimations.length
 /** 
  * Step-3: Instantiate and initialize camera: 
 */ 
-const camera = new Camera({});
+const camera = new Cam({});
 camera.setStartPosition( 0, 0, 5 ); 
 camera.setCamAnimations( camAnimations );
 camera.init();
@@ -113,16 +113,16 @@ modelDirector.addDependencies( camAnimations, textsOfEntireLesson, posRots );
  * strategy pattern for getting the times and values.
  * 
  */
-modelDirector.constructModel({
+modelDirector.constructProduct({
   section: 0,
   path: "/fullerene/models/m0.glb",
   name: "floating-cage",
-  anims: [ 
-    { enter: "scale-in" }, 
-    { main: "spin-y" }, 
-    { exit: "scale-out" }, 
-    { nested: "suspend-in-solution" }, // what if we have an animation that requires configuration?
-  ]
+  anims: {
+    enter: "scale-in",
+    main: "spin-y",
+    exit: "scale-out",
+    nested: "suspend-in-solution" 
+  },
 }); 
 
 const m0 = modelBuilder.getProduct();
@@ -132,33 +132,37 @@ const m0 = modelBuilder.getProduct();
 
 
 
-modelDirector.constructModel({
+modelDirector.constructProduct({
   section: 2,
   path: '/fullerene/models/m0.glb',
   name: 'no-soccer-pattern',
   anims: {},
-}); const m2 = modelBuilder.getProduct();
+}); 
+const m2 = modelBuilder.getProduct();
 
-modelDirector.constructModel({
+modelDirector.constructProduct({
   section: 3,
   path: '/fullerene/models/m2.glb',
   name: 'soccer-pattern',
   anims: {},
-}); const m3 = modelBuilder.getProduct();
+});
+const m3 = modelBuilder.getProduct();
 
-modelDirector.constructModel({
+modelDirector.constructProduct({
   section: 4,
   path: '/fullerene/models/m3.glb',
   name: 'doped-cage',
   anims: {},
-}); const m4 = modelBuilder.getProduct();
+});
+const m4 = modelBuilder.getProduct();
 
-modelDirector.constructModel({
+modelDirector.constructProduct({
   section: 5,
   path: '/fullerene/models/m3.glb',
   name: 'doped-cage',
   anims: {},
-}); const m5 = modelBuilder.getProduct();
+});
+const m5 = modelBuilder.getProduct();
 
 const models = new Models( [ m0, m2, m3, m4, m5 ] );
 
