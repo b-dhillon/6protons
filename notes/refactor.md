@@ -103,7 +103,7 @@ Q: Which fn's are methods? Which are utilities?
 
 - model.inNewPosition:
   Initalizing Logic:
-    if ( camera.animations[section] === 'circle-model' ) models[section][0].inNewPosition = false;
+    if ( camera.animations[section] === 'circle-cw' ) models[section][0].inNewPosition = false;
 
 
 - model.yOffsetForText:

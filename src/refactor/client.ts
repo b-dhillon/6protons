@@ -3,12 +3,23 @@ import { Section } from './classes/Section';
 import { Cam, CamAnimation } from './classes/Cam';
 import { Models, ModelBuilder, ModelDirector } from './classes/Model';
 import { Universe } from './classes/Universe';
-import { writeFileSync } from "fs"
+import { writeFileSync } from "fs";
 
+/**
+ * Lesson Build Steps: 
+ * 
+ * 0. List out all assets or import them as lists
+ * 1. Initialize a Universe
+ * 2. Define all the camera animations you want to use. How you want to move through the universe.
+ * 3. Instantiate and initialize Camera
+ * 4. Build 3D models -- still need to create model AnimationClips
+ * 5. Loop, instantiate, and initialize all Sections
+ *
+*/
 
 
 /**
- * To Do
+ * To Do:
  * 
  * 1. Get a lesson printing and saving. Check to see if the shape of the data looks correct. 
  * 2. Write tests to confirm that the data is indeed correct.
@@ -17,69 +28,64 @@ import { writeFileSync } from "fs"
  * 5. Build out Diamond lesson. 
  * 6. Write up a back-end ?
  * 
- * 
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * There isn't any change in the client for soln-3. The change is in 
- * Camera.createAnimClips 
- *  Instead of calling translateCircle or translateRotate, we call a static method in the name-space 
- *  and create a CircleStrategy() or a TRStrategy() based on the animName configured by the client here. 
- * 
- *  In the future, if I have a new type of camera animation I will need to:
- *    - potentially create a new strategy
- *    - a new way to assign that strategy 
- *    - a new PosRot case
- *    - a new CamAnimConfig??
- */
+*/
 
 
 
 /** 
  * Step-0. List out assets or import them as lists
 */ 
-const modelPaths = [
 
-  ['path1'], // section 0
+// This should be turned into a get/set method on Lesson
+const numberOfSections = 6
 
-  ['path2'], // section 1
+const textOfEntireLesson = [
 
-  ['path3', 'path4'],
-
-  [],
-
-  [],
-
-  [],
+  [""],
+  [
+    "In 1985, chemists were studying how molecules form in outer space when they began vaporizing graphite rods in an atmosphere of Helium gas..."
+  ],
+  [
+    "Firing lazers at graphite rods in a supersonic helium beam, produced novel cage-like molecules composed of 60 carbon atoms, joined together to form a hollow sphere.",
+    "The largest and most symmetrical form of pure carbon ever discovered.", 
+    "This molecule would go on to be named Buckminsterfullerene."
+  ],
+  [
+    "The carbon atoms arrange themselves as hexagons and pentagons (highlighted in red), like the seams of a soccer ball.", 
+    "Fullerenes are exceedingly rugged and are even capable of surviving the extreme temperatures of outer space.", 
+    "And because they are essentially hollow cages, they can be manipulated to make materials never before known."
+  ],
+  [
+    "For example, when a buckyball is 'doped' via inserting potassium or cesium into its cavity, it becomes the best organic superconductor known.", 
+    "These molecules are presently being studied for use in many other applications, such as new polymers and catalysts, as well as novel drug delivery systems.",
+    "Scientists have even turned their attention to Buckminsterfullerene in their quest for a cure for AIDS."
+  ],
+  [
+    "How can Buckminsterfullerene help cure AIDS?",
+    "An enzyme (HIV-1-Protease) that is required for HIV to replicate, exhibits a non-polar pocket in its three-dimensional structure.",
+    "On the protein model in front of you, notice how the non-polar Fullerene fits the exact diameter of the enzyme's binding pocket.",
+    "If this pocket is blocked, the production of virus ceases. Because buckyballs are nonpolar, and have approximately the same diameter as the pocket of the enzyme, they are being considered as possible HIV-1-Protease inhibitors."
+  ]
 
 ];
 
-const textsOfEntireLesson = [ [], ['', ''], [''], ['', ''], [''], [''] ]; // each index is textOfSection
+const musicPathsOfEntireLesson = [ "/audio/music/fullerene3.mp3" ];
 
-const musicPathsOfEntireLesson = ['', ''];
+const voicePathsOfEntireLesson = [
+  "/audio/voices/fiona/voice0.mp3", // 0
+  "/audio/voices/fiona/voice0.mp3", // 1
+  "/audio/voices/fiona/voice1.mp3", // 2
+  "/audio/voices/fiona/voice1.mp3", // 3
+  "/audio/voices/fiona/voice1.mp3", // 4
+];
 
-const voicePathsOfEntireLesson = ['', '', '', ''];
 
-// This should be turned into a get method on Lesson
-const numberOfSections = 6
 
 /** 
  * Step-1: Initialize a universe:
 */ 
 const universe = new Universe( "fullerene-universe", 25000, 5 );
+
 
 
 /** 
@@ -88,21 +94,19 @@ const universe = new Universe( "fullerene-universe", 25000, 5 );
 */ 
 const camAnimations = [
 
-  new CamAnimation( 'zoom-in', 4 ),
+  new CamAnimation( "zoom-in", 4 ),
 
-  new CamAnimation( 'zoom-out-rotate-up', 2, Math.PI / 4 ),
+  new CamAnimation( "zoom-out-rotate-up", 2, Math.PI / 4 ),
 
-  new CamAnimation( 'zoom-in-rotate-down', 2, Math.PI / 4 ),
+  new CamAnimation( "zoom-in-rotate-down", 2, Math.PI / 4 ),
 
-  new CamAnimation( 'circle-model', Math.PI / 2, -Math.PI / 2 ),
+  new CamAnimation( "circle-cw", Math.PI / 2, -Math.PI / 2 ), // IS THIS NAME CORRECT ?
 
-  new CamAnimation( 'zoom-out', 3 ),
+  new CamAnimation( "zoom-out", 3 ),
 
-  new CamAnimation( 'corkscrew-up', 2, Math.PI / 2 ),
+  new CamAnimation( "corkscrew-up", 2, Math.PI / 2 ),
 
 ];
-
-
 
 
 
@@ -121,9 +125,6 @@ camera.createAnimClips();
 
 
 
-
-
-
 /**
  * Step-4. Build models
  * 
@@ -136,59 +137,65 @@ camera.createAnimClips();
  *  
 */
 const modelBuilder = new ModelBuilder();
+
 const modelDirector = new ModelDirector( modelBuilder );
 
 const posRots = camera.getPosRots();
 
-modelDirector.addDependencies( camAnimations, textsOfEntireLesson, posRots );
+modelDirector.addDependencies( camAnimations, textOfEntireLesson, posRots );
 
 modelDirector.constructProduct({
   section: 0,
-  path: '/fullerene/models/m0.glb',
-  name: 'floating-cage',
+  path: "/fullerene/models/m0.glb",
+  name: "floating-fullerene",
   anims: { 
     enter: "",
     main: "suspend",
     exit: "scale-down",
     nested: "",
   },
-}); 
+});
+
 const m0 = modelBuilder.getProduct();
 
 
 modelDirector.constructProduct({
   section: 2,
-  path: '/fullerene/models/m0.glb',
-  name: 'no-soccer-pattern',
+  path: "/fullerene/models/m0.glb",
+  name: "no-soccer-pattern",
   anims: {},
-}); 
+});
+
 const m2 = modelBuilder.getProduct();
 
 
 modelDirector.constructProduct({
   section: 3,
-  path: '/fullerene/models/m2.glb',
-  name: 'soccer-pattern',
+  path: "/fullerene/models/m2.glb",
+  name: "soccer-pattern",
   anims: {},
-}); 
+});
+
 const m3 = modelBuilder.getProduct();
 
 
 modelDirector.constructProduct({
   section: 4,
-  path: '/fullerene/models/m3.glb',
-  name: 'doped-cage',
+  path: "/fullerene/models/m3.glb",
+  name: "doped-fullerene",
   anims: {},
-}); 
+});
+
 const m4 = modelBuilder.getProduct();
 
 
 modelDirector.constructProduct({
   section: 5,
-  path: '/fullerene/models/m3.glb',
-  name: 'doped-cage',
+  path: '/fullerene/models/m4.glb',
+  name: "protease-with-fullerene",
   anims: {},
-}); 
+});
+
 const m5 = modelBuilder.getProduct();
 
 
@@ -206,11 +213,11 @@ for( let i = 0; i < numberOfSections; i++ ) {
 
   const section = new Section({
     section: i,
-    camAnimation: camAnimations[i],
-    posRot: posRots[i],
-    models: models.groupedBySection[i],
-    text: textsOfEntireLesson[i],
-    voicePath: voicePathsOfEntireLesson[i],
+    camAnimation: camAnimations[ i ],
+    posRot: posRots[ i ],
+    models: models.groupedBySection[ i ],
+    text: textOfEntireLesson[ i ],
+    voicePath: voicePathsOfEntireLesson[ i ],
   }); 
   
   sections[ i ] = section;
@@ -227,7 +234,7 @@ lessonBuilder.addTitle( 'Buckminsterfullerene' )
              .addUniverse( universe )
              .addCamera( camera )
              .setModels( models.groupedBySection )
-             .setTexts( textsOfEntireLesson )
+             .setTexts( textOfEntireLesson )
              .addMusics( musicPathsOfEntireLesson )
              .addVoices( voicePathsOfEntireLesson )
              .setSections( sections )
@@ -236,34 +243,23 @@ lessonBuilder.addTitle( 'Buckminsterfullerene' )
 
 const buckminsterfullerene = lessonBuilder.build();
 
-saveLesson( buckminsterfullerene );
+printLesson( buckminsterfullerene );
 
-// Change this to a print:
 
-function saveLesson( lesson: Lesson ) {
+function printLesson( lesson: Lesson ) {
 
-  console.log('Saving lesson...');
+  console.log( "Saving lesson..." );
 
   const jsonData = JSON.stringify( lesson, null, 2 );
 
-  writeFileSync( 'LESSON.json', jsonData, 'utf-8' );
+  writeFileSync( "LESSON.json", jsonData, "utf-8" );
 
-  console.log('Record saved.');
+  console.log( "Lesson saved." );
 
 };
 
 
-/**
- * Lesson Build Steps: 
- * 
- * 0. List out all assets or import them as lists
- * 1. Initialize a Universe
- * 2. Define all the camera animations you want to use. How you want to move through the universe.
- * 3. Instantiate and initialize Camera
- * 4. Build 3D models -- still need to create model AnimationClips
- * 5. Loop, instantiate, and initialize all Sections
- *
-*/
+
 
 
 /**

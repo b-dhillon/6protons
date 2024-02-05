@@ -9,6 +9,16 @@ import { easeInOutCubic, easeOutCubic } from '../../utility-functions/easing-fun
 import { AnimationClipCreator } from '../animation-clip-creator';
 
 
+/**
+ * 
+ *  In the future, if I have a new type of camera animation I will need to:
+ *    - potentially create a new strategy
+ *    - a new way to assign that strategy 
+ *    - a new PosRot case
+ *    - a new CamAnimConfig??
+ */
+
+
 export class Cam {
 
   startPosition: Vector3;
@@ -296,7 +306,7 @@ class PosRotFactory {
           iRot,
         );
 
-      case 'circle-model':
+      case 'circle-cw':
         return this.circleModel(
           tMag,
           rMag,

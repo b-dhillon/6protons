@@ -31,9 +31,12 @@ interface RotationInfo {
  * once data is loaded, calls PageConstructor()
  */
 export default function App() {
-  const [initializedPages, setInitializedPages] = useState<InitializedPage[] | undefined>(undefined);
-  const [dataInitialized, setDataInitialized] = useState(false);
-  const [currentPage, setCurrentPage] = useState('test-page');
+
+  const [ initializedPages, setInitializedPages ] = useState<InitializedPage[] | undefined>(undefined);
+
+  const [ dataInitialized, setDataInitialized ] = useState(false);
+
+  const [ currentPage, setCurrentPage ] = useState("test-page");
 
   useEffect(() => {
     Init();
