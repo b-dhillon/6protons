@@ -169,7 +169,7 @@ export function circleModel( config: CameraAnimConfig ): AnimationClip {
 
   const tracks = createKeyframeTracks(timesAndValues)
   return new AnimationClip(
-    'circle-model', 
+    'circle-cw', 
     1, 
     [ tracks.posTrack, tracks.rotTrack ]
   );

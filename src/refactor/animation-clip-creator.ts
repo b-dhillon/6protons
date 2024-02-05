@@ -62,7 +62,7 @@ class AnimationClipCreator {
 
 		const values = [ [ 0, 0, 0 ] , [ 1, 1, 1 ] ]; // are these arrays flattened automatically?
 
-		const track = new VectorKeyframeTrack( '.scale', times, values );
+		const track = new VectorKeyframeTrack( ".scale", times, values );
 	  
 		return new AnimationClip( "scale-up", 1, [ track ] );
 
@@ -75,7 +75,7 @@ class AnimationClipCreator {
 
 		const values = [ [ 1, 1, 1 ] , [ 0, 0, 0 ] ];
 
-		const track = new VectorKeyframeTrack( '.scale', times, values );
+		const track = new VectorKeyframeTrack( ".scale", times, values );
 	  
 		return new AnimationClip( "scale-down", 1, [ track ] );
 
@@ -88,9 +88,7 @@ class AnimationClipCreator {
 
 		const values = [ 0, Math.PI * 2 ];
 		
-		const trackName = ".rotation['y']";
-
-		const track = new NumberKeyframeTrack( trackName, times, values );
+		const track = new NumberKeyframeTrack( ".rotation['y']", times, values );
 	  
 		return new AnimationClip( "spin-y", 1, [ track ]);
 		
@@ -98,6 +96,30 @@ class AnimationClipCreator {
 
 
 }
+
+/**
+ * 
+ * Potential way to unify Model animations so that we can call CreateModelAnimation( config ) just like 
+ * CreateCameraAnimation( config ).
+ * 
+ * 	What we can do is, create strategies for times and values for even the scale-up, scale-down, and spin-y animations
+ * 
+ *  Then we can create a seperate function createTracks() that will select what tracks, and how many are needed. 
+ *  There can really only be about 3 different tracks currently: 
+ * 		Position
+ * 		Rotation
+ * 		Scale
+ * 
+ *  Lastly, we call the AnimationClip() constructor and pass in the tracks 
+ * 
+ * 
+ *  ModelAnimConfig will need to come back. 
+ * 	It will need the following propeties:
+ * 		1. animName
+ * 		2. types of keyframe tracks needed
+ * 		3. Initial/Final values for any property that is going to be animated.
+ * 
+ */
 
 
 

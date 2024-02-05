@@ -11,9 +11,9 @@
  */
 
 import { Euler, Vector3 } from "three";
-import { computeModelPosition } from "../../../../utility-functions/compute-model-position";
-import { easeInOutCubic, easeOutCubic } from "../../../../utility-functions/easing-functions";
-import { CamAnimConfig, ModelAnimConfig } from "../../../types";
+import { computeModelPosition } from "../utility-functions/compute-model-position";
+import { easeInOutCubic, easeOutCubic } from "../utility-functions/easing-functions";
+import { CamAnimConfig } from "./types";
 
 
 ////////////////////////
@@ -182,12 +182,13 @@ export class TRStrategy implements TimesAndValuesStrategy {
  * 
  */
 
-// Change name? This is just the Suspend animation here with the sin's?
 export class SuspendStrategy implements TimesAndValuesStrategy {
 
     execute( config: any ) {
 
-		let times: number[] = [], posValues: number[] = [], rotValues: number[] = []
+		let times: number[] = [];
+        let posValues: number[] = [];
+        let rotValues: number[] = [];
 
         const { iPos, iRot } = config;
 
@@ -253,6 +254,112 @@ export class SuspendStrategy implements TimesAndValuesStrategy {
     };
 
 };
+
+
+export class SimpleScaleStrategy implements TimesAndValuesStrategy {
+
+    execute( config: any ) {
+
+		let times: number[] = [];
+        let scaleValues: number[] = [];
+        const n = 100;
+
+
+        const { initial, final } = config;
+
+
+        function createScale( t: number ): Vector3 {
+
+            // y is arbitrary. could be x or z. just need same for all 3.
+			const y = initial.y + ( ( final.y - initial.y ) * t )
+
+            return new Vector3( y, y, y );
+
+        };
+
+
+        for( let i = 0; i < n; i++ ) {
+	
+			const t = i / ( n - 1 ); // normalizes t from 0 - 1
+
+            times[ i ] = t;
+
+			/** Create Scale Values */
+			const scale = createScale( t );
+
+			scaleValues[ i * 3 ] = scale.x;
+            scaleValues[ i * 3 + 1 ] = scale.y;
+            scaleValues[ i * 3 + 2 ] = scale.z;
+
+		};
+
+        return { 
+            times: times, 
+            values: {
+                scale: scaleValues,
+            } 
+        };
+        
+    };
+
+};
+
+
+export class SimpleRotateStrategy implements TimesAndValuesStrategy {
+
+    execute( config: any ) {
+
+		let times: number[] = [];
+        let rotValues: number[] = [];
+
+        const n = 100;
+
+        const rotAxis = "y";
+
+        const { initial, final } = config;
+
+
+        function createRot( t: number ): Vector3 {
+
+			const y = initial.y + ( ( final.y - initial.y ) * t )
+
+            return new Vector3( initial.x, y, initial.z );
+
+        };
+
+
+        for( let i = 0; i < n; i++ ) {
+	
+			const t = i / ( n - 1 ); // normalizes t from 0 - 1
+
+            times[ i ] = t;
+
+			/** Create Scale Values */
+			const rot = createRot( t );
+
+			rotValues[ i * 3 ] = rot.x;
+            rotValues[ i * 3 + 1 ] = rot.y;
+            rotValues[ i * 3 + 2 ] = rot.z;
+
+		};
+
+        return { 
+            times: times, 
+            values: {
+                rot: rotValues,
+            } 
+        };
+        
+    };
+
+};
+
+
+
+
+
+
+
 
 ////////////////////////
 /// Strategy Context ///

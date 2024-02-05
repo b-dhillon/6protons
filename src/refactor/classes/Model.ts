@@ -21,8 +21,6 @@ const modelClipCreators: any = {
 
 
 
-
-
 export class Model {
 
   private static _lastId = 0;
@@ -173,19 +171,16 @@ export class ModelBuilder implements IModelBuilder {
   public addAnimNames( animNames: ModelAnimNamesConfig = {} ): void {
 
     const names = {
-      enter: 'scale-up',
-      main: 'spin-y',
-      exit: 'scale-down',
-      nested: '',
+      enter: "scale-up",
+      main: "spin-y",
+      exit: "scale-down",
+      nested: "",
       ...animNames, // over-rides any defaults
     };
 
     this.model.animNames = names;
 
   };
-
-
-
 
 
   // Creates AnimationClips based on animNames that are set when Model is instantiated
@@ -225,7 +220,6 @@ export class ModelBuilder implements IModelBuilder {
   };
 
 
-
   public addDependantProperties( camAnimations: CamAnimation[], textOfEntireLesson: string[][] ): void {
 
     const section = this.model.section;
@@ -253,11 +247,10 @@ export class ModelBuilder implements IModelBuilder {
     const sectionHasText = sectionText.length; // boolean, no paragraphs should be an empty array NOT an empty string in the first index.
 
     this.model.yOffsetForText = sectionHasText ? 0.15 : 0;
-    this.model.inNewPosition = sectionCamAnimation.name === 'circle-model' || null ? false : true;
+    this.model.inNewPosition = sectionCamAnimation.name === 'circle-cw' || null ? false : true;
     this.model.zoomInOnReverse = prevCamAnimation.name === 'zoom-out' ? true : false;
 
   };
-
 
 
   // When an animation that doesn't exist is called for, the PosRot is just all undefined
@@ -293,7 +286,6 @@ export class ModelBuilder implements IModelBuilder {
   };
 
 
-
   public async extractMeshes(): Promise<void> {
 
     const path = this.model.path;
@@ -309,6 +301,7 @@ export class ModelBuilder implements IModelBuilder {
     this.model.meshes = meshes;
 
   };
+
 
   public getProduct(): Model {
 
@@ -385,12 +378,7 @@ export class ModelDirector {
 
 
 
-
-
-
-
 // Utility Functions:
-
 function getCamRotAngleAndRotVector( rotAxis: string | null, camRot: Euler ): RotAngleAndRotVector {
 
   let rotVector = new Vector3();
@@ -466,6 +454,7 @@ function loadGLTF(path: string): Promise<GLTF> {
         reject(error);
       }
     );
+
   });
 
 }
