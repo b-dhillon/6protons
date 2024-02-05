@@ -1,26 +1,10 @@
 import { ThreePage } from './ThreePage';
 import { Section } from './Section';
 import { Model } from './Model';
-import { Camera } from './Camera'
 import { Universe } from './Universe'
+import { Cam } from './Cam';
 
-/**
-  perhaps we should change this from a string to an object:
 
-  class TextOfSection {
-
-    id: number // sectionIter
-    p1: [ sentence, sentence, sentence ]
-    p2: [ sentence, sentence, sentence ]
-    p3: [ sentence, sentence, sentence ]
-
-    constructor(){}
-
-    paragraphToSentences(paragraph: string): string[] {
-     const sentences = paragraph.split( '.' )  
-    }
-  } 
- */
 type TextOfSection = string[];
 
 export class Lesson extends ThreePage {
@@ -36,20 +20,9 @@ export class Lesson extends ThreePage {
   musicPathsOfEntireLesson: string[] = [];
 
   voicePathsOfEntireLesson: string[] = [];
-  
-  public extractSections(): void {
-
-    this.sections.forEach( (section: Section) => {
-
-      this.textOfEntireLesson.push(section.text);
-      this.voicePathsOfEntireLesson.push(section.voicePath);
-      this.modelsOfEntirePage.push(section.models)
-
-    });
-
-  };
 
 };
+
 
 interface ILessonBuilder {
 
@@ -61,7 +34,7 @@ interface ILessonBuilder {
 
   addSection(section: Section): void;
 
-  addCamera(camera: Camera): void;
+  addCamera(camera: Cam): void;
 
   addModel(model: Model[]): void;
 
@@ -75,6 +48,8 @@ interface ILessonBuilder {
 
   addVoices(voicePathsOfEntireLesson: string[]): void;
 
+  extractSections(): void
+
 };
 
 export class LessonBuilder implements ILessonBuilder {
@@ -87,11 +62,13 @@ export class LessonBuilder implements ILessonBuilder {
 
   }
 
+  
   reset(): void {
 
     this.lesson = new Lesson();
 
   };
+
 
   addTitle( title: string ): LessonBuilder {
 
@@ -100,12 +77,14 @@ export class LessonBuilder implements ILessonBuilder {
 
   };
 
+
   addThumbnail( thumbnail: string ): LessonBuilder {
 
     this.lesson.thumbnail = thumbnail;
     return this; 
 
   };
+
 
   addUniverse( universe: Universe ): LessonBuilder {
 
@@ -114,12 +93,14 @@ export class LessonBuilder implements ILessonBuilder {
 
   };
 
+
   addSection( section: Section ): LessonBuilder {
 
     this.lesson.sections.push(section);
     return this; 
 
   };
+
 
   setSections( sections: Section[] ): LessonBuilder {
 
@@ -128,12 +109,14 @@ export class LessonBuilder implements ILessonBuilder {
 
   };
 
-  addCamera( camera: Camera ): LessonBuilder {
+
+  addCamera( camera: Cam ): LessonBuilder {
 
     this.lesson.camera = camera;
     return this; 
 
   };
+
 
   addModel( model: Model[] ): LessonBuilder {
 
@@ -142,21 +125,24 @@ export class LessonBuilder implements ILessonBuilder {
 
   };
 
+
   setModels( models: Model[][] ): LessonBuilder {
 
     this.lesson.modelsOfEntirePage = models;
     return this; 
 
-  }
+  };
+
 
   // text and texts should be re-named to: 
   // textOfSection and textOfEntireLesson
   addText( textOfSection: string[] ): LessonBuilder {
 
-    this.lesson.textOfEntireLesson.push(textOfSection);
+    this.lesson.textOfEntireLesson.push( textOfSection );
     return this;
 
   };
+
 
   setTexts( textsOfLesson: string[][] ): LessonBuilder {
 
@@ -165,6 +151,7 @@ export class LessonBuilder implements ILessonBuilder {
 
   };
 
+
   addMusics( musicPathsOfEntireLesson: string[] ): LessonBuilder {
 
     this.lesson.musicPathsOfEntireLesson = musicPathsOfEntireLesson; 
@@ -172,12 +159,29 @@ export class LessonBuilder implements ILessonBuilder {
 
   };
 
+
   addVoices( voicePathsOfEntireLesson: string[] ): LessonBuilder {
 
     this.lesson.voicePathsOfEntireLesson = voicePathsOfEntireLesson;
     return this;
 
   };
+
+
+  extractSections(): void {
+
+    if( this.lesson.sections.length === 0 ) throw new Error( "Sections have not been added or set. Therefore, no sections to extract." )
+
+    this.lesson.sections.forEach(( section: Section ) => {
+
+      this.lesson.textOfEntireLesson.push( section.text );
+      this.lesson.voicePathsOfEntireLesson.push( section.voicePath );
+      this.lesson.modelsOfEntirePage.push( section.models );
+
+    });
+
+  };
+
 
   build(): Lesson {
 
@@ -188,34 +192,4 @@ export class LessonBuilder implements ILessonBuilder {
   };
 
 };
-
-
-
-
-
-// old pre builder-pattern constructor: 
-  // constructor( { id, title, thumbnail = '' }: LessonConfig ) {
-  //   super({id, title});
-  //   this.thumbnail = thumbnail;
-  // };
-
-
-
-// Brainstorming Init method:
-/*
-
-  Lesson.init() method will:
-    initialize camera: create animationDS, set an initial position, and create AnimationClips
-    initialize models: load and extract meshes from GLTF and create modelPositions
-    initialize text: extract text from some type of file and break it up into necessary paragraphs and sections
-  .
-.
-
-
-Example Use:
- diamond.init();
- lessons.push(diamond);
-.
-
-*/
 

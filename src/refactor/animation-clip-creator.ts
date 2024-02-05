@@ -15,9 +15,9 @@ import {
     TRStrategy,
     SuspendStrategy,
 	TimesAndValuesStrategy
-} from './strategy'
+} from './times-and-values-strategy'
 
-import { CamAnimConfig, ModelAnimConfig } from '../../../types';
+import { CamAnimConfig, ModelAnimConfig } from './types';
 
 
 class AnimationClipCreator {

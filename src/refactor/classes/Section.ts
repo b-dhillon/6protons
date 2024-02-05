@@ -13,7 +13,7 @@
 
 import { Vector3 } from 'three';
 import { Model } from './Model';
-import { PosRot } from './Camera';
+import { PosRot } from './Cam';
 
 
 type CamAnimation = {

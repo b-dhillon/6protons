@@ -4,14 +4,12 @@ import {
   getUpVector,
 } from '../../utility-functions/get-vector';
 import { getVecOnCircle } from '../../utility-functions/get-vector-on-circle';
-import { translateRotate } from '../../components/animations/translate-rotate-oo';
-import { circleModel } from '../../components/animations/circle-model-xz';
 import { CamConfig, CamAnimConfig } from "../types"
 import { easeInOutCubic, easeOutCubic } from '../../utility-functions/easing-functions';
+import { AnimationClipCreator } from '../animation-clip-creator';
 
 
-
-export class Camera {
+export class Cam {
 
   startPosition: Vector3;
 
@@ -31,11 +29,12 @@ export class Camera {
 
   animClips: AnimationClip[];
 
+  
   constructor({
     startPosition = new Vector3( 0, 0, 0 ),
     startRotation = new Euler( 0, 0, 0 ),
     camAnimations = [],
-  }: CamConfig = {} ) {
+   }: CamConfig = {} ) {
 
     this.startPosition = startPosition;
     this.startRotation = startRotation;
@@ -47,9 +46,8 @@ export class Camera {
     this.animClips = [];
     
   };
-
   
-  // public methods:
+
   public setStartPosition(x: number = 0, y: number = 0, z: number = 0): void {
 
     const startPos = new Vector3(x, y, z);
@@ -58,7 +56,7 @@ export class Camera {
     this.positions[0] = startPos;
 
   };
-
+  
 
   public setStartRotation(x: number = 0, y: number = 0, z: number = 0): void {
 
@@ -68,7 +66,7 @@ export class Camera {
     this.rotations[0] = startRot;
 
   };
-
+  
 
   public setCamAnimations( camAnimations: CamAnimation[] ): void {
 
@@ -76,7 +74,7 @@ export class Camera {
 
   };
 
-
+  
   public init(): void {
 
     this.createPosRots();
@@ -85,8 +83,7 @@ export class Camera {
   };
 
 
-  // private methods:
-  private createPosRots(): void {
+  public createPosRots(): void {
 
     if (!this.camAnimations.length) {
 
@@ -111,7 +108,7 @@ export class Camera {
   };
 
 
-  private createAnimConfigs(): void {
+  public createAnimConfigs(): void {
 
     // if positions and rotations haven't been extracted from PosRots
     // and set, then set them:
@@ -130,23 +127,30 @@ export class Camera {
 
         const animConfig: CamAnimConfig = {
 
-          animName: this.camAnimations[i].name,
+          animName: this.camAnimations[ i ].name,
+          tMag: this.camAnimations[ i ].tMag,
+          rMag: this.camAnimations[ i ].rMag,
+          duration: this.camAnimations[ i ].duration,
 
-          iPos: this.positions[i],
-          fPos: this.positions[i + 1],
-          iRot: this.rotations[i],
-          fRot: this.rotations[i + 1],
-          rotAxis: this.posRots[i].axis,
+          iPos: this.positions[ i ],
+          fPos: this.positions[ i + 1 ],
+          iRot: this.rotations[ i ],
+          fRot: this.rotations[ i + 1 ],
+          rotAxis: this.posRots[ i ].axis,
           
-          easingFn: i === 0 ? easeOutCubic : easeInOutCubic
+          easingFn: i === 0 ? easeOutCubic : easeInOutCubic,
+
+          smoothness: 100,
 
         };
 
-        this.animConfigs[i] = animConfig;
+        this.animConfigs[ i ] = animConfig;
 
       };
 
-    } else {
+    } 
+    
+    else {
 
       throw new Error(
         'not enough positions and rotations to create AnimationConfigs'
@@ -155,39 +159,27 @@ export class Camera {
     };
 
   };
+  
+  
+  public createAnimClips() {
 
-
-  private createAnimClips() {
-
-    if (!this.animConfigs.length) {
+    if ( !this.animConfigs.length ) {
 
       this.createAnimConfigs();
 
     };
 
-    this.animConfigs.forEach( (config: CamAnimConfig, i: number) => {
+    this.animConfigs.forEach( ( config: CamAnimConfig, i: number) => {
 
-      let clip: AnimationClip;
-
-      if ( this.camAnimations[i].name === 'circle-model' ) {
-
-        clip = circleModel( config );
-
-      }
-      
-      else {
-
-        clip = translateRotate( config );
-
-      };
+      const clip = AnimationClipCreator.CreateCameraAnimation( config )
 
       this.animClips.push( clip );
 
     });
 
   };
-
-
+  
+  
   private setPositions(posRots: PosRot[]): void {
 
     for (let i = 0; i < posRots.length; i++) {
@@ -197,7 +189,7 @@ export class Camera {
     };
 
   };
-
+  
 
   private setRotations(posRots: PosRot[]): void {
 
@@ -209,7 +201,7 @@ export class Camera {
 
   };
 
-
+  
   public getPosRots(): PosRot[] {
 
     if (!this.posRots.length) throw new Error('posRot array is empty')
@@ -217,10 +209,8 @@ export class Camera {
     else return this.posRots;
 
   };
-
-}
-
-
+  
+};
 
 
 
@@ -248,25 +238,30 @@ export class CamAnimation {
 
 
 
-
-
-
-
 export class PosRot {
+
   pos: Vector3;
   rot: Euler;
   axis: string | null;
 
-  constructor(fPos: Vector3, fRot: Euler, axis: string | null = null) {
+  constructor( fPos: Vector3, fRot: Euler, axis: string | null = null ) {
+
     this.pos = fPos;
     this.rot = fRot;
     this.axis = axis;
+
   }
+
 }
+
+
+
+
 
 class PosRotFactory {
 
   static create( camAnimation: CamAnimation, iPos: Vector3, iRot: Euler ): PosRot {
+
     const { tMag, rMag, name } = camAnimation
 
     switch (name) {
@@ -318,11 +313,12 @@ class PosRotFactory {
     }
   }
 
+
   private static zoomOut(
     tMag: number,
     iPos: Vector3,
     iRot: Euler,
-  ): PosRot {
+   ): PosRot {
 
     const frustrumVector = getFrustrumVector(iPos, iRot);
     const oppFrustrumVector = frustrumVector.clone().negate();
@@ -331,14 +327,15 @@ class PosRotFactory {
     // zoom does not have a rotation, we copy:
     const fRot = iRot;
 
-    return new PosRot(fPos, fRot, null);
+    return new PosRot( fPos, fRot, null );
   }
+
 
   private static zoomIn(
     tMag: number,
     iPos: Vector3,
     iRot: Euler,
-  ): PosRot {
+   ): PosRot {
 
     const frustrumVector = getFrustrumVector(iPos, iRot);
     const scaledVector = frustrumVector.multiplyScalar(tMag);
@@ -347,15 +344,16 @@ class PosRotFactory {
     // zoom does not have a rotation, so fRot = iRot.
     const fRot = iRot;
 
-    return new PosRot(fPos, fRot, null);
+    return new PosRot( fPos, fRot, null );
   }
+
 
   private static zoomOutRotateUp(
     tMag: number,
     rMag: number,
     iPos: Vector3,
     iRot: Euler
-  ): PosRot {
+   ): PosRot {
 
     // zoom out -- final position (fPos):
     const frustrumVector = getFrustrumVector(iPos, iRot);
@@ -368,14 +366,16 @@ class PosRotFactory {
     const fRot = new Euler(iRot.x + rMag, iRot.y, iRot.z);
 
     return new PosRot(fPos, fRot, axis);
-  }
+
+  };
+
 
   private static rotateDownZoomIn(
     tMag: number,
     rMag: number,
     iPos: Vector3,
     iRot: Euler
-  ): PosRot {
+   ): PosRot {
 
     // first we rotate down to get the fRot -- rotate x-axis
     const axis = 'x';
@@ -389,12 +389,13 @@ class PosRotFactory {
     return new PosRot(fPos, fRot, axis);
   }
 
+
   private static corkscrewUp(
     tMag: number,
     rMag: number,
     iPos: Vector3,
     iRot: Euler
-  ): PosRot {
+   ): PosRot {
 
     // get the y-vector with an applied rotation matrix and then scale it:
     const upVector = getUpVector(iPos, iRot);
@@ -408,6 +409,7 @@ class PosRotFactory {
     return new PosRot(fPos, fRot, axis);
   }
 
+
   // rMag = -tMag if you want the camera
   // to .lookAt the model after circle translation
   private static circleModel(
@@ -415,7 +417,7 @@ class PosRotFactory {
     rMag: number,
     iPos: Vector3,
     iRot: Euler
-  ): PosRot {
+   ): PosRot {
 
     const fPos = getVecOnCircle(iPos, iRot, tMag);
 
@@ -426,99 +428,5 @@ class PosRotFactory {
 
     return new PosRot(fPos, fRot, axis);
   }
+
 }
-
-
-
-
-
-
-
-
-
-
-
-/**
- * Notes: 
- * 
- * Camera.inNewPosition: boolean | undefined;
- * 
- * this field needs to be an array indexed by section, or needs to be set everytime section mutates
- * sometimes we want multiple sections without moving camera. so user can click next
- * and see something else happen on screen.
- */
-
-
-
-
-/* 
-
-
-Data Flow from animationNames to AnimationClips:
-
-animationNames --> createPosRots() --> cameraPosRots: { positions[], rotations[] }
-
-cameraPosRots --> createAnimationClipConfigs() --> animationClipConfig[]
-
-animationClipConfig[] --> createAnimationClips() --> animationClips
-
-
-
-
-// factory .create method --> moved to inside the factory 
-// reason: we don't want to bloat the class with extra methods. this method 
-// could be cut and moved into the factory
-private createPosRot(camAnimation: CamAnimation, i: number): PosRot {
-    const { name, tMag, rMag } = camAnimation;
-
-    PosRotFactory.create( camAnimation )
-
-    switch (name) {
-      case 'zoom-out':
-        return PosRotFactory.zoomOut(tMag, this.positions, this.rotations, i);
-
-      case 'zoom-in':
-        return PosRotFactory.zoomIn(tMag, this.positions, this.rotations, i);
-
-      case 'zoom-out-rotate-up':
-        return PosRotFactory.zoomOutRotateUp(
-          tMag,
-          rMag,
-          this.positions,
-          this.rotations,
-        );
-
-      case 'rotate-down-zoom-in':
-        return PosRotFactory.rotateDownZoomIn(
-          tMag,
-          rMag,
-          this.positions,
-          this.rotations,
-        );
-
-      case 'corkscrew-up':
-        return PosRotFactory.corkscrewUp(
-          tMag,
-          rMag,
-          this.positions,
-          this.rotations,
-        );
-
-      case 'circle-model':
-        return PosRotFactory.circleModel(
-          tMag,
-          rMag,
-          this.positions,
-          this.rotations,
-        );
-
-      default:
-        return {
-          pos: new Vector3(undefined, undefined, undefined),
-          rot: new Vector3(undefined, undefined, undefined),
-          axis: null,
-        };
-    }
-    //
-  }
-*/
