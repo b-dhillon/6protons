@@ -38,6 +38,18 @@ class AnimationClipCreator {
 		return new AnimationClip( config.animName, config.duration, [ posTrack, rotTrack ] );
 
 	};
+
+	/*
+	static CreateModelAnimation( config: any ) {
+		
+		this.keyframes.setStrategy( config.strategy );
+
+		const keyframeTracks = this.keyframes.create( config );
+
+		return new AnimationClip( config.animName, 1, keyframeTracks );
+
+	};
+	*/
 	
 
 	// model animations:

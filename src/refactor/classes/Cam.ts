@@ -144,6 +144,7 @@ export class Cam {
 
           iPos: this.positions[ i ],
           fPos: this.positions[ i + 1 ],
+          
           iRot: this.rotations[ i ],
           fRot: this.rotations[ i + 1 ],
           rotAxis: this.posRots[ i ].axis,
@@ -338,6 +339,7 @@ class PosRotFactory {
     const fRot = iRot;
 
     return new PosRot( fPos, fRot, null );
+
   }
 
 
@@ -355,6 +357,7 @@ class PosRotFactory {
     const fRot = iRot;
 
     return new PosRot( fPos, fRot, null );
+
   }
 
 
@@ -397,6 +400,7 @@ class PosRotFactory {
     const fPos = scaledVector;
 
     return new PosRot(fPos, fRot, axis);
+
   }
 
 
@@ -417,6 +421,7 @@ class PosRotFactory {
     const fRot = new Euler(iRot.x, iRot.y + rMag, iRot.z);
 
     return new PosRot(fPos, fRot, axis);
+
   }
 
 
@@ -437,6 +442,7 @@ class PosRotFactory {
     //                                          ^ is this - or + ? clock-wise should be negative.
 
     return new PosRot(fPos, fRot, axis);
+
   }
 
 }
