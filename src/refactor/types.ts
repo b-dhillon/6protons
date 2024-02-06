@@ -1,5 +1,6 @@
 import { AnimationClip, Euler, Vector3 } from "three";
-import { CamAnimation } from "./classes/Camera";
+import { CamAnimation } from "./classes/Cam";
+import { KeyframeStrategy } from "./keyframes-strategy";
 
 /**
  * Camera 
@@ -16,18 +17,22 @@ export type CamConfig = {
 export type CamAnimConfig = {
 
   animName: string;
+
   tMag: number;
   rMag: number;
 
-
   iPos: Vector3;
   fPos: Vector3;
+
   iRot: Euler;
   fRot: Euler;
   rotAxis: string | null;
+
   easingFn: Function;
   smoothness: number;
   duration: number;
+
+  keyframeStrategy: KeyframeStrategy;
 
 };
 
@@ -38,15 +43,19 @@ export type ModelAnimConfig = {
 
   iPos: Vector3 | undefined;
   fPos: Vector3 | undefined;
+
   iRot: Euler | undefined;
   fRot: Euler | undefined; 
   rotAxis: string | undefined;
+
   easingFn: Function | undefined;
   smoothness: number | undefined;
   duration: number;
 
   iScale: Vector3 | undefined; 
   fScale: Vector3 | undefined;
+
+  keyframeStrategy: KeyframeStrategy;
 
 };
 

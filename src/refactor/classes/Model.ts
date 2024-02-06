@@ -1,25 +1,23 @@
 import { ModelAnimNamesConfig, ModelAnimNames, ModelAnimConfig, ModelAnimClips, RotAngleAndRotVector, ModelDirectorConfig, PosRot } from "../types"
-import { Euler, Matrix4, Object3D, Vector3 } from 'three';
+import { AnimationClip, Euler, Matrix4, Object3D, Vector3 } from 'three';
 import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { CamAnimation } from './Cam';
-import { AnimationClipCreator } from '../animation-clip-creator';
+import { AnimationClipCreator, ClipCreator } from '../animation-clip-creator';
+import { SimpleRotateStrategy, SimpleScaleStrategy, SuspendStrategy } from "../keyframes-strategy";
 
 
 
-const modelClipCreators: any = {
+class Anims {
 
-  "scale-up": () => AnimationClipCreator.CreateScaleUpAnimation(),
+  enter: { name?: string, config?: ModelAnimConfig, clip?: AnimationClip } = {};
+  exit: { name?: string, config?: ModelAnimConfig, clip?: AnimationClip } = {};
+  main: { name?: string, config?: ModelAnimConfig, clip?: AnimationClip } = {};
+  nested: { name?: string, config?: ModelAnimConfig, clip?: AnimationClip } = {};
 
-  "spin-y": () => AnimationClipCreator.CreateSpinYAnimation(),
-
-  "scale-down": () => AnimationClipCreator.CreateScaleDownAnimation(),
-
-  "suspend": ( config: any ) => AnimationClipCreator.CreateSuspendAnimation( config )
+  constructor() {}
 
 };
-
-
 
 export class Model {
 
@@ -28,6 +26,7 @@ export class Model {
   constructor() {
 
     this.id = Model._lastId++;
+    this.anims = new Anims();
 
   };
   
@@ -41,11 +40,9 @@ export class Model {
 
   visible: boolean = false;
 
-  scale: number = 1;
+  scale: number = 1;  
 
-  animNames!: ModelAnimNames;
-  
-  animClips: ModelAnimClips | undefined;
+  anims: Anims;
     
   meshes: Object3D[] | undefined;
 
@@ -177,23 +174,28 @@ export class ModelBuilder implements IModelBuilder {
       main: "spin-y",
       exit: "scale-down",
       nested: "",
-      ...animNames, // over-rides any defaults
+      ...animNames, // over-rides the hard-coded defaults
     };
 
-    this.model.animNames = names;
+    this.model.anims.enter.name = names.enter;
+    this.model.anims.main.name = names.main;
+    this.model.anims.exit.name = names.exit;
+    this.model.anims.nested.name = names.nested;
 
   };
 
 
-  // Experimental: -- currently not being used:
-  /*
+  // Experimental:
   public createAnimConfigs() {
 
     // Experimental: 
-    this.model.anims.enter.config = createConfig( this.model.anims.enter.name )
-    this.model.anims.main.config = createConfig( this.model.anims.main.name )
-    this.model.anims.exit.config = createConfig( this.model.anims.exit.name )
-    this.model.anims.nested.config = createConfig( this.model.anims.nested.name )
+    this.model.anims.enter.config = createConfig( this.model.anims.enter.name );
+    this.model.anims.main.config = createConfig( this.model.anims.main.name );
+    this.model.anims.exit.config = createConfig( this.model.anims.exit.name );
+    this.model.anims.nested.config = createConfig( this.model.anims.nested.name );
+
+    const iPos = this.model.position;
+    const iRot = this.model.rotation;
 
     function createConfig( animName: string | undefined ): any {
 
@@ -207,7 +209,8 @@ export class ModelBuilder implements IModelBuilder {
   
           initial = new Vector3( 0, 0, 0 );
           final = new Vector3( 1, 1, 1 );
-          config = { initial: initial, final: final, name: animName, tracks: [ scale ] }
+          
+          config = { initial: initial, final: final, animName: animName, keyframeStrategy: new SimpleScaleStrategy() }
   
         return config;
       
@@ -216,7 +219,8 @@ export class ModelBuilder implements IModelBuilder {
   
           initial = new Vector3( 1, 1, 1 );
           final = new Vector3( 0, 0, 0 );
-          config = { initial: initial, final: final, name: animName, tracks: [ scale ] }
+
+          config = { initial: initial, final: final, animName: animName, keyframeStrategy: new SimpleScaleStrategy() }
   
         return config;
     
@@ -225,27 +229,28 @@ export class ModelBuilder implements IModelBuilder {
   
           initial = new Euler( 0, 1, 0 );
           final = new Euler( 0, Math.PI * 2, 0);
-          config = { initial: initial, final: final, name: animName, tracks: [ rot ] }
+
+          config = { initial: initial, final: final, animName: animName, keyframeStrategy: new SimpleRotateStrategy() }
   
         return config;
     
   
         case "suspend":
   
-          config = { iPos: this.model.position, iRot: this.model.rotation, name: animName, tracks: [ pos, rot ] }
+          config = { iPos: iPos, iRot: iRot, animName: animName, keyframeStrategy: new SuspendStrategy() }
   
         return config
     
   
         default:
-          throw new Error( `Invalid animation name. no model animation with that name found. NAME: ${ animName }` )
+          throw new Error( `Invalid animation name. No model animation with that name found. NAME: ${ animName }` )
     
       };
     
     };
 
   };
-  */
+  
 
 
 
@@ -253,51 +258,19 @@ export class ModelBuilder implements IModelBuilder {
   // Creates AnimationClips based on animNames that are set when Model is instantiated
   public createAnimClips(): void {
 
-    if( !this.model.animNames ) this.addAnimNames();
-
-
-    // grabbing the names of the animations
-    const enterName = this.model.animNames.enter;
-    const mainName = this.model.animNames.main;
-    const exitName = this.model.animNames.exit;
-    const nestedName = this.model.animNames?.nested;
-
-    // This is for any model animations that require a config object. So far there is only one, suspend. 
-    // In the future, if we add more animations, we will have to abstract this out into it's own function.
-    let config;
-    if( mainName === "suspend" ) config = { iPos: this.model.position, iRot: this.model.rotation }
-
-    // string indexing an object that stores the constructor functions
-    const createEnterClip = enterName ? modelClipCreators[ enterName ] : () => undefined;
-    const createMainClip = mainName ? modelClipCreators[ mainName ] : () => undefined;
-    const createExitClip = exitName ? modelClipCreators[ exitName ] : () => undefined;
-    const createNestedClip = nestedName ? modelClipCreators[ nestedName ] : () => undefined;
-
-    // set the animationClips object to hold the AnimationClips
-    // that will be returned from these functions
-    this.model.animClips = {
-
-      enter: createEnterClip(),
-      main: mainName === "suspend" ? createMainClip( config ) : createMainClip(), 
-      exit: createExitClip(),
-      nested: createNestedClip()
-
-    };
-
 
     // Experimental:
-    /*
     const enterConfig = this.model.anims.enter.config
     const mainConfig = this.model.anims.main.config
     const exitConfig = this.model.anims.exit.config
     const nestedConfig = this.model.anims.nested.config
 
     // this should be handled with a setter: setAnims()
-    this.model.anims.enter.clip = CreateAnimation( enterConfig )
-    this.model.anims.main.clip = CreateAnimation( mainConfig )
-    this.model.anims.exit.clip = CreateAnimation( exitConfig )
-    this.model.anims.nested.clip = CreateAnimation( nestedConfig )
-    */
+    this.model.anims.enter.clip = ClipCreator.createClip( enterConfig );
+    this.model.anims.main.clip = ClipCreator.createClip( mainConfig );
+    this.model.anims.exit.clip = ClipCreator.createClip( exitConfig );
+    this.model.anims.nested.clip = ClipCreator.createClip( nestedConfig );
+    
 
   };
 
@@ -550,6 +523,38 @@ function loadGLTF(path: string): Promise<GLTF> {
 
 
 
+// function createAnimClips() {
+
+  // if( !this.model.animNames ) this.addAnimNames();
+  // if( !this.model.animNames ) this.addAnimNames();
+
+
+  // grabbing the names of the animations
+  // const enterName = this.model.animNames.enter;
+  // const mainName = this.model.animNames.main;
+  // const exitName = this.model.animNames.exit;
+  // const nestedName = this.model.animNames?.nested;
+
+
+  // // string indexing an object that stores the constructor functions
+  // const createEnterClip = enterName ? modelClipCreators[ enterName ] : () => undefined;
+  // const createMainClip = mainName ? modelClipCreators[ mainName ] : () => undefined;
+  // const createExitClip = exitName ? modelClipCreators[ exitName ] : () => undefined;
+  // const createNestedClip = nestedName ? modelClipCreators[ nestedName ] : () => undefined;
+
+  // // set the animationClips object to hold the AnimationClips
+  // // that will be returned from these functions
+  // this.model.animClips = {
+
+  //   enter: createEnterClip(),
+  //   main: mainName === "suspend" ? createMainClip( config ) : createMainClip(), 
+  //   exit: createExitClip(),
+  //   nested: createNestedClip()
+
+  // };
+  
+// }
+
 
 
 // Model Animation Configs graveyard:
@@ -596,16 +601,7 @@ class BlankModelAnimConfig {
 // }
 
 
-// class Anims {
 
-//   enter: { name?: string, config?: ModelAnimConfig, clip?: AnimationClip } = {};
-//   exit: { name?: string, config?: ModelAnimConfig, clip?: AnimationClip } = {};
-//   main: { name?: string, config?: ModelAnimConfig, clip?: AnimationClip } = {};
-//   nested: { name?: string, config?: ModelAnimConfig, clip?: AnimationClip } = {};
-
-//   constructor() {}
-
-// };
 
 
 /**
