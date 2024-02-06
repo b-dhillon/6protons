@@ -293,10 +293,10 @@ export class ModelBuilder implements IModelBuilder {
     const nestedConfig = this.model.anims.nested.config
 
     // this should be handled with a setter: setAnims()
-    this.model.anims.enter.clip = AnimationClipCreator.CreateModelAnimation( enterConfig )
-    this.model.anims.main.clip = AnimationClipCreator.CreateModelAnimation( mainConfig )
-    this.model.anims.exit.clip = AnimationClipCreator.CreateModelAnimation( exitConfig )
-    this.model.anims.nested.clip = AnimationClipCreator.CreateModelAnimation( nestedConfig )
+    this.model.anims.enter.clip = CreateAnimation( enterConfig )
+    this.model.anims.main.clip = CreateAnimation( mainConfig )
+    this.model.anims.exit.clip = CreateAnimation( exitConfig )
+    this.model.anims.nested.clip = CreateAnimation( nestedConfig )
     */
 
   };
