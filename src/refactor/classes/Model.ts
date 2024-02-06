@@ -107,19 +107,21 @@ export class Models {
 
 interface IModelBuilder {
 
-  addPath(path: string): void;
+  addPath( path: string ): void;
 
-  assignSection(section: number): void;
+  assignSection( section: number ): void;
 
-  addName(name: string): void;
+  addName( name: string ): void;
 
   addAnimNames( animNames: ModelAnimNamesConfig ): void;
 
+  // createAnimConfigs( animNames: ModelAnimNames | undefined ): any;
+
   createAnimClips(): void;
 
-  addDependantProperties(camAnimations: CamAnimation[], textOfEntireLesson: string[][]): void;
+  addDependantProperties( camAnimations: CamAnimation[], textOfEntireLesson: string[][] ): void;
 
-  computePosition(posRot: PosRot): void;
+  computePosition( posRot: PosRot ): void;
 
   extractMeshes(): void;
 
@@ -183,6 +185,71 @@ export class ModelBuilder implements IModelBuilder {
   };
 
 
+  // Experimental: -- currently not being used:
+  /*
+  public createAnimConfigs() {
+
+    // Experimental: 
+    this.model.anims.enter.config = createConfig( this.model.anims.enter.name )
+    this.model.anims.main.config = createConfig( this.model.anims.main.name )
+    this.model.anims.exit.config = createConfig( this.model.anims.exit.name )
+    this.model.anims.nested.config = createConfig( this.model.anims.nested.name )
+
+    function createConfig( animName: string | undefined ): any {
+
+      let initial; 
+      let final;
+      let config;
+    
+      switch( animName ) {
+    
+        case "scale-up":
+  
+          initial = new Vector3( 0, 0, 0 );
+          final = new Vector3( 1, 1, 1 );
+          config = { initial: initial, final: final, name: animName, tracks: [ scale ] }
+  
+        return config;
+      
+    
+        case "scale-down":
+  
+          initial = new Vector3( 1, 1, 1 );
+          final = new Vector3( 0, 0, 0 );
+          config = { initial: initial, final: final, name: animName, tracks: [ scale ] }
+  
+        return config;
+    
+  
+        case "spin-y": 
+  
+          initial = new Euler( 0, 1, 0 );
+          final = new Euler( 0, Math.PI * 2, 0);
+          config = { initial: initial, final: final, name: animName, tracks: [ rot ] }
+  
+        return config;
+    
+  
+        case "suspend":
+  
+          config = { iPos: this.model.position, iRot: this.model.rotation, name: animName, tracks: [ pos, rot ] }
+  
+        return config
+    
+  
+        default:
+          throw new Error( `Invalid animation name. no model animation with that name found. NAME: ${ animName }` )
+    
+      };
+    
+    };
+
+  };
+  */
+
+
+
+
   // Creates AnimationClips based on animNames that are set when Model is instantiated
   public createAnimClips(): void {
 
@@ -216,6 +283,21 @@ export class ModelBuilder implements IModelBuilder {
       nested: createNestedClip()
 
     };
+
+
+    // Experimental:
+    /*
+    const enterConfig = this.model.anims.enter.config
+    const mainConfig = this.model.anims.main.config
+    const exitConfig = this.model.anims.exit.config
+    const nestedConfig = this.model.anims.nested.config
+
+    // this should be handled with a setter: setAnims()
+    this.model.anims.enter.clip = AnimationClipCreator.CreateModelAnimation( enterConfig )
+    this.model.anims.main.clip = AnimationClipCreator.CreateModelAnimation( mainConfig )
+    this.model.anims.exit.clip = AnimationClipCreator.CreateModelAnimation( exitConfig )
+    this.model.anims.nested.clip = AnimationClipCreator.CreateModelAnimation( nestedConfig )
+    */
 
   };
 
@@ -495,52 +577,10 @@ class BlankModelAnimConfig {
 
 
 
-// Experimental: -- currently not being used:
-public createAnimConfigs() {
-
-  // Experimental: 
-  // this.model.anims.enter.config = createConfig( this.model.anims.enter.name )
-  // this.model.anims.main.config = createConfig( this.model.anims.main.name )
-  // this.model.anims.exit.config = createConfig( this.model.anims.exit.name )
-  // this.model.anims.nested.config = createConfig( this.model.anims.nested.name )
-
-};
 
 
-function createConfig( name: string | undefined ) {
 
-  const modelAnimConfig = new BlankModelAnimConfig();
 
-  switch( name ) {
-
-    case 'scale-up':
-      modelAnimConfig.iScale = new Vector3( 0, 0, 0 );
-      modelAnimConfig.fScale = new Vector3( 1, 1, 1 );
-    break;
-
-    case 'scale-down':
-      modelAnimConfig.iScale = new Vector3( 1, 1, 1 );
-      modelAnimConfig.fScale = new Vector3( 0, 0, 0 );
-    break; 
-
-    case 'spin-y': 
-      modelAnimConfig.iRot = new Euler( 0, 1, 0 );
-      modelAnimConfig.fRot = new Euler( 0, Math.PI * 2, 0);
-      modelAnimConfig.rotAxis = 'y';
-    break;
-
-    case 'suspend':
-      modelAnimConfig.duration = 90;
-    break;
-
-    default:
-      throw new Error( `Invalid animation name. no model animation with that name found. NAME: ${name}` )
-
-  };
-
-  return modelAnimConfig;
-
-};
 
 
 
