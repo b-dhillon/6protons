@@ -10,9 +10,9 @@
  *  3. Potentially creating a new config?
  */
 
-import { Euler, InterpolateSmooth, Vector3, VectorKeyframeTrack } from "three";
+import { Euler, InterpolateSmooth, KeyframeTrack, NumberKeyframeTrack, Vector3, VectorKeyframeTrack } from "three";
 import { computeModelPosition } from "../utility-functions/compute-model-position";
-import { easeInOutCubic, easeOutCubic } from "../utility-functions/easing-functions";
+// import { easeInOutCubic, easeOutCubic } from "../utility-functions/easing-functions";
 import { CamAnimConfig } from "./types";
 
 
@@ -20,31 +20,17 @@ import { CamAnimConfig } from "./types";
 /// Stategy Pattern  ///
 ////////////////////////
 
-type TandV = {
-    times: number[],
-    values: {
-      pos?: number[],
-      rot?: number[]
-      scale?: number[]
-    }
-};
 
-// abstract strategy:
-export interface TimesAndValuesStrategy {
+// Abstract Strategy:
+export interface KeyframeStrategy {
 
-    execute( config: any ): TandV ; 
-
-    // createPos()
-    // createRot()
-    // createScale()
-    // createTimesAndValues() // loop
-    // createKeyframes()
+    execute( config: any ): KeyframeTrack[] ; 
 
 };
 
 
-// concrete strategies:
-export class CircleStrategy implements TimesAndValuesStrategy {
+// Concrete Strategies:
+export class CircleStrategy implements KeyframeStrategy {
 
     execute( config: CamAnimConfig ) {
 
@@ -88,7 +74,7 @@ export class CircleStrategy implements TimesAndValuesStrategy {
             else if ( rotAxis === 'z' ) rot = iRot.z + ( fRot.z - iRot.z ) * easedT;
 
             return rot;
-            
+
         };
 
 
@@ -112,23 +98,24 @@ export class CircleStrategy implements TimesAndValuesStrategy {
         };
 
 
-        return { 
-            times: times, 
-            values: {
-                pos: posValues, 
-                rot: rotValues
-            } 
-        };
+        const posTrack = new VectorKeyframeTrack( '.position', times, posValues as number[] );
 
+		const rotTrack = new NumberKeyframeTrack( '.rotation[' + config.rotAxis + ']', times, rotValues as number[] );
+
+        return [ posTrack, rotTrack ];
     };
 
 };
 
-export class TRStrategy implements TimesAndValuesStrategy {
+export class TRStrategy implements KeyframeStrategy {
 
     execute( config: CamAnimConfig ) {
 
-        let times: number[] = [], posValues: number[] = [], rotValues: number[] = [];
+        let times: number[] = [];
+
+        let posValues: number[] = [];
+        
+        let rotValues: number[] = [];
 
         const { iPos, fPos, iRot, fRot, rotAxis, easingFn, smoothness: n } = config;
 
@@ -175,27 +162,18 @@ export class TRStrategy implements TimesAndValuesStrategy {
             
         };
 
-        return { 
-            times: times, 
-            values: {
-                pos: posValues,
-                rot: rotValues
-            } 
-        };
+        const posTrack = new VectorKeyframeTrack( '.position', times, posValues as number[] );
+
+		const rotTrack = new NumberKeyframeTrack( '.rotation[' + config.rotAxis + ']', times, rotValues as number[] );
+
+        return [ posTrack, rotTrack ];
         
     };
 
 };
-/**
- * 
- * ModelStrategy is different from the other two because 
- * it doesn't seem to use loops. 
- * ScaleUp, ScaleDown, SpinY don't use loops to create Times and Values 
- * Suspend however does. And Suspend is just Translate-Rotate effectively, but with a sin approach 
- * 
- */
 
-export class SuspendStrategy implements TimesAndValuesStrategy {
+
+export class SuspendStrategy implements KeyframeStrategy {
 
     execute( config: any ) {
 
@@ -259,26 +237,18 @@ export class SuspendStrategy implements TimesAndValuesStrategy {
 	
 		};
 
-        return { 
-            times: times, 
-            values: {
-                pos: posValues,
-                rot: rotValues
-            } 
-        };
+        const posTrack = new VectorKeyframeTrack( ".position", times, posValues as number[], InterpolateSmooth )
 
-        // const posTrack = new VectorKeyframeTrack( ".position", times, posValues as number[], InterpolateSmooth )
+		const rotTrack = new VectorKeyframeTrack( ".rotation", times, rotValues as number[], InterpolateSmooth )
 
-		// const rotTrack = new VectorKeyframeTrack( ".rotation", times, rotValues as number[], InterpolateSmooth )
-
-        // return [ posTrack, rotTrack ]
+        return [ posTrack, rotTrack ]
         
     };
 
 };
 
 
-export class SimpleScaleStrategy implements TimesAndValuesStrategy {
+export class SimpleScaleStrategy implements KeyframeStrategy {
 
     execute( config: any ) {
 
@@ -315,24 +285,16 @@ export class SimpleScaleStrategy implements TimesAndValuesStrategy {
 
 		};
 
-        return { 
-            times: times, 
-            values: {
-                scale: scaleValues,
-            } 
-        };
+        const scaleTrack = new VectorKeyframeTrack( ".scale", times, scaleValues as number[], InterpolateSmooth )
 
-
-        // const scaleTrack = new VectorKeyframeTrack( ".scale", times, scaleValues as number[], InterpolateSmooth )
-
-        // return [ scaleTrack ]
+        return [ scaleTrack ]
         
     };
 
 };
 
 
-export class SimpleRotateStrategy implements TimesAndValuesStrategy {
+export class SimpleRotateStrategy implements KeyframeStrategy {
 
     execute( config: any ) {
 
@@ -371,16 +333,9 @@ export class SimpleRotateStrategy implements TimesAndValuesStrategy {
 
 		};
 
-        return { 
-            times: times, 
-            values: {
-                rot: rotValues,
-            } 
-        };
+        const rotTrack = new VectorKeyframeTrack( ".rotation['y']", times, rotValues as number[], InterpolateSmooth )
 
-        // const rotTrack = new VectorKeyframeTrack( ".rotation['y']", times, rotValues as number[], InterpolateSmooth )
-
-        // return [ rotTrack ]
+        return [ rotTrack ]
         
     };
 
@@ -397,17 +352,21 @@ export class SimpleRotateStrategy implements TimesAndValuesStrategy {
 /// Strategy Context ///
 ////////////////////////
 
-export class TimesAndValues {
+export class KeyframeCreator {
 
-    strategy: TimesAndValuesStrategy | undefined;
+    strategy: KeyframeStrategy | undefined;
 
-    setStrategy( strategy: TimesAndValuesStrategy ) {
+    setStrategy( strategy: KeyframeStrategy ) {
 
         this.strategy = strategy
 
     };
 
-    create( config: any ): TandV {
+    resetStrategy() {
+        this.strategy = undefined;
+    }
+
+    create( config: any ): KeyframeTrack[] {
 
         if ( this.strategy ) {
 
@@ -425,46 +384,12 @@ export class TimesAndValues {
 
 };
 
+
+
 /*
 
-export class AnimationClipCreator {
 
-    static strategy: KeyframeStrategy | undefined;
-
-    static setStrategy( strategy: KeyframeStrategy ) {
-
-        this.strategy = strategy
-
-    };
-
-    createClip( config: any ): AnimationClip {
-
-        if ( this.strategy ) {
-
-            const keyframeTracks = this.strategy.execute( config );
-
-		    return new AnimationClip( config.animName, 1, keyframeTracks );
-
-        } 
-        
-        else {
-
-            throw new Error('No strategy set!');
-
-            this.setStrategy( config.strategy )
-            
-            const keyframeTracks = this.strategy.execute( config );
-
-		    return new AnimationClip( config.animName, 1, keyframeTracks );
-
-        };
-        
-    };
-
-};
-
-AnimationClipCreator.setStrategy( config.strategy )
-AnimationClipCreator.createClip( config );
+ClipCreator.createClip( config );
 
 ^^ This one line could then work for all animations, model and camera. 
 When we get a new animation, we simply have to create a new keyframe strategy and config for it.

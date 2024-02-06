@@ -7,6 +7,7 @@ import { getVecOnCircle } from '../../utility-functions/get-vector-on-circle';
 import { CamConfig, CamAnimConfig } from "../types"
 import { easeInOutCubic, easeOutCubic } from '../../utility-functions/easing-functions';
 import { AnimationClipCreator } from '../animation-clip-creator';
+import { CircleStrategy, KeyframeStrategy, TRStrategy } from '../keyframes-strategy';
 
 
 /**
@@ -144,7 +145,7 @@ export class Cam {
 
           iPos: this.positions[ i ],
           fPos: this.positions[ i + 1 ],
-          
+
           iRot: this.rotations[ i ],
           fRot: this.rotations[ i + 1 ],
           rotAxis: this.posRots[ i ].axis,
@@ -152,6 +153,8 @@ export class Cam {
           easingFn: i === 0 ? easeOutCubic : easeInOutCubic,
 
           smoothness: 100,
+
+          keyframeStrategy: assignKeyframeStrategy( this.camAnimations[ i ].name )
 
         };
 
@@ -340,7 +343,7 @@ class PosRotFactory {
 
     return new PosRot( fPos, fRot, null );
 
-  }
+  };
 
 
   private static zoomIn(
@@ -358,7 +361,7 @@ class PosRotFactory {
 
     return new PosRot( fPos, fRot, null );
 
-  }
+  };
 
 
   private static zoomOutRotateUp(
@@ -401,7 +404,7 @@ class PosRotFactory {
 
     return new PosRot(fPos, fRot, axis);
 
-  }
+  };
 
 
   private static corkscrewUp(
@@ -422,7 +425,7 @@ class PosRotFactory {
 
     return new PosRot(fPos, fRot, axis);
 
-  }
+  };
 
 
   // rMag = -tMag if you want the camera
@@ -444,5 +447,16 @@ class PosRotFactory {
     return new PosRot(fPos, fRot, axis);
 
   }
+
+}
+
+
+function assignKeyframeStrategy( animName: string ): KeyframeStrategy {
+
+	const splitName = animName.split('-');
+	const firstName = splitName[ 0 ];
+
+	if ( firstName === "circle" ) return new CircleStrategy();
+	else return new TRStrategy();
 
 }
