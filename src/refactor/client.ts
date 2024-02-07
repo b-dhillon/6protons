@@ -37,6 +37,9 @@ import { writeFileSync } from "fs";
 */ 
 
 // This should be turned into a get/set method on Lesson
+
+console.log("EXECUTING CLIENT");
+
 const numberOfSections = 6
 
 const textOfEntireLesson = [
@@ -86,6 +89,9 @@ const voicePathsOfEntireLesson = [
 */ 
 const universe = new Universe( "fullerene-universe", 25000, 5 );
 
+console.log("UNIVERSE INITIALIZED");
+
+
 
 
 /** 
@@ -108,6 +114,8 @@ const camAnimations = [
 
 ];
 
+console.log("CAM ANIMATIONS CREATED");
+
 
 
 /** 
@@ -115,7 +123,8 @@ const camAnimations = [
 */ 
 const camera = new Cam();
 
-camera.setStartPosition( 0, 0, 5 ); 
+camera.setStartPosition( 0, 0, 5 );
+camera.setStartRotation( 0, 0, 0 ); // this can be handled automatically as a default. 
 
 camera.setCamAnimations( camAnimations );
 
@@ -124,6 +133,8 @@ camera.createPosRots();
 camera.createAnimConfigs();
 
 camera.createAnimClips();
+
+console.log("CAM INITIALIZED");
 
 
 
@@ -150,7 +161,7 @@ modelDirector.constructProduct({
   section: 0,
   path: "/fullerene/models/m0.glb",
   name: "floating-fullerene",
-  anims: { 
+  animNames: { 
     enter: "",
     main: "suspend",
     exit: "scale-down",
@@ -165,7 +176,7 @@ modelDirector.constructProduct({
   section: 2,
   path: "/fullerene/models/m0.glb",
   name: "no-soccer-pattern",
-  anims: {},
+  animNames: {},
 });
 
 const m2 = modelBuilder.getProduct();
@@ -175,7 +186,7 @@ modelDirector.constructProduct({
   section: 3,
   path: "/fullerene/models/m2.glb",
   name: "soccer-pattern",
-  anims: {},
+  animNames: {},
 });
 
 const m3 = modelBuilder.getProduct();
@@ -185,7 +196,7 @@ modelDirector.constructProduct({
   section: 4,
   path: "/fullerene/models/m3.glb",
   name: "doped-fullerene",
-  anims: {},
+  animNames: {},
 });
 
 const m4 = modelBuilder.getProduct();
@@ -195,15 +206,18 @@ modelDirector.constructProduct({
   section: 5,
   path: '/fullerene/models/m4.glb',
   name: "protease-with-fullerene",
-  anims: {},
+  animNames: {},
 });
 
 const m5 = modelBuilder.getProduct();
 
+console.log("MODELS BUILT");
 
 const models = new Models( [ m0, m2, m3, m4, m5 ] );
 
 models.groupBySection( numberOfSections );
+
+console.log("MODELS GROUPED");
 
 
 /** 
@@ -226,6 +240,8 @@ for( let i = 0; i < numberOfSections; i++ ) {
 
 };
 
+console.log("SECTIONS INITIALIZED");
+
 
 /** 
  * Step-6: Build lesson with builder: 
@@ -246,6 +262,9 @@ lessonBuilder.addTitle( "Buckminsterfullerene" )
 ;
 
 const buckminsterfullerene = lessonBuilder.build();
+
+console.log("LESSON BUILT!!!!");
+
 
 printLesson( buckminsterfullerene );
 

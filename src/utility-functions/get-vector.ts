@@ -2,6 +2,7 @@ import { Euler, Matrix4, Vector3 } from "three";
 
 export function getFrustrumVector( iPos: Vector3, rot: Euler ): Vector3 {
 
+  let isCameraRotated;
   let rotAngle: number;
   const rotAxis = rot.x ? 'x' : rot.y ? 'y' : rot.z ? 'z' : null;
   
@@ -14,37 +15,55 @@ export function getFrustrumVector( iPos: Vector3, rot: Euler ): Vector3 {
 
   // Set the correct axis for rotation
   switch (rotAxis) {
+
     case 'x':
+      isCameraRotated = true;
       rotVector.setX(1); // Rotate around the x-axis
       rotAngle = rot.x; // set rotation angle from x-coordinates
-      break;
+    break;
+
     case 'y':
+      isCameraRotated = true;
       rotVector.setY(1); // Rotate around the y-axis
       rotAngle = rot.y; // set rotation angle from y-coordinates
-      break;
+    break;
+
     case 'z':
+      isCameraRotated = true;
       rotVector.setZ(1); // Rotate around the z-axis
       rotAngle = rot.z; // set rotation angle from z-coordinates
-      break;
+    break;
+
+    case null: 
+      isCameraRotated = false;
+    break;
+
     default:
       throw new Error('Invalid rotation axis');
+
   }
 
-  // Create a new rotation matrix for the additional rotation
-  const rotationMatrix = new Matrix4();
+  if ( isCameraRotated ) {
 
-  // Initialize the rotation matrix to rotate around the specified axis by the given angle
-  rotationMatrix.makeRotationAxis(rotVector.normalize(), rotAngle);
+    // Create a new rotation matrix for the additional rotation
+    const rotationMatrix = new Matrix4();
+  
+    // Initialize the rotation matrix to rotate around the specified axis by the given angle
+    rotationMatrix.makeRotationAxis( rotVector.normalize(), rotAngle! );
 
-  // Apply the additional rotation to the model's position vector
-  // This rotates the model around the camera based on the specified axis and angle
-  localFrustrumVector.applyMatrix4(rotationMatrix);
+    // Apply the additional rotation to the model's position vector
+    // This rotates the model around the camera based on the specified axis and angle
+    localFrustrumVector.applyMatrix4(rotationMatrix);
+
+  }
+
 
   // Vector transformation from local-space to world-space
   // Add the camera's new scaled vector to the camera's world position
   const worldFrustrumVector = iPos.add( localFrustrumVector );
 
   return worldFrustrumVector;
+  
 };
 
 

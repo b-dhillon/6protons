@@ -88,21 +88,26 @@ export class Cam {
 
   public createPosRots(): void {
 
-    if (!this.camAnimations.length) {
+    if ( !this.camAnimations.length ) {
 
       throw new Error('No camAnimations have been created');
 
     };
 
-    if (!this.positions.length || this.rotations.length) {
+    if ( !this.positions.length || !this.rotations.length ) {
 
       throw new Error('Initial position or initial rotation have not been set');
 
     };
 
-    for (let i = 0; i < this.camAnimations.length; i++) {
+    for ( let i = 0; i < this.camAnimations.length; i++ ) {
 
-      const posRot = PosRotFactory.create( this.camAnimations[i], this.positions[i], this.rotations[i] );
+      const posRot = PosRotFactory.create( this.camAnimations[ i ], this.positions[ i ], this.rotations[ i ] );
+
+      // make sure the next step of the loop has a position and a rotation. 
+      // the first iteration of the loop will use the startPosition and startRotation as they will be at index=0
+      this.positions.push( posRot.pos );
+      this.rotations.push( posRot.rot );
 
       this.posRots.push( posRot );
 
@@ -197,7 +202,7 @@ export class Cam {
   };
   
 
-  private setRotations(posRots: PosRot[]): void {
+  private setRotations( posRots: PosRot[] ): void {
 
     for (let i = 0; i < posRots.length; i++) {
 
@@ -273,10 +278,10 @@ class PosRotFactory {
     switch (name) {
 
       case "zoom-out":
-        return this.zoomOut(tMag, iPos, iRot );
+        return this.zoomOut( tMag, iPos, iRot );
 
       case "zoom-in":
-        return this.zoomIn(tMag, iPos, iRot );
+        return this.zoomIn( tMag, iPos, iRot );
 
       case "zoom-out-rotate-up":
         return this.zoomOutRotateUp(
@@ -326,7 +331,7 @@ class PosRotFactory {
     iRot: Euler,
    ): PosRot {
 
-    const frustrumVector = getFrustrumVector(iPos, iRot);
+    const frustrumVector = getFrustrumVector( iPos, iRot );
     const oppFrustrumVector = frustrumVector.clone().negate();
     const scaledVector = oppFrustrumVector.multiplyScalar(tMag);
     const fPos = scaledVector;
@@ -344,7 +349,7 @@ class PosRotFactory {
     iRot: Euler,
    ): PosRot {
 
-    const frustrumVector = getFrustrumVector(iPos, iRot);
+    const frustrumVector = getFrustrumVector( iPos, iRot );
     const scaledVector = frustrumVector.multiplyScalar(tMag);
     const fPos = scaledVector;
 
@@ -364,7 +369,7 @@ class PosRotFactory {
    ): PosRot {
 
     // zoom out -- final position (fPos):
-    const frustrumVector = getFrustrumVector(iPos, iRot);
+    const frustrumVector = getFrustrumVector( iPos, iRot );
     const oppFrustrumVector = frustrumVector.clone().negate();
     const scaledVector = oppFrustrumVector.multiplyScalar(tMag);
     const fPos = scaledVector;

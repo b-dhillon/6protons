@@ -129,6 +129,6 @@ export type ModelDirectorConfig = {
   path: string, 
   section: number, 
   name: string,
-  anims: ModelAnimNamesConfig,
+  animNames: ModelAnimNamesConfig,
 
 };
