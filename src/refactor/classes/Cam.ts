@@ -6,7 +6,7 @@ import {
 import { getVecOnCircle } from '../../utility-functions/get-vector-on-circle';
 import { CamConfig, CamAnimConfig } from "../types"
 import { easeInOutCubic, easeOutCubic } from '../../utility-functions/easing-functions';
-import { AnimationClipCreator } from '../animation-clip-creator';
+import { ClipCreator } from '../clip-creator';
 import { CircleStrategy, KeyframeStrategy, TRStrategy } from '../keyframes-strategy';
 
 
@@ -59,22 +59,22 @@ export class Cam {
   };
   
 
-  public setStartPosition(x: number = 0, y: number = 0, z: number = 0): void {
+  public setStartPosition( x: number = 0, y: number = 0, z: number = 0 ): void {
 
-    const startPos = new Vector3(x, y, z);
+    const startPos = new Vector3( x, y, z );
 
     this.startPosition = startPos;
-    this.positions[0] = startPos;
+    this.positions[ 0 ] = startPos;
 
   };
   
 
-  public setStartRotation(x: number = 0, y: number = 0, z: number = 0): void {
+  public setStartRotation( x: number = 0, y: number = 0, z: number = 0 ): void {
 
     const startRot = new Euler(x, y, z);
 
     this.startRotation = startRot;
-    this.rotations[0] = startRot;
+    this.rotations[ 0 ] = startRot;
 
   };
   
@@ -82,14 +82,6 @@ export class Cam {
   public setCamAnimations( camAnimations: CamAnimation[] ): void {
 
     this.camAnimations = camAnimations;
-
-  };
-
-  
-  public init(): void {
-
-    this.createPosRots();
-    this.createAnimClips();
 
   };
 
@@ -183,9 +175,9 @@ export class Cam {
 
     };
 
-    this.animConfigs.forEach( ( config: CamAnimConfig, i: number) => {
+    this.animConfigs.forEach( ( config: CamAnimConfig ) => {
 
-      const clip = AnimationClipCreator.CreateCameraAnimation( config )
+      const clip = ClipCreator.createClip( config )
 
       this.animClips.push( clip );
 
@@ -280,13 +272,13 @@ class PosRotFactory {
 
     switch (name) {
 
-      case 'zoom-out':
+      case "zoom-out":
         return this.zoomOut(tMag, iPos, iRot );
 
-      case 'zoom-in':
+      case "zoom-in":
         return this.zoomIn(tMag, iPos, iRot );
 
-      case 'zoom-out-rotate-up':
+      case "zoom-out-rotate-up":
         return this.zoomOutRotateUp(
           tMag,
           rMag,
@@ -294,7 +286,7 @@ class PosRotFactory {
           iRot,
         );
 
-      case 'rotate-down-zoom-in':
+      case "rotate-down-zoom-in":
         return this.rotateDownZoomIn(
           tMag,
           rMag,
@@ -302,7 +294,7 @@ class PosRotFactory {
           iRot,
         );
 
-      case 'corkscrew-up':
+      case "corkscrew-up":
         return this.corkscrewUp(
           tMag,
           rMag,
@@ -310,8 +302,8 @@ class PosRotFactory {
           iRot,
         );
 
-      case 'circle-cw':
-        return this.circleModel(
+      case "circle-cw":
+        return this.circleCW(
           tMag,
           rMag,
           iPos,
@@ -379,9 +371,9 @@ class PosRotFactory {
 
     // rotate up -- final rotation (fRot) - rotate x-axis
     const axis = 'x';
-    const fRot = new Euler(iRot.x + rMag, iRot.y, iRot.z);
+    const fRot = new Euler( iRot.x + rMag, iRot.y, iRot.z );
 
-    return new PosRot(fPos, fRot, axis);
+    return new PosRot( fPos, fRot, axis );
 
   };
 
@@ -430,7 +422,7 @@ class PosRotFactory {
 
   // rMag = -tMag if you want the camera
   // to .lookAt the model after circle translation
-  private static circleModel(
+  private static circleCW(
     tMag: number,
     rMag: number,
     iPos: Vector3,

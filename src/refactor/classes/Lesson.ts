@@ -13,6 +13,8 @@ export class Lesson extends ThreePage {
 
   thumbnail: string | undefined;
 
+  numberOfSections: number | undefined;
+
   sections: Section[] = [];
 
   textOfEntireLesson: TextOfSection[] = [];
@@ -20,37 +22,43 @@ export class Lesson extends ThreePage {
   musicPathsOfEntireLesson: string[] = [];
 
   voicePathsOfEntireLesson: string[] = [];
-
+  
 };
 
 
 interface ILessonBuilder {
 
-  addTitle(title: string): void;
+  addTitle(title: string): LessonBuilder;
 
-  addThumbnail(thumbnail: string): void;
+  addNumberOfSections( numberofSections: number ): LessonBuilder;
 
-  addUniverse(universe: Universe): void;
+  addThumbnail(thumbnail: string): LessonBuilder;
 
-  addSection(section: Section): void;
+  addUniverse(universe: Universe): LessonBuilder;
 
-  addCamera(camera: Cam): void;
+  addSection(section: Section): LessonBuilder;
 
-  addModel(model: Model[]): void;
+  setSections( sections: Section[] ): LessonBuilder
 
-  setModels(models: Model[][]): void;
+  addCamera(camera: Cam): LessonBuilder;
 
-  addText(textOfSection: string[]): void;
+  addModel(model: Model[]): LessonBuilder;
 
-  setTexts(textsOfLesson: string[][]): void;
+  setModels(models: Model[][]): LessonBuilder;
 
-  addMusics(musicPathsOfEntireLesson: string[]): void;
+  addText(textOfSection: string[]): LessonBuilder;
 
-  addVoices(voicePathsOfEntireLesson: string[]): void;
+  setTexts(textsOfLesson: string[][]): LessonBuilder;
+
+  addMusics(musicPathsOfEntireLesson: string[]): LessonBuilder;
+
+  addVoices(voicePathsOfEntireLesson: string[]): LessonBuilder;
 
   extractSections(): void
 
 };
+
+
 
 export class LessonBuilder implements ILessonBuilder {
 
@@ -76,6 +84,13 @@ export class LessonBuilder implements ILessonBuilder {
     return this; 
 
   };
+
+  addNumberOfSections( numberofSections: number ): LessonBuilder {
+
+    this.lesson.numberOfSections = numberofSections;
+    return this;
+
+  }
 
 
   addThumbnail( thumbnail: string ): LessonBuilder {

@@ -121,6 +121,8 @@ camera.setCamAnimations( camAnimations );
 
 camera.createPosRots();
 
+camera.createAnimConfigs();
+
 camera.createAnimClips();
 
 
@@ -205,7 +207,7 @@ models.groupBySection( numberOfSections );
 
 
 /** 
- * Step-6: Loop and instantiate sections:
+ * Step-5: Loop and instantiate sections:
 */ 
 const sections: Section[] = [];
 
@@ -226,10 +228,12 @@ for( let i = 0; i < numberOfSections; i++ ) {
 
 
 /** 
- * Step-7: Build lesson with builder: 
+ * Step-6: Build lesson with builder: 
 */ 
 const lessonBuilder = new LessonBuilder();
-lessonBuilder.addTitle( 'Buckminsterfullerene' )
+
+lessonBuilder.addTitle( "Buckminsterfullerene" )
+             .addNumberOfSections( numberOfSections )
              .addThumbnail( "url('./lesson-thumbnails/fullerene.png')" )
              .addUniverse( universe )
              .addCamera( camera )

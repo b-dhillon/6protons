@@ -11,25 +11,21 @@
  * We can write .get() and .set() methods for this!
  */
 
-import { Vector3 } from 'three';
 import { Model } from './Model';
-import { PosRot } from './Cam';
+import { CamAnimation, PosRot } from './Cam';
 
 
-type CamAnimation = {
-  name: string;
-  tMag: number;
-  rMag: number;
-};
 
 type SectionConfig = {
+
   section: number;
   camAnimation?: CamAnimation;
   posRot: PosRot;
   models?: Model[];
   text?: string[];
   voicePath?: string;
-}
+
+};
 
 
 
@@ -38,11 +34,17 @@ export class Section {
   private static _lastId = 0;
 
   readonly id: number;
+
   section: number;
+
   camAnimation: CamAnimation | undefined;
+
   posRot: PosRot;
+
   models: Model[];
+
   text: string[];
+
   voicePath: string;
 
   constructor({
@@ -52,17 +54,25 @@ export class Section {
     models = [],
     text = [],
     voicePath = '',
-  }: SectionConfig) {
+  }: SectionConfig ) {
+
     this.id = Section._lastId++;
+
     this.section = section;
+
     this.camAnimation = camAnimation; 
+
     this.posRot = posRot;
+
     this.models = models;
+
     this.text = text;
+
     this.voicePath = voicePath;
+
   };
 
-}
+};
 
 
 // Section Factory Notes:

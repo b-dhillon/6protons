@@ -12,8 +12,8 @@
 
 import { Euler, InterpolateSmooth, KeyframeTrack, NumberKeyframeTrack, Vector3, VectorKeyframeTrack } from "three";
 import { computeModelPosition } from "../utility-functions/compute-model-position";
-// import { easeInOutCubic, easeOutCubic } from "../utility-functions/easing-functions";
 import { CamAnimConfig } from "./types";
+// import { easeInOutCubic, easeOutCubic } from "../utility-functions/easing-functions";
 
 
 ////////////////////////

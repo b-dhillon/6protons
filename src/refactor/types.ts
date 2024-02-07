@@ -14,6 +14,7 @@ export type CamConfig = {
 
 };
   
+
 export type CamAnimConfig = {
 
   animName: string;
@@ -37,27 +38,32 @@ export type CamAnimConfig = {
 };
 
 
-export type ModelAnimConfig = {
 
-  animName: string | undefined;
 
-  iPos: Vector3 | undefined;
-  fPos: Vector3 | undefined;
 
-  iRot: Euler | undefined;
-  fRot: Euler | undefined; 
-  rotAxis: string | undefined;
 
-  easingFn: Function | undefined;
-  smoothness: number | undefined;
-  duration: number;
 
-  iScale: Vector3 | undefined; 
-  fScale: Vector3 | undefined;
+// export type ModelAnimConfig = {
 
-  keyframeStrategy: KeyframeStrategy;
+//   animName: string | undefined;
 
-};
+//   iPos: Vector3 | undefined;
+//   fPos: Vector3 | undefined;
+
+//   iRot: Euler | undefined;
+//   fRot: Euler | undefined; 
+//   rotAxis: string | undefined;
+
+//   easingFn: Function | undefined;
+//   smoothness: number | undefined;
+//   duration: number;
+
+//   iScale: Vector3 | undefined; 
+//   fScale: Vector3 | undefined;
+
+//   keyframeStrategy: KeyframeStrategy;
+
+// };
 
 export type PosRot = {
 
@@ -71,7 +77,7 @@ export type PosRot = {
 
 /**
  * Model 
- */
+*/
 
 export type ModelAnimNamesConfig = {
 
@@ -81,6 +87,7 @@ export type ModelAnimNamesConfig = {
   nested?: string;
 
 };
+
 
 export type ModelAnimNames = {
 
@@ -92,29 +99,20 @@ export type ModelAnimNames = {
 };
 
 
+export type ModelAnimConfig = {
 
-export type ModelClipConstructors = {
+  animName: string,
+ 
+  initial?: any, 
+  final?: any,
   
-  [key: string]: AnimationClip; // Index signature
+  iPos?: Vector3,
+  iRot?: Euler,
 
-  // 'scale-up': (config?: any) => AnimationClip;
-  // 'spin-y': (config?: any) => AnimationClip;
-  // 'scale-down': (config?: any) => AnimationClip;
-  // 'suspend': (config?: any) => AnimationClip;
-
-  'scale-up': AnimationClip;
-  'spin-y': AnimationClip;
-  'scale-down': AnimationClip;
-  'suspend': AnimationClip;
+  smoothness?: number;
+  duration?: number;
   
-};
-
-export type ModelAnimClips = {
-
-  enter: AnimationClip | undefined;
-  main: AnimationClip | undefined; 
-  exit: AnimationClip | undefined; 
-  nested: AnimationClip | undefined;
+  keyframeStrategy: KeyframeStrategy
 
 };
 
