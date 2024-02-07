@@ -1,23 +1,18 @@
 
 import { AnimationClip } from 'three';
 
-import {
-    KeyframeCreator, 
-    CircleStrategy, 
-    TRStrategy,
-	KeyframeStrategy
-} from './keyframes-strategy'
+import { KeyframeCreator } from './keyframes-strategy'
 
-// import { CamAnimConfig, ModelAnimConfig } from './types';
+import { CamAnimConfig, ModelAnimConfig } from './types';
 
 
 export class ClipCreator {
 
 	static keyframeCreator = new KeyframeCreator();
 
-	static createClip( config: any ): AnimationClip {
+	static createClip( config: CamAnimConfig | ModelAnimConfig ): AnimationClip {
 		
-		this.keyframeCreator.setStrategy( config.strategy );
+		this.keyframeCreator.setStrategy( config.keyframeStrategy );
 
 		const keyframeTracks = this.keyframeCreator.create( config );
 
@@ -27,40 +22,8 @@ export class ClipCreator {
 
 	};
 	
-}
+};
 
-
-
-
-
-
-
-
-
-
-/**
- * 
- * Potential way to unify Model animations so that we can call CreateModelAnimation( config ) just like 
- * CreateCameraAnimation( config ).
- * 
- * 	What we can do is, create strategies for times and values for even the scale-up, scale-down, and spin-y animations
- * 
- *  Then we can create a seperate function createTracks() that will select what tracks, and how many are needed. 
- *  There can really only be about 3 different tracks currently: 
- * 		Position
- * 		Rotation
- * 		Scale
- * 
- *  Lastly, we call the AnimationClip() constructor and pass in the tracks 
- * 
- * 
- *  ModelAnimConfig will need to come back. 
- * 	It will need the following propeties:
- * 		1. animName
- * 		2. types of keyframe tracks needed
- * 		3. Initial/Final values for any property that is going to be animated.
- * 
- */
 
 
 

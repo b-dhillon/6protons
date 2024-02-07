@@ -1,9 +1,9 @@
-import { ModelAnimNamesConfig, ModelAnimNames, ModelAnimConfig, ModelAnimClips, RotAngleAndRotVector, ModelDirectorConfig, PosRot } from "../types"
+import { ModelAnimNamesConfig, ModelAnimNames, ModelAnimConfig, RotAngleAndRotVector, ModelDirectorConfig, PosRot } from "../types"
 import { AnimationClip, Euler, Matrix4, Object3D, Vector3 } from 'three';
 import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { CamAnimation } from './Cam';
-import { AnimationClipCreator, ClipCreator } from '../animation-clip-creator';
+import { ClipCreator } from '../clip-creator';
 import { SimpleRotateStrategy, SimpleScaleStrategy, SuspendStrategy } from "../keyframes-strategy";
 
 
@@ -112,7 +112,7 @@ interface IModelBuilder {
 
   addAnimNames( animNames: ModelAnimNamesConfig ): void;
 
-  // createAnimConfigs( animNames: ModelAnimNames | undefined ): any;
+  createAnimConfigs( animNames: ModelAnimNames | undefined ): any;
 
   createAnimClips(): void;
 
@@ -197,7 +197,7 @@ export class ModelBuilder implements IModelBuilder {
     const iPos = this.model.position;
     const iRot = this.model.rotation;
 
-    function createConfig( animName: string | undefined ): any {
+    function createConfig( animName: string | undefined ): ModelAnimConfig {
 
       let initial; 
       let final;
@@ -250,29 +250,7 @@ export class ModelBuilder implements IModelBuilder {
     };
 
   };
-  
 
-
-
-
-  // Creates AnimationClips based on animNames that are set when Model is instantiated
-  public createAnimClips(): void {
-
-
-    // Experimental:
-    const enterConfig = this.model.anims.enter.config
-    const mainConfig = this.model.anims.main.config
-    const exitConfig = this.model.anims.exit.config
-    const nestedConfig = this.model.anims.nested.config
-
-    // this should be handled with a setter: setAnims()
-    this.model.anims.enter.clip = ClipCreator.createClip( enterConfig );
-    this.model.anims.main.clip = ClipCreator.createClip( mainConfig );
-    this.model.anims.exit.clip = ClipCreator.createClip( exitConfig );
-    this.model.anims.nested.clip = ClipCreator.createClip( nestedConfig );
-    
-
-  };
 
 
   public addDependantProperties( camAnimations: CamAnimation[], textOfEntireLesson: string[][] ): void {
@@ -339,6 +317,26 @@ export class ModelBuilder implements IModelBuilder {
     this.model.position = modelWorldPos;
 
   };
+  
+
+  // Creates AnimationClips based on animNames that are set when Model is instantiated
+  public createAnimClips(): void {
+
+
+    // Experimental:
+    const enterConfig = this.model.anims.enter.config
+    const mainConfig = this.model.anims.main.config
+    const exitConfig = this.model.anims.exit.config
+    const nestedConfig = this.model.anims.nested.config
+
+    // this should be handled with a setter: setAnims()
+    this.model.anims.enter.clip = ClipCreator.createClip( enterConfig! );
+    this.model.anims.main.clip = ClipCreator.createClip( mainConfig! );
+    this.model.anims.exit.clip = ClipCreator.createClip( exitConfig! );
+    this.model.anims.nested.clip = ClipCreator.createClip( nestedConfig! );
+    
+
+  };
 
 
   public async extractMeshes(): Promise<void> {
@@ -366,7 +364,7 @@ export class ModelBuilder implements IModelBuilder {
 
   };
 
-}
+};
 
 
 
@@ -379,6 +377,7 @@ export class ModelDirector {
   camAnimations: CamAnimation[] | undefined;
 
   posRots: PosRot[] | undefined;
+
 
   constructor( builder: ModelBuilder) {
 
@@ -417,6 +416,8 @@ export class ModelDirector {
     this.builder.addName( name );
 
     this.builder.addAnimNames( anims );
+
+    this.builder.createAnimConfigs();
     
     this.builder.addDependantProperties( this.camAnimations, this.textOfEntireLesson );
     
@@ -441,17 +442,17 @@ function getCamRotAngleAndRotVector( rotAxis: string | null, camRot: Euler ): Ro
 
   switch (rotAxis) {
 
-    case 'x':
+    case "x":
       rotVector.setX(1);
       rotAngle = camRot.x;
     break;
 
-    case 'y':
+    case "y":
       rotVector.setY(1);
       rotAngle = camRot.y;
     break;
 
-    case 'z':
+    case "z":
       rotVector.setZ(1);
       rotAngle = camRot.z;
     break;
