@@ -10,10 +10,10 @@ import { SimpleRotateStrategy, SimpleScaleStrategy, SuspendStrategy } from "../k
 
 class Anims {
 
-  enter: { name?: string, config?: ModelAnimConfig, clip?: AnimationClip } = {};
-  exit: { name?: string, config?: ModelAnimConfig, clip?: AnimationClip } = {};
-  main: { name?: string, config?: ModelAnimConfig, clip?: AnimationClip } = {};
-  nested: { name?: string, config?: ModelAnimConfig, clip?: AnimationClip } = {};
+  enter: { name?: string, config?: ModelAnimConfig | null , clip?: AnimationClip | null } = {};
+  exit: { name?: string, config?: ModelAnimConfig | null , clip?: AnimationClip | null } = {};
+  main: { name?: string, config?: ModelAnimConfig | null , clip?: AnimationClip | null } = {};
+  nested: { name?: string, config?: ModelAnimConfig | null , clip?: AnimationClip | null } = {};
 
   constructor() {}
 
@@ -32,7 +32,7 @@ export class Model {
   
   readonly id: number;
 
-  section!: number;
+  section: number | undefined;
 
   name: string | undefined;
 
@@ -84,7 +84,11 @@ export class Models {
 
       let section = this.models[i].section;
 
-      modelsBySection[ section ].push( this.models[i] ); 
+      if ( section === undefined ) throw new Error(
+        "Model has not been assigned to a section. Cannot groupBySection if no section assigned. Please call builder.assignSection first."
+      );
+
+      else modelsBySection[ section ].push( this.models[i] ); 
 
     };
     
@@ -188,16 +192,17 @@ export class ModelBuilder implements IModelBuilder {
   // Experimental:
   public createAnimConfigs() {
 
+    const iPos = this.model.position;
+    const iRot = this.model.rotation;
+
     // Experimental: 
     this.model.anims.enter.config = createConfig( this.model.anims.enter.name );
     this.model.anims.main.config = createConfig( this.model.anims.main.name );
     this.model.anims.exit.config = createConfig( this.model.anims.exit.name );
     this.model.anims.nested.config = createConfig( this.model.anims.nested.name );
 
-    const iPos = this.model.position;
-    const iRot = this.model.rotation;
 
-    function createConfig( animName: string | undefined ): ModelAnimConfig {
+    function createConfig( animName: string | undefined ): ModelAnimConfig | null {
 
       let initial; 
       let final;
@@ -240,6 +245,9 @@ export class ModelBuilder implements IModelBuilder {
           config = { iPos: iPos, iRot: iRot, animName: animName, keyframeStrategy: new SuspendStrategy() }
   
         return config
+
+        case "":
+          return null;
     
   
         default:
@@ -257,7 +265,7 @@ export class ModelBuilder implements IModelBuilder {
 
     const section = this.model.section;
 
-    if (!section) {
+    if ( section === undefined ) {
 
       throw new Error(
         'model has not been assigned to a section, dependant properties depend on the section.'
@@ -265,23 +273,31 @@ export class ModelBuilder implements IModelBuilder {
 
     };
 
-    const sectionCamAnimation = camAnimations[ section ]
-    const prevCamAnimation = camAnimations[ section - 1 ];
+    const sectionText = textOfEntireLesson[ section ];
+    const sectionHasText = sectionText.length; // boolean, no paragraphs should be an empty array NOT an empty string in the first index.
+    this.model.yOffsetForText = sectionHasText ? 0.15 : 0;
 
-    if (!sectionCamAnimation || !prevCamAnimation) {
+
+
+    const sectionCamAnimation = camAnimations[ section ];
+    let prevCamAnimation;
+
+    if ( section > 0 ) prevCamAnimation = camAnimations[ section - 1 ]
+    else prevCamAnimation = null;
+
+    if ( !sectionCamAnimation ) {
 
       throw new Error(
-        "camAnimation or prevCamAnimation is falsy for this model's assigned section, dependant properties depend on camAnimation."
+        "sectionCamAnimation is falsy for this model's assigned section, dependant properties depend on camAnimation."
       );
 
     };
 
-    const sectionText = textOfEntireLesson[ section ];
-    const sectionHasText = sectionText.length; // boolean, no paragraphs should be an empty array NOT an empty string in the first index.
 
-    this.model.yOffsetForText = sectionHasText ? 0.15 : 0;
-    this.model.inNewPosition = sectionCamAnimation.name === 'circle-cw' || null ? false : true;
-    this.model.zoomInOnReverse = prevCamAnimation.name === 'zoom-out' ? true : false;
+    this.model.inNewPosition = sectionCamAnimation.name === "circle-cw" || null ? false : true;
+
+    if ( prevCamAnimation === null ) this.model.zoomInOnReverse = false
+    else this.model.zoomInOnReverse = prevCamAnimation.name === "zoom-out" ? true : false;
 
   };
 
@@ -330,10 +346,13 @@ export class ModelBuilder implements IModelBuilder {
     const nestedConfig = this.model.anims.nested.config
 
     // this should be handled with a setter: setAnims()
-    this.model.anims.enter.clip = ClipCreator.createClip( enterConfig! );
-    this.model.anims.main.clip = ClipCreator.createClip( mainConfig! );
-    this.model.anims.exit.clip = ClipCreator.createClip( exitConfig! );
-    this.model.anims.nested.clip = ClipCreator.createClip( nestedConfig! );
+    this.model.anims.enter.clip = enterConfig ? ClipCreator.createClip( enterConfig ) : null;
+
+    this.model.anims.main.clip = mainConfig ? ClipCreator.createClip( mainConfig ) : null;
+
+    this.model.anims.exit.clip = exitConfig ? ClipCreator.createClip( exitConfig ) : null;
+
+    this.model.anims.nested.clip = nestedConfig ? ClipCreator.createClip( nestedConfig ) : null;
     
 
   };
@@ -401,7 +420,7 @@ export class ModelDirector {
   };
 
 
-  constructProduct( { path, section, name, anims }: ModelDirectorConfig ) {
+  constructProduct( { path, section, name, animNames }: ModelDirectorConfig ) {
 
     if(!this.textOfEntireLesson || !this.camAnimations || !this.posRots) {
 
@@ -415,7 +434,7 @@ export class ModelDirector {
 
     this.builder.addName( name );
 
-    this.builder.addAnimNames( anims );
+    this.builder.addAnimNames( animNames );
 
     this.builder.createAnimConfigs();
     
