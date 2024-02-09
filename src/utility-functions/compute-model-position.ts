@@ -110,7 +110,7 @@ function applyCamRotation( modelLocalPosition: Vector3, camRotAngle: number, cam
  */
 
 
-/*
+
 export function createModelPosition(
   cameraPosition: number[],
   rotationAngleCorodinates: number[],
@@ -165,12 +165,6 @@ export function createModelPosition(
   // Return the new model position in world space
   return modelWorldPositionArr;
 }
-
-
-
-
-
-*/
 
 
 

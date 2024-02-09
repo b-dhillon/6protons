@@ -1,6 +1,6 @@
 import { Euler, Matrix4, Vector3 } from "three";
 
-export function getFrustrumVector( iPos: Vector3, rot: Euler ): Vector3 {
+export function getLocalFrustrumVector( iPos: Vector3, rot: Euler ): Vector3 {
 
   let isCameraRotated;
   let rotAngle: number;
@@ -60,9 +60,11 @@ export function getFrustrumVector( iPos: Vector3, rot: Euler ): Vector3 {
 
   // Vector transformation from local-space to world-space
   // Add the camera's new scaled vector to the camera's world position
-  const worldFrustrumVector = iPos.add( localFrustrumVector );
+  // const worldFrustrumVector = iPos.add( localFrustrumVector );
 
-  return worldFrustrumVector;
+  return localFrustrumVector
+
+  // return worldFrustrumVector;
   
 };
 
@@ -107,7 +109,7 @@ export function getUpVector( iPos: Vector3, rot: Euler ): Vector3 {
   const rotMatrix = new Matrix4();
 
   // Initialize the rotation matrix to rotate around the specified axis by the given angle
-  rotMatrix.makeRotationAxis(rotVector.normalize(), rotAngle);
+  rotMatrix.makeRotationAxis( rotVector.normalize(), rotAngle );
 
   // Apply the additional rotation to the model's position vector
   // This rotates the model around the camera based on the specified axis and angle
@@ -115,7 +117,7 @@ export function getUpVector( iPos: Vector3, rot: Euler ): Vector3 {
 
   // Vector transformation from local-space to world-space
   // Add the camera's new scaled vector to the camera's world position
-  const worldUpVector = iPos.add(localUpVector);
+  // const worldUpVector = iPos.add(localUpVector);
 
-  return worldUpVector;
+  return localUpVector;
 };

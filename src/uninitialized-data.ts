@@ -162,7 +162,7 @@ export const uninitializedData: UninitializedData = {
 
           zoomInOnReverse: false,
           animationClips: [
-            SuspendInSolution(90),
+            suspend( 90 ),
             ScaleXYZ({
               duration: 1,
               iScale: [0.18, 0.18, 0.18],
@@ -181,11 +181,11 @@ export const uninitializedData: UninitializedData = {
           yOffsetForText: 0.15,
           zoomInOnReverse: false,
           animationClips: [
-            Rotate({
+            spinY({
               duration: 50,
               axis: 'y',
-              iAngle: 0,
-              fAngle: Math.PI * 2, // this is supposed to be radians...?
+              iRot: 0,
+              fRot: Math.PI * 2, // this is supposed to be radians...?
             }),
             ScaleXYZ({
               duration: 1,
@@ -204,11 +204,11 @@ export const uninitializedData: UninitializedData = {
           yOffsetForText: 0.15,
           zoomInOnReverse: false,
           animationClips: [
-            Rotate({
+            spinY({
               duration: 50,
               axis: 'y',
-              iAngle: 0,
-              fAngle: Math.PI * 2, // this is supposed to be radians...?
+              iRot: 0,
+              fRot: Math.PI * 2, // this is supposed to be radians...?
             }),
             ScaleXYZ({
               duration: 1,
@@ -227,11 +227,11 @@ export const uninitializedData: UninitializedData = {
           yOffsetForText: 0.15,
           zoomInOnReverse: false,
           animationClips: [
-            Rotate({
+            spinY({
               duration: 50,
               axis: 'y',
-              iAngle: 0,
-              fAngle: Math.PI * 2, // this is supposed to be radians...?
+              iRot: 0,
+              fRot: Math.PI * 2, // this is supposed to be radians...?
             }),
             ScaleXYZ({
               duration: 1,
@@ -250,22 +250,22 @@ export const uninitializedData: UninitializedData = {
           yOffsetForText: 0.15,
           zoomInOnReverse: true,
           animationClips: [
-            Rotate({
+            spinY({
               duration: 50,
               axis: 'y',
-              iAngle: 0,
-              fAngle: Math.PI * 2
+              iRot: 0,
+              fRot: Math.PI * 2
             }),
             ScaleXYZ({
               duration: 1,
               iScale: [0.18, 0.18, 0.18],
               fScale: [0.0, 0.0, 0.0],
             }),
-            Rotate({
+            spinY({
               duration: 1500,
               axis: 'x',
-              iAngle: 0,
-              fAngle: 360,
+              iRot: 0,
+              fRot: 360,
             }),
           ],
         },
@@ -279,11 +279,11 @@ export const uninitializedData: UninitializedData = {
           yOffsetForText: 0.07,
           zoomInOnReverse: false,
           animationClips: [
-            Rotate({
+            spinY({
               duration: 4000,
               axis: 'y',
-              iAngle: 0,
-              fAngle: 180,
+              iRot: 0,
+              fRot: 180,
             }),
             //hiv protease
             ScaleXYZ({
@@ -598,7 +598,7 @@ positions: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animationClips: [
-                    Rotate( { duration: 5000, axis: 'y', initialAngle: 0, fAngle: 360 } ),
+                    spinY( { duration: 5000, axis: 'y', initialAngle: 0, fRot: 360 } ),
                     ScaleXYZ( { duration: 1, initialScale: [ 0.18, 0.18, 0.18 ], fScale: [ 0, 0, 0 ] } )
                 ]
             },
@@ -617,7 +617,7 @@ positions: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animationClips: [
-                    Rotate( { duration: 5000, axis: 'y', initialAngle: 0, fAngle: 360 } ),
+                    spinY( { duration: 5000, axis: 'y', initialAngle: 0, fRot: 360 } ),
                     ScaleXYZ( { duration: 1, initialScale: [ 0.18, 0.18, 0.18 ], fScale: [ 0, 0, 0 ] } )
                 ]
             },
@@ -636,9 +636,9 @@ positions: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animationClips: [
-                    Rotate( { duration: 5000, axis: 'y', initialAngle: 0, fAngle: 360 } ),
+                    spinY( { duration: 5000, axis: 'y', initialAngle: 0, fRot: 360 } ),
                     ScaleXYZ( { duration: 1, initialScale: [ 0.18, 0.18, 0.18 ], fScale: [ 0, 0, 0 ] } ),
-                    Rotate( { duration: 1500, axis: 'x', initialAngle: 0, fAngle: 360 } ),
+                    spinY( { duration: 1500, axis: 'x', initialAngle: 0, fRot: 360 } ),
                 ]
             },
             {
@@ -656,7 +656,7 @@ positions: [
                     { _x: 0, _y: 0, _z: 0 }
                 ],
                 animationClips: [
-                    Rotate( { duration: 5000, axis: 'y', initialAngle: 0, fAngle: 360 } ),
+                    spinY( { duration: 5000, axis: 'y', initialAngle: 0, fRot: 360 } ),
                     ScaleXYZ( { duration: 1, initialScale: [ 0.10, 0.10, 0.10 ], fScale: [ 0, 0, 0 ] } ),
                     ScaleXYZ( { duration: 3, initialScale: [ 0.01, 0.01, 0.01 ], fScale: [ 0.075, 0.075, 0.075 ] } )
                 ]
@@ -802,12 +802,12 @@ TranslateRotate_x: function ( duration: number, initial_position: number[], fina
 /*
 
 animations: [
-    [ Translate( 3, [ 0, 0, 3 ], [ 0, 0, 0 ] ),  Rotate( 0, 'x', 0, 0) ],
-    [ Translate( 3, [ 0, 0, 0 ], [ 0.75, 0, 1 ] ), Rotate( 3, 'x', 0, 0.66 ) ], 
-    [ Translate( 3, [ 0.75, 0, 1 ], [ 0.75, 0, -2 ] ), Rotate( 3, 'x', 0.66, 0 ) ], // favorite animation, rotates down and translates z
-    [ Translate( 3, [ 0.75, 0, -2 ], [ 0, 0, 0 ] ), Rotate( 3, 'x', 0, -0.66 ) ], 
-    [ Translate( 3, [ 0, 0, 0 ], [ 0, 0, -2 ] ), Rotate( 3, 'x', -0.66, 0 ) ],
-    // [ Translate( 0, [ 0.75, 0, -2 ], [ 0.75, 0, -2 ] ), Rotate( 3, 'y', 0, 1.5 ) ], 
+    [ Translate( 3, [ 0, 0, 3 ], [ 0, 0, 0 ] ),  spinY( 0, 'x', 0, 0) ],
+    [ Translate( 3, [ 0, 0, 0 ], [ 0.75, 0, 1 ] ), spinY( 3, 'x', 0, 0.66 ) ], 
+    [ Translate( 3, [ 0.75, 0, 1 ], [ 0.75, 0, -2 ] ), spinY( 3, 'x', 0.66, 0 ) ], // favorite animation, rotates down and translates z
+    [ Translate( 3, [ 0.75, 0, -2 ], [ 0, 0, 0 ] ), spinY( 3, 'x', 0, -0.66 ) ], 
+    [ Translate( 3, [ 0, 0, 0 ], [ 0, 0, -2 ] ), spinY( 3, 'x', -0.66, 0 ) ],
+    // [ Translate( 0, [ 0.75, 0, -2 ], [ 0.75, 0, -2 ] ), spinY( 3, 'y', 0, 1.5 ) ], 
 ],
 
 animations: [
@@ -882,16 +882,16 @@ function preCalulateAllTimesAndAllValues( _duration: number, _initial: number, _
 /*
     Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] )
 
-    Rotate( 5000, 'y', 0, 360 ),
+    spinY( 5000, 'y', 0, 360 ),
     Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] )
 
-    Rotate( 5000, 'y', 0, 360 ),
+    spinY( 5000, 'y', 0, 360 ),
     Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] )
 
-    Rotate( 5000, 'y', 0, 360 ),
+    spinY( 5000, 'y', 0, 360 ),
     Scale( 1, [ 0.18, 0.18, 0.18 ], [ 0, 0, 0 ] ),
-    Rotate( 2500, 'x', 0, 360 ),
-    Rotate( 4000, 'y', 0, 360 ),
+    spinY( 2500, 'x', 0, 360 ),
+    spinY( 4000, 'y', 0, 360 ),
     Scale( 1, [ 0.1, 0.1, 0.1 ], [ 0, 0, 0 ] ),
     Scale( 3, [ 0.01, 0.01, 0.01 ], [ 0.075, 0.075, 0.075 ] ),
 */

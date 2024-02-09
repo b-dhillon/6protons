@@ -14,6 +14,12 @@ Then just put the assets into a folder with a specific directory structure:
 - model animation names
 - etc...
 
+And produce two assets: 
+- lesson.json 
+- gltf's of my models --> the gltf path's and the model's animations will be already in lesson.json
+
+These will be placed on a back-end server. 
+
 /////////////////////////////////////
 /////////////////////////////////////
 /////////////////////////////////////
