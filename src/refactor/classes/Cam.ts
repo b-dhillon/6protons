@@ -1,6 +1,6 @@
 import { AnimationClip, Euler, Vector3 } from 'three';
 import {
-  getFrustrumVector,
+  getLocalFrustrumVector,
   getUpVector,
 } from '../../utility-functions/get-vector';
 import { getVecOnCircle } from '../../utility-functions/get-vector-on-circle';
@@ -63,6 +63,8 @@ export class Cam {
 
     const startPos = new Vector3( x, y, z );
 
+    console.log( "startPos that will be set: " ,startPos );
+
     this.startPosition = startPos;
     this.positions[ 0 ] = startPos;
 
@@ -102,11 +104,16 @@ export class Cam {
 
     for ( let i = 0; i < this.camAnimations.length; i++ ) {
 
-      const posRot = PosRotFactory.create( this.camAnimations[ i ], this.positions[ i ], this.rotations[ i ] );
+      const iPos = this.positions[ i ].clone();
+
+      const iRot = this.rotations[ i ].clone();
+
+      const posRot = PosRotFactory.create( this.camAnimations[ i ], iPos, iRot );
 
       // make sure the next step of the loop has a position and a rotation. 
       // the first iteration of the loop will use the startPosition and startRotation as they will be at index=0
       this.positions.push( posRot.pos );
+
       this.rotations.push( posRot.rot );
 
       this.posRots.push( posRot );
@@ -118,14 +125,13 @@ export class Cam {
 
   public createAnimConfigs(): void {
 
-    // if positions and rotations haven't been extracted from PosRots
-    // and set, then set them:
+    // if positions and rotations haven't been extracted from PosRots:
     const arePosRotsExtracted = this.positions.length > 2 && this.rotations.length > 2;
 
     if ( !arePosRotsExtracted ) {
 
-      this.setPositions(this.posRots);
-      this.setRotations(this.posRots);
+      this.setPositions( this.posRots );
+      this.setRotations( this.posRots );
 
     };
 
@@ -159,7 +165,7 @@ export class Cam {
 
       };
 
-    } 
+    }
     
     else {
 
@@ -195,7 +201,7 @@ export class Cam {
 
     for (let i = 0; i < posRots.length; i++) {
 
-      this.positions.push(posRots[i].pos);
+      this.positions.push( posRots[i].pos );
 
     };
 
@@ -206,7 +212,7 @@ export class Cam {
 
     for (let i = 0; i < posRots.length; i++) {
 
-      this.rotations.push(posRots[i].rot);
+      this.rotations.push( posRots[i].rot );
 
     };
 
@@ -243,7 +249,7 @@ export class CamAnimation {
 
   };
 
-}
+};
 
 
 
@@ -261,9 +267,9 @@ export class PosRot {
     this.rot = fRot;
     this.axis = axis;
 
-  }
+  };
 
-}
+};
 
 
 
@@ -275,54 +281,21 @@ class PosRotFactory {
 
     const { tMag, rMag, name } = camAnimation
 
-    switch (name) {
+    if( name === "zoom-out" ) return this.zoomOut( tMag, iPos, iRot )
 
-      case "zoom-out":
-        return this.zoomOut( tMag, iPos, iRot );
+    else if( name === "zoom-in" ) return this.zoomIn( tMag, iPos, iRot )
 
-      case "zoom-in":
-        return this.zoomIn( tMag, iPos, iRot );
+    else if( name === "zoom-out-rotate-up" ) return this.zoomOutRotateUp( tMag, rMag, iPos, iRot )
 
-      case "zoom-out-rotate-up":
-        return this.zoomOutRotateUp(
-          tMag,
-          rMag,
-          iPos,
-          iRot,
-        );
+    else if( name === "rotate-down-zoom-in" ) return this.rotateDownZoomIn( tMag, rMag, iPos, iRot )
 
-      case "rotate-down-zoom-in":
-        return this.rotateDownZoomIn(
-          tMag,
-          rMag,
-          iPos,
-          iRot,
-        );
+    else if( name === "corkscrew-up" ) return this.corkscrewUp( tMag, rMag, iPos, iRot )
 
-      case "corkscrew-up":
-        return this.corkscrewUp(
-          tMag,
-          rMag,
-          iPos,
-          iRot,
-        );
+    else if( name === "circle-cw" ) return this.circleCW( tMag, rMag, iPos, iRot )
 
-      case "circle-cw":
-        return this.circleCW(
-          tMag,
-          rMag,
-          iPos,
-          iRot,
-        );
-        
-      default: 
-        return new PosRot(
-          new Vector3(undefined, undefined, undefined),
-          new Euler(undefined, undefined, undefined), 
-          null
-        )
-    }
-  }
+    else return new PosRot( new Vector3( undefined, undefined, undefined ), new Euler( undefined, undefined, undefined ),  null );
+
+  };
 
 
   private static zoomOut(
@@ -331,10 +304,16 @@ class PosRotFactory {
     iRot: Euler,
    ): PosRot {
 
-    const frustrumVector = getFrustrumVector( iPos, iRot );
+    const frustrumVector = getLocalFrustrumVector( iPos, iRot );
+
     const oppFrustrumVector = frustrumVector.clone().negate();
-    const scaledVector = oppFrustrumVector.multiplyScalar(tMag);
-    const fPos = scaledVector;
+
+    const scaledVector = oppFrustrumVector.multiplyScalar( tMag );
+
+    const worldFrustrumVector = iPos.add( scaledVector );
+
+    const fPos = worldFrustrumVector;
+
     // zoom does not have a rotation, we copy:
     const fRot = iRot;
 
@@ -349,9 +328,13 @@ class PosRotFactory {
     iRot: Euler,
    ): PosRot {
 
-    const frustrumVector = getFrustrumVector( iPos, iRot );
-    const scaledVector = frustrumVector.multiplyScalar(tMag);
-    const fPos = scaledVector;
+    const frustrumVector = getLocalFrustrumVector( iPos, iRot );
+
+    const scaledVector = frustrumVector.multiplyScalar( tMag );
+
+    const worldFrustrumVector = iPos.add( scaledVector );
+
+    const fPos = worldFrustrumVector;
 
     // zoom does not have a rotation, so fRot = iRot.
     const fRot = iRot;
@@ -369,10 +352,15 @@ class PosRotFactory {
    ): PosRot {
 
     // zoom out -- final position (fPos):
-    const frustrumVector = getFrustrumVector( iPos, iRot );
+    const frustrumVector = getLocalFrustrumVector( iPos, iRot );
+
     const oppFrustrumVector = frustrumVector.clone().negate();
+
     const scaledVector = oppFrustrumVector.multiplyScalar(tMag);
-    const fPos = scaledVector;
+
+    const worldFrustrumVector = iPos.add( scaledVector );
+
+    const fPos = worldFrustrumVector;
 
     // rotate up -- final rotation (fRot) - rotate x-axis
     const axis = 'x';
@@ -391,13 +379,18 @@ class PosRotFactory {
    ): PosRot {
 
     // first we rotate down to get the fRot -- rotate x-axis
-    const axis = 'x';
+    const axis = "x";
+
     const fRot = new Euler(iRot.x - rMag, iRot.y, iRot.z);
 
-    // then we feed the fRot to getFrustrumVector for a zoom-in
-    const frustrumVector = getFrustrumVector(iPos, fRot);
-    const scaledVector = frustrumVector.multiplyScalar(tMag);
-    const fPos = scaledVector;
+    // then we feed the fRot to getLocalFrustrumVector for a zoom-in
+    const frustrumVector = getLocalFrustrumVector( iPos, fRot );
+
+    const scaledVector = frustrumVector.multiplyScalar( tMag );
+
+    const worldFrustrumVector = iPos.add( scaledVector );
+
+    const fPos = worldFrustrumVector;
 
     return new PosRot(fPos, fRot, axis);
 
@@ -412,15 +405,20 @@ class PosRotFactory {
    ): PosRot {
 
     // get the y-vector with an applied rotation matrix and then scale it:
-    const upVector = getUpVector(iPos, iRot);
-    const scaledUpVector = upVector.multiplyScalar(tMag);
-    const fPos = scaledUpVector;
+    const upVector = getUpVector( iPos, iRot );
+
+    const scaledUpVector = upVector.multiplyScalar( tMag );
+
+    const worldFrustrumVector = iPos.add( scaledUpVector );
+
+    const fPos = worldFrustrumVector;
 
     // final rotation - corkscrewUp rotates the y-axis.
-    const axis = 'y';
-    const fRot = new Euler(iRot.x, iRot.y + rMag, iRot.z);
+    const axis = "y";
 
-    return new PosRot(fPos, fRot, axis);
+    const fRot = new Euler( iRot.x, iRot.y + rMag, iRot.z );
+
+    return new PosRot( fPos, fRot, axis );
 
   };
 
@@ -436,16 +434,16 @@ class PosRotFactory {
 
     const fPos = getVecOnCircle(iPos, iRot, tMag);
 
-    const axis = 'y';
+    const axis = "y";
     // fRot is just iRot.y +- Math.PI/2
-    const fRot = new Euler(iRot.x, iRot.y - rMag, iRot.z);
+    const fRot = new Euler( iRot.x, iRot.y - rMag, iRot.z );
     //                                          ^ is this - or + ? clock-wise should be negative.
 
-    return new PosRot(fPos, fRot, axis);
+    return new PosRot( fPos, fRot, axis );
 
-  }
+  };
 
-}
+};
 
 
 function assignKeyframeStrategy( animName: string ): KeyframeStrategy {
@@ -456,4 +454,57 @@ function assignKeyframeStrategy( animName: string ): KeyframeStrategy {
 	if ( firstName === "circle" ) return new CircleStrategy();
 	else return new TRStrategy();
 
+};
+
+
+
+// PosRotFactory switch --> Turned into if, else-if, else as it is more readable/cleaner.
+/*
+switch (name) {
+
+  case "zoom-out":
+    return this.zoomOut( tMag, iPos, iRot );
+
+  case "zoom-in":
+    return this.zoomIn( tMag, iPos, iRot );
+
+  case "zoom-out-rotate-up":
+    return this.zoomOutRotateUp(
+      tMag,
+      rMag,
+      iPos,
+      iRot,
+    );
+
+  case "rotate-down-zoom-in":
+    return this.rotateDownZoomIn(
+      tMag,
+      rMag,
+      iPos,
+      iRot,
+    );
+
+  case "corkscrew-up":
+    return this.corkscrewUp(
+      tMag,
+      rMag,
+      iPos,
+      iRot,
+    );
+
+  case "circle-cw":
+    return this.circleCW(
+      tMag,
+      rMag,
+      iPos,
+      iRot,
+    );
+    
+  default: 
+  return new PosRot(
+    new Vector3(undefined, undefined, undefined),
+    new Euler(undefined, undefined, undefined), 
+    null
+  )
 }
+*/

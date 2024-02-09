@@ -1,10 +1,8 @@
 import { ModelAnimNamesConfig, ModelAnimNames, ModelAnimConfig, RotAngleAndRotVector, ModelDirectorConfig, PosRot } from "../types"
 import { AnimationClip, Euler, Matrix4, Object3D, Vector3 } from 'three';
-import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
-import { CamAnimation } from './Cam';
 import { ClipCreator } from '../clip-creator';
 import { SimpleRotateStrategy, SimpleScaleStrategy, SuspendStrategy } from "../keyframes-strategy";
+import { CamAnimation } from "./Cam";
 
 
 
@@ -44,7 +42,7 @@ export class Model {
 
   anims: Anims;
     
-  meshes: Object3D[] | undefined;
+  meshes: Object3D[] | undefined | any;
 
   position: Vector3 | undefined;
   
@@ -102,10 +100,6 @@ export class Models {
 
 
 
-
-
-
-
 interface IModelBuilder {
 
   addPath( path: string ): void;
@@ -124,7 +118,7 @@ interface IModelBuilder {
 
   computePosition( posRot: PosRot ): void;
 
-  extractMeshes(): void;
+  // extractMeshes(): void;
 
 };
 
@@ -194,6 +188,7 @@ export class ModelBuilder implements IModelBuilder {
 
     const iPos = this.model.position;
     const iRot = this.model.rotation;
+
 
     // Experimental: 
     this.model.anims.enter.config = createConfig( this.model.anims.enter.name );
@@ -313,20 +308,27 @@ export class ModelBuilder implements IModelBuilder {
     // Define the vector that points out the front of the camera in local space
     let modelLocalPosition = new Vector3(0, 0, -1);
 
-    const { camRotAngle, camRotVector } = getCamRotAngleAndRotVector(rotAxis, camRot);
 
-    if ( camRot ) {
+    if ( rotAxis !== null ) {
 
-      modelLocalPosition = applyCamRotation( modelLocalPosition, camRotAngle, camRotVector );
+      const { camRotAngle, camRotVector } = getCamRotAngleAndRotVector( rotAxis, camRot );
 
-    };
+      if ( camRot ) {
+  
+        modelLocalPosition = applyCamRotation( modelLocalPosition, camRotAngle, camRotVector );
+  
+      };
+
+    }
+
 
     // Add model local pos to camPos to get world pos of model:
-    let modelWorldPos = camPos.add(modelLocalPosition);
+    let modelWorldPos = camPos.add( modelLocalPosition );
 
-    if (yOffsetForText) {
 
-      modelWorldPos = new Vector3(modelWorldPos.x, (modelWorldPos.y + yOffsetForText), modelWorldPos.z);
+    if ( yOffsetForText ) {
+
+      modelWorldPos = new Vector3( modelWorldPos.x, (modelWorldPos.y + yOffsetForText), modelWorldPos.z );
 
     };
 
@@ -358,21 +360,44 @@ export class ModelBuilder implements IModelBuilder {
   };
 
 
-  public async extractMeshes(): Promise<void> {
+  // public async extractMeshes(): Promise<any> {
 
-    const path = this.model.path;
+    // const path = this.model.path;
 
-    const gltf = await loadGLTF(path);
+    // this.model.meshes = "NEED FETCH FOR GLTF LOADER"
 
-    const meshes = gltf.scene.children.filter( (child: any) => {
+    // return new Promise( async( resolve, reject ) => {
 
-      return child.isMesh || ( child.isGroup && child.__removed === undefined )
+    //   try {
+  
+    //     const gltf = await loadGLTF( path );
+    
+    //     const meshes = gltf.scene.children.filter( (child: any) => {
+    
+    //       return child.isMesh || ( child.isGroup && child.__removed === undefined )
+    
+    //     });
+    
+    //     console.log("Setting mesh!");
+    //     this.model.meshes = meshes;
+    //     console.log("MESH", this.model.meshes);
 
-    });
+    //     resolve(meshes);
+    //     return meshes;
+  
+    //   }
+  
+    //   catch(e) {
 
-    this.model.meshes = meshes;
+    //     this.model.meshes = e
+    //     reject( e );
 
-  };
+    //   }
+
+    // })
+
+
+  // };
 
 
   public getProduct(): Model {
@@ -420,7 +445,7 @@ export class ModelDirector {
   };
 
 
-  constructProduct( { path, section, name, animNames }: ModelDirectorConfig ) {
+  async constructProduct( { path, section, name, animNames }: ModelDirectorConfig ) {
 
     if(!this.textOfEntireLesson || !this.camAnimations || !this.posRots) {
 
@@ -436,15 +461,18 @@ export class ModelDirector {
 
     this.builder.addAnimNames( animNames );
 
-    this.builder.createAnimConfigs();
-    
     this.builder.addDependantProperties( this.camAnimations, this.textOfEntireLesson );
     
     this.builder.computePosition( this.posRots[ section ] );
 
+    // needs to be called after compute position because this function depends on the iPos and iRot 
+    // of our model that is the output of compute position. It needs this for the Suspend animation.
+    this.builder.createAnimConfigs();
+
     this.builder.createAnimClips();
 
-    this.builder.extractMeshes();
+    // this.builder.extractMeshes();
+    // const meshes = await this.builder.extractMeshes();
 
   };
 
@@ -477,6 +505,7 @@ function getCamRotAngleAndRotVector( rotAxis: string | null, camRot: Euler ): Ro
     break;
 
     default: 
+      console.log( `Rotation Axis: ${ rotAxis }` ); // null
       throw new Error( "Invalid rotAxis provided, must be 'x', 'y', or 'z' " );
   }
 
@@ -486,45 +515,52 @@ function getCamRotAngleAndRotVector( rotAxis: string | null, camRot: Euler ): Ro
 
 
 function applyCamRotation( modelLocalPosition: Vector3, camRotAngle: number, camRotVector: Vector3 ): Vector3 {
+
   // Create a new rotation matrix for the additional rotation
   const rotMatrix = new Matrix4();
 
   // Initialize the rotation matrix to rotate around the specified axis by the given angle
-  rotMatrix.makeRotationAxis(camRotVector.normalize(), camRotAngle); // <-- need to test if this works if rotVector = 0,0,0 and rotAngle = 0
+  rotMatrix.makeRotationAxis( camRotVector.normalize(), camRotAngle ); // <-- need to test if this works if rotVector = 0,0,0 and rotAngle = 0
 
   // Apply the additional rotation to the model's position vector
   // This rotates the model around the camera based on the specified axis and angle of the camera's rotation
-  modelLocalPosition.applyMatrix4(rotMatrix);
+  modelLocalPosition.applyMatrix4( rotMatrix );
 
   return modelLocalPosition;
 
 }
 
 
-function loadGLTF(path: string): Promise<GLTF> {
+/*
+
+function loadGLTF( path: string ): Promise<GLTF> {
 
   return new Promise((resolve, reject) => {
+
     const loader = new GLTFLoader();
+
     const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
+
+    dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
 
     // (Optional) Force non-WebAssembly JS decoder (without this line, WebAssembly
     // is the default if supported).
     dracoLoader.setDecoderConfig({ type: 'js' });
 
-    loader.setDRACOLoader(dracoLoader);
+    loader.setDRACOLoader( dracoLoader );
 
     loader.load(
       path,
       (gltf: any) => {
-        // console.log('gltf', gltf);
-        resolve(gltf);
+        console.log('gltf loaded');
+        resolve( gltf );
       },
       (xhr: any) => {
-        // console.log('loading glTF');
-        // console.log((xhr.loaded / xhr.total) + 'loaded');
+        console.log('loading glTF');
+        console.log((xhr.loaded / xhr.total) + 'loaded');
       },
       (error: any) => {
+        console.log('gltf FAILED');
         console.error(error);
         reject(error);
       }
@@ -532,48 +568,47 @@ function loadGLTF(path: string): Promise<GLTF> {
 
   });
 
-}
+};
+
+*/
 
 
 
+/*
+
+function createAnimClips() {
+
+  if( !this.model.animNames ) this.addAnimNames();
+  if( !this.model.animNames ) this.addAnimNames();
 
 
+  grabbing the names of the animations
+  const enterName = this.model.animNames.enter;
+  const mainName = this.model.animNames.main;
+  const exitName = this.model.animNames.exit;
+  const nestedName = this.model.animNames?.nested;
 
 
+  // string indexing an object that stores the constructor functions
+  const createEnterClip = enterName ? modelClipCreators[ enterName ] : () => undefined;
+  const createMainClip = mainName ? modelClipCreators[ mainName ] : () => undefined;
+  const createExitClip = exitName ? modelClipCreators[ exitName ] : () => undefined;
+  const createNestedClip = nestedName ? modelClipCreators[ nestedName ] : () => undefined;
 
+  // set the animationClips object to hold the AnimationClips
+  // that will be returned from these functions
+  this.model.animClips = {
 
+    enter: createEnterClip(),
+    main: mainName === "suspend" ? createMainClip( config ) : createMainClip(), 
+    exit: createExitClip(),
+    nested: createNestedClip()
 
-// function createAnimClips() {
-
-  // if( !this.model.animNames ) this.addAnimNames();
-  // if( !this.model.animNames ) this.addAnimNames();
-
-
-  // grabbing the names of the animations
-  // const enterName = this.model.animNames.enter;
-  // const mainName = this.model.animNames.main;
-  // const exitName = this.model.animNames.exit;
-  // const nestedName = this.model.animNames?.nested;
-
-
-  // // string indexing an object that stores the constructor functions
-  // const createEnterClip = enterName ? modelClipCreators[ enterName ] : () => undefined;
-  // const createMainClip = mainName ? modelClipCreators[ mainName ] : () => undefined;
-  // const createExitClip = exitName ? modelClipCreators[ exitName ] : () => undefined;
-  // const createNestedClip = nestedName ? modelClipCreators[ nestedName ] : () => undefined;
-
-  // // set the animationClips object to hold the AnimationClips
-  // // that will be returned from these functions
-  // this.model.animClips = {
-
-  //   enter: createEnterClip(),
-  //   main: mainName === "suspend" ? createMainClip( config ) : createMainClip(), 
-  //   exit: createExitClip(),
-  //   nested: createNestedClip()
-
-  // };
+  };
   
-// }
+};
+
+*/
 
 
 
@@ -609,88 +644,6 @@ class BlankModelAnimConfig {
 
 
 
-// class ModelAnimConfigs {
-
-//   enter: ModelAnimConfig | undefined;
-//   main: ModelAnimConfig | undefined;
-//   exit: ModelAnimConfig | undefined;
-//   nested: ModelAnimConfig | undefined;
-
-//   [ key: string ]: ModelAnimConfig | undefined // index signature
-
-// }
-
-
-
-
-
-/**
- * What I actually want at this point
- */
-
-// this.model.anims.enter.clip = this.model.createClip( anims.enter )
-// this.model.anims.main.clip = this.model.createClip( anims.main )
-// this.model.anims.exit.clip = this.model.createClip( anims.exit )
-// this.model.anims.nested.clip = this.model.createClip( anims.nested )
-
-
-
-
-// In line'd createConfig from createAnimConfigs
-/*
-
-this.model.animConfigs = new ModelAnimConfigs(); 
-
-const animNameKeys = Object.keys( this.model.animNames );
-
-const animNameValues = Object.values( this.model.animNames );
-
-const numberOfAnimationsOnModel = animNameValues.length;
-
-for ( let i = 0; i < numberOfAnimationsOnModel; i++ ) {
-
-  const modelAnimConfig = new BlankModelAnimConfig();
-
-  switch( animNameValues[ i ] ) {
-
-    case 'scale-up':
-      modelAnimConfig.iScale = new Vector3( 0, 0, 0 );
-      modelAnimConfig.fScale = new Vector3( 1, 1, 1 );
-      break;
-
-    case 'scale-down':
-      modelAnimConfig.iScale = new Vector3( 1, 1, 1 );
-      modelAnimConfig.fScale = new Vector3( 0, 0, 0 );
-      break; 
-
-    case 'spin-y': 
-      modelAnimConfig.iRot = new Euler( 0, 1, 0 );
-      modelAnimConfig.fRot = new Euler( 0, Math.PI * 2, 0);
-      modelAnimConfig.rotAxis = 'y';
-      break;
-
-    case 'suspend':
-      modelAnimConfig.duration = 90;
-      break;
-
-    default:
-      throw new Error( "Invalid animation name. no model animation with that name found." )
-
-  };
-
-  this.model.animConfigs[ animNameKeys[ i ] ] = modelAnimConfig;
-
-};
-
-*/
-
-
-
-
-
-
-
-
 
 /** 
  * Notes:
@@ -700,9 +653,7 @@ for ( let i = 0; i < numberOfAnimationsOnModel; i++ ) {
  *   Create all model positions
  * 
  *   Create Model AnimationClips
- * 
- *   Load + Extract all GLTF Meshes
- * 
+ *   
  *   Set dependant properties:
  *    id?
  *    yOffsetForText:
