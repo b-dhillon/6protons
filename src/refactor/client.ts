@@ -6,6 +6,18 @@ import { Universe } from './classes/Universe';
 import { writeFileSync } from "fs";
 
 /**
+ * BUGS:
+ * 
+ *  If a section doesn't have a model, an empty array is added. There should be nothing added at all.
+ * 
+ *  The the position vector3's of the camera seem to be way off for the z-dimension.
+ * 
+ *  GLTFLoader doesn't seem to work in a Node environment as it depends on the fetch API.
+ * 
+ * 
+ */
+
+/**
  * Lesson Build Steps: 
  * 
  * 0. List out all assets or import them as lists
@@ -21,7 +33,6 @@ import { writeFileSync } from "fs";
 /**
  * To Do:
  * 
- * 1. Get a lesson printing and saving. Check to see if the shape of the data looks correct. 
  * 2. Write tests to confirm that the data is indeed correct.
  * 3. If all data correct, incorporate new re-factored architecture back into project.
  * 4. Get home screen working again. 
@@ -75,11 +86,13 @@ const textOfEntireLesson = [
 const musicPathsOfEntireLesson = [ "/audio/music/fullerene3.mp3" ];
 
 const voicePathsOfEntireLesson = [
+
   "/audio/voices/fiona/voice0.mp3", // 0
   "/audio/voices/fiona/voice0.mp3", // 1
   "/audio/voices/fiona/voice1.mp3", // 2
   "/audio/voices/fiona/voice1.mp3", // 3
   "/audio/voices/fiona/voice1.mp3", // 4
+
 ];
 
 
@@ -89,7 +102,7 @@ const voicePathsOfEntireLesson = [
 */ 
 const universe = new Universe( "fullerene-universe", 25000, 5 );
 
-console.log("UNIVERSE INITIALIZED");
+console.log( "Step 1 Complete" );
 
 
 
@@ -114,8 +127,7 @@ const camAnimations = [
 
 ];
 
-console.log("CAM ANIMATIONS CREATED");
-
+console.log("Step 2 Complete");
 
 
 /** 
@@ -134,8 +146,7 @@ camera.createAnimConfigs();
 
 camera.createAnimClips();
 
-console.log("CAM INITIALIZED");
-
+console.log( "Step 3 Complete" );
 
 
 /**
@@ -204,20 +215,19 @@ const m4 = modelBuilder.getProduct();
 
 modelDirector.constructProduct({
   section: 5,
-  path: '/fullerene/models/m4.glb',
+  path: "/fullerene/models/m4.glb",
   name: "protease-with-fullerene",
   animNames: {},
 });
 
 const m5 = modelBuilder.getProduct();
 
-console.log("MODELS BUILT");
 
 const models = new Models( [ m0, m2, m3, m4, m5 ] );
 
 models.groupBySection( numberOfSections );
 
-console.log("MODELS GROUPED");
+console.log("Step 4 Complete");
 
 
 /** 
@@ -240,7 +250,7 @@ for( let i = 0; i < numberOfSections; i++ ) {
 
 };
 
-console.log("SECTIONS INITIALIZED");
+console.log( "Step 5 Complete" );
 
 
 /** 
@@ -248,34 +258,34 @@ console.log("SECTIONS INITIALIZED");
 */ 
 const lessonBuilder = new LessonBuilder();
 
-lessonBuilder.addTitle( "Buckminsterfullerene" )
-             .addNumberOfSections( numberOfSections )
-             .addThumbnail( "url('./lesson-thumbnails/fullerene.png')" )
-             .addUniverse( universe )
-             .addCamera( camera )
-             .setModels( models.groupedBySection )
-             .setTexts( textOfEntireLesson )
-             .addMusics( musicPathsOfEntireLesson )
-             .addVoices( voicePathsOfEntireLesson )
-             .setSections( sections )
-             .extractSections() // need to move implmentation from Lesson to LessonBuilder
-;
+lessonBuilder.addTitle( "Buckminsterfullerene" );
+lessonBuilder.addNumberOfSections( numberOfSections );
+lessonBuilder.addThumbnail( "url('./lesson-thumbnails/fullerene.png')" );
+lessonBuilder.addUniverse( universe );
+lessonBuilder.addCamera( camera );
+lessonBuilder.setModels( models.groupedBySection );
+lessonBuilder.setTexts( textOfEntireLesson );
+lessonBuilder.addMusics( musicPathsOfEntireLesson );
+lessonBuilder.addVoices( voicePathsOfEntireLesson );
+lessonBuilder.setSections( sections );
+lessonBuilder.extractSections();
 
-const buckminsterfullerene = lessonBuilder.build();
-
-console.log("LESSON BUILT!!!!");
+const lesson = lessonBuilder.build();
 
 
-printLesson( buckminsterfullerene );
+console.log( "Step 6 Complete" );
+console.log( "LESSON BUILT" );
 
 
-function printLesson( lesson: Lesson ) {
+printLesson( lesson, lesson.title! );
+
+function printLesson( lesson: Lesson, fileName: string ) {
 
   console.log( "Saving lesson..." );
 
   const jsonData = JSON.stringify( lesson, null, 2 );
 
-  writeFileSync( "LESSON.json", jsonData, "utf-8" );
+  writeFileSync( `${ fileName.toLowerCase() }.json`, jsonData, "utf-8" );
 
   console.log( "Lesson saved." );
 
