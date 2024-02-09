@@ -1,5 +1,5 @@
 import { Euler, Vector3 } from 'three';
-import { getFrustrumVector } from './get-vector';
+import { getLocalFrustrumVector } from './get-vector';
 
 
 export function getVectorOnCircle( iPos: number[], circleMag: number ): number[] {
@@ -41,8 +41,11 @@ export function getVecOnCircle( iPos: Vector3, iRot: Euler, circleMag: number ):
   // Step 1: Find the circle's center.
   // Circle is of r=1 and is centered looking dwon the camera's frustrum. This is where the
   // model will be.
-  const circleCenter = getFrustrumVector( iPos, iRot );
-  const radius = iPos.distanceTo(circleCenter);
+  const circleCenter = getLocalFrustrumVector( iPos, iRot );
+
+  const worldCircleCenter = iPos.add( circleCenter )
+
+  const radius = iPos.distanceTo( worldCircleCenter );
   
   // Step 2: Calculate the initial angle with respect to the positive x-axis on the x-z plane.
   const initialAngle = circleMag;
@@ -59,6 +62,7 @@ export function getVecOnCircle( iPos: Vector3, iRot: Euler, circleMag: number ):
   );
   
   return fPos;
+
 };
 
 

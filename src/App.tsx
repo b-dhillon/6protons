@@ -9,6 +9,7 @@ import { getRotationInfo } from './utility-functions/get-rotation-info';
 import { UninitializedData, UninitializedPage, InitializedPage } from './types/types';
 import { createModelPosition } from './utility-functions/compute-model-position';
 
+
 interface RotationInfo {
   axis: string, 
   rotationsEqual: boolean
@@ -43,10 +44,12 @@ export default function App() {
   }, []);
 
   async function Init() {
+
     const _initializedPages = await initialize( uninitializedData );
-    // console.log('initializedPages', _initializedPages);
+
     setInitializedPages(_initializedPages);
     setDataInitialized(true);
+
   }
 
   // Once app is loaded and initialized --> find current page data and render with Page()
@@ -204,13 +207,17 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
     const allMeshesOfApp = allGLTFSOfApp.map((arrayOfGltfs: any) => {
       return arrayOfGltfs.map((gltf: any) => {
         // if(gltf) {
-        return gltf.scene.children.filter(
+        const meshesInSingleGltf = gltf.scene.children.filter(
           (child: any) =>
             child.isMesh || (child.isGroup && child.__removed === undefined)
         );
+
+        return meshesInSingleGltf
+
         // } else return ''
       });
     });
+
     // [ [ [ Mesh ], [ Mesh ], [ Mesh ] ] ]
 
     return allMeshesOfApp;
@@ -299,8 +306,8 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
       // create model position from camera positions, 
       // which are nicely stored in the animationDS
       const initializedPosition = createModelPosition(
-        animationDS[section][1],
-        animationDS[section][3],
+        animationDS[ section ][1],
+        animationDS[ section ][3],
         rotationInfo.axis,
         model.yOffsetForText
       );
@@ -308,7 +315,7 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
       // push position and rotationAxis to array to store data
       // for ClipConstructor
       initializedModelPositions[section] = initializedPosition
-      rotationInfos[section] = rotationInfo
+      rotationInfos[ section ] = rotationInfo
 
       return {
         ...model,
@@ -343,25 +350,20 @@ async function initialize(data: UninitializedData): Promise<InitializedPage[]> {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function replacer( key: any , value: any) {
+  // Keeping track of visited nodes to detect circular references
+  const visited = new WeakSet();
+  return (key: any, value: any) => {
+    if (typeof value === "object" && value !== null) {
+      if (visited.has(value)) {
+        // Circular reference found, discard key
+        return;
+      }
+      visited.add(value);
+    }
+    return value; // Return value if not circular
+  };
+}
 
 
 

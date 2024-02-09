@@ -15,15 +15,15 @@ interface AnimationClipConfig__Camera {
 }
 
 
-interface RotationInfo {
-  axis: string, 
-  rotsEqual: boolean
-}
+// interface RotationInfo {
+//   axis: string, 
+//   rotationsEqual: boolean
+// }
 
 
 
 // After OO refactor:
-export function getRotInfo( animationClipConfig: AnimationClipConfig__Camera ): RotationInfo {
+export function getRotInfo( animationClipConfig: AnimationClipConfig__Camera ): any {
   let axis = '';
 
   // First check if rots are equal
@@ -67,7 +67,7 @@ export function getRotInfo( animationClipConfig: AnimationClipConfig__Camera ): 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-export function getRotationInfo( AnimationData: AnimationDataOfSection ): RotationInfo {
+export function getRotationInfo( AnimationData: AnimationDataOfSection ): any {
   let axis = '';
 
   // First check if arrays are equal

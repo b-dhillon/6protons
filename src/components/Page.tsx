@@ -10,21 +10,32 @@ export function Page({
   initializedPageData,
   setCurrentPage,
 }: any): JSX.Element {
+
   const [initializedPage, _] = useState(initializedPageData);
+
   const section = useSelector((state: any) => state.section);
+
   const isCameraAnimating = useSelector((state: any) => state.isCameraAnimating);
+
   // useEffect( () => console.log( 'initializedPage data', initializedPage ), [] );
+
   return (
-    <Suspense>
-      <Scene initializedPage={initializedPage} section={section} isCameraAnimating={isCameraAnimating} />
-      <Interface
-        devMode={true}
-        initializedPage={initializedPage}
-        setCurrentPage={setCurrentPage}
-        section={section}
-        isCameraAnimating={isCameraAnimating}
-      />
-    </Suspense>
+    // <Suspense>
+
+
+      <>
+        <Interface
+
+            devMode={true}
+            initializedPage={initializedPage}
+            setCurrentPage={setCurrentPage}
+            section={section}
+            isCameraAnimating={isCameraAnimating}
+
+        />
+      </>
+
+    // </Suspense>
   );
 }
 
@@ -35,6 +46,7 @@ export function Page({
 
 
 
+      {/* <Scene initializedPage={ initializedPage } section={ section } isCameraAnimating={ isCameraAnimating } /> */}
 
 
 
