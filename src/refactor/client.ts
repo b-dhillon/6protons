@@ -115,15 +115,15 @@ const camAnimations = [
 
   new CamAnimation( "zoom-in", 4 ),
 
-  new CamAnimation( "zoom-out-rotate-up", 2, Math.PI / 4 ),
+  new CamAnimation( "zoom-out-rotate-up", 1, Math.PI / 4 ),
 
-  new CamAnimation( "zoom-in-rotate-down", 2, Math.PI / 4 ),
+  new CamAnimation( "zoom-in-rotate-down", 3, Math.PI / 4 ),
 
   new CamAnimation( "circle-cw", Math.PI / 2, -Math.PI / 2 ), // IS THIS NAME CORRECT ?
 
-  new CamAnimation( "zoom-out", 3 ),
+  new CamAnimation( "zoom-out", 4 ),
 
-  new CamAnimation( "corkscrew-up", 2, Math.PI / 2 ),
+  new CamAnimation( "corkscrew-up", 2, Math.PI / 2 )
 
 ];
 
