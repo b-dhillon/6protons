@@ -3,8 +3,16 @@
 # To-Do:
 
 - Debug the output of lesson.json
+  - Should we write a test for this?
+
+- Test visually by piping the lesson.json into App.
+
+- Merge all branches.
+
 - Move new re-factored logic to a back-end server. 
+
 - Connect front-end to back-end.
+
 
 - Figure out textPlacement and music initialization
 
