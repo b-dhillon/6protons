@@ -219,11 +219,25 @@ export class Cam {
   };
 
   
-  public getPosRots(): PosRot[] {
+  public getClonedPosRots(): PosRot[] {
 
     if (!this.posRots.length) throw new Error('posRot array is empty')
 
-    else return this.posRots;
+    else {
+
+      const clonedPosRots = this.posRots.map( ( posRot: PosRot ) => { 
+      
+        return {
+          pos: posRot.pos.clone(), 
+          rot: posRot.rot.clone(),
+          axis: posRot.axis
+        };
+  
+      })
+
+      return clonedPosRots;
+
+    };
 
   };
   

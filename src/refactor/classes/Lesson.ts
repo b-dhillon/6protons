@@ -4,8 +4,8 @@ import { Model } from './Model';
 import { Universe } from './Universe'
 import { Cam } from './Cam';
 
-
 type TextOfSection = string[];
+
 
 export class Lesson extends ThreePage {
 

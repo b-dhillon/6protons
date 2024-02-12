@@ -164,7 +164,7 @@ const modelBuilder = new ModelBuilder();
 
 const modelDirector = new ModelDirector( modelBuilder );
 
-const posRots = camera.getPosRots();
+const posRots = camera.getClonedPosRots();
 
 modelDirector.addDependencies( camAnimations, textOfEntireLesson, posRots );
 
