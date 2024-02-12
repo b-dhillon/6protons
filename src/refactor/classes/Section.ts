@@ -6,9 +6,10 @@
  *  a stack of sections that the user navigates through --> But for camera animations
  *  the user will still be navigating through a stack of AnimationActions
  * 
- * And it also allows us to still have the list of everything in a Lesson 
+ * Also, we can still have a list of everything in a Lesson 
  * by just iterating over sections and pulling out whatver we need. 
  * We can write .get() and .set() methods for this!
+ * 
  */
 
 import { Model } from './Model';
@@ -84,6 +85,7 @@ export class Section {
     but in the future we can have different kinds of section like 
     InteractiveSection or etc... 
   */
+
 /*
 
 class SectionFactory {

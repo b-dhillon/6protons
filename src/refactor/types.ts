@@ -124,6 +124,7 @@ export type RotAngleAndRotVector = {
 
 };
 
+
 export type ModelDirectorConfig = {
 
   path: string, 

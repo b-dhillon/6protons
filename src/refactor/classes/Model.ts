@@ -511,7 +511,7 @@ function getCamRotAngleAndRotVector( rotAxis: string | null, camRot: Euler ): Ro
 
   return { camRotAngle: rotAngle, camRotVector: rotVector };
 
-}
+};
 
 
 function applyCamRotation( modelLocalPosition: Vector3, camRotAngle: number, camRotVector: Vector3 ): Vector3 {
@@ -528,7 +528,7 @@ function applyCamRotation( modelLocalPosition: Vector3, camRotAngle: number, cam
 
   return modelLocalPosition;
 
-}
+};
 
 
 /*

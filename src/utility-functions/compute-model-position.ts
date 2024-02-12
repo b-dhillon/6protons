@@ -3,6 +3,7 @@
  * when rotation on camera's x-axis, the yOffsetForText is
  * not perfect. Perhaps we need to add offSet to the z-coordinate too if rotating
  * cam on x-axis?
+ * 
 */
 
 import { Vector3, Matrix4, Euler } from 'three';
@@ -26,7 +27,8 @@ export function computeModelPosition( fPos: Vector3, fRot: Euler, rotAxis: strin
   const modelWorldPos = camPos.add(modelLocalPosition);
 
 
-  return modelWorldPos
+  return modelWorldPos;
+
 };
 
 // Utility functions
@@ -35,6 +37,7 @@ type RotAngleAndRotVector = {
   camRotAngle: number;
   camRotVector: Vector3;
 };
+
 function getCamRotAngleAndRotVector(
   rotAxis: string | null,
   camRot: Euler
@@ -43,18 +46,21 @@ function getCamRotAngleAndRotVector(
   let rotAngle = 0;
 
   switch (rotAxis) {
+
     case 'x':
       rotVector.setX(1);
       rotAngle = camRot.x;
-      break;
+    break;
+
     case 'y':
       rotVector.setY(1);
       rotAngle = camRot.y;
-      break;
+    break;
+
     case 'z':
       rotVector.setZ(1);
       rotAngle = camRot.z;
-      break;
+    break;
   }
 
   return { camRotAngle: rotAngle, camRotVector: rotVector };
@@ -73,7 +79,8 @@ function applyCamRotation( modelLocalPosition: Vector3, camRotAngle: number, cam
   modelLocalPosition.applyMatrix4(rotMatrix);
 
   return modelLocalPosition;
-}
+
+};
 
 
 
@@ -164,7 +171,8 @@ export function createModelPosition(
 
   // Return the new model position in world space
   return modelWorldPositionArr;
-}
+
+};
 
 
 
