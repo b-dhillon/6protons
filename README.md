@@ -5,7 +5,7 @@
 # 6 Protons
 
 ### Project Description:
-- Six Protons is a VR minimum viable product. It is designed to teach organic chemistry via visualizing concepts using interactive 3D models, embedded in a virtual universe. The project in its current form focuses on organic chemistry. However, once finished, this program will be scalable and allow for the creation of 3D lessons across a variety of STEM subjects. This project is under development and is currently being rewritten.
+- Six Protons is a VR minimum viable product. It is designed to teach organic chemistry via visualizing concepts using interactive 3D models embedded in a virtual universe. The project in its current form focuses on organic chemistry. However, once finished, the program will enable the creation of 3D lessons across a variety of STEM subjects. This project is under development.
 
 ## User Interface Stills:
 <p align="center">
