@@ -15,7 +15,7 @@
 
 
 
-
+<!-- 
 ## Application Structure:
 ### File System:
 ```
@@ -102,7 +102,7 @@ Back:
 
 
 
-<!-- ## Demo:
+## Demo:
 
 ##### UI is responsive and scalable:
 https://user-images.githubusercontent.com/88413313/190004640-e058fe2b-e85b-453f-bf7c-51be5e2a056b.mp4
