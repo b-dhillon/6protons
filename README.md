@@ -10,7 +10,7 @@
 ## User Interface Stills:
 <p align="center">
     <img src="./readme_img/img-ui/ui-1.png" style="width:750px;"/>
-    <img src="./readme_img/img-ui/ui-4.jpg" style="width:750px;"/>
+    <img src="./readme_img/img-ui/ui-4.jpg" style="width:1000px;"/>
 </p>
 
 
